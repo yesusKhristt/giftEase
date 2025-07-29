@@ -1,20 +1,86 @@
+@font-face {
+  font-family: 'Century Gothic';
+  src: url('fonts/centurygothic.ttf') format('truetype');
+}
+
+.Heading {
+  font-family: 'Century Gothic';
+  font-size: 40px;
+  margin: 10px;
+}
+
+.HeadingB {
+  font-family: 'Century Gothic';
+  font-size: 40px;
+  font-weight: bold;
+  margin: 10px;
+}
+
+.subHeading {
+  font-family: 'Century Gothic';
+  font-size: 30px;
+  margin: 10px;
+}
+
+.orangeT {
+  color: #d13d2f;
+}
+
+.blueT {
+  color: #032f40;
+}
+
+.subHeadingB {
+  font-family: 'Century Gothic';
+  color: #032f40;
+  font-size: 30px;
+  font-weight: bold;
+  margin: 10px;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f3f3f3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+  font-family: 'Century Gothic';
+  font-size: 20px;
+}
+
+* {
+  font-family: 'Century Gothic';
+}
+
+.bold {
+  font-family: 'Century Gothic';
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .login-container {
   background: white;
   padding: 2rem;
+  margin-top: 5%;
   border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 300px;
+  justify-content: space-between;
+}
+
+.container {
+  width: 100%;
+
+}
+
+.center {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+
+}
+
+div.row {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 input {
@@ -27,14 +93,57 @@ input {
 button {
   padding: 10px;
   width: 100%;
-  background: #5c67f2;
+  background: #032f40;
   color: white;
   border: none;
   border-radius: 5px;
+  margin: 10px 0;
+  padding: 10px;
   cursor: pointer;
+}
+
+.btn {
+  margin: 5px 0;
+  padding: 5px;
+  width: 50%;
+  color: #032f40;
+  border: none;
+  cursor: pointer;
+}
+
+.orange {
+  background-color: #d13d2f;
+}
+
+.blue {
+  background-color: #032f40;
 }
 
 .error {
   color: red;
   margin-top: 10px;
+}
+
+.shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-5px);
+  }
 }

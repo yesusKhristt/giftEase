@@ -1,18 +1,71 @@
 <?php
 
-class UserModel {
-    private $users;
+class UserModel
+{
+    private $pdo;
 
-    public function __construct($filePath) {
-        $this->users = json_decode(file_get_contents($filePath), true);
+    private function createTableIfNotExists()
+    {
+        $sql = "
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            type ENUM('client', 'vendor', 'staff') DEFAULT 'client'
+        );
+    ";
+        $this->pdo->exec($sql);
     }
 
-    public function authenticate($email, $password) {
-        foreach ($this->users as $user) {
-            if ($user['email'] === $email && $user['password'] === $password) {
-                return $user;
-            }
+
+    public function __construct()
+    {
+        $host = 'localhost';
+        $db = 'giftease';
+        $user = 'root';
+        $pass = '';
+
+        try {
+            $this->pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->createTableIfNotExists(); // Create the table if not there
+        } catch (PDOException $e) {
+            die("❌ Database connection failed: " . $e->getMessage());
+        }
+    }
+
+
+    public function authenticate($email, $password)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            return $user;
         }
         return null;
     }
+
+    public function getUserByEmail($email)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function addUser($data)
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO users (name, email, password, type) VALUES (?, ?, ?, ?)");
+        return $stmt->execute([
+            $data['name'],
+            $data['email'],
+            $data['password'], // already hashed
+            $data['type']
+        ]);
+        header("Location: index.php?action=login&type=$type");
+        exit;
+    }
 }
+

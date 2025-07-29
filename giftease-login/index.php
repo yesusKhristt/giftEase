@@ -1,5 +1,15 @@
 <?php
-require_once __DIR__ . '/controllers/AuthController.php';
+require_once 'controllers/AuthController.php';
 
 $auth = new AuthController();
-$auth->handleLogin();
+
+$action = $_GET['action'] ?? 'signup';
+
+switch ($action) {
+    case 'signup':
+        $auth->handleSignup();
+        break;
+    default:
+        $auth->handleLogin();
+        break;
+}

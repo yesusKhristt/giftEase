@@ -1,0 +1,48 @@
+@font-face {
+  font-family: 'Century Gothic';
+  src: url('fonts/centurygothic.ttf') format('truetype');
+}
+
+.Heading {
+  font-family: 'Century Gothic';
+  font-size: 40px;
+  font-weight: bold;
+}
+
+body {
+  font-family: 'Century Gothic';
+  font-size: 20px;
+}
+
+.login-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+button {
+  padding: 10px;
+  width: 100%;
+  background: #5c67f2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+
