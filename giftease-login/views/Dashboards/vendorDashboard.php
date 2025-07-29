@@ -10,6 +10,7 @@
     <h1>✅ Welcome, <?= htmlspecialchars($user['name']) ?>!</h1>
     <p>You have successfully logged in to GiftEase as a Vendor.</p>
     <h1>Vendor Dashboard</h1>
+    <h1>Here are your options:</h1>
   </div>
 </body>
 </html>
