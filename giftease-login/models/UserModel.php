@@ -64,8 +64,7 @@ class UserModel
             $data['password'], // already hashed
             $data['type']
         ]);
-        header("Location: index.php?action=login&type=$type");
-        exit;
+        
     }
 }
 

@@ -14,14 +14,14 @@
       <p class="subHeading blueT">Vendor</p>
       <img src="resources/logoWP.png" height="100px" width="100px">
       <p class="Heading blueT"><span class="orangeT">gift</span><b>Ease</b><br>Sign In</p>
-      <form method="POST" action="?type=vendor" class="center">
+      <form method="POST" action="?type=vendor&action=signup" class="center">
         <input type="text" name="name" placeholder="Name" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="passwordC" placeholder="Confirm Password" required>
         <button type="submit">Sign In</button>
         <a href="?type=staff" class="btn">Staff Sign In</a>
-        <a href="?type=client" class="btn">Client Sign In</a>
+        <a href="?type=client&type=vendor" class="btn">Client Sign In</a>
       </form>
       <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
