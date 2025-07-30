@@ -14,7 +14,7 @@
       <p class="subHeading blueT">Staff</p>
       <img src="resources/logoWP.png" height="100px" width="100px">
       <p class="Heading blueT"><span class="orangeT">gift</span><b>Ease</b><br>Sign In</p>
-      <form method="POST" action="?type=staff" class="center">
+      <form method="POST" action="?type=staff&action=signup" class="center">
         <input type="text" name="name" placeholder="Name" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>

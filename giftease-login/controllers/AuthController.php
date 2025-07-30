@@ -23,7 +23,7 @@ class AuthController
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             $user = $this->model->authenticate($email, $password);
-
+            /*
             if ($user) {
                 switch ($type) {
                     case 'staff':
@@ -39,6 +39,11 @@ class AuthController
                 return;
             } else {
                 $error = '❌ Invalid email or password.';
+            }
+            */
+            if($user){
+                header("Location: index.php?action=dashboard&type=$type");
+                exit;
             }
         }
 
@@ -99,5 +104,8 @@ class AuthController
     }
 
 }
+
+
+
 
 
