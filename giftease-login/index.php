@@ -1,6 +1,6 @@
 <?php
 require_once 'controllers/AuthController.php';
-
+//poop
 $auth = new AuthController();
 
 $action = $_GET['action'] ?? 'login';
