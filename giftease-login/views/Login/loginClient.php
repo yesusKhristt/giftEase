@@ -31,7 +31,7 @@
         <button type="submit">Login</button>
         <a href="?type=staff" class="btn">Staff Login</a>
         <a href="?type=vendor" class="btn">Vendor Login</a>
-        <a href="?action=signup&type=staff" class="btn">No account? Sign up</a>
+        <a href="?action=signup&type=client" class="btn">No account? Sign up</a>
       </form>
       <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>

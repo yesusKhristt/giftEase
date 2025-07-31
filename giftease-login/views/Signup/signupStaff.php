@@ -20,9 +20,28 @@
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="passwordC" placeholder="Confirm Password" required>
         <button type="submit">Sign In</button>
-        <a href="?type=client" class="btn">Client Sign In</a>
-        <a href="?type=vendor" class="btn">Vendor Sign In</a>
+        <a href="?action=signup&type=client" class="btn">Client Sign In</a>
+        <a href="?action=signup&type=vendor" class="btn">Vendor Sign In</a>
+        <a href="?action=login&type=staff" class="btn">Already have an account? Sign in</a>
       </form>
+      <script>
+        const form = document.getElementById('signupForm');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+
+        form.addEventListener('submit', function (e) {
+          if (password.value !== confirmPassword.value) {
+            e.preventDefault(); // Stop form submission
+
+            confirmPassword.classList.add('shake', 'error');
+
+            // Remove the shake class after animation completes so it can be re-triggered
+            setTimeout(() => {
+              confirmPassword.classList.remove('shake');
+            }, 300);
+          }
+        });
+      </script>
       <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
       <?php endif; ?>
