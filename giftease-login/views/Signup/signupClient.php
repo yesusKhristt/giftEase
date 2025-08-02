@@ -20,8 +20,9 @@
         <input type="password" name="password" id="password" placeholder="Password" required>
         <input type="password" name="passwordC" id="confirmPassword" placeholder="Confirm Password" required>
         <button type="submit">Sign In</button>
-        <a href="?type=vendor" class="btn">Vendor Sign In</a>
-        <a href="?type=staff" class="btn">Staff Sign In</a>
+        <a href="?action=signup&type=vendor" class="btn">Vendor Sign In</a>
+        <a href="?action=signup&type=staff" class="btn">Staff Sign In</a>
+        <a href="?action=login&type=client" class="btn">Already have an account? Sign in</a>
       </form>
       <script>
         const form = document.getElementById('signupForm');
