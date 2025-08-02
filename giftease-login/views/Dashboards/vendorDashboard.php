@@ -9,6 +9,7 @@
   <div class="login-container">
     <h1>✅ Welcome, <?= htmlspecialchars($user['name']) ?>!</h1>
     <p>You have successfully logged in to GiftEase as a Vendor.</p>
+    <h1>Vendor Dashboard</h1>
   </div>
 </body>
 </html>
