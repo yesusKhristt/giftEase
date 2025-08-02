@@ -36,13 +36,13 @@ class UserModel
     }
 
 
-    public function authenticate($email, $password)
+    public function authenticate($email, $password, $type)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user['password']) && $type == $user['type']) {
             return $user;
         }
         return null;

@@ -22,7 +22,8 @@ class AuthController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
-            $user = $this->model->authenticate($email, $password);
+            $type = $_GET['type'] ?? 'client';
+            $user = $this->model->authenticate($email, $password, $type);
             /*
             if ($user) {
                 switch ($type) {
@@ -41,9 +42,11 @@ class AuthController
                 $error = '❌ Invalid email or password.';
             }
             */
-            if($user){
+            if ($user) {
                 header("Location: index.php?action=dashboard&type=$type");
                 exit;
+            } else {
+                $error = '❌ Invalid email or password.';
             }
         }
 
