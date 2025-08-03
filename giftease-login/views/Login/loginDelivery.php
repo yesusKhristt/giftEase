@@ -25,7 +25,7 @@
 
       </form>
 -->
-      <form method="POST" action="?type=vendor&action=login" class="center">
+      <form method="POST" action="?type=delivery&action=login" class="center">
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required
           class="<?= !empty($error) ? 'shake error' : '' ?>" id="passwordInput">
@@ -33,7 +33,7 @@
         <a href="?type=client" class="btn">Client Login</a>
         <a href="?type=staff" class="btn">Staff Login</a>
         <a href="?type=vendor" class="btn">Vendor Login</a>
-        <a href="?action=signup&type=vendor" class="btn">No account? Sign up</a>
+        <a href="?action=signup&type=delivery" class="btn">No account? Sign up</a>
       </form>
       <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
