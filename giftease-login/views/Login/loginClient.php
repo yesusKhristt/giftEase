@@ -31,6 +31,7 @@
         <button type="submit">Login</button>
         <a href="?type=staff" class="btn">Staff Login</a>
         <a href="?type=vendor" class="btn">Vendor Login</a>
+        <a href="?type=delivery" class="btn">Delivery Login</a>
         <a href="?action=signup&type=client" class="btn">No account? Sign up</a>
       </form>
 

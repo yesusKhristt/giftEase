@@ -32,6 +32,7 @@
         <button type="submit">Login</button>
         <a href="?type=client" class="btn">Client Login</a>
         <a href="?type=vendor" class="btn">Vendor Login</a>
+        <a href="?type=delivery" class="btn">Delivery Login</a>
         <a href="?action=signup&type=staff" class="btn">No account? Sign up</a>
       </form>
       <?php if (!empty($error)): ?>
