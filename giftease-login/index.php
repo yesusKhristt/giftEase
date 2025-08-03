@@ -21,6 +21,8 @@ switch ($action) {
             case 'staff':
                 require_once __DIR__ . '/views/Dashboards/staffDashboard.php';
                 break;
+            case 'delivery':
+                require_once __DIR__ . '/views/Dashboards/deliveryDashboard.php';
             default:
                 require_once __DIR__ . '/views/Dashboards/clientDashboard.php';
                 break;
