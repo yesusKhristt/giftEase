@@ -21,8 +21,10 @@
         <input type="password" name="passwordC" id="confirmPassword" placeholder="Confirm Password" required>
         <button type="submit">Sign In</button>
         <a href="?action=signup&type=vendor" class="btn">Vendor Sign In</a>
-        <a href="?action=signup&type=staff" class="btn">Staff Sign In</a>
-        <a href="?action=login&type=delivery" class="btn">Delivery Sign In</a>
+        <a href="?action=signup&type=delivery" class="btn">Delivery Sign In</a>
+        <a href="?action=signup&type=deliveryman" class="btn">Delivery Man Sign In</a>
+        <a href="?action=signup&type=admin" class="btn">Admin Sign In</a>
+        <a href="?action=signup&type=giftWrapper" class="btn">Gift Wrapper Sign In</a>
         <a href="?action=login&type=client" class="btn">Already have an account? Sign in</a>
       </form>
       <script>

@@ -11,10 +11,10 @@
 <body class="orange">
   <div class="container center">
     <div class="login-container">
-      <p class="subHeading blueT">Delivery</p>
+      <p class="subHeading blueT">Deliveryman</p>
       <img src="resources/logoWP.png" height="100px" width="100px">
       <p class="Heading blueT"><span class="orangeT">gift</span><b>Ease</b><br>Sign In</p>
-      <form method="POST" action="?type=delivery&action=signup" class="center" id="signupForm">
+      <form method="POST" action="?type=deliveryman&action=signup" class="center" id="signupForm">
         <input type="text" name="name" placeholder="Name" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" id="password" placeholder="Password" required>
@@ -22,10 +22,10 @@
         <button type="submit">Sign In</button>
         <a href="?action=signup&type=client" class="btn">Client Sign In</a>
         <a href="?action=signup&type=vendor" class="btn">Vendor Sign In</a>
-        <a href="?action=signup&type=deliveryman" class="btn">Delivery Man Sign In</a>
+        <a href="?action=signup&type=delivery" class="btn">Delivery Sign In</a>
         <a href="?action=signup&type=admin" class="btn">Admin Sign In</a>
         <a href="?action=signup&type=giftWrapper" class="btn">Gift Wrapper Sign In</a>
-        <a href="?action=login&type=delivery" class="btn">Already have an account? Sign in</a>
+        <a href="?action=login&type=deliveryman" class="btn">Already have an account? Sign in</a>
       </form>
       <script>
         const form = document.getElementById('signupForm');
@@ -45,6 +45,8 @@
           }
         });
       </script>
+
+
       <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
       <?php endif; ?>

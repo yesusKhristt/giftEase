@@ -52,14 +52,21 @@ class AuthController
 
         // Load different views based on user type
         switch ($type) {
-            case 'staff':
-                require_once __DIR__ . '/../views/Login/loginStaff.php';
+            case 'deliveryman':
+                require_once __DIR__ . '/../views/Login/loginDeliveryman.php';
+                break;
+            case 'giftWrapper':
+                require_once __DIR__ . '/../views/Login/loginGiftWrapper.php';
+                break;
+            case 'admin':
+                require_once __DIR__ . '/../views/Login/loginAdmin.php';
                 break;
             case 'vendor':
                 require_once __DIR__ . '/../views/Login/loginVendor.php';
                 break;
             case 'delivery':
                 require_once __DIR__ . '/../views/Login/loginDelivery.php';
+                break;
             default:
                 require_once __DIR__ . '/../views/Login/loginClient.php';
                 break;
@@ -77,6 +84,7 @@ class AuthController
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
+            
 
             if ($this->model->getUserByEmail($email)) {
                 $error = '❌ User already exists.';
@@ -92,18 +100,24 @@ class AuthController
                 header("Location: index.php?action=login&type=$type");
                 exit;
             }
-
         }
 
         switch ($type) {
-            case 'staff':
-                require_once __DIR__ . '/../views/Signup/signupStaff.php';
+            case 'deliveryman':
+                require_once __DIR__ . '/../views/Signup/signupDeliveryman.php';
+                break;
+            case 'giftWrapper':
+                require_once __DIR__ . '/../views/Signup/signupGiftWrapper.php';
+                break;
+            case 'admin':
+                require_once __DIR__ . '/../views/Signup/signupAdmin.php';
                 break;
             case 'vendor':
                 require_once __DIR__ . '/../views/Signup/signupVendor.php';
                 break;
             case 'delivery':
                 require_once __DIR__ . '/../views/Signup/signupDelivery.php';
+                break;
             default:
                 require_once __DIR__ . '/../views/Signup/signupClient.php';
                 break;

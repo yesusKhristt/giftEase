@@ -30,9 +30,12 @@
         <input type="password" name="password" placeholder="Password" required
           class="<?= !empty($error) ? 'shake error' : '' ?>" id="passwordInput">
         <button type="submit">Login</button>
-        <a href="?type=client" class="btn">Client Login</a>
-        <a href="?type=staff" class="btn">Staff Login</a>
-        <a href="?type=delivery" class="btn">Delivery Login</a>
+        <a href="?action=login&type=client" class="btn">Client Login</a>
+        <a href="?action=login&type=delivery" class="btn">Delivery Login</a>
+        <a href="?action=login&type=deliveryman" class="btn">Delivery Man Login</a>
+        <a href="?action=login&type=admin" class="btn">Admin Login</a>
+        <a href="?action=login&type=giftWrapper" class="btn">Gift Wrapper Login</a>
+
         <a href="?action=signup&type=vendor" class="btn">No account? Sign up</a>
       </form>
       <?php if (!empty($error)): ?>

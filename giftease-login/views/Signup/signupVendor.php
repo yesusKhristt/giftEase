@@ -20,9 +20,11 @@
         <input type="password" name="password"  id="password" placeholder="Password" required>
         <input type="password" name="passwordC" id="confirmPassword" placeholder="Confirm Password" required>
         <button type="submit">Sign In</button>
-        <a href="?action=signup&type=staff" class="btn">Staff Sign In</a>
         <a href="?action=signup&type=client" class="btn">Client Sign In</a>
-        <a href="?action=login&type=delivery" class="btn">Delivery Sign In</a>
+        <a href="?action=signup&type=admin" class="btn">Admin Sign In</a>
+        <a href="?action=signup&type=delivery" class="btn">Delivery Sign In</a>
+        <a href="?action=signup&type=deliveryman" class="btn">Delivery Man Sign In</a>
+        <a href="?action=signup&type=admin" class="btn">Admin Sign In</a>
         <a href="?action=login&type=vendor" class="btn">Already have an account? Sign in</a>
       </form>
       <script>

@@ -12,7 +12,7 @@ class UserModel
             name VARCHAR(100) NOT NULL,
             email VARCHAR(100) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
-            type ENUM('client', 'vendor', 'staff') DEFAULT 'client'
+            type ENUM('client', 'vendor', 'giftWrapper', 'deliverman', 'admin') DEFAULT 'client'
         );
     ";
         $this->pdo->exec($sql);
