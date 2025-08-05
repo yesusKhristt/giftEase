@@ -58,6 +58,8 @@ class AuthController
             case 'vendor':
                 require_once __DIR__ . '/../views/Login/loginVendor.php';
                 break;
+            case 'delivery':
+                require_once __DIR__ . '/../views/Login/loginDelivery.php';
             default:
                 require_once __DIR__ . '/../views/Login/loginClient.php';
                 break;
@@ -100,6 +102,8 @@ class AuthController
             case 'vendor':
                 require_once __DIR__ . '/../views/Signup/signupVendor.php';
                 break;
+            case 'delivery':
+                require_once __DIR__ . '/../views/Signup/signupDelivery.php';
             default:
                 require_once __DIR__ . '/../views/Signup/signupClient.php';
                 break;

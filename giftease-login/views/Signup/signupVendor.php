@@ -22,6 +22,7 @@
         <button type="submit">Sign In</button>
         <a href="?action=signup&type=staff" class="btn">Staff Sign In</a>
         <a href="?action=signup&type=client" class="btn">Client Sign In</a>
+        <a href="?action=login&type=delivery" class="btn">Delivery Sign In</a>
         <a href="?action=login&type=vendor" class="btn">Already have an account? Sign in</a>
       </form>
       <script>
