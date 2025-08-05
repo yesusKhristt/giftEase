@@ -14,15 +14,35 @@
       <p class="subHeading blueT">Vendor</p>
       <img src="resources/logoWP.png" height="100px" width="100px">
       <p class="Heading blueT"><span class="orangeT">gift</span><b>Ease</b><br>Sign In</p>
-      <form method="POST" action="?type=vendor" class="center">
+      <form method="POST" action="?type=vendor&action=signup" class="center"  id="signupForm">
         <input type="text" name="name" placeholder="Name" required>
         <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="password" name="passwordC" placeholder="Confirm Password" required>
+        <input type="password" name="password"  id="password" placeholder="Password" required>
+        <input type="password" name="passwordC" id="confirmPassword" placeholder="Confirm Password" required>
         <button type="submit">Sign In</button>
-        <a href="?type=staff" class="btn">Staff Sign In</a>
-        <a href="?type=client" class="btn">Client Sign In</a>
+        <a href="?action=signup&type=staff" class="btn">Staff Sign In</a>
+        <a href="?action=signup&type=client" class="btn">Client Sign In</a>
+        <a href="?action=login&type=delivery" class="btn">Delivery Sign In</a>
+        <a href="?action=login&type=vendor" class="btn">Already have an account? Sign in</a>
       </form>
+      <script>
+        const form = document.getElementById('signupForm');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+
+        form.addEventListener('submit', function (e) {
+          if (password.value !== confirmPassword.value) {
+            e.preventDefault(); // Stop form submission
+
+            confirmPassword.classList.add('shake', 'error');
+
+            // Remove the shake class after animation completes so it can be re-triggered
+            setTimeout(() => {
+              confirmPassword.classList.remove('shake');
+            }, 300);
+          }
+        });
+      </script>
       <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
       <?php endif; ?>

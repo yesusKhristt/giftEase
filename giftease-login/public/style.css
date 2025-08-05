@@ -147,3 +147,121 @@ button {
     transform: translateX(-5px);
   }
 }
+/* Deliver staff Saneth */
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #f4f6f9;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #1e1e2f;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      font-size: 22px;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #2e2e3e;
+      transition: background 0.3s;
+    }
+
+    .sidebar ul li:hover,
+    .sidebar ul li.active {
+      background-color: #4455aa;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .card h4 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .status-btns button {
+      padding: 8px 12px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .status-btns .picked { background-color: #42a5f5; color: #fff; }
+    .status-btns .out { background-color: #ffa726; color: #fff; }
+    .status-btns .delivered { background-color: #66bb6a; color: #fff; }
+
+    .status-btns button:hover {
+      opacity: 0.9;
+    }
+
+    input[type="file"] {
+      margin-top: 10px;
+    }
+
+    input[type="text"], input[type="password"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+      margin: 8px 0;
+    }
+
+    button.save-btn {
+      background-color: #2962ff;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }

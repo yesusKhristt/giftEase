@@ -14,16 +14,32 @@
       <p class="subHeading blueT">Client</p>
       <img src="resources/logoWP.png" height="100px" width="100px">
       <p class="Heading blueT"><span class="orangeT">gift</span><b>Ease</b> Login</p>
-      <form method="POST" action="?type=client" class="center">
+      <!--
+      <form method="POST" action="?type=client&action=login" class="center">
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Login</button>
         <a href="?type=vendor" class="btn">Vendor Login</a>
         <a href="?type=staff" class="btn">Staff Login</a>
+        <a href="?action=signup&type=client" class="btn">No acccount?sign up</a>
       </form>
+      -->
+      <form method="POST" action="?type=client&action=login" class="center">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required 
+        class="<?= !empty($error) ? 'shake error' : '' ?>" id="passwordInput">
+        <button type="submit">Login</button>
+        <a href="?type=staff" class="btn">Staff Login</a>
+        <a href="?type=vendor" class="btn">Vendor Login</a>
+        <a href="?type=delivery" class="btn">Delivery Login</a>
+        <a href="?action=signup&type=client" class="btn">No account? Sign up</a>
+      </form>
+
       <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
+        <!-- and again below -->
       <?php endif; ?>
+
     </div>
   </div>
 </body>
