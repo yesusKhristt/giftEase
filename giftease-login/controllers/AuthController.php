@@ -84,7 +84,7 @@ class AuthController
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
-            
+
 
             if ($this->model->getUserByEmail($email)) {
                 $error = '❌ User already exists.';
@@ -122,6 +122,69 @@ class AuthController
                 require_once __DIR__ . '/../views/Signup/signupClient.php';
                 break;
         }
+    }
+
+    public function monitorDashboards()
+    {
+        $type = $_GET['type'] ?? 'client';
+        $level1 = $_GET['level'] ?? 'primary';
+        switch ($type) {
+            case 'vendor':
+                $this->Vendor($level1);
+                break;
+            case 'delivery':
+                $this->Delivery($level1);
+                break;
+            case 'deliveryman':
+                $this->Deliveryman($level1);
+                break;
+            case 'giftWrapper':
+                $this->GiftWrapper($level1);
+                break;
+            case 'admin':
+                $this->Admin($level1);
+                break;
+            case 'client':
+                $this->Client($level1);
+                break;
+        }
+    }
+
+    public function Vendor($level1)
+    {
+        switch ($level1) {
+            case 'primary':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
+                break;
+            case 'inventory':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardInventory.php';
+                break;
+            case 'messeges':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardMesseges.php';
+                break;
+            case 'analysis':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardAnalysis.php';
+                break;
+        }
+    }
+    public function Delivery($level1)
+    {
+    }
+
+    public function Deliveryman($level1)
+    {
+    }
+
+    public function GiftWrapper($level1)
+    {
+    }
+
+    public function Admin($level1)
+    {
+    }
+
+    public function Client($level1)
+    {
     }
 
 }
