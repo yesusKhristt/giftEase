@@ -27,7 +27,7 @@
 }
 
 .blueT {
-  color: #032f40;
+  color: wheat;
 }
 
 .subHeadingB {
@@ -93,7 +93,7 @@ input {
 button {
   padding: 10px;
   width: 100%;
-  background: #032f40;
+  background: wheat;
   color: white;
   border: none;
   border-radius: 5px;
@@ -106,17 +106,43 @@ button {
   margin: 5px 0;
   padding: 5px;
   width: 50%;
-  color: #032f40;
+  color: wheat;
   border: none;
   cursor: pointer;
 }
+
+.pointerButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 per row */
+  gap: 10px; /* spacing between buttons */
+  max-width: 400px; /* optional: limit width */
+  margin: auto; /* center on page */
+}
+
+.pointerButtons a {
+  /* Styles applied to ALL <a> tags inside elements with class 'login-buttons' */
+  text-decoration: none;
+  color: white;
+  background-color: #4CAF50;
+  padding: 10px;
+  display: block;
+  border-radius: 5px;
+  font-family: 'Century Gothic', sans-serif;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.login-buttons a:hover {
+  background-color: #45a049; /* hover effect */
+}
+
 
 .orange {
   background-color: #d13d2f;
 }
 
 .blue {
-  background-color: #032f40;
+  background-color: wheat;
 }
 
 .error {

@@ -30,12 +30,14 @@
         <input type="password" name="password" placeholder="Password" required
           class="<?= !empty($error) ? 'shake error' : '' ?>" id="passwordInput">
         <button type="submit">Login</button>
-        <a href="?action=login&type=client" class="btn">Client Login</a>
-        <a href="?action=login&type=vendor" class="btn">Vendor Login</a>
-        <a href="?action=login&type=delivery" class="btn">Delivery Login</a>
-        <a href="?action=login&type=giftWrapper" class="btn">Delivery Man Login</a>
-        <a href="?action=login&type=deliveryman" class="btn">Delivery Man Login</a>
-        <a href="?action=signup&type=admin" class="btn">No account? Sign up</a>
+        <div class="pointerButtons">
+          <a href="?action=login&type=client" >Client Login</a>
+          <a href="?action=login&type=vendor" >Vendor Login</a>
+          <a href="?action=login&type=delivery" >Delivery Login</a>
+          <a href="?action=login&type=giftWrapper" >Gift Wrapper Login</a>
+          <a href="?action=login&type=deliveryman" >Delivery Man Login</a>
+          <a href="?action=signup&type=admin" >No account? Sign up</a>
+        </div>
       </form>
       <?php if (!empty($error)): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
@@ -45,8 +47,8 @@
 
           // Remove the shake class after animation so it can be retriggered on next error
           setTimeout(() => {
-              confirmPassword.classList.remove('shake');
-            }, 300);
+            confirmPassword.classList.remove('shake');
+          }, 300);
         </script>
       <?php endif; ?>
       <?php if (!empty($error)): ?>
