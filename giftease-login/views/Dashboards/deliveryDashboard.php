@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Delivery Staff Dashboard</title>
+  <title>Delivery Staff</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="public/style.css">
+  <link rel="icon" href="resources/icon.png">
 </head>
 <body>
   <div class="login-container">

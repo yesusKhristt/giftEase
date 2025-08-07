@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Welcome</title>
+  <title>Gift Wrapper</title>
   <link rel="stylesheet" href="public/style.css">
+  <link rel="icon" href="resources/icon.png">
 </head>
 <body>
   <div class="login-container">

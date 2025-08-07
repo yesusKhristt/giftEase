@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Welcome</title>
+  <title>Admin</title>
   <link rel="stylesheet" href="public/style.css">
   <link rel="icon" href="resources/icon.png">
 </head>
