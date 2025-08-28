@@ -14,7 +14,7 @@
   <div class="container">
     <?php
     $activePage = 'history';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
 
     <div class="main-content">
