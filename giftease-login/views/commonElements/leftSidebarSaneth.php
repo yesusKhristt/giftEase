@@ -18,9 +18,6 @@
       <a href="?action=dashboard&type=delivery&level=home" class="nav-item <?= isActive('home', $activePage) ?>">
         Home
       </a>
-      <a href="?action=dashboard&type=delivery&level=profile"class="nav-item <?= isActive('profile', $activePage) ?>">
-        Profile
-      </a>
       <a href="?action=dashboard&type=delivery&level=order" class="nav-item <?= isActive('order', $activePage) ?>">
         Order
       </a>
@@ -30,11 +27,9 @@
       <a href="?action=dashboard&type=delivery&level=history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
-      <a href="?action=dashboard&type=delivery&level=notification" class="nav-item <?= isActive('notification', $activePage) ?>">
+      <a href="?action=dashboard&type=delivery&level=notification"
+        class="nav-item <?= isActive('notification', $activePage) ?>">
         Notification
-      </a>
-      <a href="?action=dashboard&type=delivery&level=settings" class="nav-item <?= isActive('settings', $activePage) ?>">
-        Settings
       </a>
       <a href="?action=dashboard&type=delivery&level=proof" class="nav-item <?= isActive('proof', $activePage) ?>">
         Proof
@@ -60,10 +55,12 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="#" id="loginLink">Login</a>
-      <a href="#" id="signupLink">Sign Up</a>
-      <a href="#" class="settings-btn">
+      <a href="?action=dashboard&type=delivery&level=settings"
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
+      </a>
+      <a href="?action=dashboard&type=delivery&level=profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
+        <i class="fas fa-user"></i>
       </a>
     </nav>
   </div>

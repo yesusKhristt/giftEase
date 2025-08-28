@@ -513,9 +513,9 @@ textarea {
 
 /*Item Cards*/
 /* ==== Layout ==== */
-#inventoryGrid {
+.inventory-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 20px;
     padding: 20px;
 }
@@ -834,12 +834,10 @@ textarea {
     transition: all 0.2s ease;
 }
 
-.settings-btn:hover {
-    background: #fed2ed;
-    border-color: #e91e63;
-    transform: translateY(-1px);
+.topbar-actions a.active {
+    background: #e91e63;
+    color: #ffff;
 }
-
 
 /*#################NOTIFICATION####################*/
 
@@ -1368,8 +1366,9 @@ form {
 
 /* Secondary link button */
 .btn2 {
-    display: inline-block;
+    display: flex;
     padding: 10px 20px;
+    margin: 5px;
     font-size: 14px;
     font-family: 'Century Gothic', sans-serif;
     color: #ffff;
@@ -1377,7 +1376,7 @@ form {
     border: 2px solid #e91e63;
     border-radius: 0px;
     text-decoration: none;
-    text-align: center;
+    align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
 }

@@ -15,7 +15,7 @@
     <div class="container">
         <?php
         $activePage = 'inventory';
-        include 'views\commonElements/leftSidebar.php';
+        include 'views/commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
             <div class="page-header">

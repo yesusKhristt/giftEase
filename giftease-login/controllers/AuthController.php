@@ -190,14 +190,29 @@ class AuthController
     public function GiftWrapper($level1)
     {
         switch ($level1) {
-            case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/giftWrapperDashboard.php';
+            case 'analytics':
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/analitic.php';
                 break;
-            case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/giftWrapperDashboard.php';
+            case 'earnings':
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/earning.php';
+                break;
+            case 'order':
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/order.php';
+                break;
+            case 'portfolio':
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/portfolio.php';
+                break;
+            case 'profile':
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/profile.php';
+                break;
+            case 'settings':
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/setting.php';
+                break;
+            case 'service':
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/service.php';
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/giftWrapperDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/overview.php';
                 break;
         }
     }
@@ -205,14 +220,29 @@ class AuthController
     public function Admin($level1)
     {
         switch ($level1) {
-            case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/Admin/adminDashboard.php';
+            case 'customer':
+                require_once __DIR__ . '/../views/Dashboards/Admin/customer.php';
                 break;
-            case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/Admin/adminDashboard.php';
+            case 'delivery':
+                require_once __DIR__ . '/../views/Dashboards/Admin/deliver.php';
+                break;
+            case 'items':
+                require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
+                break;
+            case 'reports':
+                require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
+                break;
+            case 'settings':
+                require_once __DIR__ . '/../views/Dashboards/Admin/settings new.php';
+                break;
+            case 'vendor':
+                require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
+                break;
+            case 'profile':
+                require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Admin/adminDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/Admin/front.php';
                 break;
         }
     }
@@ -220,14 +250,35 @@ class AuthController
     public function Client($level1)
     {
         switch ($level1) {
-            case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/Client/gp/index.php';
+            case 'cart':
+                require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
                 break;
-            case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/Client/gp/index.php';
+            case 'wishlist':
+                require_once __DIR__ . '/../views/Dashboards/Client/wishlist.php';
+                break;
+            case 'tracking':
+                require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
+                break;
+            case 'history':
+                require_once __DIR__ . '/../views/Dashboards/Client/history.php';
+                break;
+            case 'customize':
+                require_once __DIR__ . '/../views/Dashboards/Client/customize.php';
+                break;
+            case 'payment':
+                require_once __DIR__ . '/../views/Dashboards/Client/payment.php';
+                break;
+            case 'account':
+                require_once __DIR__ . '/../views/Dashboards/Client/account.php';
+                break;
+            case 'settings':
+                require_once __DIR__ . '/../views/Dashboards/Client/settings.php';
+                break;
+            case 'viewitem':
+                require_once __DIR__ . '/../views/Dashboards/Client/ViewItem.php';
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Client/gp/index.php';
+                require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
                 break;
         }
     }
