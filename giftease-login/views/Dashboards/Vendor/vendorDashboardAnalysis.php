@@ -4,94 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Vendor Analysis</title>
-    <link rel="stylesheet" href="public/style2.css">
+    <link rel="stylesheet" href="public/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <span class="gift">gift</span><span class="Ease">Ease</span>
+    <div class="container">
+        <?php
+        $activePage = 'analysis';
+        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
+        ?>
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="title">Performance Analysis</h1>
+                <p class="subtitle">Track your business performance and growth</p>
+            </div>
+            <div class="filter-tabs">
+                <button class="btn1" onclick="filterItems('all')">This Week</button>
+                <button class="btn1" onclick="filterItems('active')">This Month</button>
+                <button class="btn1" onclick="filterItems('paused')">This Year</button>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Sales Performance</h2>
+                </div>
+                <div class="card-content">
+
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
                 </div>
             </div>
+            <div class="summary-grid">
+                <div class="card">
 
-            <nav class="sidebar-nav">
-                <ul class="nav-list">
-                    <li class="nav-item" onclick="navigateTo('orders')">
-                        <span class="nav-icon">📦</span>
-                        Orders
-                    </li>
-                    <li class="nav-item" onclick="navigateTo('inventory')">
-                        <span class="nav-icon">📋</span>
-                        Inventory
-                    </li>
-                    <li class="nav-item" onclick="navigateTo('messages')">
-                        <span class="nav-icon">💬</span>
-                        Messages
-                    </li>
-                    <li class="nav-item active">
-                        <span class="nav-icon">📊</span>
-                        Analysis
-                    </li>
-                </ul>
-            </nav>
-        </div>
+                    <p class="subtitle">Items Sold</p><br>
+                    <p class="title">125</p>
 
-        <main class="main-content">
-            <div class="content-wrapper">
-                <div class="page-header">
-                    <h1 class="page-title">Performance Analysis</h1>
-                    <p class="page-subtitle">Track your business performance and growth</p>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Sales Performance</h2>
-                    </div>
-                    <div class="card-content">
-                        <div class="chart-container">
-                            <canvas id="performanceChart"></canvas>
-                        </div>
-                    </div>
+                    <p class="subtitle">Client Interactions</p><br>
+                    <p class="title">37</p>
                 </div>
 
-                <div class="summary-grid">
-                    <div class="summary-card">
-                        <div class="summary-content">
-                            <div class="summary-text">
-                                <div class="summary-label">Items Sold</div>
-                                <div class="summary-value primary">125</div>
-                                <p class="summary-description">items sold this month</p>
-                            </div>
-                            <div class="summary-icon primary">📈</div>
-                        </div>
-                    </div>
+                <div class="card">
 
-                    <div class="summary-card">
-                        <div class="summary-content">
-                            <div class="summary-text">
-                                <div class="summary-label">Client Interactions</div>
-                                <div class="summary-value primary">37</div>
-                                <p class="summary-description">clients messaged</p>
-                            </div>
-                            <div class="summary-icon primary">👥</div>
-                        </div>
-                    </div>
+                    <p class="subtitle">Repeat Clients</p><br>
+                    <p class="title">12</p>
 
-                    <div class="summary-card">
-                        <div class="summary-content">
-                            <div class="summary-text">
-                                <div class="summary-label">Repeat Clients</div>
-                                <div class="summary-value danger">24</div>
-                                <p class="summary-description">returning customers</p>
-                            </div>
-                            <div class="summary-icon danger">🔄</div>
-                        </div>
-                    </div>
                 </div>
             </div>
-        </main>
+            <div class="summary-grid">
+                <div class="card">
+
+                    <p class="subtitle">Low Stock</p><br>
+                    <p class="title">2</p>
+
+                </div>
+            </div>
+
+
+            </main>
+        </div>
     </div>
 
     <script>

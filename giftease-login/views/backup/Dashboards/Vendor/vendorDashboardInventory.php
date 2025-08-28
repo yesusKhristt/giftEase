@@ -11,12 +11,10 @@
 
 <body>
     <div class="container">
-        <?php
-        $activePage = 'inventory';
-        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
-        ?>
+        <?php include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php'; ?>
+        <?php include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/topbar.php'; ?>
         <div class="main-content">
-
+            
             <div class="page-header">
                 <h1 class="title">Inventory Management</h1>
                 <p class="subtitle">Manage your gift items and stock levels</p>
@@ -174,7 +172,7 @@
             }
 
             grid.innerHTML = filteredItems.map(item => `
-                <a class="inventory-item" data-status="${item.status}" id="item" href="?action=dashboard&type=vendor&level=viewitem">
+                <div class="inventory-item" data-status="${item.status}">
                 
                     <img src="${item.image}" class="item-image">
                 
@@ -217,7 +215,7 @@
                             <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Delete</button>
                         </div>
                     </div>
-            </a>
+                </div>
             `).join('');
         }
 

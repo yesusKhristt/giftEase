@@ -25,7 +25,7 @@ class AuthController
             $type = $_GET['type'] ?? 'client';
             $user = $this->model->authenticate($email, $password, $type);
             if ($user) {
-                header("Location: index.php?action=dashboard&type=$type");
+                header("Location: index.php?action=dashboard&type=$type&level=primary");
                 exit;
             } else {
                 $error = '❌ Invalid email or password.';
@@ -33,7 +33,14 @@ class AuthController
         }
 
         // Load different views based on user type
-        require_once __DIR__ . '/../views/Login/login.php';
+        switch ($type) {
+            case 'client':
+                require_once __DIR__ . '/../views/Login/loginClient.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Login/loginStaff.php';
+                break;
+        }
     }
 
     public function handleSignup()
@@ -50,7 +57,7 @@ class AuthController
 
 
             if ($this->model->getUserByEmail($email)) {
-                $error = '❌ User already exists.';
+                $error = 'User already exists.';
             } else {
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
                 $this->model->addUser([
@@ -64,8 +71,14 @@ class AuthController
                 exit;
             }
         }
-
-        require_once __DIR__ . '/../views/Signup/signup.php';
+        switch ($type) {
+            case 'client':
+                require_once __DIR__ . '/../views/Signup/signupClient.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Signup/signupStaff.php';
+                break;
+        }
     }
 
     public function monitorDashboards()
@@ -97,28 +110,64 @@ class AuthController
     public function Vendor($level1)
     {
         switch ($level1) {
-            case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
-                break;
             case 'inventory':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardInventory.php';
                 break;
-            case 'messeges':
+            case 'messages':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardMesseges.php';
                 break;
             case 'analysis':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardAnalysis.php';
+                break;
+            case 'profile':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardProfile.php';
+                break;
+            case 'history':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardHistory.php';
+                break;
+            case 'settings':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardSettings.php';
+                break;
+            case 'viewitem':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewItem.php';
+                break;
+            case 'vieworder':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewOrder.php';
+                break;
+            case 'edititem':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
                 break;
         }
     }
     public function Delivery($level1)
     {
         switch ($level1) {
-            case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/deliveryDashboard.php';
+            case 'profile':
+                require_once __DIR__ . '/../views/Dashboards/Delivery/profile.php';
                 break;
-            case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/deliveryDashboard.php';
+            case 'history':
+                require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
+                break;
+            case 'map':
+                require_once __DIR__ . '/../views/Dashboards/Delivery/map.php';
+                break;
+            case 'notification':
+                require_once __DIR__ . '/../views/Dashboards/Delivery/notification.php';
+                break;
+            case 'order':
+                require_once __DIR__ . '/../views/Dashboards/Delivery/order.php';
+                break;
+            case 'proof':
+                require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';
+                break;
+            case 'settings':
+                require_once __DIR__ . '/../views/Dashboards/Delivery/Settings.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Dashboards/Delivery/home.php';
                 break;
         }
     }
@@ -127,10 +176,13 @@ class AuthController
     {
         switch ($level1) {
             case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/deliverymanDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/Deliveryman/deliverymanDashboard.php';
                 break;
             case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/deliverymanDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/Deliveryman/deliverymanDashboard.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Dashboards/Deliveryman/deliverymanDashboard.php';
                 break;
         }
     }
@@ -139,10 +191,13 @@ class AuthController
     {
         switch ($level1) {
             case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/giftWrapperDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/giftWrapperDashboard.php';
                 break;
             case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/giftWrapperDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/giftWrapperDashboard.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/giftWrapperDashboard.php';
                 break;
         }
     }
@@ -151,10 +206,13 @@ class AuthController
     {
         switch ($level1) {
             case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/adminDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/Admin/adminDashboard.php';
                 break;
             case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/adminDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/Admin/adminDashboard.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Dashboards/Admin/adminDashboard.php';
                 break;
         }
     }
@@ -163,10 +221,13 @@ class AuthController
     {
         switch ($level1) {
             case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/clientDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/Client/gp/index.php';
                 break;
             case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/clientDashboard.php';
+                require_once __DIR__ . '/../views/Dashboards/Client/gp/index.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Dashboards/Client/gp/index.php';
                 break;
         }
     }

@@ -10,63 +10,80 @@
 </head>
 
 <body>
-    <?php
-    $activePage = 'messeges';
-    include 'views/commonElements/leftSidebar.php';
-    ?>
-    <div class="container">
-        <div class="main-content">
-            <div class="chat-dashboard">
-                <div class="client-list">
-                    <div class="bold">Clients</div>
-                    <p class="active" onclick="selectClient('Thenuka')">Manjusri</p>
-                    <p onclick="selectClient('Umaya')">Umaya</p>
-                    <p onclick="selectClient('Kasun')">Kasun</p>
-                    <p onclick="selectClient('Nimal')">Nimal</p>
-                    <p onclick="selectClient('Saman')">Saman</p>
-                    <p onclick="selectClient('Ruwan')">Ruwan</p>
-                    <p onclick="selectClient('Chamara')">Chamara</p>
-                    <p onclick="selectClient('Dilshan')">Dilshan</p>
+    <?php include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php'; ?>
+    <div class="main-content">
+        <?php include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/topbar.php'; ?>
+        <div class="chat-dashboard">
+            <div class="client-list">
+                <div class="bold">Clients</div>
+                <p class="active" onclick="selectClient('Thenuka')">Manjusri</p>
+                <p onclick="selectClient('Umaya')">Umaya</p>
+                <p onclick="selectClient('Kasun')">Kasun</p>
+                <p onclick="selectClient('Nimal')">Nimal</p>
+                <p onclick="selectClient('Saman')">Saman</p>
+                <p onclick="selectClient('Ruwan')">Ruwan</p>
+                <p onclick="selectClient('Chamara')">Chamara</p>
+                <p onclick="selectClient('Dilshan')">Dilshan</p>
+            </div>
+
+            <div class="message-box">
+                <div class="bold">Messages</div>
+                <div class="message-history" id="messageHistory">
+                    <div class="message client">Hi, can I change the wrap color?</div>
+                    <div class="message vendor">No.</div>
                 </div>
+                <div class="message-input">
+                    <input type="text" id="messageInput" placeholder="Type your message..."
+                        onkeypress="handleKeyPress(event)">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
 
-                <div class="message-box">
-                    <div class="bold">Messages</div>
-                    <div class="message-history" id="messageHistory">
-                        <div class="message client">Hi, can I change the wrap color?</div>
-                        <div class="message vendor">No.</div>
+            <div class="right_sidebar">
+                <div class="profile-section">
+                    <div class="profile-picture">
+                        <i class="fas fa-user"></i>
                     </div>
-                    <div class="message-input">
-                        <input type="text" id="messageInput" placeholder="Type your message..."
-                            onkeypress="handleKeyPress(event)">
-                        <button onclick="sendMessage()">Send</button>
+                    <div class="username">Manjusri</div>
+                    <div class="rating">
+                        <div class="svg-cute-star">
+                            <?php
+                            function render_stars(float $rating): string
+                            {
+                                $output = '';
+                                $totalStars = 5;
+
+                                for ($i = 1; $i <= $totalStars; $i++) {
+                                    if ($rating >= $i) {
+                                        $output .= '<span class="star filled">★</span>';
+                                    } else {
+                                        $fraction = $rating - ($i - 1);
+                                        if ($fraction > 0) {
+                                            $percent = (1 - $fraction) * 100;
+                                            // Output partial star with inline style for clip-path percentage
+                                            $output .= '<span class="star partial" style="--empty-percent: ' . $percent . '%;">★</span>';
+                                        } else {
+                                            $output .= '<span class="star">★</span>';
+                                        }
+                                    }
+                                }
+                                return $output;
+                            }
+
+                            $rating = 3.3;
+                            echo render_stars($rating);
+                            echo "<div class='rating-text'>$rating Rating</div>"
+                                ?>
+                        </div>
                     </div>
                 </div>
-
-                <div class="right_sidebar">
-                    <div class="profile-section">
-                        <div class="profile-picture">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="username">Manjusri</div>
-                        <div class="rating">
-                            <div class="svg-cute-star">
-
-                                <?php
-                                require_once 'views/commonElements/rating.php';
-                                $rating = 3.3;
-                                echo render_stars($rating);
-                                echo "<div class='rating-text'>$rating Rating</div>"
-                                    ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="button-section">
-                        <div class="btn1">View Order</div>
-                        <div class="btn1">Cancel Order</div>
-                    </div>
+                <div class="button-section">
+                    <div class="btn1">View Order</div>
+                    <div class="btn1">Cancel Order</div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script>

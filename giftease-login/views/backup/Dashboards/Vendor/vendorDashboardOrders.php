@@ -12,12 +12,9 @@
 
 <body>
   <div class="container">
-    <?php
-    $activePage = 'orders';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
-    ?>
+    <?php include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php'; ?>
     <div class="main-content">
-
+      
       <div class="page-header">
         <h1 class="title">Orders Dashboard</h1>
         <p class="subtitle">Manage and track your current orders</p>
@@ -36,44 +33,47 @@
             </tr>
           </thead>
           <tbody>
-              <tr>
-                <td>
-                  <a class="view-btn" href="?action=dashboard&type=vendor&level=vieworder">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                      </path>
-                    </svg>
-                  </a>
-                </td>
-                <td>Thenuka Ranasinghe</td>
-                <td>$25.00</td>
-                <td>2025-08-05</td>
-                <td>2025-08-10</td>
-                <td><span class="badge blue">On-Track</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <a class="view-btn" href="?action=dashboard&type=vendor&level=vieworder">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                      </path>
-                    </svg>
-                  </a>
-                </td>
-                <td>Matt Patterson</td>
-                <td>$40.00</td>
-                <td>2025-08-04</td>
-                <td>2025-08-09</td>
-                <td><span class="badge red">Urgent</span></td>
+            <tr>
+              <td>
+                <button class="view-btn">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                    </path>
+                  </svg>
+                </button>
+              </td>
+              <td>Thenuka Ranasinghe</td>
+              <td>$25.00</td>
+              <td>2025-08-05</td>
+              <td>2025-08-10</td>
+              <td><span class="badge blue">On-Track</span></td>
+            </tr>
+            <tr>
+              <td>
+                <button class="view-btn">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                    </path>
+                  </svg>
+                </button>
+              </td>
+              <td>Matt Patterson</td>
+              <td>$40.00</td>
+              <td>2025-08-04</td>
+              <td>2025-08-09</td>
+              <td><span class="badge red">Urgent</span></td>
+            </tr>
           </tbody>
         </table>
       </div>
+
+      <!-- Summary Cards -->
       <div class="summary-grid">
         <div class="card">
 
