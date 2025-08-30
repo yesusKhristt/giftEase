@@ -22,12 +22,10 @@
         <p class="subtitle">Manage your current delivery assignments and update their status.</p>
       </div>
       
-      <!-- <div class="card"> -->
-      
         <div class="card">
           <div class="order-header">
             <h4 class="order-id">Order #DEL-001</h4>
-            <h4 class="order-status status-pending">Pending</h4>
+            <!-- <h4 class="order-status status-pending">Pending</h4> -->
           </div>
           <div class="cardColour">
           <div class="order-details">
@@ -61,19 +59,20 @@
             <button class="btn1" onclick="startDelivery('DEL-001')">Start Delivery</button>
             <button class="btn1" onclick="viewOrderDetails('DEL-001')">View Details</button>
             <button class="btn1" onclick="contactCustomer('DEL-001')">Contact Customer</button>
+            <button class="btn1" onclick="markDelivered('DEL-001')">Mark Delivered</button>
+            <button class="btn1" onclick="reportIssue('DEL-001')">Report Issue</button>
           </div>
         </div>
 
         <div class="card">
           <div class="order-header">
             <h4 class="order-id">Order #DEL-002</h4>
-            <h4 class="order-status status-in-transit">In Transit</h4>
+            <!-- <h4 class="order-status status-in-transit">In Transit</h4> -->
           </div>
           <div class="cardColour">
           <div class="order-details">
             <div class="detail-item">
               <i class="fas fa-gift"></i>
-              <!-- <h4>Chocolate Collection</h4> -->
                <h4>Chocolate Collection</h4>
             </div>
             <div class="detail-item">
@@ -99,8 +98,10 @@
           </div>
           </div>
           <div class="order-actions">
-            <button class="btn1" onclick="markDelivered('DEL-002')">Mark Delivered</button>
+             <button class="btn1" onclick="startDelivery('DEL-002')">Start Delivery</button>
             <button class="btn1" onclick="viewOrderDetails('DEL-002')">View Details</button>
+            <button class="btn1" onclick="contactCustomer('DEL-002')">Contact Customer</button>
+            <button class="btn1" onclick="markDelivered('DEL-002')">Mark Delivered</button>
             <button class="btn1" onclick="reportIssue('DEL-002')">Report Issue</button>
           </div>
         </div>
@@ -108,7 +109,7 @@
         <div class="card">
           <div class="order-header">
             <h4 class="order-id">Order #DEL-003</h4>
-            <h4 class="order-status status-pending">Pending</h4>
+            <!-- <h4 class="order-status status-pending">Pending</h4> -->
           </div>
           <div class="cardColour">
           <div class="order-details">
@@ -139,13 +140,137 @@
           </div>
           </div>
           <div class="order-actions">
-            <button class="btn1" onclick="startDelivery('DEL-003')">Start Delivery</button>
+             <button class="btn1" onclick="startDelivery('DEL-003')">Start Delivery</button>
             <button class="btn1" onclick="viewOrderDetails('DEL-003')">View Details</button>
             <button class="btn1" onclick="contactCustomer('DEL-003')">Contact Customer</button>
+            <button class="btn1" onclick="markDelivered('DEL-003')">Mark Delivered</button>
+            <button class="btn1" onclick="reportIssue('DEL-003')">Report Issue</button>
           </div>
+        </div>
+
+          <div class="card">
+          <div class="order-header">
+            <h4 class="order-id">Order #DEL-004</h4>
+            <!-- <h4 class="order-status status-pending">Pending</h4> -->
+          </div>
+          <div class="cardColour">
+          <div class="order-details">
+            <div class="detail-item">
+              <i class="fas fa-gift"></i>
+              <h4>Shoes Pack</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-user"></i>
+              <h4>Jeshani Shavindya</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <h4>543 Main Street Colombo</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-clock"></i>
+              <h4>Deliver by 3:00 PM</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-phone"></i>
+              <h4>+94 728976548</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-dollar-sign"></i>
+              <h4>Delivery Fee: $23.5</h4>
+            </div>
+          </div>
+          </div>
+          <div class="order-actions">
+             <button class="btn1" onclick="startDelivery('DEL-004')">Start Delivery</button>
+            <button class="btn1" onclick="viewOrderDetails('DEL-004')">View Details</button>
+            <button class="btn1" onclick="contactCustomer('DEL-004')">Contact Customer</button>
+            <button class="btn1" onclick="markDelivered('DEL-004')">Mark Delivered</button>
+            <button class="btn1" onclick="reportIssue('DEL-004')">Report Issue</button>
+        </div>
+
+        <div class="card">
+          <div class="order-header">
+            <h4 class="order-id">Order #DEL-005</h4>
+            <!-- <h4 class="order-status status-pending">Pending</h4> -->
+          </div>
+          <div class="cardColour">
+          <div class="order-details">
+            <div class="detail-item">
+              <i class="fas fa-gift"></i>
+              <h4>Phone Box</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-user"></i>
+              <h4>Dilma Jayathissa</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <h4>546/3 Main Street Colombo</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-clock"></i>
+              <h4>Deliver by 4:30 PM</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-phone"></i>
+              <h4>+94 772256780</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-dollar-sign"></i>
+              <h4>Delivery Fee: $123.5</h4>
+            </div>
+          </div>
+          </div>
+          <div class="order-actions">
+             <button class="btn1" onclick="startDelivery('DEL-005')">Start Delivery</button>
+            <button class="btn1" onclick="viewOrderDetails('DEL-005')">View Details</button>
+            <button class="btn1" onclick="contactCustomer('DEL-005')">Contact Customer</button>
+            <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button>
+            <button class="btn1" onclick="reportIssue('DEL-005')">Report Issue</button>
+        </div>
+
+        <div class="card">
+          <div class="order-header">
+            <h4 class="order-id">Order #DEL-005</h4>
+            <!-- <h4 class="order-status status-pending">Pending</h4> -->
+          </div>
+          <div class="cardColour">
+          <div class="order-details">
+            <div class="detail-item">
+              <i class="fas fa-gift"></i>
+              <h4>Lap Top</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-user"></i>
+              <h4>Chathu</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <h4>No.120/4 Main Street Colombo</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-clock"></i>
+              <h4>Deliver by 3:30 PM</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-phone"></i>
+              <h4>+94 728976548</h4>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-dollar-sign"></i>
+              <h4>Delivery Fee: $223.5</h4>
+            </div>
+          </div>
+          </div>
+          <div class="order-actions">
+             <button class="btn1" onclick="startDelivery('DEL-005')">Start Delivery</button>
+            <button class="btn1" onclick="viewOrderDetails('DEL-005')">View Details</button>
+            <button class="btn1" onclick="contactCustomer('DEL-005')">Contact Customer</button>
+            <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button>
+            <button class="btn1" onclick="reportIssue('DEL-005')">Report Issue</button>
+        </div>
       
-      </div>
-      </div>
     </div>
   </div>
 </body>
