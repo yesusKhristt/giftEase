@@ -21,14 +21,11 @@
     $activePage = 'home';
     include 'views\commonElements/leftSidebarSaneth.php';
     ?>
-    <!-- <div id="home" class="tab-content active"> -->
-    <!-- Home page -->
     <div class="main-content">
       <div class="page-header">
         <h1 class="title">Welcome Back, Saneth!</h1>
         <p class="subtitle">Ready to make some deliveries today</p>
       </div>
-
 
       <div class="card">
         <h3>Today's Overview</h3>
@@ -51,7 +48,6 @@
           </div>
         </div>
       </div>
-
 
       <div class="summary-grid">
         <div class="card" onclick="showEarningsBreakdown()">
@@ -77,7 +73,7 @@
       </div>
     </div>
   </div>
-  <!-- <div id="profile" class="tab-content"> -->
+
   <script src="main.js"></script>
 </body>
 

@@ -81,7 +81,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           <div class="form-group">
             <label class="subtitle">Vehicle Type</label>
-            <select class="">
+            <select class="form-select">
               <option selected>Motorcycle</option>
               <option>Car</option>
               <option>Van</option>
