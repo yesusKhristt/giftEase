@@ -26,15 +26,15 @@
         <h3>Profile Information</h3>
         <div class="form-group">
           <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" value="Alex Rodriguez" placeholder="Enter your full name" />
+          <input type="text" class="form-input" value="Saneth Tharushika" placeholder="Enter your full name" />
         </div>
         <div class="form-group">
           <label class="form-label">Phone Number</label>
-          <input type="tel" class="form-input" value="+1 (555) 123-4567" placeholder="Enter your phone number" />
+          <input type="tel" class="form-input" value="+94 761694206" placeholder="Enter your phone number" />
         </div>
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" value="alex.rodriguez@gifteasy.com" placeholder="Enter your email" />
+          <input type="email" class="form-input" value="sanethsiriwardhana@gmail.com" placeholder="Enter your email" />
         </div>
 
         <div class="settings-section">

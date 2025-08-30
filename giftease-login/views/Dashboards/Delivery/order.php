@@ -188,6 +188,7 @@
             <button class="btn1" onclick="markDelivered('DEL-004')">Mark Delivered</button>
             <button class="btn1" onclick="reportIssue('DEL-004')">Report Issue</button>
         </div>
+        </div>
 
         <div class="card">
           <div class="order-header">
@@ -229,10 +230,11 @@
             <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button>
             <button class="btn1" onclick="reportIssue('DEL-005')">Report Issue</button>
         </div>
+        </div>
 
         <div class="card">
           <div class="order-header">
-            <h4 class="order-id">Order #DEL-005</h4>
+            <h4 class="order-id">Order #DEL-006</h4>
             <!-- <h4 class="order-status status-pending">Pending</h4> -->
           </div>
           <div class="cardColour">
@@ -269,6 +271,7 @@
             <button class="btn1" onclick="contactCustomer('DEL-005')">Contact Customer</button>
             <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button>
             <button class="btn1" onclick="reportIssue('DEL-005')">Report Issue</button>
+        </div>
         </div>
       
     </div>
