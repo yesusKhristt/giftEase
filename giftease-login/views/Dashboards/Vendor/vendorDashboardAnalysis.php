@@ -12,7 +12,11 @@
     <div class="container">
         <?php
         $activePage = 'analysis';
+<<<<<<< Updated upstream
         include '\views\commonElements/leftSidebar.php';
+=======
+        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
+>>>>>>> Stashed changes
         ?>
         <div class="main-content">
             <div class="page-header">

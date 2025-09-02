@@ -2,39 +2,161 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Vendor Inventory</title>
-    <link rel="stylesheet" href="public/style.css">
-    <link rel="icon" href="resources/icon.png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delivery Partner Dashboard - GiftEase</title>
+    <link rel="stylesheet" href="public/style.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
+
     <div class="container">
         <?php
-        $activePage = 'inventory';
-<<<<<<< Updated upstream
-        include 'views\commonElements/leftSidebar.php';
-=======
-        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
->>>>>>> Stashed changes
+        $activePage = 'items';
+        include 'views/commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
-
             <div class="page-header">
-                <h1 class="title">Inventory Management</h1>
-                <p class="subtitle">Manage your gift items and stock levels</p>
+                <h1 class="title">Browse Items</h1>
+                <p class="subtitle">Manage your gift items </p>
+
             </div>
+
             <!-- Filter Tabs -->
             <div class="filter-tabs">
-                <button class="btn1" onclick="filterItems('all')">All Items</button>
-                <button class="btn1" onclick="filterItems('active')">Active</button>
-                <button class="btn1" onclick="filterItems('paused')">Paused</button>
+
+                            <select class="btn1" onchange="filterProducts('category', this.value)">
+                                <option value="">All Categories</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="computers">Computers</option>
+                            </select>
+                            <select class="btn1" onchange="filterProducts('price', this.value)">
+                                <option value="">All Prices</option>
+                                <option value="0-100">$0 - $100</option>
+                                <option value="100-500">$100 - $500</option>
+                                <option value="500+">$500+</option>
+                            </select>
+                            <select class="btn1" onchange="sortProducts(this.value)">
+                                <option value="">Sort By</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="rating">Rating</option>
+                                <option value="name">Name</option>
+                            </select>
             </div>
 
             <!-- Inventory Grid -->
-            <div class="inventory-grid" id="inventoryGrid">
+            <div class="inventory-grid">
                 <!-- Items will be populated by JavaScript -->
+                <a class="inventory-item" data-status="${item.status}" id="item"
+                    href="?action=dashboard&type=vendor&level=viewitem">
+
+                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80"
+                        class="item-image">
+
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div>
+                                <h3 class="item-name">Chocolate</h3>
+                                <p class="item-category">Sweets</p>
+                            </div>
+
+                        </div>
+
+                        <div class="item-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Price</span>
+                                <span class="detail-value">$120</span>
+                            </div>
+
+
+                        </div>
+
+                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
+                        <div class="item-actions">
+                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
+                                cart</button>
+
+                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
+                                wishlist</button>
+                        </div>
+
+                    </div>
+                </a>
+                <a class="inventory-item" data-status="${item.status}" id="item"
+                    href="?action=dashboard&type=vendor&level=viewitem">
+
+                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80"
+                        class="item-image">
+
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div>
+                                <h3 class="item-name">Chocolate</h3>
+                                <p class="item-category">Sweets</p>
+                            </div>
+
+                        </div>
+
+                        <div class="item-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Price</span>
+                                <span class="detail-value">$120</span>
+                            </div>
+
+
+                        </div>
+
+                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
+
+                        <div class="item-actions">
+                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
+                                cart</button>
+
+                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
+                                wishlist</button>
+                        </div>
+                    </div>
+                </a>
+                <a class="inventory-item" data-status="${item.status}" id="item"
+                    href="?action=dashboard&type=vendor&level=viewitem">
+
+                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80"
+                        class="item-image">
+
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div>
+                                <h3 class="item-name">Chocolate</h3>
+                                <p class="item-category">Sweets</p>
+                            </div>
+
+                        </div>
+
+                        <div class="item-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Price</span>
+                                <span class="detail-value">$120</span>
+                            </div>
+
+
+                        </div>
+
+                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
+                        <div class="item-actions">
+                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
+                                cart</button>
+
+                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
+                                wishlist</button>
+                        </div>
+
+                    </div>
+                </a>
+
             </div>
 
         </div>
@@ -52,7 +174,7 @@
                 price: 25.99,
                 stock: 45,
                 sold: 23,
-                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLRtyCTThXyDDAvE_W1QvdKpMGrA1g8VOQTQ&s",
+                image: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
                 description: "Assorted premium chocolates in elegant packaging"
             },
             {
@@ -170,58 +292,58 @@
                         <p class="empty-description">
                             ${currentFilter === 'all'
                         ? 'No inventory items available.'
-                        : `No ${currentFilter} items in your inventory.`}
-                        </p>
-                    </div>
+                        : No ${ currentFilter } items in your inventory.}
+                        </p >
+                    </div >
                 `;
                 return;
             }
 
             grid.innerHTML = filteredItems.map(item => `
-                <a class="inventory-item" data-status="${item.status}" id="item" href="?action=dashboard&type=vendor&level=viewitem">
-                
+                < a class="inventory-item" data - status="${item.status}" id = "item" href = "?action=dashboard&type=vendor&level=viewitem" >
+
                     <img src="${item.image}" class="item-image">
-                
-                    <div class="item-content">
-                        <div class="item-header">
-                            <div>
-                                <h3 class="item-name">${item.name}</h3>
-                                <p class="item-category">${item.category}</p>
+
+                        <div class="item-content">
+                            <div class="item-header">
+                                <div>
+                                    <h3 class="item-name">${item.name}</h3>
+                                    <p class="item-category">${item.category}</p>
+                                </div>
+                                <span class="item-status status-${item.status}">${item.status}</span>
                             </div>
-                            <span class="item-status status-${item.status}">${item.status}</span>
-                        </div>
-                        
-                        <div class="item-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Price</span>
-                                <span class="detail-value">$${item.price}</span>
+
+                            <div class="item-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Price</span>
+                                    <span class="detail-value">$${item.price}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Stock</span>
+                                    <span class="detail-value ${item.stock <= 10 ? 'text-danger' : ''}">${item.stock}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Sold</span>
+                                    <span class="detail-value">${item.sold}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Revenue</span>
+                                    <span class="detail-value">$${(item.price * item.sold).toFixed(2)}</span>
+                                </div>
                             </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Stock</span>
-                                <span class="detail-value ${item.stock <= 10 ? 'text-danger' : ''}">${item.stock}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Sold</span>
-                                <span class="detail-value">${item.sold}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Revenue</span>
-                                <span class="detail-value">$${(item.price * item.sold).toFixed(2)}</span>
-                            </div>
-                        </div>
-                        
-                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">${item.description}</p>
-                        
-                        <div class="item-actions">
-                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Edit</button>
-                            <button class="btn1 ${item.status === 'active' ? 'btn-secondary' : 'btn-primary'} btn-small" 
+
+                            <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">${item.description}</p>
+
+                            <div class="item-actions">
+                                <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Edit</button>
+                                <button class="btn1 ${item.status === 'active' ? 'btn-secondary' : 'btn-primary'} btn-small"
                                     onclick="toggleStatus(${item.id})">
-                                ${item.status === 'active' ? 'Pause' : 'Activate'}
-                            </button>
-                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Delete</button>
+                                    ${item.status === 'active' ? 'Pause' : 'Activate'}
+                                </button>
+                                <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Delete</button>
+                            </div>
                         </div>
-                    </div>
-            </a>
+                    </a>
             `).join('');
         }
 
@@ -255,7 +377,7 @@
         // Item actions
         function editItem(id) {
             const item = inventoryData.find(item => item.id === id);
-            alert(`Edit item: ${item.name}\n\nThis would open an edit form.`);
+            alert(Edit item: ${item.name}\n\nThis would open an edit form.);
         }
 
         function toggleStatus(id) {
@@ -277,7 +399,7 @@
 
         function deleteItem(id) {
             const item = inventoryData.find(item => item.id === id);
-            if (confirm(`Are you sure you want to delete "${item.name}"?`)) {
+            if (confirm(Are you sure you want to delete "${item.name}"?)) {
                 const index = inventoryData.findIndex(item => item.id === id);
                 inventoryData.splice(index, 1);
                 renderInventory();
@@ -307,9 +429,6 @@
         // Initialize the page
         init();
     </script>
-<<<<<<< Updated upstream
 </body>
+
 </html>
-=======
-</body>
->>>>>>> Stashed changes

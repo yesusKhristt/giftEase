@@ -62,7 +62,11 @@
                     </div>
                     <div class="button-section">
                         <div class="btn1">View Order</div>
+<<<<<<< Updated upstream
                         <div class="btn2">Cancel Order</div>
+=======
+                        <div class="btn1">Cancel Order</div>
+>>>>>>> Stashed changes
                     </div>
                 </div>
             </div>
