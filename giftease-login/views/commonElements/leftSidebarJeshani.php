@@ -15,26 +15,26 @@
     }
     ?>
     <nav class="nav-section">
-      <a href="?action=dashboard&type=giftWrapper&level=analytics"
+      <a href="?controller=giftWrapper&action=dashboard/analytics"
         class="nav-item <?= isActive('analytics', $activePage) ?>">
         Analytics
       </a>
-      <a href="?action=dashboard&type=giftWrapper&level=earnings"
+      <a href="?controller=giftWrapper&action=dashboard/earnings"
         class="nav-item <?= isActive('earnings', $activePage) ?>">
         Earning
       </a>
-      <a href="?action=dashboard&type=giftWrapper&level=order" class="nav-item <?= isActive('order', $activePage) ?>">
+      <a href="?controller=giftWrapper&action=dashboard/order" class="nav-item <?= isActive('order', $activePage) ?>">
         Order
       </a>
-      <a href="?action=dashboard&type=giftWrapper&level=overview"
+      <a href="?controller=giftWrapper&action=dashboard/overview"
         class="nav-item <?= isActive('overview', $activePage) ?>">
         Overview
       </a>
-      <a href="?action=dashboard&type=giftWrapper&level=portfolio"
+      <a href="?controller=giftWrapper&action=dashboard/portfolio"
         class="nav-item <?= isActive('portfolio', $activePage) ?>">
         Portfolio
       </a>
-      <a href="?action=dashboard&type=giftWrapper&level=service"
+      <a href="?controller=giftWrapper&action=dashboard/service"
         class="nav-item <?= isActive('service', $activePage) ?>">
         Service
       </a>
@@ -59,11 +59,11 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?action=dashboard&type=giftWrapper&level=settings"
+      <a href="?controller=giftWrapper&action=dashboard/settings"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?action=dashboard&type=giftWrapper&level=profile"
+      <a href="?controller=giftWrapper&action=dashboard/profile"
         class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>

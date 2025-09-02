@@ -15,20 +15,20 @@
     }
     ?>
     <nav class="nav-section">
-      <a href="?action=dashboard&type=vendor&level=orders" class="nav-item <?= isActive('orders', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/orders" class="nav-item <?= isActive('orders', $activePage) ?>">
         Orders
       </a>
-      <a href="?action=dashboard&type=vendor&level=inventory"
+      <a href="?controller=vendor&action=dashboard/inventory"
         class="nav-item <?= isActive('inventory', $activePage) ?>">
         Inventory
       </a>
-      <a href="?action=dashboard&type=vendor&level=analysis" class="nav-item <?= isActive('analysis', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/analysis" class="nav-item <?= isActive('analysis', $activePage) ?>">
         Analysis
       </a>
-      <a href="?action=dashboard&type=vendor&level=messages" class="nav-item <?= isActive('messages', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/messages" class="nav-item <?= isActive('messages', $activePage) ?>">
         Messages
       </a>
-      <a href="?action=dashboard&type=vendor&level=history" class="nav-item <?= isActive('history', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
     </nav>
@@ -52,10 +52,10 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?action=dashboard&type=vendor&level=settings" class="settings-btn <?= isActive('settings', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/settings" class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?action=dashboard&type=vendor&level=profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>

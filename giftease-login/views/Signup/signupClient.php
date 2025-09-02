@@ -20,14 +20,14 @@
       </div>
     </div>
     <div>
-      <form method="POST" action="?type=client&action=login" id="loginForm">
+      <form method="POST" action="?type=client&action=handleSignup" id="signupForm">
         <input type="text" name="name" placeholder="Name" class="textbox" required>
         <input type="email" name="email" placeholder="Email" class="textbox" required>
         <input type="password" name="password" id="password" placeholder="Password" class="textbox" required>
         <input type="password" name="passwordC" id="confirmPassword" placeholder="Confirm Password" class="textbox"
           required>
         <button type="submit" class="btn2">Sign Up</button>
-        <a href="?action=login&type=client" class="btn1" id="loginLink">Already have an account? Sign in</a>
+        <a href="?action=handleLogin&type=client" class="btn1" id="loginLink">Already have an account? Sign in</a>
       </form>
     </div>
     <script>

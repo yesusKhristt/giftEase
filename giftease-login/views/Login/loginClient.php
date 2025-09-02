@@ -20,12 +20,12 @@
       </div>
     </div>
     <div>
-      <form method="POST" action="?type=client&action=login" id="loginForm">
+      <form method="POST" action="?type=client&action=handleLogin" id="loginForm">
         <input type="email" name="email" placeholder="Email" class="textbox" required>
         <input type="password" name="password" placeholder="Password" class="textbox" required
           class="<?= !empty($error) ? 'shake error' : '' ?>" id="passwordInput">
         <button type="submit" class="btn2">Login</button>
-        <a href="?action=signup&type=client" class="btn1">No account? Sign up</a>
+        <a href="?action=handleSignup&type=client" class="btn1">No account? Sign up</a>
       </form>
     </div>
     <?php if (!empty($error)): ?>

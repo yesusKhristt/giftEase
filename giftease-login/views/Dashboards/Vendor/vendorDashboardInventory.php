@@ -13,7 +13,7 @@
     <div class="container">
         <?php
         $activePage = 'inventory';
-        include 'views\commonElements/leftSidebar.php';
+        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
 
