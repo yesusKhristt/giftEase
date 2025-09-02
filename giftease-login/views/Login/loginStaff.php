@@ -8,8 +8,8 @@
   <link rel="icon" href="resources/icon.png">
 </head>
 
-<body
-  style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f6f6f6;">
+<body <div class="bg-blur">
+  <img src="resources/background.jpg" class="background-image">
   <div class="authContainer">
     <div class="logo">
       <img src="resources/icon.png" class="logo_img">
@@ -66,6 +66,7 @@
         form.submit();
       });
     </script>
+  </div>
   </div>
 </body>
 
