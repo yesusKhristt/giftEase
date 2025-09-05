@@ -32,7 +32,7 @@
         <input type="password" name="password" placeholder="Password" class="textbox" required
           class="<?= !empty($error) ? 'shake error' : '' ?>" id="passwordInput">
         <button type="submit" class="btn2">Login</button>
-        <a href="?action=signup&type=admin" id="signupLink" class="btn1">No account? Sign Up</a>
+        <a href="?action=handleSignup&type=admin" id="signupLink" class="btn1">No account? Sign Up</a>
       </form>
     </div>
     <?php if (!empty($error)): ?>
@@ -55,14 +55,14 @@
       // On login submit, update action to match selected role
       form.addEventListener('submit', function (e) {
         const selectedRole = roleSelect.value;
-        form.action = `?type=${selectedRole}&action=login`;
+        form.action = `?type=${selectedRole}&action=handleLogin`;
       });
 
       // On clicking "Sign up", change action and submit form
       signupLink.addEventListener('click', function (e) {
         e.preventDefault();
         const selectedRole = roleSelect.value;
-        form.action = `?type=${selectedRole}&action=signup`;
+        form.action = `?type=${selectedRole}&action=handleSignup`;
         form.submit();
       });
     </script>

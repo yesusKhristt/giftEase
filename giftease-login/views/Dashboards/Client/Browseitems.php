@@ -5,17 +5,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delivery Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/Dilma/style.css" />
+    <link rel="stylesheet" href="public/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-    <!-- changes -->
+
     <div class="container">
         <?php
         $activePage = 'items';
-        include 'views/commonElements/leftSidebar.php';
+        include 'views/commonElements/leftSidebarDilma.php';
         ?>
         <div class="main-content">
             <div class="page-header">
@@ -27,45 +27,41 @@
             <!-- Filter Tabs -->
             <div class="filter-tabs">
 
-                            <select class="btn1" onchange="filterProducts('category', this.value)">
-                                <option value="">All Categories</option>
-                                <option value="electronics">Electronics</option>
-                                <option value="accessories">Accessories</option>
-                                <option value="computers">Computers</option>
-                            </select>
-                            <select class="btn1" onchange="filterProducts('price', this.value)">
-                                <option value="">All Prices</option>
-                                <option value="0-100">$0 - $100</option>
-                                <option value="100-500">$100 - $500</option>
-                                <option value="500+">$500+</option>
-                            </select>
-                            <select class="btn1" onchange="sortProducts(this.value)">
-                                <option value="">Sort By</option>
-                                <option value="price-low">Price: Low to High</option>
-                                <option value="price-high">Price: High to Low</option>
-                                <option value="rating">Rating</option>
-                                <option value="name">Name</option>
-                            </select>
+                <select class="btn1" onchange="filterProducts('category', this.value)">
+                    <option value="">All Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="computers">Computers</option>
+                </select>
+                <select class="btn1" onchange="filterProducts('price', this.value)">
+                    <option value="">All Prices</option>
+                    <option value="0-100">$0 - $100</option>
+                    <option value="100-500">$100 - $500</option>
+                    <option value="500+">$500+</option>
+                </select>
+                <select class="btn1" onchange="sortProducts(this.value)">
+                    <option value="">Sort By</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Rating</option>
+                    <option value="name">Name</option>
+                </select>
             </div>
 
             <!-- Inventory Grid -->
             <div class="inventory-grid">
                 <!-- Items will be populated by JavaScript -->
                 <a class="inventory-item" data-status="${item.status}" id="item"
-                    href="?action=dashboard&type=vendor&level=viewitem">
+                    href="?action=dashboard&type=client&level=viewitem">
 
-<<<<<<< Updated upstream
-                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80"
-=======
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTixlPtW5WdcCEXOMq8wbUJptdoi8Mk_cNqw&s"
->>>>>>> Stashed changes
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLRtyCTThXyDDAvE_W1QvdKpMGrA1g8VOQTQ&s"
                         class="item-image">
 
                     <div class="item-content">
                         <div class="item-header">
                             <div>
                                 <h3 class="item-name">Chocolate</h3>
-
+                                <p class="item-category">Sweets</p>
                             </div>
 
                         </div>
@@ -93,18 +89,14 @@
                 <a class="inventory-item" data-status="${item.status}" id="item"
                     href="?action=dashboard&type=vendor&level=viewitem">
 
-<<<<<<< Updated upstream
-                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80"
-=======
-                    <img src="https://images.meesho.com/images/products/423581114/8bcfz_512.webp?width=512"
->>>>>>> Stashed changes
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLRtyCTThXyDDAvE_W1QvdKpMGrA1g8VOQTQ&s"
                         class="item-image">
 
                     <div class="item-content">
                         <div class="item-header">
                             <div>
-                                <h3 class="item-name">Glass Rose Flower</h3>
-
+                                <h3 class="item-name">Chocolate</h3>
+                                <p class="item-category">Sweets</p>
                             </div>
 
                         </div>
@@ -112,7 +104,7 @@
                         <div class="item-details">
                             <div class="detail-item">
                                 <span class="detail-label">Price</span>
-                                <span class="detail-value">$200</span>
+                                <span class="detail-value">$120</span>
                             </div>
 
 
@@ -132,129 +124,14 @@
                 <a class="inventory-item" data-status="${item.status}" id="item"
                     href="?action=dashboard&type=vendor&level=viewitem">
 
-<<<<<<< Updated upstream
-                    <img src="https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80"
-=======
-                    <img src="https://m.media-amazon.com/images/I/61-DnBSho5L._UF1000,1000_QL80_.jpg"
->>>>>>> Stashed changes
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLRtyCTThXyDDAvE_W1QvdKpMGrA1g8VOQTQ&s"
                         class="item-image">
 
                     <div class="item-content">
                         <div class="item-header">
                             <div>
-<<<<<<< Updated upstream
-=======
-                                <h3 class="item-name">Cute Libiniah Bear Stuffed Toys</h3>
-
-                            </div>
-
-                        </div>
-
-                        <div class="item-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Price</span>
-                                <span class="detail-value">$120</span>
-                            </div>
-
-
-                        </div>
-
-                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
-                        <div class="item-actions">
-                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
-                                cart</button>
-
-                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
-                                wishlist</button>
-                        </div>
-
-                    </div>
-                </a>
-
-                <a class="inventory-item" data-status="${item.status}" id="item"
-                    href="?action=dashboard&type=vendor&level=viewitem">
-
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrPIrGNpAYW5S2dqvyIS9v4ze5k3oRDVYmSg&s"
-                        class="item-image">
-
-                    <div class="item-content">
-                        <div class="item-header">
-                            <div>
-                                <h3 class="item-name">Men's watches|Swiss watch</h3>
-
-                            </div>
-
-                        </div>
-
-                        <div class="item-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Price</span>
-                                <span class="detail-value">$120</span>
-                            </div>
-
-
-                        </div>
-
-                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
-                        <div class="item-actions">
-                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
-                                cart</button>
-
-                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
-                                wishlist</button>
-                        </div>
-
-                    </div>
-                </a>
-
-                <a class="inventory-item" data-status="${item.status}" id="item"
-                    href="?action=dashboard&type=vendor&level=viewitem">
-
-                    <img src="https://img.drz.lazcdn.com/static/lk/p/3013f094949c0a6664c34a01d203b134.jpg_720x720q80.jpg"
-                        class="item-image">
-
-                    <div class="item-content">
-                        <div class="item-header">
-                            <div>
-                                <h3 class="item-name">I Love you with customized name gift mug cup</h3>
-
-                            </div>
-
-                        </div>
-
-                        <div class="item-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Price</span>
-                                <span class="detail-value">$120</span>
-                            </div>
-
-
-                        </div>
-
-                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
-                        <div class="item-actions">
-                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
-                                cart</button>
-
-                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
-                                wishlist</button>
-                        </div>
-
-                    </div>
-                </a>
-
-                  <a class="inventory-item" data-status="${item.status}" id="item"
-                    href="?action=dashboard&type=vendor&level=viewitem">
-
-                    <img src="https://img.drz.lazcdn.com/static/lk/p/3013f094949c0a6664c34a01d203b134.jpg_720x720q80.jpg"
-                        class="item-image">
-
-                    <div class="item-content">
-                        <div class="item-header">
-                            <div>
->>>>>>> Stashed changes
-                                <h3 class="item-name">I Love you with customized name gift mug cup</h3>
-
+                                <h3 class="item-name">Chocolate</h3>
+                                <p class="item-category">Sweets</p>
                             </div>
 
                         </div>
@@ -285,7 +162,7 @@
         </div>
     </div>
 
-    <!-- <script>
+    <script>
         // Sample inventory data
         const inventoryData = [
             // Active Items
@@ -297,7 +174,7 @@
                 price: 25.99,
                 stock: 45,
                 sold: 23,
-                image: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLRtyCTThXyDDAvE_W1QvdKpMGrA1g8VOQTQ&s",
                 description: "Assorted premium chocolates in elegant packaging"
             },
             {
@@ -551,7 +428,7 @@
 
         // Initialize the page
         init();
-    </script> -->
+    </script>
 </body>
 
 </html>

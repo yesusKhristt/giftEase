@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delivery Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/Dilma/style.css" />
+    <link rel="stylesheet" href="public/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -15,7 +15,7 @@
     <div class="container">
         <?php
         $activePage = 'settings';
-        include 'views/commonElements/leftSidebar.php';
+        include 'views/commonElements/leftSidebarDilma.php';
         ?>
         <div class="main-content">
             
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="settings-section">
-                    <h3>Client Information</h3>
+                    <h3>Vendor Information</h3>
 
                 </div>
 
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <span>Email promotions</span>
+                        <span>Customer rating notifications</span>
                         <div class="toggle-switch" onclick="toggleNotification(this)">
                             <div class="toggle-slider"></div>
                         </div>
@@ -76,7 +76,10 @@
                         <input type="text" class="form-input" value="---1234"
                             placeholder="Enter account number" />
                     </div>
-                    
+                    <div class="form-group">
+                        <label class="form-label">Routing Number</label>
+                        <input type="text" class="form-input" value="021000021" placeholder="Enter routing number" />
+                    </div>
                     <div class="form-group">
                         <label class="form-label">Payment Schedule</label>
                         <select class="form-select">

@@ -25,9 +25,30 @@ class AuthController
             $type = $_GET['type'] ?? 'client';
             $user = $this->model->authenticate($email, $password, $type);
             if ($user) {
-                header("Location: index.php?action=dashboard&type=$type&level=primary");
-                header("Location: index.php?action=dashboard&type=$type&level=primary");
-                exit;
+                $_SESSION['user'] = $user;
+
+                // 🔑 Navigation happens here
+                switch ($user['type']) {
+                    case 'client':
+                        header("Location: index.php?controller=client&action=dashboard/primary");
+                        exit;
+                    case 'vendor':
+                        header("Location: index.php?controller=vendor&action=dashboard/primary");
+                        exit;
+                    case 'admin':
+                        header("Location: index.php?controller=admin&action=dashboard/primary");
+                        exit;
+                    case 'delivery':
+                        header("Location: index.php?controller=delivery&action=dashboard/primary");
+                        exit;
+                    case 'deliveryman':
+                        header("Location: index.php?controller=deliveryman&action=dashboard/primary");
+                        exit;
+                    case 'giftWrapper':
+                        header("Location: index.php?controller=giftWrapper&action=dashboard/primary");
+                        exit;
+                }
+
             } else {
                 $error = '❌ Invalid email or password.';
             }
