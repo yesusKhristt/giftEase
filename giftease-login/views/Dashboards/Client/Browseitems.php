@@ -11,7 +11,7 @@
 </head>
 
 <body>
-<!-- Comment -->
+
     <div class="container">
         <?php
         $activePage = 'items';
@@ -54,14 +54,14 @@
                 <a class="inventory-item" data-status="${item.status}" id="item"
                     href="?action=dashboard&type=client&level=viewitem">
 
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLRtyCTThXyDDAvE_W1QvdKpMGrA1g8VOQTQ&s"
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTixlPtW5WdcCEXOMq8wbUJptdoi8Mk_cNqw&s"
                         class="item-image">
 
                     <div class="item-content">
                         <div class="item-header">
                             <div>
                                 <h3 class="item-name">Chocolate</h3>
-                                <p class="item-category">Sweets</p>
+
                             </div>
 
                         </div>
@@ -89,14 +89,14 @@
                 <a class="inventory-item" data-status="${item.status}" id="item"
                     href="?action=dashboard&type=vendor&level=viewitem">
 
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLRtyCTThXyDDAvE_W1QvdKpMGrA1g8VOQTQ&s"
+                    <img src="https://images.meesho.com/images/products/423581114/8bcfz_512.webp?width=512"
                         class="item-image">
 
                     <div class="item-content">
                         <div class="item-header">
                             <div>
-                                <h3 class="item-name">Chocolate</h3>
-                                <p class="item-category">Sweets</p>
+                                <h3 class="item-name">Glass Rose Flower</h3>
+
                             </div>
 
                         </div>
@@ -104,7 +104,7 @@
                         <div class="item-details">
                             <div class="detail-item">
                                 <span class="detail-label">Price</span>
-                                <span class="detail-value">$120</span>
+                                <span class="detail-value">$200</span>
                             </div>
 
 
@@ -124,14 +124,122 @@
                 <a class="inventory-item" data-status="${item.status}" id="item"
                     href="?action=dashboard&type=vendor&level=viewitem">
 
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLRtyCTThXyDDAvE_W1QvdKpMGrA1g8VOQTQ&s"
+                    <img src="https://m.media-amazon.com/images/I/61-DnBSho5L._UF1000,1000_QL80_.jpg"
                         class="item-image">
 
                     <div class="item-content">
                         <div class="item-header">
                             <div>
-                                <h3 class="item-name">Chocolate</h3>
-                                <p class="item-category">Sweets</p>
+                                <h3 class="item-name">Cute Libiniah Bear Stuffed Toys</h3>
+
+                            </div>
+
+                        </div>
+
+                        <div class="item-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Price</span>
+                                <span class="detail-value">$120</span>
+                            </div>
+
+
+                        </div>
+
+                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
+                        <div class="item-actions">
+                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
+                                cart</button>
+
+                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
+                                wishlist</button>
+                        </div>
+
+                    </div>
+                </a>
+
+                <a class="inventory-item" data-status="${item.status}" id="item"
+                    href="?action=dashboard&type=vendor&level=viewitem">
+
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrPIrGNpAYW5S2dqvyIS9v4ze5k3oRDVYmSg&s"
+                        class="item-image">
+
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div>
+                                <h3 class="item-name">Men's watches|Swiss watch</h3>
+
+                            </div>
+
+                        </div>
+
+                        <div class="item-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Price</span>
+                                <span class="detail-value">$120</span>
+                            </div>
+
+
+                        </div>
+
+                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
+                        <div class="item-actions">
+                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
+                                cart</button>
+
+                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
+                                wishlist</button>
+                        </div>
+
+                    </div>
+                </a>
+
+                <a class="inventory-item" data-status="${item.status}" id="item"
+                    href="?action=dashboard&type=vendor&level=viewitem">
+
+                    <img src="https://img.drz.lazcdn.com/static/lk/p/3013f094949c0a6664c34a01d203b134.jpg_720x720q80.jpg"
+                        class="item-image">
+
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div>
+                                <h3 class="item-name">I Love you with customized name gift mug cup</h3>
+
+                            </div>
+
+                        </div>
+
+                        <div class="item-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Price</span>
+                                <span class="detail-value">$120</span>
+                            </div>
+
+
+                        </div>
+
+                        <p style="font-size: 12px; color: #6b7280; margin-bottom: 16px;">Discription</p>
+                        <div class="item-actions">
+                            <button class="btn1 btn-outline btn-small" onclick="editItem(${item.id})">Add to
+                                cart</button>
+
+                            <button class="btn1 btn-danger btn-small" onclick="deleteItem(${item.id})">Add to
+                                wishlist</button>
+                        </div>
+
+                    </div>
+                </a>
+
+                  <a class="inventory-item" data-status="${item.status}" id="item"
+                    href="?action=dashboard&type=vendor&level=viewitem">
+
+                    <img src="https://img.drz.lazcdn.com/static/lk/p/3013f094949c0a6664c34a01d203b134.jpg_720x720q80.jpg"
+                        class="item-image">
+
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div>
+                                <h3 class="item-name">I Love you with customized name gift mug cup</h3>
+
                             </div>
 
                         </div>
