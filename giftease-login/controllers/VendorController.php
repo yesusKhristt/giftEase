@@ -1,6 +1,12 @@
 <?php
 class VendorController
 {
+    private $model;
+
+    public function __construct()
+    {
+        $this->model = new VendorModel();
+    }
     public function dashboard()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'vendor') {
@@ -49,5 +55,30 @@ class VendorController
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
                 break;
         }
+    }
+
+
+    public function addProduct()
+    {
+        $error = '';
+        $success = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = $_POST['name'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
+
+            $this->model->addUser([
+                'name' => $name,
+                'email' => $email,
+                'password' => $hashedPassword,
+                'type' => $type
+            ]);
+            $success = '✅ Account created. Please log in.';
+            header("Location: index.php?action=login&type=$type###");
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Signup/signupClient.php'; //add item goes here
     }
 }

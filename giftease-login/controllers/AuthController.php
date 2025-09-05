@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../models/UserModel.php';
+
 
 class AuthController
 {
@@ -8,6 +8,7 @@ class AuthController
 
     public function __construct()
     {
+        
         $this->model = new UserModel();
     }
      public function landing(){
