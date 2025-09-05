@@ -25,21 +25,16 @@ class UserModel
         $this->pdo->exec($sql);
     }
 
-
-    public function __construct()
+    public function getpdo()
     {
-        $host = 'localhost';
-        $db = 'giftease';
-        $user = 'root';
-        $pass = '';
+        return $this->pdo;
+    }
 
-        try {
-            $this->pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->createTableIfNotExists(); // Create the table if not there
-        } catch (PDOException $e) {
-            die("❌ Database connection failed: " . $e->getMessage());
-        }
+
+    public function __construct($pdo)
+    {
+        $this->pdo = $pdo;
+        $this->createTableIfNotExists(); // Create the table if not there
     }
 
 

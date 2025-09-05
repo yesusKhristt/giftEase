@@ -7,6 +7,7 @@ class ProductsModel
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+        $this->createTableIfNotExists(); // Create the table if not there
     }
 
     public function createTableIfNotExists()
@@ -47,13 +48,13 @@ class ProductsModel
 
     public function addProduct($data)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, created_at) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
         return $stmt->execute([
             $data['vendor_id'],
             $data['name'],
             $data['price'], // already hashed
             $data['description'],
-            $data['created_at']
+            
         ]);
 
     }

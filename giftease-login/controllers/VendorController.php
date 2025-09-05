@@ -3,9 +3,10 @@ class VendorController
 {
     private $model;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        $this->model = new VendorModel();
+        require_once __DIR__ . '/../models/VendorModel.php';
+        $this->model = new VendorModel($pdo);
     }
     public function dashboard()
     {
@@ -60,25 +61,11 @@ class VendorController
 
     public function addProduct()
     {
+        require_once __DIR__ . "controllers/ProductController.php";
+        $prodController = new ProductController($this->model->getpdo());
         $error = '';
         $success = '';
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'] ?? '';
-            $email = $_POST['email'] ?? '';
-            $password = $_POST['password'] ?? '';
-
-            $this->model->addUser([
-                'name' => $name,
-                'email' => $email,
-                'password' => $hashedPassword,
-                'type' => $type
-            ]);
-            $success = '✅ Account created. Please log in.';
-            header("Location: index.php?action=login&type=$type###");
-            exit;
-        }
-
-        require_once __DIR__ . '/../views/Signup/signupClient.php'; //add item goes here
+        $prodController->addProduct();
     }
 }

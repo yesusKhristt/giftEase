@@ -6,6 +6,12 @@ class VendorModel
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+        $this->createTableIfNotExists(); // Create the table if not there
+    }
+
+    public function getpdo()
+    {
+        return $this->pdo;
     }
 
     public function createTableIfNotExists()
@@ -23,7 +29,6 @@ class VendorModel
 
         try {
             $this->pdo->exec($sql1);
-            echo "Clients table created successfully.<br>";
 
         } catch (PDOException $e) {
             die("❌ Error creating tables: " . $e->getMessage());

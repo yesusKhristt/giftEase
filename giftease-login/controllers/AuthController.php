@@ -6,10 +6,10 @@ class AuthController
 {
     private $model;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        
-        $this->model = new UserModel();
+        require_once __DIR__ . '/../models/UserModel.php';
+        $this->model = new UserModel($pdo);
     }
      public function landing(){
         require_once __DIR__ . '/../views/LandingPage/landingPage.php';
@@ -30,6 +30,7 @@ class AuthController
             $user = $this->model->authenticate($email, $password, $type);
             if ($user) {
                 $_SESSION['user'] = $user;
+                $_SESSION['pdo'] = $this->model->getpdo();
 
                 // 🔑 Navigation happens here
                 switch ($user['type']) {
