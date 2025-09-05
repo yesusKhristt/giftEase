@@ -1,9 +1,9 @@
 <?php
 session_start();
-
+//BYOP!
 // 1. Get controller & action from URL
 $controllerName = $_GET['controller'] ?? 'auth';   // default to AuthController
-$actionName = $_GET['action'] ?? 'handleLogin';      // default action
+$actionName = $_GET['action'] ?? 'landing';      // default action
 $urlParts = explode('/', trim($actionName, '/'));
 $function = $urlParts[0];
 

@@ -10,6 +10,9 @@ class AuthController
     {
         $this->model = new UserModel();
     }
+     public function landing(){
+        require_once __DIR__ . '/../views/LandingPage/landingPage.php';
+     }
 
     public function handleLogin()
     {
