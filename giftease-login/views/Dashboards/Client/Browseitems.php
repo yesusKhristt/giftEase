@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delivery Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/Dilma/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -61,7 +61,7 @@
                         <div class="item-header">
                             <div>
                                 <h3 class="item-name">Chocolate</h3>
-                                <p class="item-category">Sweets</p>
+
                             </div>
 
                         </div>
@@ -95,8 +95,8 @@
                     <div class="item-content">
                         <div class="item-header">
                             <div>
-                                <h3 class="item-name">Chocolate</h3>
-                                <p class="item-category">Sweets</p>
+                                <h3 class="item-name">Glass Rose Flower</h3>
+
                             </div>
 
                         </div>
@@ -104,7 +104,7 @@
                         <div class="item-details">
                             <div class="detail-item">
                                 <span class="detail-label">Price</span>
-                                <span class="detail-value">$120</span>
+                                <span class="detail-value">$200</span>
                             </div>
 
 
@@ -130,8 +130,8 @@
                     <div class="item-content">
                         <div class="item-header">
                             <div>
-                                <h3 class="item-name">Chocolate</h3>
-                                <p class="item-category">Sweets</p>
+                                <h3 class="item-name">I Love you with customized name gift mug cup</h3>
+
                             </div>
 
                         </div>
