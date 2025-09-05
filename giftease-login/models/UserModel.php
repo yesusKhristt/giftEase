@@ -3,6 +3,13 @@
 class UserModel
 {
     private $pdo;
+    private int $id;
+    private string $name;
+    private string $email;
+    private string $passwordHash;
+    private string $type; // 'client', 'vendor', etc.
+    private ?string $profileImage;
+    private array $orderHistory = [];
 
     private function createTableIfNotExists()
     {
@@ -43,6 +50,11 @@ class UserModel
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password']) && $type == $user['type']) {
+            $this->id = $user['id'];
+            $this->name = $user['name'];
+            $this->email = $user['email'];
+            $this->passwordHash = $user['password'];
+            $this->type = $user['type'];
             return $user;
         }
         return null;
@@ -64,7 +76,7 @@ class UserModel
             $data['password'], // already hashed
             $data['type']
         ]);
-        
+
     }
 }
 
