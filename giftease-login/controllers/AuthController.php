@@ -38,7 +38,7 @@ class AuthController
                         header("Location: index.php?controller=client&action=dashboard/primary");
                         exit;
                     case 'vendor':
-                        header("Location: index.php?controller=vendor&action=dashboard/primary");
+                        header("Location: index.php?controller=vendor&action=checkID/primary");
                         exit;
                     case 'admin':
                         header("Location: index.php?controller=admin&action=dashboard/primary");

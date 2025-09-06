@@ -16,13 +16,17 @@ class VendorController
         $user = $_SESSION['user'];
         $user_id = $user['id'];
 
-        $stmt = $this->model->getpdo()->prepare("SELECT * FROM vendors WHERE id = $user_id");
-        $exists = $stmt->fetchColumn();
+        $stmt = $this->model->getpdo()->prepare("SELECT COUNT(*) FROM vendors WHERE user_id = ?");
+        $stmt->execute([$user_id]);
 
-        if ($exists) {
-            $this->dashboard();
-        } else {
+        $exists = (int)$stmt->fetchColumn();
+        var_dump($exists);
+
+        if (!$exists) {
             $this->employeeForm($user_id);
+        } else {
+            header("Location: index.php?controller=vendor&action=dashboard/primary");
+            exit;
         }
 
     }
@@ -30,10 +34,15 @@ class VendorController
     public function employeeForm($user_id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $phone = $_POST['phone'] ?? '';
+            $shopname = $_POST['shopName'] ?? '';
+            $address = $_POST['address'] ?? '';
 
-
-            $this->model->addVendor($user_id);
+            $this->model->addVendor($user_id, $shopname, $phone, $address);
+            header("Location: index.php?controller=vendor&action=dashboard/primary");
+            exit;
         }
+        require_once __DIR__ . '/../views/commonElements/extendedFrom.php';
     }
     public function dashboard()
     {

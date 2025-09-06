@@ -20,6 +20,7 @@ class VendorModel
         CREATE TABLE IF NOT EXISTS vendors (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
+            shopName VARCHAR(50) NOT NULL,
             phone VARCHAR(20),
             address VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -35,13 +36,11 @@ class VendorModel
         }
     }
 
-    public function addVendor($data)
+    public function addVendor($user_id, $shopname, $phone, $address)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO vendors (user_id, phone, address, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)");
+        $stmt = $this->pdo->prepare("INSERT INTO vendors (user_id, shopName, phone, address, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
         return $stmt->execute([
-            $data['id'],
-            $data['phone'],
-            $data['address'], // already hashed
+            $user_id, $shopname, $phone, $address
         ]);
 
     }
