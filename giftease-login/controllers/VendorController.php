@@ -1,6 +1,13 @@
 <?php
 class VendorController
 {
+    private $model;
+
+    public function __construct($pdo)
+    {
+        require_once __DIR__ . '/../models/VendorModel.php';
+        $this->model = new VendorModel($pdo);
+    }
     public function dashboard()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'vendor') {
@@ -49,5 +56,16 @@ class VendorController
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
                 break;
         }
+    }
+
+
+    public function addProduct()
+    {
+        require_once __DIR__ . "controllers/ProductController.php";
+        $prodController = new ProductController($this->model->getpdo());
+        $error = '';
+        $success = '';
+
+        $prodController->addProduct();
     }
 }
