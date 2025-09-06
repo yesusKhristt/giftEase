@@ -66,8 +66,8 @@
 
 
             <div style="display: flex; gap: 15px;">
-                <button class="btn1" onclick="updateProfile()">Update Profile</button>
-                <button class="btn1" onclick="changePassword()">Change Password</button>
+                <a href="?controller=client&action=dashboard/editProfile" class="btn1" onclick="updateProfile()">Update Profile</a>
+                <a class="btn1" onclick="changePassword()">Change Password</a>
             </div>
         </div>
 

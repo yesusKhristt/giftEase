@@ -18,8 +18,8 @@
         include 'views/commonElements/leftSidebarDilma.php';
         ?>
         <div class="main-content">
-            
-        
+
+
             <div class="page-header">
                 <h1 class="title">Settings</h1>
                 <p class="subtitle">Manage your account preferences and delivery settings.</p>
@@ -42,66 +42,57 @@
                         placeholder="Enter your email" />
                 </div>
 
-                <div class="settings-section">
-                    <h3>Vendor Information</h3>
 
+
+            </div>
+
+            <div class="settings-section">
+                <h3>Payment Information</h3>
+                <div class="form-group">
+                    <label class="form-label">Bank Account Number</label>
+                    <input type="text" class="form-input" value="---1234" placeholder="Enter account number" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Shipping Address</label>
+                    <input type="text" class="form-input" value="021000021" placeholder="Enter routing number" />
                 </div>
 
-                <div class="settings-section">
-                    <h3>Notification Preferences</h3>
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <span>New order notifications</span>
-                        <div class="toggle-switch active" onclick="toggleNotification(this)">
-                            <div class="toggle-slider"></div>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <span>Text update alerts</span>
-                        <div class="toggle-switch active" onclick="toggleNotification(this)">
-                            <div class="toggle-slider"></div>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                        <span>Customer rating notifications</span>
-                        <div class="toggle-switch" onclick="toggleNotification(this)">
-                            <div class="toggle-slider"></div>
-                        </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Notification Preferences</h3>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <span>New order notifications</span>
+                    <div class="toggle-switch active" onclick="toggleNotification(this)">
+                        <div class="toggle-slider"></div>
                     </div>
                 </div>
-
-                <div class="settings-section">
-                    <h3>Payment Information</h3>
-                    <div class="form-group">
-                        <label class="form-label">Bank Account Number</label>
-                        <input type="text" class="form-input" value="---1234"
-                            placeholder="Enter account number" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Routing Number</label>
-                        <input type="text" class="form-input" value="021000021" placeholder="Enter routing number" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Payment Schedule</label>
-                        <select class="form-select">
-                            <option>Weekly</option>
-                            <option>Bi-weekly</option>
-                            <option>Monthly</option>
-                        </select>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <span>Text update alerts</span>
+                    <div class="toggle-switch active" onclick="toggleNotification(this)">
+                        <div class="toggle-slider"></div>
                     </div>
                 </div>
-
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn1" onclick="saveSettings()">Save Changes</button>
-                    <button class="btn1" onclick="resetSettings()">Reset</button>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <span>Customer rating notifications</span>
+                    <div class="toggle-switch" onclick="toggleNotification(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- </div> -->
-
-
-
+            <div style="display: flex; gap: 15px;">
+                <button class="btn1" onclick="saveSettings()">Save Changes</button>
+                <button class="btn1" onclick="resetSettings()">Reset</button>
+            </div>
         </div>
-        
+
+        <!-- </div> -->
+
+
+
+    </div>
+
 </body>
 
 </html>
