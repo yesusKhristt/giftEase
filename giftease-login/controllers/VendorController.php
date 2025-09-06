@@ -8,6 +8,33 @@ class VendorController
         require_once __DIR__ . '/../models/VendorModel.php';
         $this->model = new VendorModel($pdo);
     }
+
+
+
+    public function checkID()
+    {
+        $user = $_SESSION['user'];
+        $user_id = $user['id'];
+
+        $stmt = $this->model->getpdo()->prepare("SELECT * FROM vendors WHERE id = $user_id");
+        $exists = $stmt->fetchColumn();
+
+        if ($exists) {
+            $this->dashboard();
+        } else {
+            $this->employeeForm($user_id);
+        }
+
+    }
+
+    public function employeeForm($user_id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+
+            $this->model->addVendor($user_id);
+        }
+    }
     public function dashboard()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'vendor') {

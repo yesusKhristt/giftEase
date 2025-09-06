@@ -34,4 +34,15 @@ class VendorModel
             die("❌ Error creating tables: " . $e->getMessage());
         }
     }
+
+    public function addVendor($data)
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO vendors (user_id, phone, address, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)");
+        return $stmt->execute([
+            $data['id'],
+            $data['phone'],
+            $data['address'], // already hashed
+        ]);
+
+    }
 }
