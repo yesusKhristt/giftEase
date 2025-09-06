@@ -29,7 +29,7 @@
           placeholder="Email" class="textbox" required> <input type="password" name="password" id="password"
           placeholder="Password" class="textbox" required> <input type="password" name="passwordC" id="confirmPassword"
           placeholder="Confirm Password" class="textbox" required> <button type="submit" class="btn2">Sign Up</button>
-        <a href="?action=handleLogin&type=admin" class="btn1" id="loginLink">Already have an account? Sign in</a>
+        <a href="?action=handleLogin&type=<?= htmlspecialchars($type) ?>" class="btn1" id="loginLink">Already have an account? Sign in</a>
       </form>
     </div>
     <script> const form = document.getElementById('signupForm'); const password = document.getElementById('password'); const confirmPassword = document.getElementById('confirmPassword'); const loginLink = document.getElementById('loginLink'); let roleSelect = document.getElementById('roleSelect'); let selectedRole = "client"; // default if (roleSelect) { selectedRole = roleSelect.value; // keep it updated when user changes selection roleSelect.addEventListener('change', () => { selectedRole = roleSelect.value; }); } // Password validation form.addEventListener('submit', function (e) { if (password.value !== confirmPassword.value) { e.preventDefault(); confirmPassword.classList.add('shake', 'error'); setTimeout(() => { confirmPassword.classList.remove('shake'); }, 300); return; } form.action = ?type=${selectedRole}&action=handleSignup; }); // On clicking "Sign In" link loginLink.addEventListener('click', function (e) { e.preventDefault(); window.location.href = ?type=${selectedRole}&action=handleLogin; }); // Set default selected value window.addEventListener('DOMContentLoaded', () => { roleSelect.value = "vendor"; }); </script>
