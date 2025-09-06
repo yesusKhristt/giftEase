@@ -10,10 +10,9 @@ class AuthController
     {
         $this->model = new UserModel();
     }
-    public function landing()
-    {
+     public function landing(){
         require_once __DIR__ . '/../views/LandingPage/landingPage.php';
-    }
+     }
 
     public function handleLogin()
     {
@@ -59,8 +58,14 @@ class AuthController
         }
 
         // Load different views based on user type
-        require_once __DIR__ . '/../views/Login/login.php';
-
+        switch ($type) {
+            case 'client':
+                require_once __DIR__ . '/../views/Login/loginClient.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Login/loginStaff.php';
+                break;
+        }
     }
 
     public function handleSignup()
@@ -91,7 +96,14 @@ class AuthController
                 exit;
             }
         }
-        require_once __DIR__ . '/../views/Signup/signup.php';
+        switch ($type) {
+            case 'client':
+                require_once __DIR__ . '/../views/Signup/signupClient.php';
+                break;
+            default:
+                require_once __DIR__ . '/../views/Signup/signupStaff.php';
+                break;
+        }
     }
 
     public function monitorDashboards()
