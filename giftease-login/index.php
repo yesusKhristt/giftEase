@@ -1,6 +1,6 @@
 <?php
 session_start();
-//BYOP!
+
 // 1. Get controller & action from URL
 $controllerName = $_GET['controller'] ?? 'auth';   // default to AuthController
 $actionName = $_GET['action'] ?? 'landing';      // default action
@@ -18,23 +18,8 @@ if (file_exists($controllerFile)) {
     die("Controller $controllerClass not found!");
 }
 
-$host = 'localhost';
-$db = 'giftease';
-$user = 'root';
-$pass = '';
-$pdo;
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("❌ Database connection failed: " . $e->getMessage());
-}
-
-
 // 4. Create controller instance
-
-$controller = new $controllerClass($pdo);
+$controller = new $controllerClass();
 
 //YOU STOPPED HEREEE ##############
 

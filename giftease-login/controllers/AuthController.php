@@ -1,19 +1,19 @@
 <?php
 
-
+require_once __DIR__ . '/../models/UserModel.php';
 
 class AuthController
 {
     private $model;
 
-    public function __construct($pdo)
+    public function __construct()
     {
-        require_once __DIR__ . '/../models/UserModel.php';
-        $this->model = new UserModel($pdo);
+        $this->model = new UserModel();
     }
-     public function landing(){
+    public function landing()
+    {
         require_once __DIR__ . '/../views/LandingPage/landingPage.php';
-     }
+    }
 
     public function handleLogin()
     {
@@ -30,7 +30,6 @@ class AuthController
             $user = $this->model->authenticate($email, $password, $type);
             if ($user) {
                 $_SESSION['user'] = $user;
-                $_SESSION['pdo'] = $this->model->getpdo();
 
                 // 🔑 Navigation happens here
                 switch ($user['type']) {
@@ -60,14 +59,8 @@ class AuthController
         }
 
         // Load different views based on user type
-        switch ($type) {
-            case 'client':
-                require_once __DIR__ . '/../views/Login/loginClient.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Login/loginStaff.php';
-                break;
-        }
+        require_once __DIR__ . '/../views/Login/login.php';
+
     }
 
     public function handleSignup()
@@ -98,14 +91,7 @@ class AuthController
                 exit;
             }
         }
-        switch ($type) {
-            case 'client':
-                require_once __DIR__ . '/../views/Signup/signupClient.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Signup/signupStaff.php';
-                break;
-        }
+        require_once __DIR__ . '/../views/Signup/signup.php';
     }
 
     public function monitorDashboards()
