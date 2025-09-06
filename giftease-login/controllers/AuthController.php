@@ -10,9 +10,10 @@ class AuthController
     {
         $this->model = new UserModel();
     }
-     public function landing(){
+    public function landing()
+    {
         require_once __DIR__ . '/../views/LandingPage/landingPage.php';
-     }
+    }
 
     public function handleLogin()
     {
@@ -26,7 +27,8 @@ class AuthController
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             $type = $_GET['type'] ?? 'client';
-            $user = $this->model->authenticate($email, $password, $type);
+            $role= $_POST['role'] ?? '';
+            $user = $this->model->authenticate($email, $password, $role);
             if ($user) {
                 $_SESSION['user'] = $user;
 
@@ -58,14 +60,10 @@ class AuthController
         }
 
         // Load different views based on user type
-        switch ($type) {
-            case 'client':
-                require_once __DIR__ . '/../views/Login/loginClient.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Login/loginStaff.php';
-                break;
-        }
+
+        require_once __DIR__ . '/../views/Login/login.php';
+
+
     }
 
     public function handleSignup()
@@ -79,6 +77,7 @@ class AuthController
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
+            $role = $_POST['role'] ?? '';
 
 
             if ($this->model->getUserByEmail($email)) {
@@ -89,21 +88,16 @@ class AuthController
                     'name' => $name,
                     'email' => $email,
                     'password' => $hashedPassword,
-                    'type' => $type
+                    'type' => $role
                 ]);
                 $success = '✅ Account created. Please log in.';
-                header("Location: index.php?action=login&type=$type###");
+                header("Location: index.php?action=handleLogin&type=$type");
                 exit;
             }
         }
-        switch ($type) {
-            case 'client':
-                require_once __DIR__ . '/../views/Signup/signupClient.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Signup/signupStaff.php';
-                break;
-        }
+
+        require_once __DIR__ . '/../views/Signup/signup.php';
+
     }
 
     public function monitorDashboards()
