@@ -133,9 +133,8 @@
 
 
                         <div class="action-buttons" style="margin-top: 1rem;">
-                            <button class="btn1" onclick="clearCart()">🗑️ Clear Cart</button>
-                            <button class="btn1" style="flex: 1;" onclick="openCheckout()">🛒 Proceed to
-                                Checkout</button>
+                            <a href="" class="btn1" onclick="clearCart()">🗑️ Clear Cart</a>
+                            <a  href="" class="btn1" style="flex: 1;" onclick="openCheckout()">🛒 Proceed to Checkout</a>
                         </div>
                     </div>
                 </div>
