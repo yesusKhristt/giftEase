@@ -41,7 +41,7 @@
                                 First Name
                             </td>
                             <td colspan="2">
-                                <input type="text" id="first_name" name="first_name" placeholder="First Name">
+                                <input type="text" id="first_name" name="first_name" placeholder="First Name" value="<?php echo htmlspecialchars($user2['first_name']); ?>">
                             </td>
 
 
@@ -51,34 +51,22 @@
                                 Last Name
                             </td>
                             <td colspan="2">
-                                <input type="text" id="last_name" name="last_name" placeholder="Last Name">
+                                <input type="text" id="last_name" name="last_name" placeholder="Last Name" value="<?php echo htmlspecialchars($user2['last_name']); ?>">
                             </td>
                         </tr>
                         <tr>
                             <td class="subtitle">Email</td>
                             <td colspan="2">
-                                <input type="email" id="email" name="email" placeholder="Email">
+                                <input type="email" id="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($user1['email']); ?>" readonly>
                             </td>
                         </tr>
                         <tr>
                             <td class="subtitle">Mobile Phone number</td>
                             <td colspan="2">
-                                <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number">
+                                <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number" value="<?php echo htmlspecialchars($user2['phone']); ?>">
                             </td>
                         </tr>
-                        <tr>
-                            <td class="subtitle">Current Password</td>
-                            <td colspan="2">
-                                <input type="password" id="current_password" name="current_password" placeholder="Current Password">
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="subtitle">New Password</td>
-                            <td colspan="2">
-                                <input type="password" id="new_password" name="new_password" placeholder="New Password">
-                            </td>
-                        </tr>
+                        
 
                     </table>
 

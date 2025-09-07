@@ -17,10 +17,11 @@ class VendorModel
     public function createTableIfNotExists()
     {
         $sql1 = "
-        CREATE TABLE IF NOT EXISTS vendors (
+        CREATE TABLE IF NOT EXISTS clients (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
-            shopName VARCHAR(50) NOT NULL,
+            first_Name VARCHAR(50) NOT NULL,
+            last_Name VARCHAR(50) NOT NULL,
             phone VARCHAR(20),
             address VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

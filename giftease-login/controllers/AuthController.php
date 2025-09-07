@@ -35,7 +35,7 @@ class AuthController
                 // 🔑 Navigation happens here
                 switch ($user['type']) {
                     case 'client':
-                        header("Location: index.php?controller=client&action=dashboard/primary");
+                        header("Location: index.php?controller=client&action=checkID/primary");
                         exit;
                     case 'vendor':
                         header("Location: index.php?controller=vendor&action=checkID/primary");
