@@ -15,7 +15,7 @@
     <div class="container">
         <?php
         $activePage = 'tracking';
-        include 'views/commonElements/leftSidebarDilma.php';
+        include 'views/commonElements/leftSidebar.php';
         ?>
         
             <div class="main-content">

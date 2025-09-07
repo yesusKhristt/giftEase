@@ -15,7 +15,7 @@
     <div class="container">
         <?php
         $activePage = 'customize';
-        include 'views/commonElements/leftSidebarDilma.php';
+        include 'views/commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
             <div class="page-header">

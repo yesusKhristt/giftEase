@@ -15,7 +15,7 @@
     <div class="container">
         <?php
         $activePage = 'cart';
-        include 'views/commonElements/leftSidebarDilma.php';
+        include 'views/commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
             <div class="page-header">
@@ -133,8 +133,9 @@
 
 
                         <div class="action-buttons" style="margin-top: 1rem;">
-                            <a href="" class="btn1" onclick="clearCart()">🗑️ Clear Cart</a>
-                            <a  href="" class="btn1" style="flex: 1;" onclick="openCheckout()">🛒 Proceed to Checkout</a>
+                            <button class="btn1" onclick="clearCart()">🗑️ Clear Cart</button>
+                            <button class="btn1" style="flex: 1;" onclick="openCheckout()">🛒 Proceed to
+                                Checkout</button>
                         </div>
                     </div>
                 </div>

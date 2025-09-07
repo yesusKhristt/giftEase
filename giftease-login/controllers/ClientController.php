@@ -43,12 +43,6 @@ class ClientController
             case 'viewitem':
                 require_once __DIR__ . '/../views/Dashboards/Client/ViewItem.php';
                 break;
-            case 'editProfile':
-                require_once __DIR__ . '/../views/Dashboards/Client/edit.php';
-                break;
-            case 'Checkout':
-                require_once __DIR__ . '/../views/Dashboards/Client/checkout.php';
-                break;
             default:
                 require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
                 break;

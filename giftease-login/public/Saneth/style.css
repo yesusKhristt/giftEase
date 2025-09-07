@@ -1034,7 +1034,10 @@ body {
   font-size: 0.8rem;
 }
 
-
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
 
 /* Notifications */
 .notification-item {

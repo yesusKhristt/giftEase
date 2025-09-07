@@ -15,18 +15,31 @@
       <img src="resources/ge5.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease</span>
-        <p>Staff Sign Up</p>
+        <p>
+          <?php $type = $_GET['type'] ?? 'client';
+          if ($type != 'client') {
+            echo 'Staff ';
+          }
+          ?>Sign Up
+        </p>
       </div>
     </div>
     <div>
       <form method="POST" action="" id="signupForm">
-        <select name="role" id="roleSelect">
-          <option value="vendor">Vendor</option>
-          <option value="admin">Admin</option>
-          <option value="delivery">Delivery</option>
-          <option value="deliveryman">Delivery Man</option>
-          <option value="giftWrapper">Gift Wrapper</option>
-        </select>
+        <?php
+        $type = $_GET['type'] ?? 'client';
+        if ($type != 'client') {
+          echo '<select name="role" id="roleSelect">
+                  <option value="vendor">Vendor</option>
+                  <option value="admin">Admin</option>
+                  <option value="delivery">Delivery</option>
+                  <option value="deliveryman">Delivery Man</option>
+                  <option value="giftWrapper">Gift Wrapper</option>
+                </select>';
+        } else {
+          echo '<input type="hidden" name="role" value="client">';
+        }
+        ?>
         <input type="text" name="name" placeholder="Name" class="textbox" required>
         <input type="email" name="email" placeholder="Email" class="textbox" required>
         <input type="password" name="password" id="password" placeholder="Password" class="textbox" required>
@@ -40,8 +53,17 @@
       const form = document.getElementById('signupForm');
       const password = document.getElementById('password');
       const confirmPassword = document.getElementById('confirmPassword');
-      const roleSelect = document.getElementById('roleSelect');
       const loginLink = document.getElementById('loginLink');
+      let roleSelect = document.getElementById('roleSelect');
+      let selectedRole = "client"; // default
+
+      if (roleSelect) {
+        selectedRole = roleSelect.value;
+        // keep it updated when user changes selection
+        roleSelect.addEventListener('change', () => {
+          selectedRole = roleSelect.value;
+        });
+      }
 
       // Password validation
       form.addEventListener('submit', function (e) {
@@ -53,15 +75,12 @@
           }, 300);
           return;
         }
-
-        const selectedRole = roleSelect.value;
         form.action = `?type=${selectedRole}&action=handleSignup`;
       });
 
       // On clicking "Sign In" link
       loginLink.addEventListener('click', function (e) {
         e.preventDefault();
-        const selectedRole = roleSelect.value;
         window.location.href = `?type=${selectedRole}&action=handleLogin`;
       });
 
