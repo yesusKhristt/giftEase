@@ -126,13 +126,18 @@ class ClientController
     }
 
 
-    public function addProduct()
-    {
-        require_once __DIR__ . "controllers/ProductController.php";
-        $prodController = new ProductController($this->model->getpdo());
-        $error = '';
-        $success = '';
+   public function deleteProfile(){
+    $USER_ID = $_SESSION['user']['id'];
+    $stmt1 = $this->model->getpdo()->prepare('SELECT * FROM users WHERE id = ?');
+    $stmt1->execute([$USER_ID]);
+    $stmt2 = $this->model->getpdo()->prepare('SELECT * FROM clients WHERE user_id = ?');
+    $stmt2->execute([$USER_ID]);
 
-        $prodController->addProduct();
-    }
-}
+
+    $this->model->deleteClient($USER_ID);
+    header("Location: index.php");
+            exit;
+
+
+   }
+}  

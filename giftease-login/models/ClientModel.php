@@ -36,8 +36,7 @@ class ClientModel
 
         try {
             $this->pdo->exec($clientSql);
-            echo "Clients table created successfully.<br>";
-
+           
         } catch (PDOException $e) {
             die("❌ Error creating tables: " . $e->getMessage());
         }
@@ -69,22 +68,15 @@ class ClientModel
             $user_id
         ]);
     }
+
+    public function deleteClient($user_id)
+    {
+        $stmt = $this->pdo->prepare("DELETE  FROM users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $stmt = $this->pdo->prepare("DELETE FROM clients WHERE user_id = ?");
+        return $stmt->execute([$user_id]);
+    }
 }
 
-// --- Usage example ---
-$host = 'localhost';
-$db = 'giftease';
-$user = 'root';
-$pass = '';
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $clientModel = new ClientModel($pdo);
-    $clientModel->createTables();
-
-} catch (PDOException $e) {
-    die("❌ Database connection failed: " . $e->getMessage());
-}
 ?>

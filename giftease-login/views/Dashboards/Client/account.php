@@ -44,19 +44,19 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
                         <label class="subtitle">Full Name</label>
-                        <input type="text" class="form-input" value="Saneth Tharushika" readonly />
+                        <input type="text" class="form-input" value="<?php echo htmlspecialchars($user2['first_name']); ?>" readonly />
                     </div>
                     <div class="form-group">
                         <label class="subtitle">Email</label>
-                        <input type="email" class="form-input" value="sanethsiriwardhana@gmail.com" readonly />
+                        <input type="email" class="form-input" value="<?php echo htmlspecialchars($user2['email']); ?>" readonly />
                     </div>
                     <div class="form-group">
                         <label class="subtitle">Phone</label>
-                        <input type="tel" class="form-input" value="+94 761694206" />
+                        <input type="tel" class="form-input" value="<?php echo htmlspecialchars($user2['phone']); ?>" readonly />
                     </div>
                     <div class="form-group">
                         <label class="subtitle">Emergency Contact</label>
-                        <input type="tel" class="form-input" value="+94 761694206" />
+                        <input type="tel" class="form-input" value="" />
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
 
             <div style="display: flex; gap: 15px;">
                 <a href="?controller=client&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update Profile</a>
-                <a class="btn1" onclick="changePassword()">Change Password</a>
+                <a href="?controller=client&action=deleteProfile" class="btn1" onclick="deleteProfile()">Delete Profile</a>
             </div>
         </div>
 
