@@ -38,9 +38,9 @@ class ClientController
             $LAST_NAME = $_POST['last_name'] ?? '';
             $PHONE = $_POST['phone'] ?? '';
             $ADDRESS = $_POST['address'] ?? '';
-            $EMAIL = $_POST['email'] ?? '';
+            
 
-            $this->model->addClient($user_id, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS, $EMAIL);
+            $this->model->addClient($user_id, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS );
             header("Location: index.php?controller=client&action=dashboard/primary");
             exit;
         }
@@ -80,7 +80,7 @@ class ClientController
                 require_once __DIR__ . '/../views/Dashboards/Client/payment.php';
                 break;
             case 'account':
-                require_once __DIR__ . '/../views/Dashboards/Client/account.php';
+                $this->account();
                 break;
             case 'settings':
                 require_once __DIR__ . '/../views/Dashboards/Client/settings.php';
@@ -114,9 +114,9 @@ class ClientController
             $LAST_NAME = $_POST['last_name'] ?? '';
             $PHONE = $_POST['phone'] ?? '';
             $ADDRESS = $_POST['address'] ?? '';
-            $EMAIL = $_POST['email'] ?? '';
+            
 
-            $this->model->updateClient($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS, $EMAIL);
+            $this->model->updateClient($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
         header("Location: index.php?controller=client&action=dashboard/account");
             exit;
 
@@ -139,5 +139,26 @@ class ClientController
             exit;
 
 
+   }
+
+   public function account() 
+   {
+        $USER_ID = $_SESSION['user']['id'];
+        $stmt1 = $this->model->getpdo()->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt2 = $this->model->getpdo()->prepare("SELECT * FROM clients WHERE user_id = ?");
+        $stmt1->execute([$USER_ID]);
+        $user1 = $stmt1->fetch();
+        $stmt2->execute([$USER_ID]);
+        $user2 = $stmt2->fetch();
+
+        $stmt3 = $this->model->getpdo()->prepare(
+            "SELECT DATE_FORMAT(c.created_at, '%d %M %Y') AS join_month_year 
+            FROM clients c
+            WHERE c.user_id = ?"
+        );
+        $stmt3->execute([$USER_ID]);
+        $joinData = $stmt3->fetch(PDO::FETCH_ASSOC);
+
+        require_once __DIR__ . '/../views/Dashboards/Client/account.php';
    }
 }  

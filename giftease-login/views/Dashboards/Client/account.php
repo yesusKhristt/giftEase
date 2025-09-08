@@ -29,8 +29,8 @@
                 <div class="profile-section">
                     <i class="profile-picture"></i>
                     <div class="">
-                        <h4>Thenuka Ranasinghe</h4>
-                        <p>client • Member since Jan 2025</p>
+                        <h4><?php echo htmlspecialchars($user2['first_name']) . ' ' . htmlspecialchars($user2['last_name']); ?></h4>
+                        <p>Member since <?php echo htmlspecialchars($joinData['join_month_year']); ?></p>
 
 
                     </div>
@@ -44,19 +44,28 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
                         <label class="subtitle">Full Name</label>
-                        <input type="text" class="form-input" value="<?php echo htmlspecialchars($user2['first_name']); ?>" readonly />
+                        <div type="text" class="form-input" >
+                        <?php echo htmlspecialchars($user2['first_name']); ?> <?php echo htmlspecialchars($user2['last_name']); ?>
+                        </div>
+
                     </div>
                     <div class="form-group">
                         <label class="subtitle">Email</label>
-                        <input type="email" class="form-input" value="<?php echo htmlspecialchars($user2['email']); ?>" readonly />
+                        <div type="email" class="form-input" >
+                            <?php echo htmlspecialchars($user1['email']); ?>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="subtitle">Phone</label>
-                        <input type="tel" class="form-input" value="<?php echo htmlspecialchars($user2['phone']); ?>" readonly />
+                        <div type="tel" class="form-input" >
+                            <?php echo htmlspecialchars($user2['phone']); ?>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="subtitle">Emergency Contact</label>
-                        <input type="tel" class="form-input" value="" />
+                        <div type="tel" class="form-input" >
+                            12918989261819
+                        </div>
                     </div>
                 </div>
             </div>
@@ -66,8 +75,10 @@
 
 
             <div style="display: flex; gap: 15px;">
-                <a href="?controller=client&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update Profile</a>
-                <a href="?controller=client&action=deleteProfile" class="btn1" onclick="deleteProfile()">Delete Profile</a>
+                <a href="?controller=client&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update
+                    Profile</a>
+                <a href="?controller=client&action=deleteProfile" class="btn1" onclick="deleteProfile()">Delete
+                    Profile</a>
             </div>
         </div>
 

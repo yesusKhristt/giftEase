@@ -25,8 +25,7 @@ class ClientModel
             user_id INT NOT NULL,
             first_name VARCHAR(50),
             last_name VARCHAR(50),
-            email VARCHAR(100),
-            phone VARCHAR(20),
+                        phone VARCHAR(20),
             address VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -36,35 +35,35 @@ class ClientModel
 
         try {
             $this->pdo->exec($clientSql);
-           
+
         } catch (PDOException $e) {
             die("❌ Error creating tables: " . $e->getMessage());
         }
     }
 
-    public function addClient($user_id, $first_name, $last_name, $phone, $address, $email)
+    public function addClient($user_id, $first_name, $last_name, $phone, $address)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO clients (user_id, first_name, last_name, phone, address, email, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
+        $stmt = $this->pdo->prepare("INSERT INTO clients (user_id, first_name, last_name, phone, address, created_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
         return $stmt->execute([
             $user_id,
             $first_name,
             $last_name,
             $phone,
-            $address,
-            $email
+            $address
+            
         ]);
 
     }
 
-    public function updateClient($user_id, $first_name, $last_name, $phone, $address, $email)
+    public function updateClient($user_id, $first_name, $last_name, $phone, $address)
     {
-        $stmt = $this->pdo->prepare("UPDATE clients SET first_name = ?, last_name = ?, phone = ?, address = ?, email = ? WHERE user_id = ?");
+        $stmt = $this->pdo->prepare("UPDATE clients SET first_name = ?, last_name = ?, phone = ?, address = ?,  WHERE user_id = ?");
         return $stmt->execute([
             $first_name,
             $last_name,
             $phone,
             $address,
-            $email,
+            
             $user_id
         ]);
     }
