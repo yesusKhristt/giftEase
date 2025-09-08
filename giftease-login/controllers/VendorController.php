@@ -81,7 +81,7 @@ class VendorController
             $shopname = $_POST['shopName'] ?? '';
             $address = $_POST['address'] ?? '';
 
-            $this->vendor->addVendor($user_id, $shopname, $phone, $address);
+            //$this->vendor->addVendor($user_id, $shopname, $phone, $address);
             header("Location: index.php?controller=vendor&action=dashboard/primary");
             exit;
         }
@@ -117,9 +117,10 @@ class VendorController
             // Update query
             if ($profilePicPath) {
                 // update including profile picture
-                $this->product->addProduct()
+                $this->product->addProduct();
 
             } else {
+                $this->product->addProduct();
                 // update without changing profile picture
             }
 
