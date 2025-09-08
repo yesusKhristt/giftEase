@@ -7,9 +7,9 @@ class VendorController
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/VendorModel.php';
-        require_once __DIR__ . '/../models/ProductModel.php';
+        // require_once __DIR__ . '/../models/ProductsModel.php';
         $this->vendor = new VendorModel($pdo);
-        $this->product = new ProductsModel($pdo);
+        // $this->product = new ProductsModel($pdo);
     }
 
     public function checkID()
