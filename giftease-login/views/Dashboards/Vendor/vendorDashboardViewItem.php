@@ -103,7 +103,7 @@
                 </div>
 
                 <div class="actions">
-                    <a class="btn1" href="?action=dashboard&type=vendor&level=edititem">Edit Item</a>
+                    <a class="btn1" href="?controller=vendor&action=dashboard/item/edit">Edit Item</a>
                     <a class="btn2" >Delete Item</a>
                 </div>
 

@@ -35,25 +35,36 @@ class ProductsModel
         );
          ";
 
+         $sql3 = "
+         CREATE TABLE IF NOT EXISTS productImages (
+            product_id INT NOT NULL,
+            image_loc VARCHAR(100) NOT NULL,
+            PRIMARY KEY (product_id, category_id),
+            FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+        );
+        ";
+
         try {
             $this->pdo->exec($sql1);
             echo "Products table created successfully.<br>";
             $this->pdo->exec($sql2);
             echo "productCategories table created successfully.<br>";
+            $this->pdo->exec($sql3);
+            echo "productImages table created successfully.<br>";
 
         } catch (PDOException $e) {
             die("❌ Error creating tables: " . $e->getMessage());
         }
     }
 
-    public function addProduct($data)
+    public function addProduct($vendor_id, $name, $price, $description)
     {
         $stmt = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
         return $stmt->execute([
-            $data['vendor_id'],
-            $data['name'],
-            $data['price'], // already hashed
-            $data['description'],
+            $vendor_id,
+            $name,
+            $price, // already hashed
+            $description
             
         ]);
 

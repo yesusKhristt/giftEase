@@ -26,6 +26,7 @@
                 <button class="btn1" onclick="filterItems('all')">All Items</button>
                 <button class="btn1" onclick="filterItems('active')">Active</button>
                 <button class="btn1" onclick="filterItems('paused')">Paused</button>
+                <a href="?controller=vendor&action=dashboard/item/add" class="btn2">Add Item</a>
             </div>
 
             <!-- Inventory Grid -->
@@ -174,7 +175,7 @@
             }
 
             grid.innerHTML = filteredItems.map(item => `
-                <a class="inventory-item" data-status="${item.status}" id="item" href="?action=dashboard&type=vendor&level=viewitem">
+                <a class="inventory-item" data-status="${item.status}" id="item" href="?controller=vendor&action=dashboard/item/view">
                 
                     <img src="${item.image}" class="item-image">
                 

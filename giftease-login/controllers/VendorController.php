@@ -1,12 +1,15 @@
 <?php
 class VendorController
 {
-    private $model;
+    private $vendor;
+    private $product;
 
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/VendorModel.php';
-        $this->model = new VendorModel($pdo);
+        require_once __DIR__ . '/../models/ProductModel.php';
+        $this->vendor = new VendorModel($pdo);
+        $this->product = new ProductsModel($pdo);
     }
 
 
@@ -16,10 +19,10 @@ class VendorController
         $user = $_SESSION['user'];
         $user_id = $user['id'];
 
-        $stmt = $this->model->getpdo()->prepare("SELECT COUNT(*) FROM vendors WHERE user_id = ?");
+        $stmt = $this->vendor->getpdo()->prepare("SELECT COUNT(*) FROM vendors WHERE user_id = ?");
         $stmt->execute([$user_id]);
 
-        $exists = (int)$stmt->fetchColumn();
+        $exists = (int) $stmt->fetchColumn();
         var_dump($exists);
 
         if (!$exists) {
@@ -38,7 +41,7 @@ class VendorController
             $shopname = $_POST['shopName'] ?? '';
             $address = $_POST['address'] ?? '';
 
-            $this->model->addVendor($user_id, $shopname, $phone, $address);
+            $this->vendor->addVendor($user_id, $shopname, $phone, $address);
             header("Location: index.php?controller=vendor&action=dashboard/primary");
             exit;
         }
@@ -54,13 +57,83 @@ class VendorController
         $path = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
-        $this->Vendor($parts[1]);
+        $this->Vendor($parts);
+    }
+
+    public function handleitems($parts)
+    {
+        switch ($parts[2]) {
+            case 'view':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewItem.php';
+                break;
+            case 'edit':
+                $this->editItem($parts);
+                break;
+            case 'add':
+                $this->addItem($parts);
+                break;
+        }
+    }
+
+
+    public function editItem($parts)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $phone = $_POST['phone'] ?? '';
+            $shopname = $_POST['shopName'] ?? '';
+            $address = $_POST['address'] ?? '';
+
+            $this->vendor->addVendor($user_id, $shopname, $phone, $address);
+            header("Location: index.php?controller=vendor&action=dashboard/primary");
+            exit;
+        }
+        require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
+    }
+
+    public function addItem($parts)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = $_POST['title'];
+            $category = $_POST['category'];
+            $subcategory = $_POST['subcategory'];
+            $price = $_POST['price'];
+            $description = $_POST['description'];
+
+            // Handle file upload if user selected a new image
+            $profilePicPath = null;
+            if (!empty($_FILES['profile_pic']['name'])) {
+                $uploadDir = "resources/uploads/vendor/items"; // folder to save images
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                $fileName = time() . "_" . basename($_FILES['profile_pic']['name']);
+                $targetFile = $uploadDir . $fileName;
+
+                // Move uploaded file to target folder
+                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $targetFile)) {
+                    $profilePicPath = $targetFile;
+                }
+            }
+
+            // Update query
+            if ($profilePicPath) {
+                // update including profile picture
+                $this->product->addProduct()
+
+            } else {
+                // update without changing profile picture
+            }
+
+            echo "Profile updated successfully!";
+        }
+        require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
     }
 
 
     public function Vendor($parts)
     {
-        switch ($parts) {
+        switch ($parts[1]) {
             case 'inventory':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardInventory.php';
                 break;
@@ -79,8 +152,8 @@ class VendorController
             case 'settings':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardSettings.php';
                 break;
-            case 'viewitem':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewItem.php';
+            case 'item':
+                $this->handleitems($parts);
                 break;
             case 'vieworder':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewOrder.php';
@@ -92,16 +165,5 @@ class VendorController
                 require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
                 break;
         }
-    }
-
-
-    public function addProduct()
-    {
-        require_once __DIR__ . "controllers/ProductController.php";
-        $prodController = new ProductController($this->model->getpdo());
-        $error = '';
-        $success = '';
-
-        $prodController->addProduct();
     }
 }
