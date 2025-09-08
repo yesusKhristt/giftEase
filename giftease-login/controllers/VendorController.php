@@ -12,8 +12,6 @@ class VendorController
         $this->product = new ProductsModel($pdo);
     }
 
-
-
     public function checkID()
     {
         $user = $_SESSION['user'];
