@@ -17,11 +17,10 @@ class VendorModel
     public function createTableIfNotExists()
     {
         $sql1 = "
-        CREATE TABLE IF NOT EXISTS clients (
+        CREATE TABLE IF NOT EXISTS vendors (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
-            first_Name VARCHAR(50) NOT NULL,
-            last_Name VARCHAR(50) NOT NULL,
+            shopName VARCHAR(50) NOT NULL,
             phone VARCHAR(20),
             address VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -37,11 +36,22 @@ class VendorModel
         }
     }
 
+    public function getVendorID($id){
+
+        $stmt = $this->getpdo()->prepare("SELECT id FROM vendors WHERE user_id = ?");
+        $stmt->execute([$id]);
+
+        return $stmt->fetch()[0];
+    }
+
     public function addVendor($user_id, $shopname, $phone, $address)
     {
         $stmt = $this->pdo->prepare("INSERT INTO vendors (user_id, shopName, phone, address, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
         return $stmt->execute([
-            $user_id, $shopname, $phone, $address
+            $user_id,
+            $shopname,
+            $phone,
+            $address
         ]);
 
     }
