@@ -30,9 +30,37 @@
             </div>
 
             <!-- Inventory Grid -->
-            <div class="inventory-grid" id="inventoryGrid">
-                <!-- Items will be populated by JavaScript -->
+            <div class="inventory-grid">
+                <?php
+                foreach ($allProducts as $row) {
+                    ?>
+                    <a class="inventory-item" data-status="<?= htmlspecialchars($row['status']) ?>" id="item"
+                        href="?controller=vendor&action=dashboard/item/view/<?= $row['id'] ?>">
+                        <img src="resources/uploads/vendor/products/<?= htmlspecialchars($row['displayImage'] ?? 'default.png') ?>"
+                            class="item-image">
+
+                        <div class="item-content">
+                            <div class="item-header">
+                                <div>
+                                    <h3 class="item-name"><?= htmlspecialchars($row['name']) ?></h3>
+                                </div>
+                                <span
+                                    class="item-status status-<?= htmlspecialchars($row['status']) ?>"><?= htmlspecialchars($row['status']) ?></span>
+                            </div>
+
+                            <div class="item-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Price</span>
+                                    <span class="detail-value">Rs.<?= htmlspecialchars($row['price']) ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <?php
+                }
+                ?>
             </div>
+
 
         </div>
     </div>
@@ -305,4 +333,5 @@
         init();
     </script>
 </body>
+
 </html>
