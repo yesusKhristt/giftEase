@@ -95,40 +95,32 @@ class VendorController
 
                 if (move_uploaded_file($tmpName, $targetFile)) {
                     // store the uploaded file path in array
-                    $profilePicPath[] = $targetFile;
+                    $profilePicPath[] = $fileName;
                 }
             }
-            if (!empty($_FILES['profile_pic']['name'])) {
-                $uploadDir = "resources/uploads/vendor/products/"; // folder to save images
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0777, true);
-                }
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
 
-                $fileName = time() . "_" . basename($_FILES['profile_pic']['name']);
-                $targetFile = $uploadDir . $fileName;
-
-                // Move uploaded file to target folder
-                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $targetFile)) {
-                    $profilePicPath = $targetFile;
-                }
-            }
             switch ($parts[2]) {
                 case 'add':
-                    $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $profilePicPath);
+                    $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
                     break;
                 case 'edit':
-                    $this->product->editProduct($parts[3], $title, $price, $description, $profilePicPath);
+                    $this->product->editProduct($parts[3], $title, $price, $description, $category, $subcategory, $profilePicPath);
                     break;
             }
 
-            header("Location: index.php?controller=vendor&action=dashboard/item/view/$parts[3]");
-            exit;
+
         }
         if ($parts[2] == 'edit') {
             $productId = $parts[3];
             $productDetails = $this->product->fetchProduct($productId);
         }
         require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
+    }
+
+    public function test($user_id, $title, $price, $description, $category, $subcategory, $profilePicPath)
+    {
+        require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
     }
 
     public function showInventory($parts)

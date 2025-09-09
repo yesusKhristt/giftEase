@@ -11,7 +11,8 @@
 </head>
 
 <body>
-    <form method="POST" action="" id="uploadForm" enctype="multipart/form-data">
+    <form method="POST" action="?controller=vendor&action=dashboard/item/add" id="uploadForm"
+        enctype="multipart/form-data">
         <table class="table">
             <tr>
                 <td style="width:15%" class="subtitle">Product Title</td>
@@ -61,7 +62,7 @@
                 </td>
             </tr>
 
-            <tr>
+            <!-- <tr>
                 <td class="subtitle">Upload Images</td>
                 <td colspan="2">
                     <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
@@ -73,13 +74,27 @@
                             accept="image/*">
                     </div>
 
-                    <!-- Preview Area -->
                     <div id="preview" style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;"></div>
 
                     <button type="button" onclick="document.getElementById('fileInput').click()"
                         style="margin-top:10px; padding:6px 12px; background:#3498db; color:white; border:none; border-radius:5px; cursor:pointer;">
                         + Add More
                     </button>
+                </td>
+            </tr> -->
+            <tr>
+                <td class="subtitle">Upload Images</td>
+                <td colspan="2">
+                    <input type="file" id="fileInput" name="images[]" multiple style="display:none;" accept="image/*">
+
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt" style="font-size:3rem; color:#3498db;"></i>
+                        <h4>Drop files here or click to upload</h4>
+                        <p>Supported formats: JPG, PNG (Max 10MB)</p>
+                    </div>
+
+                    <div id="preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;"></div>
+
                 </td>
             </tr>
 
@@ -93,35 +108,115 @@
     <script>
         let selectedFiles = [];
 
+        // Open file dialog on click
+        document.getElementById("uploadArea").addEventListener("click", () => {
+            document.getElementById("fileInput").click();
+        });
+
+        // Handle file selection
         document.getElementById("fileInput").addEventListener("change", e => {
             selectedFiles = selectedFiles.concat(Array.from(e.target.files));
-            e.target.value = ""; // reset so same file can be re-selected
+            updatePreview();
+            e.target.value = ""; // allow re-selecting same files
+        });
 
-            // preview
-            let preview = document.getElementById("preview");
+        // Drag-and-drop functionality
+        const uploadArea = document.getElementById("uploadArea");
+        uploadArea.addEventListener("dragover", e => {
+            e.preventDefault();
+            uploadArea.style.border = "2px dashed #3498db";
+        });
+        uploadArea.addEventListener("dragleave", e => {
+            e.preventDefault();
+            uploadArea.style.border = "";
+        });
+        uploadArea.addEventListener("drop", e => {
+            e.preventDefault();
+            const files = Array.from(e.dataTransfer.files);
+            selectedFiles = selectedFiles.concat(files);
+            updatePreview();
+        });
+
+        // Update preview with drag-and-drop sorting
+        function updatePreview() {
+            const preview = document.getElementById("preview");
             preview.innerHTML = "";
-            selectedFiles.forEach(file => {
-                let img = document.createElement("img");
+
+            selectedFiles.forEach((file, index) => {
+                const imgWrapper = document.createElement("div");
+                imgWrapper.draggable = true;
+                imgWrapper.style.position = "relative";
+
+                const img = document.createElement("img");
                 img.src = URL.createObjectURL(file);
                 img.style.width = "100px";
                 img.style.height = "100px";
                 img.style.objectFit = "cover";
-                preview.appendChild(img);
+                imgWrapper.appendChild(img);
+                if (index === 0) {
+                    img.style.border = "3px solid #e91e63";
+                    img.style.borderRadius = "10px";
+
+                    const label = document.createElement("div");
+                    label.className = "subtitle";
+                    label.innerText = "Public Display";
+
+                    // Add the label below the image
+                    imgWrapper.appendChild(label);
+                } else {
+                    img.style.border = "none";
+                    img.style.borderRadius = "10px";
+                }
+
+
+
+                // Delete button
+                const del = document.createElement("button");
+                del.innerText = "×";
+                del.style.position = "absolute";
+                del.style.top = "0";
+                del.style.right = "0";
+                del.style.background = "red";
+                del.style.color = "white";
+                del.style.border = "none";
+                del.style.cursor = "pointer";
+                del.addEventListener("click", () => {
+                    selectedFiles.splice(index, 1);
+                    updatePreview();
+                });
+                imgWrapper.appendChild(del);
+
+                // Drag events
+                imgWrapper.addEventListener("dragstart", e => {
+                    e.dataTransfer.setData("text/plain", index);
+                });
+                imgWrapper.addEventListener("dragover", e => e.preventDefault());
+                imgWrapper.addEventListener("drop", e => {
+                    e.preventDefault();
+                    const fromIndex = e.dataTransfer.getData("text/plain");
+                    const toIndex = index;
+                    const movedItem = selectedFiles.splice(fromIndex, 1)[0];
+                    selectedFiles.splice(toIndex, 0, movedItem);
+                    updatePreview();
+                });
+
+                preview.appendChild(imgWrapper);
             });
-        });
+        }
 
-        document.getElementById("uploadForm").addEventListener("submit", function (e) {
-            e.preventDefault();
+        // On submit, update hidden input to include reordered files
+        document.getElementById("uploadForm").addEventListener("submit", e => {
+            const fileInput = document.getElementById("fileInput");
 
-            let formData = new FormData(this); // includes all inputs
-            selectedFiles.forEach(file => formData.append("images[]", file));
+            // Reset input
+            fileInput.files = new DataTransfer().files;
 
-            fetch("dashboard/item/add", {
-                method: "POST",
-                body: formData
-            })
-                .then(res => res.text())
-                .then(data => console.log(data));
+            // Add selectedFiles in order to DataTransfer
+            const dt = new DataTransfer();
+            selectedFiles.forEach(file => dt.items.add(file));
+            fileInput.files = dt.files;
+
+            // Now the form will POST with reordered files
         });
     </script>
 </body>

@@ -85,14 +85,17 @@ class ProductsModel
 
     }
 
-    public function addProduct($vendor_id, $name, $price, $description, $profilePath)
+    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath)
     {
-        $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
+        $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, status, mainCategory, subCategory, displayImage, created_at) VALUES (?, ?, ?, ?, 'active',? ,  ? , ? ,CURRENT_TIMESTAMP)");
         $stmt1->execute([
             $vendor_id,
             $name,
             $price,
-            $description
+            $description,
+            $mainC,
+            $subC,
+            $profilePath[0]
         ]);
         $productID = $this->pdo->lastInsertId();
         ;
@@ -103,26 +106,32 @@ class ProductsModel
                 $image
             ]);
         }
+        header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
+        exit;
     }
 
-    public function editProduct($product_id, $name, $price, $description, $profilePath)
+    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath)
     {
 
-        $stmt1 = $this->pdo->prepare('UPDATE products SET name = ?, price = ?, description = ? WHERE id = ?;');
+        $stmt1 = $this->pdo->prepare('UPDATE products SET name = ?, price = ?, description = ?,mainCategory = ?, subCategory = ?, displayImage = ?  WHERE id = ?;');
         $stmt1->execute([
             $name,
             $price,
             $description,
+            $mainC,
+            $subC,
+            $profilePath[0],
             $product_id
         ]);
         ;
-        if ($profilePath) {
+        foreach ($profilePath as $image) {
             $stmt2 = $this->pdo->prepare("UPDATE productImages SET image_loc = ? WHERE product_id = ?;");
             $stmt2->execute([
-                $profilePath,
+                $image,
                 $product_id
-
             ]);
         }
+        header("Location: index.php?controller=vendor&action=dashboard/item/view/$product_id");
+        exit;
     }
 }
