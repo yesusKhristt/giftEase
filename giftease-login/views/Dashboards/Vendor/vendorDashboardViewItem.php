@@ -57,7 +57,7 @@
             <div class="card">
                 <div>
                     <div style="display:flex">
-                        <button class = "btn1" id="scroll-left">◀</button>
+                        <button class="btn1" id="scroll-left">◀</button>
                         <div class="image-scroll">
                             <?php
                             foreach ($productDetails['images'] as $image): ?>
@@ -70,7 +70,7 @@
 
 
 
-                        <button id="scroll-right" class = "btn1">▶</button>
+                        <button id="scroll-right" class="btn1">▶</button>
 
 
 
@@ -78,7 +78,7 @@
                             <h4><?= htmlspecialchars($productDetails['name']) ?></h4>
                             <p>
                                 <?php
-                                
+
                                 require_once 'views/commonElements/rating.php';
                                 $rating = 3.3;
                                 echo render_stars($rating);
@@ -107,9 +107,9 @@
                         </div>
                     </div>
                     <div class="card">
-                        <p style="padding:30px">
-                             <?= htmlspecialchars($productDetails['description']) ?>
-                        </p>
+                        
+                            <?php echo nl2br(htmlspecialchars($productDetails['description'])) ?>
+                        
                     </div>
                     <div class="card">
                         <h4>Review</h4>
@@ -118,9 +118,10 @@
 
                 <div class="actions">
                     <a class="btn1"
-                        href="?controller=vendor&action=dashboard/item/edit/<?= htmlspecialchars($productDetails['id']) ?>">Edit
-                        Item</a>
-                    <a class="btn2">Delete Item</a>
+                        href="?controller=vendor&action=dashboard/item/edit/<?= urlencode($productDetails['id']) ?>">
+                        Edit Item</a>
+                    <a class="btn2" href="?controller=vendor&action=dashboard/item/delete/
+                    <?= urlencode($productDetails['id']) ?>">Delete Item</a>
                 </div>
 
             </div>

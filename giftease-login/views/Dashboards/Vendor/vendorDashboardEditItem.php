@@ -11,8 +11,11 @@
 </head>
 
 <body>
-    <form method="POST" action="?controller=vendor&action=dashboard/item/add" id="uploadForm"
-        enctype="multipart/form-data">
+    <form method="POST"
+        action="?controller=vendor&action=dashboard/item/<?php echo $parts[2] ?><?php if ($parts[2] == 'edit') {
+              echo "/$parts[3]";
+          } ?>"
+        id="uploadForm" enctype="multipart/form-data">
         <table class="table">
             <tr>
                 <td style="width:15%" class="subtitle">Product Title</td>

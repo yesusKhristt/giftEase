@@ -17,10 +17,7 @@
         include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
-            <?= htmlspecialchars($user_id) ?>
-            <?= htmlspecialchars($title) ?>
-            <?= htmlspecialchars($price) ?>
-            <?= htmlspecialchars($description) ?>
+
             <?php
             var_dump($profilePicPath);
             ?>
