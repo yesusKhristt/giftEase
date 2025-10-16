@@ -142,15 +142,6 @@ class VendorController
                     }
                     require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
             }
-=======
-                    $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
-                    break;
-                case 'edit':
-                    $this->product->editProduct($parts[3], $title, $price, $description, $category, $subcategory, $profilePicPath);
-                    break;
-            }
-
-
 >>>>>>> Dilma
         }
         if ($parts[2] == 'edit') {
@@ -161,7 +152,6 @@ class VendorController
     }
 
 <<<<<<< HEAD
-    public function test($profilePicPath)
 =======
     public function test($user_id, $title, $price, $description, $category, $subcategory, $profilePicPath)
 >>>>>>> Dilma
