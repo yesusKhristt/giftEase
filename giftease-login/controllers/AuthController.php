@@ -27,7 +27,8 @@ class AuthController
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             $type = $_GET['type'] ?? 'client';
-            $user = $this->model->authenticate($email, $password, $type);
+            $role= $_POST['role'] ?? '';
+            $user = $this->model->authenticate($email, $password, $role);
             if ($user) {
                 $_SESSION['user'] = $user;
 
@@ -37,7 +38,7 @@ class AuthController
                         header("Location: index.php?controller=client&action=dashboard/primary");
                         exit;
                     case 'vendor':
-                        header("Location: index.php?controller=vendor&action=dashboard/primary");
+                        header("Location: index.php?controller=vendor&action=checkID/primary");
                         exit;
                     case 'admin':
                         header("Location: index.php?controller=admin&action=dashboard/primary");
@@ -74,6 +75,7 @@ class AuthController
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
+            $role = $_POST['role'] ?? '';
 
 
             if ($this->model->getUserByEmail($email)) {
@@ -84,14 +86,16 @@ class AuthController
                     'name' => $name,
                     'email' => $email,
                     'password' => $hashedPassword,
-                    'type' => $type
+                    'type' => $role
                 ]);
                 $success = '✅ Account created. Please log in.';
-                header("Location: index.php?action=login&type=$type###");
+                header("Location: index.php?action=handleLogin&type=$type");
                 exit;
             }
         }
+
         require_once __DIR__ . '/../views/Signup/signup.php';
+
     }
 
     public function monitorDashboards()
