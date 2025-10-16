@@ -13,24 +13,13 @@
     <div class="settings-section">
         <h3>Staff Information</h3>
         <form method="POST" action="" id="loginForm">
-<<<<<<< HEAD
             <label class="form-label">Phone Number</label>
             <input type="text" name="phone" placeholder="Phone No" class="form-input" required>
-=======
-            
->>>>>>> Dilma
             <?php
             $role = $_SESSION['user']['type'];
             switch ($role) {
                 case 'client':
                     echo '
-<<<<<<< HEAD
-=======
-                    <label class="form-label">First Name</label>
-                    <input type="textarea" name="first_name" placeholder="First Name" class="form-input" required>
-                    <label class="form-label">Last Name</label>
-                    <input type="textarea" name="last_name" placeholder="Last Name" class="form-input" required>
->>>>>>> Dilma
                     <label class="form-label">Address</label>
                     <input type="textarea" name="address" placeholder="Address" class="form-input" required>
                     ';
@@ -61,11 +50,6 @@
                     break;
             }
             ?>
-<<<<<<< HEAD
-=======
-            <label class="form-label">Phone Number</label>
-            <input type="text" name="phone" placeholder="Phone No" class="form-input" required>
->>>>>>> Dilma
             <button type="submit" class="btn2 form-input" >Submit</button>
         </form>
     </div>
