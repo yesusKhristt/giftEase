@@ -36,11 +36,22 @@ class VendorModel
         }
     }
 
+    public function getVendorID($id){
+
+        $stmt = $this->getpdo()->prepare("SELECT id FROM vendors WHERE user_id = ?");
+        $stmt->execute([$id]);
+
+        return $stmt->fetch()[0];
+    }
+
     public function addVendor($user_id, $shopname, $phone, $address)
     {
         $stmt = $this->pdo->prepare("INSERT INTO vendors (user_id, shopName, phone, address, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
         return $stmt->execute([
-            $user_id, $shopname, $phone, $address
+            $user_id,
+            $shopname,
+            $phone,
+            $address
         ]);
 
     }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delivery Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/Dilma/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -26,78 +26,132 @@
 
            
 
-            <!-- Cards -->
-            <div style="gap: 20px; display: grid; grid-template-columns: repeat(3, 1fr);">
+             <div class="card">
+                <div class="services-grid">
+                    <div class="card">
+                        <div class="service-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <h3 class="service-title">Premium Gift Wrapping</h3>
+                        <p class="service-description">High-quality wrapping paper with elegant ribbons and bows.
+                            Perfect for special occasions and luxury gifts.</p>
+                        <div class="service-price">$15 - $35</div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn btn-outline" onclick="editService('premium-wrapping')">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="btn btn-ghost" onclick="viewServiceStats('premium-wrapping')">
+                                <i class="fas fa-chart-line"></i>
+                                Stats
+                            </button>
+                        </div>
+                    </div>
 
-                <!-- Card 1 -->
-                <div class="card" style="padding:0">
-                    <div
-                        style="text-align: center; font-size: 30px; margin-bottom: 10px;;height: 300px; display: flex; justify-content: center; align-items: center;">
-                        <img src="https://img.icons8.com/color/48/chocolate.png">
+                    <div class="card">
+                        <div class="service-icon">
+                            <i class="fas fa-ribbon"></i>
+                        </div>
+                        <h3 class="service-title">Custom Ribbons & Bows</h3>
+                        <p class="service-description">Personalized ribbon designs with custom colors, patterns, and
+                            embossed messages.</p>
+                        <div class="service-price">$5 - $15</div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn btn-outline" onclick="editService('custom-ribbons')">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="btn btn-ghost" onclick="viewServiceStats('custom-ribbons')">
+                                <i class="fas fa-chart-line"></i>
+                                Stats
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-body" style="padding-left: 40px;">
-                        <h3>chocolate</h3>
-                        <p style="color:green;font-size:15px;margin-bottom:10px">Starting at $24.99</p>
-                        <p style="font-size:16px">Customization Options:</p>
-                        <ul style="list-style-type: disc; padding-left: 20px;color:grey;">
-                            <li>Custom text/logo</li>
-                            <li>Multiple colors</li>
-                            <li>Size selection</li>
-                        </ul>
+
+                    <div class="card">
+                        <div class="service-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3 class="service-title">Handwritten Gift Cards</h3>
+                        <p class="service-description">Beautiful handwritten messages on premium cardstock with
+                            calligraphy options.</p>
+                        <div class="service-price">$3 - $8</div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn btn-outline" onclick="editService('gift-cards')">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="btn btn-ghost" onclick="viewServiceStats('gift-cards')">
+                                <i class="fas fa-chart-line"></i>
+                                Stats
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-footer"
-                        style="padding-left: 40px; padding-bottom: 20px;display: flex; gap: 10px;margin-top: 10px;">
-                        <button class="btn1"><i class="fa fa-palette"></i> Customize</button>
-                        <button class="btn1"><i class="fa fa-file"></i> Templates</button>
+
+                    <div class="card">
+                        <div class="service-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <h3 class="service-title">Luxury Gift Boxes</h3>
+                        <p class="service-description">Premium presentation boxes in various sizes with magnetic
+                            closures and tissue paper.</p>
+                        <div class="service-price">$10 - $25</div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn btn-outline" onclick="editService('gift-boxes')">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="btn btn-ghost" onclick="viewServiceStats('gift-boxes')">
+                                <i class="fas fa-chart-line"></i>
+                                Stats
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="service-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h3 class="service-title">Express Delivery</h3>
+                        <p class="service-description">Same-day delivery service for urgent orders within the city
+                            limits.</p>
+                        <div class="service-price">$8 - $20</div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn btn-outline" onclick="editService('express-delivery')">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="btn btn-ghost" onclick="viewServiceStats('express-delivery')">
+                                <i class="fas fa-chart-line"></i>
+                                Stats
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="service-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3 class="service-title">Theme Wrapping</h3>
+                        <p class="service-description">Specialized wrapping for holidays, birthdays, weddings, and
+                            corporate events.</p>
+                        <div class="service-price">$12 - $30</div>
+                        <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
+                            <button class="btn btn-outline" onclick="editService('theme-wrapping')">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="btn btn-ghost" onclick="viewServiceStats('theme-wrapping')">
+                                <i class="fas fa-chart-line"></i>
+                                Stats
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Card 2 -->
-                <div class="card" style="padding:0">
-                    <div
-                        style="text-align: center; font-size: 30px; margin-bottom: 10px;height: 300px; display: flex; justify-content: center; align-items: center;">
-                        
-                    </div>
-                    <div class="card-body" style="padding-left: 40px;">
-                        <h3>chocolate</h3>
-                        <p style="color:green;font-size:15px;margin-bottom:10px">Starting at $24.99</p>
-                        <p style="font-size:16px">Customization Options:</p>
-                        <ul style="list-style-type: disc; padding-left: 20px;color:grey;">
-                            <li>Custom text/logo</li>
-                            <li>Multiple colors</li>
-                            <li>Size selection</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer"
-                        style="padding-left: 40px; padding-bottom: 20px;display: flex; gap: 10px;margin-top: 10px;">
-                        <button class="btn1"><i class="fa fa-palette"></i> Customize</button>
-                        <button class="btn1"><i class="fa fa-file"></i> Templates</button>
-                    </div>
-                </div>
-
-
-                <!-- Card 3 -->
-                <div class="card" style="padding:0">
-                    <div
-                        style="text-align: center; font-size: 30px; margin-bottom: 10px;height: 300px; display: flex; justify-content: center; align-items: center;">
-                        
-                    </div>
-                    <div class="card-body" style="padding-left: 40px;">
-                        <h3>chocolate</h3>
-                        <p style="color:green;font-size:15px;margin-bottom:10px">Starting at $24.99</p>
-                        <p style="font-size:16px">Customization Options:</p>
-                        <ul style="list-style-type: disc; padding-left: 20px;color:grey;">
-                            <li>Custom text/logo</li>
-                            <li>Multiple colors</li>
-                            <li>Size selection</li>
-                        </ul>
-                    </div>
-                    <div class="card-footer"
-                        style="padding-left: 40px; padding-bottom: 20px;display: flex; gap: 10px;margin-top: 10px;">
-                        <button class="btn1"><i class="fa fa-palette"></i> Customize</button>
-                        <button class="btn1"><i class="fa fa-file"></i> Templates</button>
-                    </div>
-                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 
         </div>
 </body>
