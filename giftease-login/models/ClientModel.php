@@ -1,5 +1,5 @@
 <?php
-// ClientModel.php
+// ClientModel.php***
 
 class ClientModel
 {
@@ -57,7 +57,7 @@ class ClientModel
 
     public function updateClient($user_id, $first_name, $last_name, $phone, $address)
     {
-        $stmt = $this->pdo->prepare("UPDATE clients SET first_name = ?, last_name = ?, phone = ?, address = ?,  WHERE user_id = ?");
+        $stmt = $this->pdo->prepare("UPDATE clients SET first_name = ?, last_name = ?, phone = ?, address = ? WHERE user_id = ?");
         return $stmt->execute([
             $first_name,
             $last_name,
