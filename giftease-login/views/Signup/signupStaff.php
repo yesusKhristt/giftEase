@@ -12,15 +12,14 @@
   style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f6f6f6;">
   <div class="authContainer">
     <div class="logo">
-      <img src="resources/icon.png" class="logo_img">
+      <img src="resources/ge5.png" class="logo_img">
       <div class="gift">
-        gift<span class="Ease">Ease
-        </span>
+        gift<span class="Ease">Ease</span>
         <p>Staff Sign Up</p>
       </div>
     </div>
     <div>
-      <form method="POST" action="?type=admin&action=login" id="loginForm">
+      <form method="POST" action="" id="signupForm">
         <select name="role" id="roleSelect">
           <option value="vendor">Vendor</option>
           <option value="admin">Admin</option>
@@ -34,7 +33,7 @@
         <input type="password" name="passwordC" id="confirmPassword" placeholder="Confirm Password" class="textbox"
           required>
         <button type="submit" class="btn2">Sign Up</button>
-        <a href="?action=login&type=admin" class="btn1" id="loginLink">Already have an account? Sign in</a>
+        <a href="?action=handleLogin&type=admin" class="btn1" id="loginLink">Already have an account? Sign in</a>
       </form>
     </div>
     <script>
@@ -42,7 +41,7 @@
       const password = document.getElementById('password');
       const confirmPassword = document.getElementById('confirmPassword');
       const roleSelect = document.getElementById('roleSelect');
-      const loginLink = document.getElementById('loginLink'); // updated id
+      const loginLink = document.getElementById('loginLink');
 
       // Password validation
       form.addEventListener('submit', function (e) {
@@ -52,18 +51,18 @@
           setTimeout(() => {
             confirmPassword.classList.remove('shake');
           }, 300);
-          return; // stop here if passwords don't match
+          return;
         }
 
         const selectedRole = roleSelect.value;
-        form.action = `?type=${selectedRole}&action=signup`; // update action
+        form.action = `?type=${selectedRole}&action=handleSignup`;
       });
 
-      // On clicking "Sign Up" link (navigation only)
+      // On clicking "Sign In" link
       loginLink.addEventListener('click', function (e) {
         e.preventDefault();
         const selectedRole = roleSelect.value;
-        window.location.href = `?type=${selectedRole}&action=login`;
+        window.location.href = `?type=${selectedRole}&action=handleLogin`;
       });
 
       // Set default selected value
@@ -72,12 +71,9 @@
       });
     </script>
 
-
-
     <?php if (!empty($error)): ?>
       <p class="error"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
-
 </body>
 
 </html>

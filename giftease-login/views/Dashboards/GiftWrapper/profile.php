@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Partner Dashboard - GiftEase</title>
+  <link rel="stylesheet" href="public/style.css" />
+  <link rel="profile" href="profile.php" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
+    async defer></script>
+</head>
+
+<body>
+
+  <div class="container">
+    <?php
+    $activePage = 'profile';
+    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
+    ?>
+    <!-- <div id="home" class="tab-content active"> -->
+    <!-- Home page -->
+    <div class="main-content">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Profile Overview</h2>
+          <p class="section-subtitle">Manage your personal and vehicle information</p>
+        </div>
+        <button class="btn1" onclick="editProfile()">
+          <i class="fas fa-edit"></i>
+          Edit Profile
+        </button>
+      </div>
+      <div class="cardColour">
+
+        <div class="profile-section">
+          <i class="profile-picture"></i>
+          <div class="">
+            <h4>Elegant Wraps</h4>
+            <p>Professional Gift Wrapping Service</p>
+            <p><i class="fas fa-star"></i> 4.9 Rating • <i class="fas fa-gift"></i> Professional Gift Wrappers.</p>
+
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <div class="card">
+            <div class="title">1,247</div>
+            <div class="subtitle">Total Gift Wrappings</div>
+          </div>
+          <div class="card">
+            <div class="title">$18,650</div>
+            <div class="subtitle">Total Earnings</div>
+          </div>
+          <div class="card">
+            <div class="title">98.5%</div>
+            <div class="subtitle">Success Rate</div>
+          </div>
+          <div class="card">
+            <div class="title">4.9</div>
+            <div class="subtitle">Avg Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Business Information</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label class="subtitle">Business Name</label>
+            <input type="text" class="form-input" value="Elegant Wraps" readonly />
+          </div>
+          <div class="form-group">
+            <label class="subtitle">Email Address</label>
+            <input type="email" class="form-input" value="contact@elegantwraps.com" readonly />
+          </div>
+          <div class="form-group">
+            <label class="subtitle">Phone Number</label>
+            <input type="tel" class="form-input" value="+94 761694206" />
+          </div>
+          <div class="form-group">
+            <label class="subtitle">Emergency Contact</label>
+            <input type="tel" class="form-input" value="+94 761694206" />
+          </div>
+          <div class="form-group">
+            <label class="subtitle">Business Address</label>
+            <input type="address" class="form-input" value="123, main street colombo" />
+          </div>
+          <div class="form-group">
+            <label class="subtitle">Business Description</label>
+            <textarea rows="4"
+              style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 0.9rem; resize: vertical;">"Professional gift wrapping service specializing in premium presentations for all occasions. We offer custom designs, luxury materials, and same-day service for your special gifts." </textarea>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Performance Metrics</h4>
+        <div class="summary-grid">
+          <div class="cardColour">
+            <div class="title">28</div>
+            <div class="subtitle">This Month</div>
+            <div>+15% vs last month</div>
+          </div>
+          <div class="cardColour">
+            <div class="title">$420</div>
+            <div class="subtitle">Monthly Earnings</div>
+            <div>+8% vs last month</div>
+          </div>
+          <div class="cardColour">
+            <div class="title">156</div>
+            <div class="subtitle">Customer Reviews</div>
+            <div>+12 this month</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 15px;">
+        <button class="btn1" onclick="updateProfile()">Update Profile</button>
+        <button class="btn1" onclick="changePassword()">Change Password</button>
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -10,6 +10,10 @@ class AuthController
     {
         $this->model = new UserModel();
     }
+    public function landing()
+    {
+        require_once __DIR__ . '/../views/LandingPage/landingPage.php';
+    }
 
     public function handleLogin()
     {
@@ -23,24 +27,41 @@ class AuthController
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             $type = $_GET['type'] ?? 'client';
-            $user = $this->model->authenticate($email, $password, $type);
+            $role= $_POST['role'] ?? '';
+            $user = $this->model->authenticate($email, $password, $role);
             if ($user) {
-                header("Location: index.php?action=dashboard&type=$type&level=primary");
-                exit;
+                $_SESSION['user'] = $user;
+
+                // 🔑 Navigation happens here
+                switch ($user['type']) {
+                    case 'client':
+                        header("Location: index.php?controller=client&action=checkID/primary");
+                        exit;
+                    case 'vendor':
+                        header("Location: index.php?controller=vendor&action=checkID/primary");
+                        exit;
+                    case 'admin':
+                        header("Location: index.php?controller=admin&action=dashboard/primary");
+                        exit;
+                    case 'delivery':
+                        header("Location: index.php?controller=delivery&action=dashboard/primary");
+                        exit;
+                    case 'deliveryman':
+                        header("Location: index.php?controller=deliveryman&action=dashboard/primary");
+                        exit;
+                    case 'giftWrapper':
+                        header("Location: index.php?controller=giftWrapper&action=dashboard/primary");
+                        exit;
+                }
+
             } else {
                 $error = '❌ Invalid email or password.';
             }
         }
 
         // Load different views based on user type
-        switch ($type) {
-            case 'client':
-                require_once __DIR__ . '/../views/Login/loginClient.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Login/loginStaff.php';
-                break;
-        }
+        require_once __DIR__ . '/../views/Login/login.php';
+
     }
 
     public function handleSignup()
@@ -54,6 +75,7 @@ class AuthController
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
+            $role = $_POST['role'] ?? '';
 
 
             if ($this->model->getUserByEmail($email)) {
@@ -64,21 +86,16 @@ class AuthController
                     'name' => $name,
                     'email' => $email,
                     'password' => $hashedPassword,
-                    'type' => $type
+                    'type' => $role
                 ]);
                 $success = '✅ Account created. Please log in.';
-                header("Location: index.php?action=login&type=$type###");
+                header("Location: index.php?action=handleLogin&type=$type");
                 exit;
             }
         }
-        switch ($type) {
-            case 'client':
-                require_once __DIR__ . '/../views/Signup/signupClient.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Signup/signupStaff.php';
-                break;
-        }
+
+        require_once __DIR__ . '/../views/Signup/signup.php';
+
     }
 
     public function monitorDashboards()
