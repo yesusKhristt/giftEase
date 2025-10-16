@@ -2,7 +2,7 @@
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
-      <img src="resources/icon.png" class="logo_img">
+      <img src="resources/ge5.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease
         </span>
@@ -15,26 +15,26 @@
     }
     ?>
     <nav class="nav-section">
-      <a href="?action=dashboard&type=client&level=items" class="nav-item <?= isActive('items', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/items" class="nav-item <?= isActive('items', $activePage) ?>">
         Browse Items
       </a>
-      <a href="?action=dashboard&type=client&level=cart" class="nav-item <?= isActive('cart', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/cart" class="nav-item <?= isActive('cart', $activePage) ?>">
         Cart
       </a>
-      <a href="?action=dashboard&type=client&level=wishlist" class="nav-item <?= isActive('whishlist', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/wishlist" class="nav-item <?= isActive('whishlist', $activePage) ?>">
         Wishlist
       </a>
-      <a href="?action=dashboard&type=client&level=tracking" class="nav-item <?= isActive('tracking', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/tracking" class="nav-item <?= isActive('tracking', $activePage) ?>">
         Track Order
       </a>
-      <a href="?action=dashboard&type=client&level=history" class="nav-item <?= isActive('history', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         Order History
       </a>
-      <a href="?action=dashboard&type=client&level=customize"
+      <a href="?controller=client&action=dashboard/customize"
         class="nav-item <?= isActive('customize', $activePage) ?>">
         Customize Items
       </a>
-      <a href="?action=dashboard&type=client&level=payment" class="nav-item <?= isActive('payment', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/payment" class="nav-item <?= isActive('payment', $activePage) ?>">
         Payment
       </a>
     </nav>
@@ -58,11 +58,11 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?action=dashboard&type=client&level=settings"
+      <a href="?controller=client&action=dashboard/settings"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?action=dashboard&type=client&level=account" class="settings-btn <?= isActive('account', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/account" class="settings-btn <?= isActive('account', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>

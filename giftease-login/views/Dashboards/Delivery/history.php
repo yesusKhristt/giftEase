@@ -14,7 +14,7 @@
   <div class="container">
     <?php
     $activePage = 'history';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
 
     <div class="main-content">
@@ -24,7 +24,7 @@
       </div>
       <div class="filter-tabs">
         <div class="btn1">
-          <label>Date Range:</label>
+          <label>Date Range: </label>
           <div class="date-range-picker">
             <input type="date" id="dateFrom" class="form-input" />
             <span>to</span>
@@ -48,7 +48,7 @@
         <button class="btn1" onclick="exportHistory()">
           <i class="fas fa-download"></i> Export
         </button>
-        <button class="btn2" onclick="resetFilters()">
+        <button class="btn1" onclick="resetFilters()">
           <i class="fas fa-undo"></i> Reset
         </button>
 
@@ -65,12 +65,11 @@
             <th>Earnings</th>
             <th>Rating</th>
             <th>Distance</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="historyTableBody">
           <tr>
-            <td>DEL-098</td>
+            <td>#DEL-001</td>
             <td>
               <div class="customer-cell">
                 <div class="customer-avatar-small">ST</div>
@@ -82,9 +81,9 @@
             </td>
             <td>
               <div class="product-cell">
-                <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" />
+                <!-- <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" /> -->
                 <div>
-                  <div class="product-name">Flower Bouquet</div>
+                  <div class="product-name">Premium Rose Bouquet</div>
                   <div class="product-category">Flowers</div>
                 </div>
               </div>
@@ -104,22 +103,9 @@
               </div>
             </td>
             <td>5.2 km</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-098')" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="downloadReceipt('DEL-098')" title="Download Receipt">
-                  <i class="fas fa-download"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="repeatOrder('DEL-098')" title="Repeat Order">
-                  <i class="fas fa-redo"></i>
-                </button>
-              </div>
-            </td>
           </tr>
           <tr>
-            <td>DEL-097</td>
+            <td>#DEL-002</td>
             <td>
               <div class="customer-cell">
                 <div class="customer-avatar-small">TR</div>
@@ -131,10 +117,10 @@
             </td>
             <td>
               <div class="product-cell">
-                <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" />
+                <!-- <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" /> -->
                 <div>
-                  <div class="product-name">Gift Basket</div>
-                  <div class="product-category">Gifts</div>
+                  <div class="product-name">Chocolate Collection</div>
+                  <div class="product-category">Sweets</div>
                 </div>
               </div>
             </td>
@@ -145,7 +131,7 @@
               </div>
             </td>
             <td><span class="order-status status-delivered">Delivered</span></td>
-            <td class="earnings-cell">$18.00</td>
+            <td class="earnings-cell"> $12.00</td>
             <td>
               <div class="rating-cell">
                 <div class="stars">⭐⭐⭐⭐⭐</div>
@@ -153,22 +139,9 @@
               </div>
             </td>
             <td>7.8 km</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-097')" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="downloadReceipt('DEL-097')" title="Download Receipt">
-                  <i class="fas fa-download"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="repeatOrder('DEL-097')" title="Repeat Order">
-                  <i class="fas fa-redo"></i>
-                </button>
-              </div>
-            </td>
           </tr>
           <tr>
-            <td>DEL-096</td>
+            <td>#DEL-003</td>
             <td>
               <div class="customer-cell">
                 <div class="customer-avatar-small">MR</div>
@@ -180,7 +153,42 @@
             </td>
             <td>
               <div class="product-cell">
-                <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" />
+                <!-- <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" /> -->
+                <div>
+                  <div class="product-name">Birthday Cake & Balloons</div>
+                  <div class="product-category">Sweets</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="date-cell">
+                <div class="delivery-date">Jan 13, 2024</div>
+                <div class="delivery-time">1:45 PM</div>
+              </div>
+            </td>
+            <td><span class="order-status status-delivered">Delivered</span></td>
+            <td class="earnings-cell">$18.00</td>
+            <td>
+              <div class="rating-cell">
+                <div class="stars">⭐⭐⭐⭐</div>
+                <div class="rating-score">4.0</div>
+              </div>
+            </td>
+            <td>4.250 km</td>
+          </tr>
+           <td>#DEL-004</td>
+            <td>
+              <div class="customer-cell">
+                <div class="customer-avatar-small">JS</div>
+                <div>
+                  <div class="customer-name">Jeshani Shavindya</div>
+                  <div class="customer-phone">+94 728976548</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="product-cell">
+                <!-- <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" /> -->
                 <div>
                   <div class="product-name">Chocolate Box</div>
                   <div class="product-category">Sweets</div>
@@ -194,7 +202,42 @@
               </div>
             </td>
             <td><span class="order-status status-delivered">Delivered</span></td>
-            <td class="earnings-cell">$12.00</td>
+            <td class="earnings-cell">$23.5</td>
+            <td>
+              <div class="rating-cell">
+                <div class="stars">⭐⭐⭐⭐</div>
+                <div class="rating-score">4.0</div>
+              </div>
+            </td>
+            <td>12.5 km</td>
+          </tr>
+           <td>#DEL-005</td>
+            <td>
+              <div class="customer-cell">
+                <div class="customer-avatar-small">DJ</div>
+                <div>
+                  <div class="customer-name">Dilma Jayathissa</div>
+                  <div class="customer-phone">+94 772256780</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="product-cell">
+                <!-- <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" /> -->
+                <div>
+                  <div class="product-name">Phone Box</div>
+                  <div class="product-category">Electric</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="date-cell">
+                <div class="delivery-date">Jan 13, 2024</div>
+                <div class="delivery-time">1:45 PM</div>
+              </div>
+            </td>
+            <td><span class="order-status status-delivered">Delivered</span></td>
+            <td class="earnings-cell">$123.5</td>
             <td>
               <div class="rating-cell">
                 <div class="stars">⭐⭐⭐⭐</div>
@@ -202,20 +245,44 @@
               </div>
             </td>
             <td>3.5 km</td>
+          </tr>
+            </tr>
+           <td>#DEL-006</td>
             <td>
-              <div class="action-buttons">
-                <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-096')" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="downloadReceipt('DEL-096')" title="Download Receipt">
-                  <i class="fas fa-download"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="repeatOrder('DEL-096')" title="Repeat Order">
-                  <i class="fas fa-redo"></i>
-                </button>
+              <div class="customer-cell">
+                <div class="customer-avatar-small">CR</div>
+                <div>
+                  <div class="customer-name">Chathu</div>
+                  <div class="customer-phone">+94 728976548</div>
+                </div>
               </div>
             </td>
+            <td>
+              <div class="product-cell">
+                <!-- <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" /> -->
+                <div>
+                  <div class="product-name">Lap Top</div>
+                  <div class="product-category">Electric</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="date-cell">
+                <div class="delivery-date">Jan 13, 2024</div>
+                <div class="delivery-time">1:45 PM</div>
+              </div>
+            </td>
+            <td><span class="order-status status-delivered">Delivered</span></td>
+            <td class="earnings-cell">$223.5</td>
+            <td>
+              <div class="rating-cell">
+                <div class="stars">⭐⭐⭐⭐</div>
+                <div class="rating-score">4.0</div>
+              </div>
+            </td>
+            <td>8.5 km</td>
           </tr>
+
         </tbody>
       </table>
 

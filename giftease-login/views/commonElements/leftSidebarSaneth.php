@@ -15,23 +15,23 @@
     }
     ?>
     <nav class="nav-section">
-      <a href="?action=dashboard&type=delivery&level=home" class="nav-item <?= isActive('home', $activePage) ?>">
+      <a href="?controller=delivery&action=dashboard/home" class="nav-item <?= isActive('home', $activePage) ?>">
         Home
       </a>
-      <a href="?action=dashboard&type=delivery&level=order" class="nav-item <?= isActive('order', $activePage) ?>">
+      <a href="?controller=delivery&action=dashboard/order" class="nav-item <?= isActive('order', $activePage) ?>">
         Order
       </a>
-      <a href="?action=dashboard&type=delivery&level=map" class="nav-item <?= isActive('map', $activePage) ?>">
+      <a href="?controller=delivery&action=dashboard/map" class="nav-item <?= isActive('map', $activePage) ?>">
         Map
       </a>
-      <a href="?action=dashboard&type=delivery&level=history" class="nav-item <?= isActive('history', $activePage) ?>">
+      <a href="?controller=delivery&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
-      <a href="?action=dashboard&type=delivery&level=notification"
+      <a href="?controller=delivery&action=dashboard/notification"
         class="nav-item <?= isActive('notification', $activePage) ?>">
         Notification
       </a>
-      <a href="?action=dashboard&type=delivery&level=proof" class="nav-item <?= isActive('proof', $activePage) ?>">
+      <a href="?controller=delivery&action=dashboard/proof" class="nav-item <?= isActive('proof', $activePage) ?>">
         Proof
       </a>
     </nav>
@@ -55,11 +55,11 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?action=dashboard&type=delivery&level=settings"
+      <a href="?controller=delivery&action=dashboard/settings"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?action=dashboard&type=delivery&level=profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
+      <a href="?controller=delivery&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>

@@ -15,7 +15,7 @@
   <div class="container">
     <?php
     $activePage = 'profile';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
     <div class="main-content">
       <div class="cardColour">
@@ -81,7 +81,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           <div class="form-group">
             <label class="subtitle">Vehicle Type</label>
-            <select class="">
+            <select class="form-select">
               <option selected>Motorcycle</option>
               <option>Car</option>
               <option>Van</option>

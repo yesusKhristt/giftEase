@@ -13,7 +13,7 @@
     <div class="container">
         <?php
         $activePage = 'inventory';
-        include 'views\commonElements/leftSidebar.php';
+        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
 
@@ -26,12 +26,41 @@
                 <button class="btn1" onclick="filterItems('all')">All Items</button>
                 <button class="btn1" onclick="filterItems('active')">Active</button>
                 <button class="btn1" onclick="filterItems('paused')">Paused</button>
+                <a href="?controller=vendor&action=dashboard/item/add" class="btn2">Add Item</a>
             </div>
 
             <!-- Inventory Grid -->
-            <div class="inventory-grid" id="inventoryGrid">
-                <!-- Items will be populated by JavaScript -->
+            <div class="inventory-grid">
+                <?php
+                foreach ($allProducts as $row) {
+                    ?>
+                    <a class="inventory-item" data-status="<?= htmlspecialchars($row['status']) ?>" id="item"
+                        href="?controller=vendor&action=dashboard/item/view/<?= $row['id'] ?>">
+                        <img src="resources/uploads/vendor/products/<?= htmlspecialchars($row['displayImage'] ?? 'default.png') ?>"
+                            class="item-image">
+
+                        <div class="item-content">
+                            <div class="item-header">
+                                <div>
+                                    <h3 class="item-name"><?= htmlspecialchars($row['name']) ?></h3>
+                                </div>
+                                <span
+                                    class="item-status status-<?= htmlspecialchars($row['status']) ?>"><?= htmlspecialchars($row['status']) ?></span>
+                            </div>
+
+                            <div class="item-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Price</span>
+                                    <span class="detail-value">Rs.<?= htmlspecialchars($row['price']) ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <?php
+                }
+                ?>
             </div>
+
 
         </div>
     </div>
@@ -174,7 +203,7 @@
             }
 
             grid.innerHTML = filteredItems.map(item => `
-                <a class="inventory-item" data-status="${item.status}" id="item" href="?action=dashboard&type=vendor&level=viewitem">
+                <a class="inventory-item" data-status="${item.status}" id="item" href="?controller=vendor&action=dashboard/item/view">
                 
                     <img src="${item.image}" class="item-image">
                 
@@ -304,4 +333,5 @@
         init();
     </script>
 </body>
+
 </html>

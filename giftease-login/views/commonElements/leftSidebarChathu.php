@@ -2,7 +2,7 @@
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
-      <img src="resources/icon.png" class="logo_img">
+      <img src="resources/ge5.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease
         </span>
@@ -14,22 +14,22 @@
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
-    <a href="?action=dashboard&type=admin&level=front" class="nav-item <?= isActive('front', $activePage) ?>">
+    <a href="?controller=admin&action=dashboard/front" class="nav-item <?= isActive('front', $activePage) ?>">
       Front
     </a>
-    <a href="?action=dashboard&type=admin&level=customer" class="nav-item <?= isActive('customer', $activePage) ?>">
+    <a href="?controller=admin&action=dashboard/customer" class="nav-item <?= isActive('customer', $activePage) ?>">
       Customer
     </a>
-    <a href="?action=dashboard&type=admin&level=delivery" class="nav-item <?= isActive('delivery', $activePage) ?>">
+    <a href="?controller=admin&action=dashboard/delivery" class="nav-item <?= isActive('delivery', $activePage) ?>">
       Delivery
     </a>
-    <a href="?action=dashboard&type=admin&level=vendor" class="nav-item <?= isActive('vendor', $activePage) ?>">
+    <a href="?controller=admin&action=dashboard/vendor" class="nav-item <?= isActive('vendor', $activePage) ?>">
       Vendor
     </a>
-    <a href="?action=dashboard&type=admin&level=items" class="nav-item <?= isActive('items', $activePage) ?>">
+    <a href="?controller=admin&action=dashboard/items" class="nav-item <?= isActive('items', $activePage) ?>">
       Items
     </a>
-    <a href="?action=dashboard&type=admin&level=reports" class="nav-item <?= isActive('reports', $activePage) ?>">
+    <a href="?controller=admin&action=dashboard/reports" class="nav-item <?= isActive('reports', $activePage) ?>">
       Reports
     </a>
     </nav>
@@ -53,11 +53,11 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?action=dashboard&type=admin&level=settings"
+      <a href="?controller=admin&action=dashboard/settings"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?action=dashboard&type=admin&level=profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
+      <a href="?controller=admin&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>
