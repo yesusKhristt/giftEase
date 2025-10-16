@@ -26,121 +26,6 @@
 
             </div>
 
-<<<<<<< HEAD
-            <div class="card">
-                <div style="display:flex">
-                    <div style="width: 70%">
-                        <div style="display:flex" class="card">
-                            <img src="https://i.ytimg.com/vi/FHok-UlAT-E/maxresdefault.jpg" alt="Item Image"
-                                class="item-image" style="height: 250px; width: 250px; margin-right:50px">
-
-                            <div>
-                                <table>
-                                    <tr>
-                                        <td>Chocolate</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>Quantity</td>
-                                        <td><span>2</span>
-                                            <button class="btn3" onclick="updateQuantity(this, -1)"> - </button>
-                                            <button class="btn3" onclick="updateQuantity(this, 1)"> + </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Price</td>
-                                        <td>$180</td>
-                                    </tr>
-
-                                </table>
-
-                            </div>
-                        </div>
-
-
-                        <div style="display:flex" class="card">
-                            <img src="https://i.ytimg.com/vi/FHok-UlAT-E/maxresdefault.jpg" alt="Item Image"
-                                class="item-image" style="height: 250px; width: 250px; margin-right:50px">
-
-                            <div>
-                                <table>
-                                    <tr>
-                                        <td>Chocolate</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>Quantity</td>
-                                        <td><span>2</span>
-                                            <button class="btn3" onclick="updateQuantity(this, -1)"> - </button>
-                                            <button class="btn3" onclick="updateQuantity(this, 1)"> + </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Price</td>
-                                        <td>$180</td>
-                                    </tr>
-
-                                </table>
-
-                            </div>
-                        </div>
-
-
-                        <div style="display:flex" class="card">
-                            <img src="https://i.ytimg.com/vi/FHok-UlAT-E/maxresdefault.jpg" alt="Item Image"
-                                class="item-image" style="height: 250px; width: 250px; margin-right:50px">
-
-                            <div>
-                                <table>
-                                    <tr>
-                                        <td>Available Stock</td>
-                                        <td>47</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Quantity</td>
-                                        <td><span>2</span>
-                                            <button class="btn3" onclick="updateQuantity(this, -1)"> - </button>
-                                            <button class="btn3" onclick="updateQuantity(this, 1)"> + </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Price</td>
-                                        <td>$180</td>
-                                    </tr>
-
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="card">
-                        <table>
-                            <div>
-                                <tr>
-                                    <td><span>Subtotal:</span></td>
-                                    <td><span>$379.97</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span>Tax:</span></td>
-                                    <td><span>$30.40</span></td>
-                                </tr>
-                                <tr>
-                                    <td><span>Total:</span></td>
-                                    <td><span>$410.37</span></td>
-                                </tr>
-                            </div>
-                        </table>
-
-
-                        <div class="action-buttons" style="margin-top: 1rem;">
-                            <a href="" class="btn1" onclick="clearCart()">🗑️ Clear Cart</a>
-                            <a  href="" class="btn1" style="flex: 1;" onclick="openCheckout()">🛒 Proceed to Checkout</a>
-                        </div>
-                    </div>
-=======
              <div class="cart-layout" style="display:grid;grid-template-columns:2fr 1fr;gap:20px;">
     
     <!-- Cart Items -->
@@ -163,7 +48,6 @@
                 <div>
                   <div class="product-name">Rose Teddy</div>
                   <div class="product-category">Toys</div>
->>>>>>> Dilma
                 </div>
               </div>
             </td>
