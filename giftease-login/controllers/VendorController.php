@@ -65,10 +65,13 @@ class VendorController
             case 'add':
                 $this->handleItem($parts);
                 break;
+<<<<<<< HEAD
             case 'delete':
                 $this->deleteItem($parts);
                 break;
 
+=======
+>>>>>>> Dilma
         }
     }
 
@@ -79,6 +82,7 @@ class VendorController
         require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewItem.php';
     }
 
+<<<<<<< HEAD
     public function deleteItem($parts)
     {
         $productId = $parts[3];
@@ -87,6 +91,8 @@ class VendorController
         exit;
     }
 
+=======
+>>>>>>> Dilma
 
     public function handleItem($parts)
     {
@@ -114,6 +120,7 @@ class VendorController
 
             switch ($parts[2]) {
                 case 'add':
+<<<<<<< HEAD
                     $productID = $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
                     header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
                     exit;
@@ -135,6 +142,16 @@ class VendorController
                     }
                     require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
             }
+=======
+                    $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+                    break;
+                case 'edit':
+                    $this->product->editProduct($parts[3], $title, $price, $description, $category, $subcategory, $profilePicPath);
+                    break;
+            }
+
+
+>>>>>>> Dilma
         }
         if ($parts[2] == 'edit') {
             $productId = $parts[3];
@@ -143,7 +160,11 @@ class VendorController
         require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
     }
 
+<<<<<<< HEAD
     public function test($profilePicPath)
+=======
+    public function test($user_id, $title, $price, $description, $category, $subcategory, $profilePicPath)
+>>>>>>> Dilma
     {
         require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
     }
