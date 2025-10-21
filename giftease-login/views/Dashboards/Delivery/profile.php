@@ -12,7 +12,7 @@
 
 <body>
 
-  <div class="container">
+   <div class="container">
     <?php
     $activePage = 'profile';
     include 'views\commonElements/leftSidebarSaneth.php';
@@ -127,12 +127,14 @@
             <div>+12 this month</div>
           </div>
         </div>
-      </div>
+      </div> 
 
-      <div style="display: flex; gap: 15px;">
-        <button class="btn1" onclick="updateProfile()">Update Profile</button>
-        <button class="btn1" onclick="changePassword()">Change Password</button>
-      </div>
+       <div style="display: flex; gap: 15px;">
+                <a href="?controller=delivery&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update
+                    Profile</a>
+                <a href="?controller=delivery&action=deleteProfile" class="btn1" onclick="deleteProfile()">Delete
+                    Profile</a>
+            </div>
     </div>
   </div>
   <script src="main.js"></script>
