@@ -261,7 +261,7 @@
                                     <td><span class="status-badge status-pending">Pending</span></td>
                                     <td>
                                         <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="followUpPayment('WRP-003')">
-                                            <i class="fas fa-phone"></i>
+                                            <i class="fas fa-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
