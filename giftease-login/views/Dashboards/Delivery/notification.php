@@ -26,8 +26,8 @@
         <button class="btn1" onclick="clearNotifications()">Clear All</button>
       </div>
 
-      <div class="notification-item unread" data-notification-id="1">
-        <div class="notification-icon notification-info">
+      <!-- <div class="notification-item unread" data-notification-id="1"> -->
+        <!-- <div class="notification-icon notification-info"> -->
           <i class="fas fa-info"></i>
         </div>
         <div class="notification-content">
