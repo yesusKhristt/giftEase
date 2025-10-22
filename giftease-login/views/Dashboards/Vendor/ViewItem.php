@@ -80,7 +80,7 @@
                                 <?php
 
                                 require_once 'views/commonElements/rating.php';
-                                $rating = 3.3;
+                                $rating = $productDetails['rating'];
                                 echo render_stars($rating);
                                 echo "<div class='rating-text'>$rating Rating</div>"
                                     ?>
@@ -88,25 +88,26 @@
                             <table class="table">
                                 <tr>
                                     <td>Available Stock</td>
-                                    <td>-not implemented-</td>
+                                    <td><?=htmlspecialchars($productDetails['totalStock'] - $productDetails['reservedStock'])?></td>
                                 </tr>
                                 <tr>
                                     <td>Quantity Sold</td>
-                                    <td>80</td>
+                                    <td><?=htmlspecialchars($productDetails['sold'])?></td>
                                 </tr>
                                 <tr>
                                     <td>Impressions</td>
-                                    <td>180</td>
+                                    <td><?=htmlspecialchars($productDetails['impressions'])?></td>
                                 </tr>
                                 <tr>
                                     <td>Clicks</td>
-                                    <td>7</td>
+                                    <td><?=htmlspecialchars($productDetails['clicks'])?></td>
                                 </tr>
                             </table>
                             </p>
                         </div>
                     </div>
-                    <div class="card">
+                    
+                    <div style="padding: 20px">
                         
                             <?php echo nl2br(htmlspecialchars($productDetails['description'])) ?>
                         

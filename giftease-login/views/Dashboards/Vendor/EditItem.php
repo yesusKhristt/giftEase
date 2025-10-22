@@ -60,7 +60,7 @@
             <tr>
                 <td class="subtitle">Description</td>
                 <td colspan="2">
-                    <textarea name="description" rows="6" cols="50"
+                    <textarea name="description" rows="10" cols="50"
                         placeholder="Enter Product Description"><?php echo $parts[2] == 'edit' ? htmlspecialchars($productDetails['description']) : ''; ?></textarea>
                 </td>
             </tr>
