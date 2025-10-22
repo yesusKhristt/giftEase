@@ -30,10 +30,6 @@
       <a href="?controller=client&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         Order History
       </a>
-      <a href="?controller=client&action=dashboard/customize"
-        class="nav-item <?= isActive('customize', $activePage) ?>">
-        Customize Items
-      </a>
       <a href="?controller=client&action=dashboard/payment" class="nav-item <?= isActive('payment', $activePage) ?>">
         Payment
       </a>
