@@ -56,11 +56,11 @@ class DeliveryController
         $path = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
-        $this->Delivery($parts[1]);
+        $this->Delivery($parts);
     }
     public function Delivery($parts)
     {
-        switch ($parts) {
+        switch ($parts[1]) {
             case 'profile':
                 require_once __DIR__ . '/../views/Dashboards/Delivery/profile.php';
                 break;
