@@ -22,7 +22,7 @@
         <p class="subtitle">Stay updated with important alerts and messages.</p>
       </div>
       <div class ="filter-tabs">
-        <button class="btn1" onclick="markAllRead()">Mark All Read</button>
+        <button class="btn2" onclick="markAllRead()">Mark All Read</button>
         <button class="btn1" onclick="clearNotifications()">Clear All</button>
       </div>
 
@@ -34,8 +34,8 @@
           <div class="notification-title">New Order Assigned</div>
           <div class="notification-text">You have been assigned order DEL-004 for delivery today. Priority: High</div>
           <div class="notification-actions">
-            <button class="btn2" onclick="acceptOrder('DEL-004')">Accept</button>
-            <button class="btn2" onclick="viewOrderDetails('DEL-004')">View Details</button>
+            <button class="btn1" onclick="acceptOrder('DEL-004')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-004')">View Details</button> -->
           </div>
         </div>
         <div class="notification-time">1 minutes ago</div>
@@ -50,8 +50,8 @@
           <div class="notification-title">New Order Assigned</div>
           <div class="notification-text">You have been assigned order DEL-005 for delivery today. Priority: Normal</div>
           <div class="notification-actions">
-            <button class="btn2" onclick="acceptOrder('DEL-005')">Accept</button>
-            <button class="btn2" onclick="viewOrderDetails('DEL-005')">View Details</button>
+            <button class="btn1" onclick="acceptOrder('DEL-005')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-005')">View Details</button> -->
           </div>
         </div>
         <div class="notification-time">3 minutes ago</div>
@@ -66,8 +66,8 @@
           <div class="notification-title">New Order Assigned</div>
           <div class="notification-text">You have been assigned order DEL-006 for delivery today. Priority: Normal</div>
           <div class="notification-actions">
-            <button class="btn2" onclick="acceptOrder('DEL-006')">Accept</button>
-            <button class="btn2" onclick="viewOrderDetails('DEL-006')">View Details</button>
+            <button class="btn1" onclick="acceptOrder('DEL-006')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-006')">View Details</button> -->
           </div>
         </div>
         <div class="notification-time">5 minutes ago</div>
@@ -142,7 +142,25 @@
         
     </div>
   </div>
-  <script src="main.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="order-actions">
+  <div class="summary-grid">
+    <button class="btn1" onclick="acceptOrder('DEL-006')">Accept</button>
+    <!-- <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button> -->
+  </div>
+</div>
+
+<script>
+  function acceptOrder(orderId) {
+    Swal.fire({
+      title: 'Oder Accept!',
+      text: `You have accepted order ${orderId} for delivery.`,
+      icon: 'success',
+      confirmButtonText: 'OK'
+    });
+  }
+</script>
 </body>
 
 </html>

@@ -302,15 +302,35 @@
             </div>
           </div>
         </div>
-        <div class="order-actions">
-          <div class="summary-grid">
-            <!-- <button class="btn1" onclick="viewOrderDetails('DEL-005')">View Details</button> -->
-            <button class="btn1" onclick="startDelivery('DEL-005')">Start Delivery</button>
-            <!-- <button class="btn1" onclick="contactCustomer('DEL-005')">Contact Customer</button> -->
-            <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button>
-            <!-- <button class="btn1" onclick="reportIssue('DEL-005')">Report Issue</button> -->
-          </div>
-        </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="order-actions">
+  <div class="summary-grid">
+    <button class="btn1" onclick="startDelivery('DEL-005')">Start Delivery</button>
+    <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button>
+  </div>
+</div>
+
+<script>
+  function startDelivery(orderId) {
+    Swal.fire({
+      title: 'Delivery Started!',
+      text: 'Order ' + orderId + ' is now on the way.',
+      icon: 'info',
+      confirmButtonText: 'OK'
+    });
+  }
+
+  function markDelivered(orderId) {
+    Swal.fire({
+      title: 'Delivered!',
+      text: 'Order ' + orderId + ' has been successfully delivered.',
+      icon: 'success',
+      confirmButtonText: 'Great!'
+    });
+  }
+</script>
       </div>
 
     </div>
