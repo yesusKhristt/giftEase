@@ -87,9 +87,9 @@
                         <!-- Stats Cards -->
                         <div class="card">
                             <div class="stats-grid">
-                                <div class="cardColour">
+                                <div class="card">
                                     <div class="stat-header">
-                                        <span class="stat-label">Urgent Orders</span>
+                                        <span class="stat-labe l">Urgent Orders</span>
                                         <!-- <div class="stat-icon"
                                         style="background: linear-gradient(135deg, #ff5722, #ff7043);"> -->
                                         <i class="fas fa-exclamation-triangle"></i>
@@ -102,7 +102,7 @@
                                     </div>
                                 </div>
 
-                                <div class="cardColour">
+                                <div class="card">
                                     <div class="stat-header">
                                         <span class="stat-label">Pending Orders</span>
                                         <!-- <div class="stat-icon" -->
@@ -117,7 +117,7 @@
                                     </div>
                                 </div>
 
-                                <div class="cardColour">
+                                <div class="card">
                                     <div class="stat-header">
                                         <span class="stat-label">Completed Today</span>
                                         <!-- <div class="stat-icon" -->
@@ -132,7 +132,7 @@
                                     </div>
                                 </div>
 
-                                <div class="cardColour">
+                                <div class="card">
                                     <div class="stat-header">
                                         <span class="stat-label">Today's Revenue</span>
                                         <!-- <div class="stat-icon" -->
@@ -147,7 +147,7 @@
                                     </div>
                                 </div>
 
-                                <div class="cardColour">
+                                <div class="card">
                                     <div class="stat-header">
                                         <span class="stat-label">Customer Rating</span>
                                         <!-- <div class="stat-icon" -->
@@ -162,7 +162,7 @@
                                     </div>
                                 </div>
 
-                                <div class="cardColour">
+                                <div class="card">
                                     <div class="stat-header">
                                         <span class="stat-label">Response Time</span>
                                         <!-- <div class="stat-icon" -->
