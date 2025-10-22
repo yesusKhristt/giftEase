@@ -32,274 +32,260 @@
                             <option value="all">All Orders</option>
                             <option value="urgent">Urgent</option>
                             <option value="pending">My Orders</option>
-                            <!-- <option value="in-progress">In Progress</option> -->
                             <option value="completed">Completed</option>
                         </select>
-                        <!-- <button class="btn1" onclick="createNewOrder()">
-                            <i class="fas fa-plus"></i>
-                            New Order
-                        </button> -->
                     </div>
             </div>
-
-            <!-- Order Cards -->
-
             <div class="card">
-                <!-- <div class="summary-grid"> -->
-                    <!-- <div style="display: flex; justify-content: flex-start; gap: 12px; flex-wrap: wrap; width: 100%;"> -->
-                        <!-- <button class="btn1" onclick="allOrders()"> -->
-                            <!-- <i class="fas fa-list"></i> -->
-                            <div class="title">All Orders</div>
-                        <!-- </button> -->
-                    <!-- </div> -->
-
-                    <!-- <div style="display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap; width: 100%;">
-                        <button class="btn1" onclick="myOrders()">
-                            <i class="fas fa-list"></i>
-                            My Orders
-                        </button>
-                    </div> -->
-                <!-- </div> -->
-           
-            <!-- <div class="summary-grid"> -->
-            <div class="card">
-                <div class="title">WRP-001</div>
-                <div class="subtitle">
-                    Premium Rose Bouquet → Sarah Johnson
-                </div>
-                <span class="urgency-badge urgency-urgent">Urgent</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Today 2:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $25.00
+                <div class="title">All Orders</div>
+                <div class="card">
+                    <div class="title">WRP-001</div>
+                    <div class="subtitle">
+                        Premium Rose Bouquet → Sarah Johnson
                     </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <!-- <span class="progress-label">Progress</span> -->
-                        <!-- <span class="progress-percentage">25%</span> -->
+                    <span class="urgency-badge urgency-urgent">Urgent</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            <i class="fas fa-clock"></i> Due: Today 2:00 PM •
+                            <i class="fas fa-dollar-sign"></i> Fee: $25.00
+                        </div>
                     </div>
 
-                    <div class="summary-grid">
-                        <button class="btn1" onclick="startWrapping('WRP-001')">
-                            <i class="fas fa-play"></i>
-                            Start Wrapping
-                        </button>
+                    <div class="progress-section">
+                        <div class="progress-header">
+                        </div>
 
-                        <button class="btn1" onclick="markComplete('WRP-001')">
-                            <i class="fas fa-check"></i>
-                            Mark Complete
-                        </button>
-                    </div>
+                        <div class="summary-grid">
+                            <button class="btn1" onclick="startWrapping('WRP-001')">
+                                <i class="fas fa-play"></i>
+                                Start Wrapping
+                            </button>
 
-                </div>
+                            <button class="btn1" onclick="markComplete('WRP-001')">
+                                <i class="fas fa-check"></i>
+                                Mark Complete
+                            </button>
+                        </div>
 
-                <div class="title">WRP-002</div>
-                <div class="subtitle">
-                    Wedding Gift Set → Michael & Emma
-                </div>
-                <span class="urgency-badge urgency-urgent">Normal</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Tomorrow 10:00 AM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $35.00
-                    </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <!-- <span class="progress-label">Progress</span> -->
-                        <!-- <span class="progress-percentage">0%</span> -->
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%"></div>
                     </div>
 
-                    <div class="summary-grid">
-                        <button class="btn1" onclick="startWrapping('WRP-002')">
-                            <i class="fas fa-play"></i>
-                            Start Wrapping
-                        </button>
-                        <button class="btn1" onclick="markComplete('WRP-002')">
-                            <i class="fas fa-check"></i>
-                            Mark Complete
-                        </button>
+                    <div class="title">WRP-002</div>
+                    <div class="subtitle">
+                        Wedding Gift Set → Michael & Emma
                     </div>
-                </div>
-
-                <div class="title">WRP-003</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">Low Priority</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
-                    </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <!-- <span class="progress-label">Progress</span> -->
-                        <!-- <span class="progress-percentage">75%</span> -->
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 75%"></div>
+                    <span class="urgency-badge urgency-urgent">Normal</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            <i class="fas fa-clock"></i> Due: Tomorrow 10:00 AM •
+                            <i class="fas fa-dollar-sign"></i> Fee: $35.00
+                        </div>
                     </div>
 
-                    <div class="summary-grid">
-                        <button class="btn1" onclick="continueWrapping('WRP-003')">
-                            <i class="fas fa-play"></i>
-                            Continue
-                        </button>
-                        <button class="btn1" onclick="markComplete('WRP-001')">
-                            <i class="fas fa-check"></i>
-                            Mark Complete
-                        </button>
-                    </div>
-                </div>
+                    <div class="progress-section">
+                        <div class="progress-header">
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
 
-                <div class="title">WRP-004</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">Low Priority</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
-                    </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <!-- <span class="progress-label">Progress</span> -->
-                        <!-- <span class="progress-percentage">60%</span> -->
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 75%"></div>
+                        <div class="summary-grid">
+                            <button class="btn1" onclick="startWrapping('WRP-002')">
+                                <i class="fas fa-play"></i>
+                                Start Wrapping
+                            </button>
+                            <button class="btn1" onclick="markComplete('WRP-002')">
+                                <i class="fas fa-check"></i>
+                                Mark Complete
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="summary-grid">
-                        <button class="btn1" onclick="continueWrapping('WRP-003')">
-                            <i class="fas fa-play"></i>
-                            Continue
-                        </button>
-                        <button class="btn1" onclick="markComplete('WRP-001')">
-                            <i class="fas fa-check"></i>
-                            Mark Complete
-                        </button>
+                    <div class="title">WRP-003</div>
+                    <div class="subtitle">
+                        Birthday Surprise → David Chen
                     </div>
-                </div>
-
-                <div class="title">WRP-005</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">Normal</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
-                    </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <!-- <span class="progress-label">Progress</span> -->
-                        <!-- <span class="progress-percentage">15%</span> -->
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 75%"></div>
+                    <span class="urgency-badge urgency-low">Low Priority</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
+                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                        </div>
                     </div>
 
-                    <div class="summary-grid">
-                        <button class="btn1" onclick="continueWrapping('WRP-003')">
-                            <i class="fas fa-play"></i>
-                            Continue
-                        </button>
-                        <button class="btn1" onclick="markComplete('WRP-001')">
-                            <i class="fas fa-check"></i>
-                            Mark Complete
-                        </button>
-                    </div>
-                </div>
+                    <div class="progress-section">
+                        <div class="progress-header">
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
 
-                <div class="title">WRP-006</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">High</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
-                    </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <!-- <span class="progress-label">Progress</span> -->
-                        <!-- <span class="progress-percentage">75%</span> -->
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 75%"></div>
+                        <div class="summary-grid">
+                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                                <i class="fas fa-play"></i>
+                                Continue
+                            </button>
+                            <button class="btn1" onclick="markComplete('WRP-001')">
+                                <i class="fas fa-check"></i>
+                                Mark Complete
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="summary-grid">
-                        <button class="btn1" onclick="continueWrapping('WRP-003')">
-                            <i class="fas fa-play"></i>
-                            Continue
-                        </button>
-                        <button class="btn1" onclick="markComplete('WRP-001')">
-                            <i class="fas fa-check"></i>
-                            Mark Complete
-                        </button>
+                    <div class="title">WRP-004</div>
+                    <div class="subtitle">
+                        Birthday Surprise → David Chen
                     </div>
-                </div>
+                    <span class="urgency-badge urgency-low">Low Priority</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
+                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                        </div>
+                    </div>
 
-                <div class="title">WRP-007</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">Low Priority</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                    <div class="progress-section">
+                        <div class="progress-header">
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+
+                        <div class="summary-grid">
+                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                                <i class="fas fa-play"></i>
+                                Continue
+                            </button>
+                            <button class="btn1" onclick="markComplete('WRP-001')">
+                                <i class="fas fa-check"></i>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="title">WRP-005</div>
+                    <div class="subtitle">
+                        Birthday Surprise → David Chen
+                    </div>
+                    <span class="urgency-badge urgency-low">Normal</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
+                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-header">
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+
+                        <div class="summary-grid">
+                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                                <i class="fas fa-play"></i>
+                                Continue
+                            </button>
+                            <button class="btn1" onclick="markComplete('WRP-001')">
+                                <i class="fas fa-check"></i>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="title">WRP-006</div>
+                    <div class="subtitle">
+                        Birthday Surprise → David Chen
+                    </div>
+                    <span class="urgency-badge urgency-low">High</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
+                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-header">
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+
+                        <div class="summary-grid">
+                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                                <i class="fas fa-play"></i>
+                                Continue
+                            </button>
+                            <button class="btn1" onclick="markComplete('WRP-001')">
+                                <i class="fas fa-check"></i>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="title">WRP-007</div>
+                    <div class="subtitle">
+                        Birthday Surprise → David Chen
+                    </div>
+                    <span class="urgency-badge urgency-low">Low Priority</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
+                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-header">
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+
+                        <div class="summary-grid">
+                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                                <i class="fas fa-play"></i>
+                                Continue
+                            </button>
+                            <button class="btn1" onclick="markComplete('WRP-001')">
+                                <i class="fas fa-check"></i>
+                                Mark Complete
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <!-- <span class="progress-label">Progress</span> -->
-                        <!-- <span class="progress-percentage">0%</span> -->
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 75%"></div>
-                    </div>
-
-                    <div class="summary-grid">
-                        <button class="btn1" onclick="continueWrapping('WRP-003')">
-                            <i class="fas fa-play"></i>
-                            Continue
-                        </button>
-                        <button class="btn1" onclick="markComplete('WRP-001')">
-                            <i class="fas fa-check"></i>
-                            Mark Complete
-                        </button>
-                    </div>
-                </div>
-
             </div>
-
-
         </div>
     </div>
-    </div>
-    <script src="script.js"></script>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="order-actions">
+    <div class="summary-grid">
+        <button class="btn1" onclick="startWrapping('DEL-001')">Start Wrapping</button>
+        <button class="btn1" onclick="markComplete('DEL-001')">Mark Complete</button>
+    </div>
+</div>
+
+<script>
+    function startWrapping(orderId) {
+        Swal.fire({
+            title: 'Wrapping Started!',
+            text: 'You have started wrapping order ' + orderId + '.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    function markComplete(orderId) {
+        Swal.fire({
+            title: 'Mark Complete!',
+            text: 'You have marked order ' + orderId + ' as complete.',
+            icon: 'success',
+            confirmButtonText: 'Great!'
+        });
+    }
+</script>
 
 </html>
