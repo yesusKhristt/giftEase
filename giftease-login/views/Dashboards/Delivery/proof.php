@@ -53,10 +53,73 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+     
+      <button class="btn1" style="margin-top: 10px;" onclick="reportIssue()">Report Issue</button>
+      <table class="table">
+        <thead>
+          <tr>
+        <th>Order ID</th>
+        <th>Issue Description</th>
+        <!-- <th>Status</th> -->
+        <th>Reported On</th>
+        <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+        <td>DEL-003</td>
+        <td>Customer not in address and can't contact.</td>
+        <!-- <td><span class="status pending">Pending</span></td> -->
+        <td>2024-06-10</td>
+        <td>
+          <div style="display:inline-flex; gap:8px; align-items:center;">
+            <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </td>
+          </tr>
+          <tr>
+        <td>DEL-004</td>
+        <td>Given Wrong Address.</td>
+        <!-- <td><span class="status resolved">Resolved</span></td> -->
+        <td>2024-06-08</td>
+        <td>
+          <div style="display:inline-flex; gap:8px; align-items:center;">
+            <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </td>
+          </tr>
+          <tr>
+        <td>DEL-005</td>
+        <td>Customer don't pay.</td>
+        <!-- <td><span class="status resolved">Resolved</span></td> -->
+        <td>2024-06-09</td>
+        <td>
+          
+          <div style="display:inline-flex; gap:8px; align-items:center;">
+            <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </td>
+          </tr>
+        </tbody>
+      </table>
 
-  <script src="main.js"></script>
+      
+
 </body>
 
 </html>

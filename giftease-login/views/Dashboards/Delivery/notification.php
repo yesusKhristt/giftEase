@@ -21,7 +21,7 @@
         <h1 class="title">Notifications</h1>
         <p class="subtitle">Stay updated with important alerts and messages.</p>
       </div>
-      <div class ="filter-tabs">
+      <div class="filter-tabs">
         <button class="btn2" onclick="markAllRead()">Mark All Read</button>
         <button class="btn1" onclick="clearNotifications()">Clear All</button>
       </div>
@@ -46,7 +46,7 @@
         <div class="notification-icon notification-info">
           <i class="fas fa-info"></i>
         </div>
-      <div class="notification-content">
+        <div class="notification-content">
           <div class="notification-title">New Order Assigned</div>
           <div class="notification-text">You have been assigned order DEL-005 for delivery today. Priority: Normal</div>
           <div class="notification-actions">
@@ -58,11 +58,11 @@
         <button class="notification-dismiss" onclick="dismissNotification(2)">&times;</button>
       </div>
 
-       <div class="notification-item unread" data-notification-id="3">
+      <div class="notification-item unread" data-notification-id="3">
         <div class="notification-icon notification-info">
           <i class="fas fa-info"></i>
         </div>
-      <div class="notification-content">
+        <div class="notification-content">
           <div class="notification-title">New Order Assigned</div>
           <div class="notification-text">You have been assigned order DEL-006 for delivery today. Priority: Normal</div>
           <div class="notification-actions">
@@ -87,7 +87,7 @@
         <button class="notification-dismiss" onclick="dismissNotification(2)">&times;</button>
       </div>
 
-       <div class="notification-item">
+      <div class="notification-item">
         <div class="notification-icon notification-info">
           <i class="fas fa-star"></i>
         </div>
@@ -138,29 +138,40 @@
         <div class="notification-time">Yesterday</div>
         <button class="notification-dismiss" onclick="dismissNotification(4)">&times;</button>
       </div>
-
-        
     </div>
   </div>
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<div class="order-actions">
-  <div class="summary-grid">
-    <button class="btn1" onclick="acceptOrder('DEL-006')">Accept</button>
-    <!-- <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button> -->
-  </div>
-</div>
+  <button class="btn1" onclick="acceptOrder('DEL-006')">Accept</button>
+  <button class="btn2" onclick="markAllRead()">Mark All Read</button>
+  <button class="btn1" onclick="clearNotifications()">Clear All</button>
 
-<script>
-  function acceptOrder(orderId) {
-    Swal.fire({
-      title: 'Oder Accept!',
-      text: `You have accepted order ${orderId} for delivery.`,
-      icon: 'success',
-      confirmButtonText: 'OK'
-    });
-  }
-</script>
+  <script>
+    function acceptOrder(orderId) {
+      Swal.fire({
+        title: 'Oder Accept!',
+        text: `You have accepted order ${orderId} for delivery.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+    function markAllRead(orderId) {
+      Swal.fire({
+        title: 'Marked as Read',
+        text: `All your notifications have been marked as read.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+    function clearNotifications(orderId) {
+      Swal.fire({
+        title: 'Notifications Cleared',
+        text: `All your notifications have been cleared.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+  </script>
 </body>
 
 </html>
