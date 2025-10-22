@@ -46,8 +46,10 @@
                     <span class="urgency-badge urgency-urgent">Urgent</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <i class="fas fa-clock"></i> Due: Today 2:00 PM •
-                            <i class="fas fa-dollar-sign"></i> Fee: $25.00
+                            <!-- <i class="fas fa-clock"></i>  -->
+                            Due: Today 2:00 PM<br>
+                            <!-- <i class="fas fa-dollar-sign"></i> -->
+                             Fee: Rs25.00
                         </div>
                     </div>
 
@@ -76,8 +78,10 @@
                     <span class="urgency-badge urgency-urgent">Normal</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <i class="fas fa-clock"></i> Due: Tomorrow 10:00 AM •
-                            <i class="fas fa-dollar-sign"></i> Fee: $35.00
+                            <!-- <i class="fas fa-clock"></i>  -->
+                            Due: Tomorrow 10:00 AM<br>
+                            <!-- <i class="fas fa-dollar-sign"></i> -->
+                             Fee: Rs35.00
                         </div>
                     </div>
 
@@ -107,8 +111,10 @@
                     <span class="urgency-badge urgency-low">Low Priority</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                            <!-- <i class="fas fa-clock"></i>  -->
+                             Due: Friday 3:00 PM<br> 
+                            <!-- <i class="fas fa-dollar-sign"></i>  -->
+                            Fee: Rs18.00
                         </div>
                     </div>
 
@@ -138,8 +144,10 @@
                     <span class="urgency-badge urgency-low">Low Priority</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                            <!-- <i class="fas fa-clock"></i>  -->
+                            Due: Friday 3:00 PM<br>
+                            <i class="fas fa-dollar-sign"></i> 
+                            Fee: Rs18.00
                         </div>
                     </div>
 
@@ -169,8 +177,10 @@
                     <span class="urgency-badge urgency-low">Normal</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                            <!-- <i class="fas fa-clock"></i>  -->
+                            Due: Friday 3:00 PM<br>
+                            <!-- <i class="fas fa-dollar-sign"></i>  -->
+                            Fee: Rs18.00
                         </div>
                     </div>
 
@@ -200,8 +210,8 @@
                     <span class="urgency-badge urgency-low">High</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                            Due: Friday 3:00 PM.<br>
+                            Fee: Rs18.00
                         </div>
                     </div>
 
@@ -231,8 +241,10 @@
                     <span class="urgency-badge urgency-low">Low Priority</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                            <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                            <!-- <i class="fas fa-clock"></i>  -->
+                            Due: Friday 3:00 PM.<br>
+                            <!-- <i class="fas fa-dollar-sign"></i>  -->
+                            Fee: Rs18.00
                         </div>
                     </div>
 
@@ -261,12 +273,8 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<div class="order-actions">
-    <div class="summary-grid">
-        <button class="btn1" onclick="startWrapping('DEL-001')">Start Wrapping</button>
-        <button class="btn1" onclick="markComplete('DEL-001')">Mark Complete</button>
-    </div>
-</div>
+    <button class="btn1" onclick="startWrapping('DEL-001')">Start Wrapping</button>
+    <button class="btn1" onclick="markComplete('DEL-001')">Mark Complete</button>
 
 <script>
     function startWrapping(orderId) {
