@@ -128,6 +128,24 @@ class ClientController
             header("Location: index.php?controller=client&action=dashboard/cart");
             exit;
         }
+        if ($state === 'inc') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['client']['id'];
+
+            $this->cart->increaseCartQuantity($client_id, $product_id);
+
+            header("Location: index.php?controller=client&action=dashboard/cart");
+            exit;
+        }
+        if ($state === 'dec') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['client']['id'];
+
+            $this->cart->decreaseCartQuantity($client_id, $product_id);
+
+            header("Location: index.php?controller=client&action=dashboard/cart");
+            exit;
+        }
         $cartItems = $this->cart->getCartForClient($_SESSION['client']['id']);
         require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
     }

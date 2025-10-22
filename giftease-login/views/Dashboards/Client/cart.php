@@ -56,15 +56,15 @@
                 </td>
                 <td>
                   <div class="qty-control" style="display:flex;gap:6px;align-items:center;">
-                    <button class="btn1 btn-small">-</button>
-                    <span>2</span>
-                    <button class="btn1 btn-small">+</button>
+                    <a class="btn1 btn-small" href="?controller=client&action=dashboard/cart/<?= $row['id'] ?>&state=dec">-</a>
+                    <span><?= htmlspecialchars($row['quantity']) ?></span>
+                    <a class="btn1 btn-small" href="?controller=client&action=dashboard/cart/<?= $row['id'] ?>&state=inc">+</a>
                   </div>
                 </td>
                 <td>Rs. <?= htmlspecialchars($row['price']) ?></td>
-                <td>-not implemented-</td>
-                <td>
-                  <a class="view-btn" href="?controller=client&action=dashboard/cart/<?= $row['id'] ?>&state=remove">
+                <td><?= htmlspecialchars($row['quantity'] * $row['price']) ?></td>
+                <td> 
+                  <a class="view-btn remove-from-cart" href="?controller=client&action=dashboard/cart/<?= $row['id'] ?>&state=remove">
                     Remove
                   </a>
                 </td>

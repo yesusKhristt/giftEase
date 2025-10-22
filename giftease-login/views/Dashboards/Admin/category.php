@@ -14,13 +14,13 @@
 
     <div class="container">
         <?php
-        $activePage = 'giftWrapping';
+        $activePage = 'category';
         include 'views/commonElements/leftSidebarChathu.php';
         ?>
         <div class="main-content">
             <div class="page-header">
-                <h1 class="title">Customize Order</h1>
-                <p class="subtitle">Personalize your products with custom options</p>
+                <h1 class="title">Add Product Categories</h1>
+                <p class="subtitle">Add Product Categories for efficient searching</p>
 
             </div>
 
@@ -28,50 +28,26 @@
 
             <div class="card">
                 <div class="services-grid">
-                    <a href="?controller=admin&action=dashboard/addGiftWrappingItems">
+                    <a href="?controller=admin&action=dashboard/category/add" style="text-decoration: none;">
                         <div class="card">
                             <div class="service-icon">
                                 <i class="fas fa-gift"></i>
                             </div>
-                            <h3 class="service-title">Add gift wrapping items</h3>
+                            <h3 class="service-title">Add Categories</h3>
                         </div>
                     </a>
 
-                    <a href="?controller=admin&action=dashboard/editGiftWrappingItems">
+                    <a href="?controller=admin&action=dashboard/category/edit">
                         <div class="card">
                             <div class="service-icon">
                                 <i class="fas fa-ribbon"></i>
                             </div>
-                            <h3 class="service-title">Edit gift wrapping items</h3>
+                            <h3 class="service-title">Edit Subcategory</h3>
                         </div>
                     </a>
                 </div>
             </div>
-            <div class="card">
-
-                <div class="services-grid">
-
-                    <div class="card">
-                        <div class="service-icon">
-                            <i class="fas fa-gift"></i>
-                        </div>
-                        <h3 class="service-title">Add gift wrapping packages</h3>
-                    </div>
-
-
-                    <div class="card">
-                        <div class="service-icon">
-                            <i class="fas fa-ribbon"></i>
-                        </div>
-                        <h3 class="service-title">Edit gift wrapping packages</h3>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
-    </div>
-    </div>
-
     </div>
 </body>
 

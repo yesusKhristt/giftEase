@@ -12,13 +12,6 @@ class ProductsModel
 
     public function createTableIfNotExists()
     {
-        $sql1 = "
-        CREATE TABLE IF NOT EXISTS categories (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(20) NOT NULL
-        );
-         ";
-
         //INSERT INTO products (vendor_id, name, price, description,mainCategory, subCategory, created_at) VALUES (9, 'Apex Slaughterspine', 35, 'COOLEST FICTIONAL DINASAUR EVER', 1,13, CURRENT_TIMESTAMP);
         $sql2 = "
         CREATE TABLE IF NOT EXISTS products (
@@ -40,7 +33,7 @@ class ProductsModel
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE,
             FOREIGN KEY (mainCategory) REFERENCES categories(id) ON DELETE CASCADE,
-            FOREIGN KEY (subCategory) REFERENCES categories(id) ON DELETE CASCADE
+            FOREIGN KEY (subCategory) REFERENCES subcategories(id) ON DELETE CASCADE
         );
          ";
 
@@ -55,7 +48,6 @@ class ProductsModel
         ";
 
         try {
-            $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
             $this->pdo->exec($sql3);
         } catch (PDOException $e) {
@@ -99,6 +91,8 @@ class ProductsModel
             'totalStock' => $product1[0]['totalStock'],
             'reservedStock' => $product1[0]['reservedStock'],
             'impressions' => $product1[0]['impressions'],
+            'subcategory' => $product1[0]['subCategory'],
+            'category' => $product1[0]['mainCategory'],
             'sold' => $product1[0]['sold'],
             'clicks' => $product1[0]['clicks'],
             'rating' => $product1[0]['raiting'],

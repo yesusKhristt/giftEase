@@ -3,13 +3,16 @@ class VendorController
 {
     private $vendor;
     private $product;
+    private $category;
 
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/VendorModel.php';
         require_once __DIR__ . '/../models/ProductsModel.php';
+        require_once __DIR__ . '/../models/CategoryModel.php';
         $this->vendor = new VendorModel($pdo);
         $this->product = new ProductsModel($pdo);
+        $this->category = new CategoryModel($pdo);
     }
 
     public function checkID()
@@ -140,7 +143,20 @@ class VendorController
             $productId = $parts[3];
             $productDetails = $this->product->fetchProduct($productId);
         }
+        $categories = $this->category->getCategory();
+        $subcategories = $this->category->getAllSubcategory();
         require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
+    }
+
+    public function ajaxCategory()
+    {
+        $categoryId = intval($_POST['category_id'] ?? 0);
+
+        $subcategories = $this->category->getSubcategory($categoryId);
+
+        header('Content-Type: application/json');
+        echo json_encode($subcategories);
+
     }
 
     public function test($profilePicPath)
@@ -198,6 +214,9 @@ class VendorController
                 break;
             case 'manageInventory':
                 $this->manageInventory($parts);
+                break;
+            case 'getCategory':
+                $this->ajaxCategory();
                 break;
             case 'messages':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Messeges.php';
