@@ -62,9 +62,9 @@
         </div>
         <div class="order-actions">
           <div class="summary-grid">
-            <button class="btn1" onclick="viewOrderDetails('DEL-001')">View Details</button>
+            <!-- <button class="btn1" onclick="viewOrderDetails('DEL-001')">View Details</button> -->
             <button class="btn1" onclick="startDelivery('DEL-001')">Start Delivery</button>
-            <button class="btn1" onclick="contactCustomer('DEL-001')">Contact Customer</button>
+            <!-- <button class="btn1" onclick="contactCustomer('DEL-001')">Contact Customer</button> -->
             <button class="btn1" onclick="markDelivered('DEL-001')">Mark Delivered</button>
             <!-- <button class="btn1" onclick="reportIssue('DEL-001')">Report Issue</button> -->
           </div>
@@ -111,9 +111,9 @@
 
         <div class="order-actions">
           <div class="summary-grid">
-            <button class="btn1" onclick="viewOrderDetails('DEL-002')">View Details</button>
+            <!-- <button class="btn1" onclick="viewOrderDetails('DEL-002')">View Details</button> -->
             <button class="btn1" onclick="startDelivery('DEL-002')">Start Delivery</button>
-            <button class="btn1" onclick="contactCustomer('DEL-002')">Contact Customer</button>
+            <!-- <button class="btn1" onclick="contactCustomer('DEL-002')">Contact Customer</button> -->
             <button class="btn1" onclick="markDelivered('DEL-002')">Mark Delivered</button>
             <!-- <button class="btn1" onclick="reportIssue('DEL-002')">Report Issue</button> -->
           </div>
@@ -160,9 +160,9 @@
 
         <div class="order-actions">
           <div class="summary-grid">
-            <button class="btn1" onclick="viewOrderDetails('DEL-003')">View Details</button>
+            <!-- <button class="btn1" onclick="viewOrderDetails('DEL-003')">View Details</button> -->
             <button class="btn1" onclick="startDelivery('DEL-003')">Start Delivery</button>
-            <button class="btn1" onclick="contactCustomer('DEL-003')">Contact Customer</button>
+            <!-- <button class="btn1" onclick="contactCustomer('DEL-003')">Contact Customer</button> -->
             <button class="btn1" onclick="markDelivered('DEL-003')">Mark Delivered</button>
             <!-- <button class="btn1" onclick="reportIssue('DEL-003')">Report Issue</button> -->
           </div>
@@ -208,9 +208,9 @@
         </div>
         <div class="order-actions">
           <div class="summary-grid">
-            <button class="btn1" onclick="viewOrderDetails('DEL-004')">View Details</button>
+            <!-- <button class="btn1" onclick="viewOrderDetails('DEL-004')">View Details</button> -->
             <button class="btn1" onclick="startDelivery('DEL-004')">Start Delivery</button>
-            <button class="btn1" onclick="contactCustomer('DEL-004')">Contact Customer</button>
+            <!-- <button class="btn1" onclick="contactCustomer('DEL-004')">Contact Customer</button> -->
             <button class="btn1" onclick="markDelivered('DEL-004')">Mark Delivered</button>
             <!-- <button class="btn1" onclick="reportIssue('DEL-004')">Report Issue</button> -->
           </div>
@@ -256,9 +256,9 @@
         </div>
         <div class="order-actions">
           <div class="summary-grid">
-            <button class="btn1" onclick="viewOrderDetails('DEL-005')">View Details</button>
+            <!-- <button class="btn1" onclick="viewOrderDetails('DEL-005')">View Details</button> -->
             <button class="btn1" onclick="startDelivery('DEL-005')">Start Delivery</button>
-            <button class="btn1" onclick="contactCustomer('DEL-005')">Contact Customer</button>
+            <!-- <button class="btn1" onclick="contactCustomer('DEL-005')">Contact Customer</button> -->
             <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button>
             <!-- <button class="btn1" onclick="reportIssue('DEL-005')">Report Issue</button> -->
           </div>
@@ -304,9 +304,9 @@
         </div>
         <div class="order-actions">
           <div class="summary-grid">
-            <button class="btn1" onclick="viewOrderDetails('DEL-005')">View Details</button>
+            <!-- <button class="btn1" onclick="viewOrderDetails('DEL-005')">View Details</button> -->
             <button class="btn1" onclick="startDelivery('DEL-005')">Start Delivery</button>
-            <button class="btn1" onclick="contactCustomer('DEL-005')">Contact Customer</button>
+            <!-- <button class="btn1" onclick="contactCustomer('DEL-005')">Contact Customer</button> -->
             <button class="btn1" onclick="markDelivered('DEL-005')">Mark Delivered</button>
             <!-- <button class="btn1" onclick="reportIssue('DEL-005')">Report Issue</button> -->
           </div>
