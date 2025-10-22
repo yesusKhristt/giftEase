@@ -15,6 +15,10 @@
     include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
+      <div class="page-header">
+                <h1 class="title">Account</h1>
+                <p class="subtitle">Manage your Personal Information</p>
+            </div>
       <header class="topbar">
         <div class="left">
           <button class="hamburger" id="sidebarToggle" aria-label="Toggle sidebar">

@@ -15,14 +15,19 @@
     include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
-      <section id="customers" class="page active">
+      <div class="page-header">
+                <h1 class="title">Customer</h1>
+                <p class="subtitle">Customer List</p>
+            </div>
+
+      <!-- <section id="customers" class="page active">
         <div class="page-header">
           <div>
             <h3>Customers</h3>
             <p class="muted">Customer list (demo)</p>
           </div>
-        </div>
-        <div class="table-wrap">
+        </div> -->
+        <!-- <div class="table-wrap">
           <table>
             <thead>
               <tr>
@@ -52,7 +57,75 @@
                 <td>2025-01-12</td>
               </tr>
             </tbody>
-          </table>
+          </table> -->
+
+           <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>oredr ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>Date</th>
+                                    <!-- <th>Status</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>001</td>
+                                    <td>chathu</td>
+                                    <td>0786607436</td>
+                                    <td>102/8 colombo</td>
+                                    <td style="font-weight: 600;">2026/02/03</td>
+                                    <!-- <td><span class="status-badge status-paid">Paid</span></td>
+                                     -->
+                                        <!-- <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-001')">
+                                            <i class="fas fa-eye"></i>
+                                        </button> -->
+                                    
+                                </tr>
+                                <tr>
+                                    <td>002</td>
+                                    <td>oshani</td>
+                                    <td>0786607436</td>
+                                    <td>1000 colombo </td>
+                                    <td style="font-weight: 600;">2026/02/05</td>
+                                    <!-- <td><span class="status-badge status-paid">Paid</span></td>
+                                     -->
+                                        <!-- <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-002')">
+                                            <i class="fas fa-eye"></i>
+                                        </button> -->
+                                    
+                                </tr>
+                                <tr>
+                                    <td>002</td>
+                                    <td>ruwanthika</td>
+                                    <td>0786607436</td>
+                                    <td></td>
+                                    <td style="font-weight: 600;">$35.00</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    
+                                        <!-- <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="followUpPayment('WRP-003')">
+                                            <i class="fas fa-phone"></i>
+                                        </button> -->
+                                    
+                                </tr>
+                                <tr>
+                                    <td>003</td>
+                                    <td>sadunika</td>
+                                    <td>0786607436</td>
+                                    <td>David Lee</td>
+                                    <td style="font-weight: 600;">$28.00</td>
+                                    <td><span class="status-badge status-paid">Paid</span></td>
+                                    
+                                        <!-- <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-004')">
+                                            <i class="fas fa-eye"></i>
+                                        </button> -->
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+        </div>
         </div>
       </section>
     </div>

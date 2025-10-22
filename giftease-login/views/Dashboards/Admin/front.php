@@ -15,7 +15,12 @@
     include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
-      <section id="dashboard" class="page active">
+     <div class="page-header">
+                <h1 class="title">Account</h1>
+                <p class="subtitle">Manage your Personal Information</p>
+            </div>
+
+      <!-- <section id="dashboard" class="page active">
         <h2>Dashboard Overview</h2>
 
         <div class="cards">
@@ -40,7 +45,7 @@
               <p id="totalVendors">0</p>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="quick-grid">
           <a class="quick ellipse items">📦 <span>Items</span></a>

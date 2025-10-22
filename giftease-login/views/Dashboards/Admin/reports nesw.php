@@ -15,13 +15,18 @@
     include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
-      <section id="reports" class="page active" aria-labelledby="reports-title">
+  <div class="page-header">
+                <h1 class="title">Account</h1>
+                <p class="subtitle">Manage your Personal Information</p>
+            </div>
+
+      <!-- <section id="reports" class="page active" aria-labelledby="reports-title">
         <div class="page-header">
           <div>
             <h3 id="reports-title">Reports</h3>
             <p class="muted">Generate and download reports (demo)</p>
           </div>
-        </div>
+        </div> -->
         <div class="cards">
           <button class="card press button-card">👔 Vendor Report</button>
           <button class="card press button-card">📦 Items Report</button>
