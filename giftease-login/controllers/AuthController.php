@@ -60,9 +60,7 @@ class AuthController
         }
 
         // Load different views based on user type
-
         require_once __DIR__ . '/../views/Login/login.php';
-
 
     }
 

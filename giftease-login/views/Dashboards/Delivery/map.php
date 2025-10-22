@@ -50,8 +50,8 @@
         </select>
       </div>
       <div class="card">
-        <button class="btn2" onclick="shareLocation()">
-          <i class="fas fa-share-alt"></i> Share Location
+        <button class="btn1" onclick="shareLocation()">
+          <i class="fas fa-share"></i> Share Location
         </button>
       </div>
 

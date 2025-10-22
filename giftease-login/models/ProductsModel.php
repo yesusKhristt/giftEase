@@ -24,13 +24,13 @@ class ProductsModel
         CREATE TABLE IF NOT EXISTS products (
             id INT AUTO_INCREMENT PRIMARY KEY,
             vendor_id INT NOT NULL,
-            name VARCHAR(100) NOT NULL,
+            name VARCHAR(500) NOT NULL,
             price INT NOT NULL,
-            description VARCHAR(500) NOT NULL,
+            description VARCHAR(3000) NOT NULL,
             status VARCHAR(20) NOT NULL,
             mainCategory INT NOT NULL,
             subCategory INT NOT NULL,
-            displayImage VARCHAR(100) NOT NULL,
+            displayImage VARCHAR(500) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE,
             FOREIGN KEY (mainCategory) REFERENCES categories(id) ON DELETE CASCADE,
@@ -41,8 +41,9 @@ class ProductsModel
         $sql3 = "
          CREATE TABLE IF NOT EXISTS productImages (
             product_id INT NOT NULL,
-            image_loc VARCHAR(100) NOT NULL,
-            PRIMARY KEY (product_id, image_loc),
+            sortOrder INT NOT NULL,
+            image_loc VARCHAR(500) NOT NULL,
+            PRIMARY KEY (product_id, sortOrder),
             FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
         );
         ";
@@ -71,7 +72,7 @@ class ProductsModel
         $stmt1->execute();
         $product1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId");
+        $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
         $stmt2->execute();
         $product2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -83,6 +84,29 @@ class ProductsModel
             'images' => $product2
         ];
 
+    }
+
+    public function fetchProductPic($productId)
+    {
+        $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
+        $stmt2->execute();
+        return $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
+    public function fetchProductPicCol($productId)
+    {
+        $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
+        $stmt2->execute();
+        return $stmt2->fetch(PDO::FETCH_ASSOC);
+
+    }
+
+
+    public function deleteProduct($productId)
+    {
+        $stmt1 = $this->pdo->prepare("DELETE FROM products WHERE id = $productId");
+        $stmt1->execute();
     }
 
     public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath)
@@ -99,39 +123,72 @@ class ProductsModel
         ]);
         $productID = $this->pdo->lastInsertId();
         ;
+        $sort = 1;
         foreach ($profilePath as $image) {
-            $stmt2 = $this->pdo->prepare("INSERT INTO productImages (product_id, image_loc) VALUES (?, ?)");
+            $stmt2 = $this->pdo->prepare("INSERT INTO productImages (product_id, sortOrder, image_loc) VALUES (?, ? ,?)");
             $stmt2->execute([
                 $productID,
+                $sort,
                 $image
             ]);
+            $sort++;
         }
-        header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
-        exit;
+        return $productID;
     }
 
     public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath)
     {
+        // fallback to DB images if $profilePath is empty
+        if (empty($profilePath)) {
+            $profilePath = $this->fetchProductPic($product_id);
+            $notuploaded = true;
+        } else {
+            $notuploaded = false;
+        }
 
-        $stmt1 = $this->pdo->prepare('UPDATE products SET name = ?, price = ?, description = ?,mainCategory = ?, subCategory = ?, displayImage = ?  WHERE id = ?;');
+        // get displayImage safely
+        if (empty($profilePath)) {
+            $displayImage = null; // no images at all
+        } else {
+            $first = $profilePath[0];
+            $displayImage = $notuploaded ? $first['image_loc'] : $first;
+        }
+
+        // update products table
+        $stmt1 = $this->pdo->prepare('
+        UPDATE products 
+        SET name = ?, price = ?, description = ?, mainCategory = ?, subCategory = ?, displayImage = ?  
+        WHERE id = ?
+    ');
         $stmt1->execute([
             $name,
             $price,
             $description,
             $mainC,
             $subC,
-            $profilePath[0],
+            $displayImage,
             $product_id
         ]);
-        ;
-        foreach ($profilePath as $image) {
-            $stmt2 = $this->pdo->prepare("UPDATE productImages SET image_loc = ? WHERE product_id = ?;");
+
+        // delete old images
+        $stmt3 = $this->pdo->prepare("DELETE FROM productImages WHERE product_id = ?");
+        $stmt3->execute([$product_id]);
+
+        // insert new images
+        $sort = 1;
+        foreach ($profilePath as $row) {
+            $image = $notuploaded ? $row['image_loc'] : $row;
+            $stmt2 = $this->pdo->prepare("
+            INSERT INTO productImages (product_id, sortOrder, image_loc)
+            VALUES (?, ?, ?)
+        ");
             $stmt2->execute([
-                $image,
-                $product_id
+                $product_id,
+                $sort,
+                $image
             ]);
+            $sort++;
         }
-        header("Location: index.php?controller=vendor&action=dashboard/item/view/$product_id");
-        exit;
     }
+
 }

@@ -65,6 +65,10 @@ class VendorController
             case 'add':
                 $this->handleItem($parts);
                 break;
+            case 'delete':
+                $this->deleteItem($parts);
+                break;
+
         }
     }
 
@@ -73,6 +77,14 @@ class VendorController
         $productId = $parts[3];
         $productDetails = $this->product->fetchProduct($productId);
         require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewItem.php';
+    }
+
+    public function deleteItem($parts)
+    {
+        $productId = $parts[3];
+        $this->product->deleteProduct($productId);
+        header("Location: index.php?controller=vendor&action=dashboard/inventory");
+        exit;
     }
 
 
@@ -102,14 +114,27 @@ class VendorController
 
             switch ($parts[2]) {
                 case 'add':
-                    $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
-                    break;
+                    $productID = $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+                    header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
+                    exit;
                 case 'edit':
-                    $this->product->editProduct($parts[3], $title, $price, $description, $category, $subcategory, $profilePicPath);
-                    break;
+                    $this->product->editProduct(
+                        $parts[3],       // product ID
+                        $title,
+                        $price,
+                        $description,
+                        $category,
+                        $subcategory,
+                        $profilePicPath
+                    );
+                    header("Location: index.php?controller=vendor&action=dashboard/item/view/" . urlencode($parts[3]));
+                    exit;
+                case 'edit2':
+                    if ($profilePicPath == null) {
+                        $profilePicPath = $this->product->fetchProductPic($parts[3]);
+                    }
+                    require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
             }
-
-
         }
         if ($parts[2] == 'edit') {
             $productId = $parts[3];
@@ -118,7 +143,7 @@ class VendorController
         require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
     }
 
-    public function test($user_id, $title, $price, $description, $category, $subcategory, $profilePicPath)
+    public function test($profilePicPath)
     {
         require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
     }
