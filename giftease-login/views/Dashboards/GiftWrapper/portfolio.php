@@ -44,11 +44,12 @@
                     </button>
                 </div>
             </div>
+            
 
             <div class="card">
                 <div class="gallery-grid">
                     <div class="gallery-item" data-category="premium">
-                        <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=300&fit=crop"
+                        <img src="resources/premium gold.jpeg"
                             alt="Premium Gold Wrapping" class="gallery-image">
                         <div class="gallery-info">
                             <h4 class="gallery-title">Premium Gold Foil Wrap</h4>
@@ -74,7 +75,7 @@
                     </div>
 
                     <div class="gallery-item" data-category="wedding">
-                        <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=400&h=300&fit=crop"
+                        <img src="resources/paper.jpeg"
                             alt="Wedding Gift Wrapping" class="gallery-image">
                         <div class="gallery-info">
                             <h4 class="gallery-title">Vintage Wedding Style</h4>
@@ -100,7 +101,7 @@
                     </div>
 
                     <div class="gallery-item" data-category="premium">
-                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop"
+                        <img src="resources/luxury box.jpeg"
                             alt="Luxury Box Set" class="gallery-image">
                         <div class="gallery-info">
                             <h4 class="gallery-title">Luxury Presentation Box</h4>
@@ -126,7 +127,7 @@
                     </div>
 
                     <div class="gallery-item" data-category="birthday">
-                        <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=300&fit=crop"
+                        <img src="resources/geometric.jpeg"
                             alt="Modern Minimalist" class="gallery-image">
                         <div class="gallery-info">
                             <h4 class="gallery-title">Modern Minimalist Design</h4>
@@ -152,7 +153,7 @@
                     </div>
 
                     <div class="gallery-item" data-category="corporate">
-                        <img src="https://images.unsplash.com/photo-1607344645866-009c7d0f2e8d?w=400&h=300&fit=crop"
+                        <img src="resources/logo.jpeg"
                             alt="Corporate Branding" class="gallery-image">
                         <div class="gallery-info">
                             <h4 class="gallery-title">Corporate Branded Wrapping</h4>
@@ -178,7 +179,7 @@
                     </div>
 
                     <div class="gallery-item" data-category="birthday">
-                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop"
+                        <img src="resources/rainbow.jpeg"
                             alt="Colorful Birthday Wrapping" class="gallery-image">
                         <div class="gallery-info">
                             <h4 class="gallery-title">Vibrant Birthday Collection</h4>

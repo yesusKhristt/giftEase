@@ -22,30 +22,30 @@
             <div id="overview" class="tab-content active">
                 <div class="card">
                     <div class="summary-grid">
-                        <div class="cardColour">
+                        <div class="card">
                             <div class="title">Urgent Orders : 3</div>
                             <div class="subtitle">2 due today, 1 overdue</div>
                         </div>
-                        <div class="cardColour">
+                        <div class="card">
                             <div class="title">Pending Orders : 12</div>
                             <div class="subtitle">+3 from yesterday</div>
                         </div>
-                        <div class="cardColour">
+                        <div class="card">
                             <div class="title">Completed Today : 8</div>
                             <div class="subtitle">+2 from yesterday</div>
                         </div>
                     </div>
 
                     <div class="summary-grid">
-                        <div class="cardColour">
+                        <div class="card">
                             <div class="title">Today's Revenue : $156</div>
                             <div class="subtitle">Avg $19.50 per order</div>
                         </div>
-                        <div class="cardColour">
+                        <div class="card">
                             <div class="title">Customer Rating : 4.9 </div>
                             <div class="subtitle">Based on 187 reviews</div>
                         </div>
-                        <div class="cardColour">
+                        <div class="card">
                             <div class="title">Response Time : 12m </div>
                             <div class="subtitle">Average response time</div>
                         </div>
@@ -184,24 +184,24 @@
                     </div>
                     <p class="section-subtitle">Frequently used tools and shortcuts</p>
                     <div class="summary-grid">
-                        <div class="cardColour" onclick="createNewOrder()">
+                        <div class="card" onclick="createNewOrder()">
                             <i class="fas fa-plus"></i>
                             <div class="title">New Order</div>
                             <p class="service-description">Create a new wrapping order manually</p>
                         </div>
-                        <div class="cardColour" onclick="scanQRCode()">
+                        <div class="card" onclick="scanQRCode()">
                             <i class="fas fa-qrcode"></i>
                             <div class="title">Scan QR Code</div>
                             <p class="service-description">Scan customer QR code for quick order access</p>
                         </div>
                     </div>
                     <div class="summary-grid">
-                        <div class="cardColour" onclick="viewInventory()">
+                        <div class="card" onclick="viewInventory()">
                             <i class="fas fa-boxes"></i>
                             <div class="title">Check Inventory</div>
                             <p class="service-description">View available wrapping materials</p>
                         </div>
-                        <div class="cardColour" onclick="generateReport()">
+                        <div class="card" onclick="generateReport()">
                             <i class="fas fa-chart-bar"></i>
                             <div class="title">Generate Report</div>
                             <p class="service-description">Create daily or weekly performance reports</p>
