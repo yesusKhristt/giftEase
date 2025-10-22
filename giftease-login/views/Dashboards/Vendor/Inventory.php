@@ -27,6 +27,9 @@
                 <button class="btn1" onclick="filterItems('active')">Active</button>
                 <button class="btn1" onclick="filterItems('paused')">Paused</button>
                 <a href="?controller=vendor&action=dashboard/item/add" class="btn2">Add Item</a>
+                <a class="btn2" href="?controller=vendor&action=dashboard/manageInventory">
+                    Manage Inventory
+                </a>
             </div>
 
             <!-- Inventory Grid -->

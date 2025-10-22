@@ -29,6 +29,9 @@
     <a href="?controller=admin&action=dashboard/items" class="nav-item <?= isActive('items', $activePage) ?>">
       Items
     </a>
+    <a href="?controller=admin&action=dashboard/giftWrapping" class="nav-item <?= isActive('giftWrapping', $activePage) ?>">
+      Gift Wrapping
+    </a>
     <a href="?controller=admin&action=dashboard/reports" class="nav-item <?= isActive('reports', $activePage) ?>">
       Reports
     </a>
