@@ -21,8 +21,6 @@
         $activePage = 'portfolio';
         include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
         ?>
-        <!-- <div id="home" class="tab-content active"> -->
-        <!-- Home page -->
         <div class="main-content">
             <div class="section-header">
                 <div>
@@ -38,176 +36,130 @@
                         <option value="birthday">Birthday Gifts</option>
                         <option value="corporate">Corporate Gifts</option>
                     </select>
-                    <button class="btn1" onclick="uploadPhoto()">
+                     <!-- <button class="btn1" onclick="uploadPhoto()"> 
                         <i class="fas fa-camera"></i>
+                        Upload Photo  -->
+                    <button type="button" class="btn1" onclick="document.getElementById('fileInput').click()" aria-label="Upload Photo">
+                        <i class="fas fa-cloud-upload-alt" style="margin-right: 8px;"></i>
                         Upload Photo
                     </button>
-                </div>
-            </div>
-            
+                    <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="display: none;" onchange="handleFileUpload(event)" />
 
-            <div class="card">
-                <div class="gallery-grid">
-                    <div class="gallery-item" data-category="premium">
-                        <img src="resources/premium gold.jpeg"
-                            alt="Premium Gold Wrapping" class="gallery-image">
-                        <div class="gallery-info">
-                            <h4 class="gallery-title">Premium Gold Foil Wrap</h4>
-                            <p class="gallery-description">Elegant gold foil wrapping with silk ribbon for luxury
-                                jewelry gift. Customer rating: 5/5 stars.</p>
-                            <div
-                                style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.8rem; color: #666;">
-                                    <i class="fas fa-heart" style="color: #e91e63;"></i> 24 likes
-                                </span>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="editPhoto(1)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="deletePhoto(1)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item" data-category="wedding">
-                        <img src="resources/paper.jpeg"
-                            alt="Wedding Gift Wrapping" class="gallery-image">
-                        <div class="gallery-info">
-                            <h4 class="gallery-title">Vintage Wedding Style</h4>
-                            <p class="gallery-description">Classic brown kraft paper with natural twine and dried
-                                flowers for rustic wedding gifts.</p>
-                            <div
-                                style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.8rem; color: #666;">
-                                    <i class="fas fa-heart" style="color: #e91e63;"></i> 18 likes
-                                </span>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="editPhoto(2)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="deletePhoto(2)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item" data-category="premium">
-                        <img src="resources/luxury box.jpeg"
-                            alt="Luxury Box Set" class="gallery-image">
-                        <div class="gallery-info">
-                            <h4 class="gallery-title">Luxury Presentation Box</h4>
-                            <p class="gallery-description">Premium magnetic closure box with custom tissue paper and
-                                embossed logo for corporate gifts.</p>
-                            <div
-                                style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.8rem; color: #666;">
-                                    <i class="fas fa-heart" style="color: #e91e63;"></i> 31 likes
-                                </span>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="editPhoto(3)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="deletePhoto(3)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item" data-category="birthday">
-                        <img src="resources/geometric.jpeg"
-                            alt="Modern Minimalist" class="gallery-image">
-                        <div class="gallery-info">
-                            <h4 class="gallery-title">Modern Minimalist Design</h4>
-                            <p class="gallery-description">Clean lines and simple elegance with geometric patterns
-                                for contemporary birthday gifts.</p>
-                            <div
-                                style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.8rem; color: #666;">
-                                    <i class="fas fa-heart" style="color: #e91e63;"></i> 15 likes
-                                </span>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="editPhoto(4)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="deletePhoto(4)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item" data-category="corporate">
-                        <img src="resources/logo.jpeg"
-                            alt="Corporate Branding" class="gallery-image">
-                        <div class="gallery-info">
-                            <h4 class="gallery-title">Corporate Branded Wrapping</h4>
-                            <p class="gallery-description">Professional wrapping with company colors and logo for
-                                executive gifts and client appreciation.</p>
-                            <div
-                                style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.8rem; color: #666;">
-                                    <i class="fas fa-heart" style="color: #e91e63;"></i> 22 likes
-                                </span>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="editPhoto(5)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="deletePhoto(5)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gallery-item" data-category="birthday">
-                        <img src="resources/rainbow.jpeg"
-                            alt="Colorful Birthday Wrapping" class="gallery-image">
-                        <div class="gallery-info">
-                            <h4 class="gallery-title">Vibrant Birthday Collection</h4>
-                            <p class="gallery-description">Bright and cheerful wrapping with rainbow ribbons and fun
-                                patterns perfect for children's birthday parties.</p>
-                            <div
-                                style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.8rem; color: #666;">
-                                    <i class="fas fa-heart" style="color: #e91e63;"></i> 27 likes
-                                </span>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="editPhoto(6)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn1" style="padding: 4px 8px; font-size: 0.8rem;"
-                                        onclick="deletePhoto(6)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
-    </div>
+        <div class="inventory-grid">
+            <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/paper.jpeg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Vintage Wedding Style</h3>
+                            <p class="gallery-description">Classic brown kraft paper with natural twine and dried
+                                flowers for rustic wedding gifts. </p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/premium gold.jpeg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Premium Gold Foil Wrap</h3>
+                            <p class="gallery-description">Elegant gold foil wrapping with silk ribbon for luxury
+                                jewelry gift. </p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/luxury box.jpeg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Luxury Presentation Box</h3>
+                            <p class="gallery-description">Elegant gold foil wrapping with silk ribbon for luxury
+                                jewelry gift. </p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/geometric.jpeg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Modern Minimalist Design</h3>
+                            <p class="gallery-description">Clean lines and simple elegance with geometric patterns
+                                for contemporary birthday gifts. </p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/logo.jpeg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Corporate Branded Wrapping</h3>
+                            <p class="gallery-description">Professional wrapping with company colors and logo for
+                                executive gifts and client appreciation. </p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/rainbow.jpeg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Vibrant Birthday Collection</h3>
+                            <p class="gallery-description">Bright and cheerful wrapping with rainbow ribbons and fun
+                                patterns perfect for children's birthday parties. </p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+
+
+        </div>
     </div>
     </div>
 

@@ -29,14 +29,14 @@
                     <h2 class="section-title">Service Offerings</h2>
                     <p class="section-subtitle">Manage your wrapping services and pricing</p>
                 </div>
-                <button class="btn btn-primary" onclick="addNewService()">
+                <!-- <button class="btn btn-primary" onclick="addNewService()">
                     <i class="fas fa-plus"></i>
                     Add Service
-                </button>
+                </button> -->
             </div>
 
             <div class="card">
-                <div class="services-grid">
+                <div class="summary-grid">
                     <div class="card">
                         <div class="service-icon">
                             <i class="fas fa-gift"></i>
@@ -46,11 +46,11 @@
                             Perfect for special occasions and luxury gifts.</p>
                         <div class="service-price">$15 - $35</div>
                         <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
-                            <button class="btn btn-outline" onclick="editService('premium-wrapping')">
+                            <button class="btn1" onclick="editService('premium-wrapping')">
                                 <i class="fas fa-edit"></i>
                                 Edit
                             </button>
-                            <button class="btn btn-ghost" onclick="viewServiceStats('premium-wrapping')">
+                            <button class="btn1" onclick="viewServiceStats('premium-wrapping')">
                                 <i class="fas fa-chart-line"></i>
                                 Stats
                             </button>
@@ -66,11 +66,11 @@
                             embossed messages.</p>
                         <div class="service-price">$5 - $15</div>
                         <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
-                            <button class="btn btn-outline" onclick="editService('custom-ribbons')">
+                            <button class="btn1" onclick="editService('custom-ribbons')">
                                 <i class="fas fa-edit"></i>
                                 Edit
                             </button>
-                            <button class="btn btn-ghost" onclick="viewServiceStats('custom-ribbons')">
+                            <button class="btn1" onclick="viewServiceStats('custom-ribbons')">
                                 <i class="fas fa-chart-line"></i>
                                 Stats
                             </button>
@@ -86,11 +86,11 @@
                             calligraphy options.</p>
                         <div class="service-price">$3 - $8</div>
                         <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
-                            <button class="btn btn-outline" onclick="editService('gift-cards')">
+                            <button class="btn1" onclick="editService('gift-cards')">
                                 <i class="fas fa-edit"></i>
                                 Edit
                             </button>
-                            <button class="btn btn-ghost" onclick="viewServiceStats('gift-cards')">
+                            <button class="btn1" onclick="viewServiceStats('gift-cards')">
                                 <i class="fas fa-chart-line"></i>
                                 Stats
                             </button>
@@ -106,11 +106,11 @@
                             closures and tissue paper.</p>
                         <div class="service-price">$10 - $25</div>
                         <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
-                            <button class="btn btn-outline" onclick="editService('gift-boxes')">
+                            <button class="btn1" onclick="editService('gift-boxes')">
                                 <i class="fas fa-edit"></i>
                                 Edit
                             </button>
-                            <button class="btn btn-ghost" onclick="viewServiceStats('gift-boxes')">
+                            <button class="btn1" onclick="viewServiceStats('gift-boxes')">
                                 <i class="fas fa-chart-line"></i>
                                 Stats
                             </button>
@@ -126,11 +126,11 @@
                             limits.</p>
                         <div class="service-price">$8 - $20</div>
                         <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
-                            <button class="btn btn-outline" onclick="editService('express-delivery')">
+                            <button class="btn1" onclick="editService('express-delivery')">
                                 <i class="fas fa-edit"></i>
                                 Edit
                             </button>
-                            <button class="btn btn-ghost" onclick="viewServiceStats('express-delivery')">
+                            <button class="btn1" onclick="viewServiceStats('express-delivery')">
                                 <i class="fas fa-chart-line"></i>
                                 Stats
                             </button>
@@ -146,11 +146,11 @@
                             corporate events.</p>
                         <div class="service-price">$12 - $30</div>
                         <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
-                            <button class="btn btn-outline" onclick="editService('theme-wrapping')">
+                            <button class="btn1" onclick="editService('theme-wrapping')">
                                 <i class="fas fa-edit"></i>
                                 Edit
                             </button>
-                            <button class="btn btn-ghost" onclick="viewServiceStats('theme-wrapping')">
+                            <button class="btn1" onclick="viewServiceStats('theme-wrapping')">
                                 <i class="fas fa-chart-line"></i>
                                 Stats
                             </button>

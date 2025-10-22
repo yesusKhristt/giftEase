@@ -115,10 +115,10 @@
                         </div>
                     </div>
 
-                    <div style="display: flex; gap: 15px;">
+                    <!-- <div style="display: flex; gap: 15px;">
                         <button class="btn1" onclick="saveSettings()">Save Changes</button>
                         <button class="btn1" onclick="resetSettings()">Reset</button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

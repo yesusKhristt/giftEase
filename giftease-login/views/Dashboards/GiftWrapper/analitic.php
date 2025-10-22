@@ -12,6 +12,7 @@
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
         async defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -45,7 +46,8 @@
             </div>
 
             <div class="card">
-                <div class="card">
+                <div class="summary-grid">
+                <div class="cardColour">
                     <div class="stat-header">
                         <span class="stat-label">Total Orders</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #9c27b0, #ba68c8);"> -->
@@ -62,7 +64,7 @@
 
 
 
-                <div class="card">
+                <div class="cardColour">
                     <div class="stat-header">
                         <span class="stat-label">Customer Retention</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #4caf50, #66bb6a);"> -->
@@ -75,10 +77,12 @@
                         <span>Excellent retention rate</span>
                     </div>
                 </div>
+                </div>
+                
 
 
-
-                <div class="card">
+                <div class="summary-grid">
+                <div class="cardColour">
                     <div class="stat-header">
                         <span class="stat-label">Peak Hours</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #ff9800, #ffb74d);"> -->
@@ -94,7 +98,7 @@
 
 
 
-                <div class="card">
+                <div class="cardColour">
                     <div class="stat-header">
                         <span class="stat-label">Efficiency Score</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #2196f3, #42a5f5);"> -->
@@ -108,7 +112,10 @@
                     </div>
                 </div>
             </div>
+            </div>
 
+            <canvas id="riskChart"></canvas>
+                       
 
             <div class="card">
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 32px;">
@@ -118,7 +125,7 @@
                             <i class="fas fa-chart-area" style="color: #e91e63; margin-right: 8px;"></i>
                             Revenue Trend
                         </h3>
-                        <div class="card">
+                        <!-- <div class="card">
                             <div
                                 style="height: 220px; display: flex; align-items: end; justify-content: space-between; padding: 20px; background: #f8f9fa; border-radius: 12px;">
                                 <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
@@ -146,7 +153,9 @@
                                     <span style="font-size: 0.8rem; color: #666;">Week 4</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+                        
+                         <canvas id="vaccChart" height="255px"></canvas>
                     </div>
 
                     <div class="card">
@@ -224,7 +233,8 @@
                     <i class="fas fa-lightbulb" style="color: #e91e63; margin-right: 8px;"></i>
                     Business Insights & Recommendations
                 </h3>
-                <div class="card">
+                <div class="cardColour">
+                    <div class="summary-grid">
                     <div class="card">
                         <h4>Growth Opportunity</h4>
                         <p>Your premium wrapping service has 23% higher demand. Consider expanding your premium material
@@ -240,13 +250,145 @@
                         <p>78% customer retention rate is excellent! Consider implementing a loyalty program to reward
                             repeat customers.</p>
                     </div>
+                    </div>
                 </div>
 
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
+    <script>
+    // ---------- Stacked Bar (Antenatal Risk Cases) ----------
+    const riskCtx = document.getElementById('riskChart').getContext('2d');
+
+    const riskData = {
+        labels: ['18 - 25', '25 - 30', '30 - 40', '40 - 50', '50+'],
+        datasets: [
+            {
+                label: 'Normal',
+                data: [7, 11, 13, 2, 3],
+                backgroundColor: '#10B981', // green
+                borderRadius: 6,
+                barThickness: 28
+            },
+            {
+                label: 'Moderate',
+                data: [5, 11, 16, 3, 4],
+                backgroundColor: '#F59E0B', // amber
+                borderRadius: 6,
+                barThickness: 28
+            },
+            {
+                label: 'High',
+                data: [1, 12, 6, 7, 4],
+                backgroundColor: '#EF4444', // red
+                borderRadius: 6,
+                barThickness: 28
+            }
+        ]
+    };
+
+    const riskConfig = {
+        type: 'bar',
+        data: riskData,
+        options: {
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: { boxWidth: 12, boxHeight: 12, padding: 12 }
+                },
+                tooltip: { mode: 'index', intersect: false }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    grid: { display: false },
+                    ticks: { color: '#374151', font: { size: 12 } }
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    max: 50,
+                    ticks: {
+                        stepSize: 10,
+                        color: '#6b7280',
+                        font: { size: 12 }
+                    },
+                    grid: {
+                        borderDash: [4, 4],
+                        color: 'rgba(15, 23, 42, 0.06)'
+                    }
+                }
+            }
+        }
+    };
+
+    new Chart(riskCtx, riskConfig);
+
+    // ---------- Doughnut (Monthly Vaccinations Completed) ----------
+    const vaccCtx = document.getElementById('vaccChart').getContext('2d');
+
+    // Values chosen to total 254 (so the center text matches)
+    const vaccData = {
+        labels: ['Completed', 'Pending', 'Upcoming'],
+        datasets: [{
+            data: [150, 80, 24], // sums to 254
+            backgroundColor: ['#0EA5A4', '#FBC88D', '#F08B77'],
+            hoverOffset: 8
+        }]
+    };
+
+    // small plugin to draw centered text (value + label)
+    const centerTextPlugin = {
+        id: 'centerText',
+        beforeDraw(chart) {
+            if (chart.config.type !== 'doughnut') return;
+            const { ctx, chartArea } = chart;
+            const centerX = (chartArea.left + chartArea.right) / 2;
+            const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+            ctx.save();
+            // number (bold)
+            ctx.font = '700 30px Inter, Arial';
+            ctx.fillStyle = '#111827';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('254', centerX, centerY - 8);
+
+            // label (lighter)
+            ctx.font = '400 13px Inter, Arial';
+            ctx.fillStyle = '#6b7280';
+            ctx.fillText('Children', centerX, centerY + 20);
+            ctx.restore();
+        }
+    };
+
+    const vaccConfig = {
+        type: 'doughnut',
+        data: vaccData,
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            cutout: '64%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { usePointStyle: true, pointStyle: 'circle', padding: 12 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `${ctx.label}: ${ctx.formattedValue}`
+                    }
+                }
+            }
+        },
+        plugins: [centerTextPlugin]
+    };
+
+    new Chart(vaccCtx, vaccConfig);
+</script>
 </body>
 
 </html>

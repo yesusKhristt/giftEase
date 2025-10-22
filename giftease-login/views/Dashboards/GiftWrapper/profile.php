@@ -29,10 +29,10 @@
           <h2 class="section-title">Profile Overview</h2>
           <p class="section-subtitle">Manage your personal and vehicle information</p>
         </div>
-        <button class="btn1" onclick="editProfile()">
+        <!-- <button class="btn1" onclick="editProfile()">
           <i class="fas fa-edit"></i>
           Edit Profile
-        </button>
+        </button> -->
       </div>
       <div class="cardColour">
 

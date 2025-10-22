@@ -20,10 +20,13 @@
         ?>
         <div class="main-content">
             <div id="overview" class="tab-content active">
-                <div class="card">
+                <!-- <div class="card"> -->
                     <div class="summary-grid">
                         <div class="card">
-                            <div class="title">Urgent Orders : 3</div>
+                            <i class="fas fa-exclamation-triangle" style="color: #e91e63; margin-left: 8px;"></i>
+                            <h4>Urgent Orders : 3</h4>
+                            
+                            
                             <div class="subtitle">2 due today, 1 overdue</div>
                         </div>
                         <div class="card">
@@ -38,98 +41,19 @@
 
                     <div class="summary-grid">
                         <div class="card">
-                            <div class="stats-grid">
-                                <div class="cardColour">
-                                    <div class="stat-header">
-                                        <span class="stat-label">Urgent Orders</span>
-                                        <!-- <div class="stat-icon"
-                                        style="background: linear-gradient(135deg, #ff5722, #ff7043);"> -->
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <!-- </div> -->
-                                    </div>
-                                    <div class="stat-value">3</div>
-                                    <div class="stat-description">
-                                        <i class="fas fa-arrow-up trend-up"></i>
-                                        <span>2 due today, 1 overdue</span>
-                                    </div>
-                                </div>
-
-                                <div class="cardColour">
-                                    <div class="stat-header">
-                                        <span class="stat-label">Pending Orders</span>
-                                        <!-- <div class="stat-icon" -->
-                                        <!-- style="background: linear-gradient(135deg, #ff9800, #ffb74d);"> -->
-                                        <i class="fas fa-clock"></i>
-                                        <!-- </div> -->
-                                    </div>
-                                    <div class="stat-value">12</div>
-                                    <div class="stat-description">
-                                        <i class="fas fa-arrow-up trend-up"></i>
-                                        <span>+3 from yesterday</span>
-                                    </div>
-                                </div>
-
-                                <div class="cardColour">
-                                    <div class="stat-header">
-                                        <span class="stat-label">Completed Today</span>
-                                        <!-- <div class="stat-icon" -->
-                                        <!-- style="background: linear-gradient(135deg, #4caf50, #66bb6a);"> -->
-                                        <i class="fas fa-check-circle"></i>
-                                        <!-- </div> -->
-                                    </div>
-                                    <div class="stat-value">8</div>
-                                    <div class="stat-description">
-                                        <i class="fas fa-arrow-up trend-up"></i>
-                                        <span>+2 from yesterday</span>
-                                    </div>
-                                </div>
-
-                                <div class="cardColour">
-                                    <div class="stat-header">
-                                        <span class="stat-label">Today's Revenue</span>
-                                        <!-- <div class="stat-icon" -->
-                                        <!-- style="background: linear-gradient(135deg, #9c27b0, #ba68c8);"> -->
-                                        <i class="fas fa-dollar-sign"></i>
-                                        <!-- </div> -->
-                                    </div>
-                                    <div class="stat-value">$156</div>
-                                    <div class="stat-description">
-                                        <i class="fas fa-arrow-up trend-up"></i>
-                                        <span>Avg $19.50 per order</span>
-                                    </div>
-                                </div>
-
-                                <div class="cardColour">
-                                    <div class="stat-header">
-                                        <span class="stat-label">Customer Rating</span>
-                                        <!-- <div class="stat-icon" -->
-                                        <!-- style="background: linear-gradient(135deg, #2196f3, #42a5f5);"> -->
-                                        <i class="fas fa-star"></i>
-                                        <!-- </div> -->
-                                    </div>
-                                    <div class="stat-value">4.9</div>
-                                    <div class="stat-description">
-                                        <i class="fas fa-arrow-up trend-up"></i>
-                                        <span>Based on 187 reviews</span>
-                                    </div>
-                                </div>
-
-                                <div class="cardColour">
-                                    <div class="stat-header">
-                                        <span class="stat-label">Response Time</span>
-                                        <!-- <div class="stat-icon" -->
-                                        <!-- style="background: linear-gradient(135deg, #607d8b, #78909c);"> -->
-                                        <i class="fas fa-stopwatch"></i>
-                                        <!-- </div> -->
-                                    </div>
-                                    <div class="stat-value">12m</div>
-                                    <div class="stat-description">
-                                        <i class="fas fa-arrow-down trend-up"></i>
-                                        <span>Average response time</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="title">Today's Revenue : $156</div>
+                            <div class="subtitle">Avg $19.50 per order</div>
                         </div>
+                        <div class="card">
+                            <div class="title">Customer Rating : 4.9 </div>
+                            <div class="subtitle">Based on 187 reviews</div>
+                        </div>
+                        <div class="card">
+                            <div class="title">Response Time : 12m </div>
+                            <div class="subtitle">Average response time</div>
+                        </div>
+                    </div>
+                <!-- </div> -->
 
                 <div class="card">
                     <div class="summary-grid">
@@ -168,7 +92,7 @@
                                 <span>Customer: <span class="detail-value">Sarah Johnson</span></span>
                             </div>
                             <div class="detail-item">
-                                <i class="fas fa-phone"></i>
+                                <i class="fas fa-phone"></i> 
                                 <span>Contact: <span class="detail-value">+1 (555) 123-4567</span></span>
                             </div>
                         </div>
@@ -237,14 +161,14 @@
                     </div> -->
 
                     <!-- <div style="display: flex; gap: 12px; flex-wrap: wrap;"> -->
-                    <div class="summary-grid">
+                    <!-- <div class="summary-grid">
                         <button class="btn1" onclick="startWrapping('WRP-001')">
                             <i class="fas fa-play"></i>
                             Start Wrapping
                         </button>
                         <button class="btn1" onclick="viewOrderDetails('WRP-001')">
                             <i class="fas fa-eye"></i>
-                            View Details
+                            View Details 
                         </button>
                         <button class="btn1" onclick="contactCustomer('WRP-001')">
                             <i class="fas fa-phone"></i>
@@ -254,7 +178,7 @@
                             <i class="fas fa-clock"></i>
                             Request Extension
                         </button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="card">
                     <div class="title">
