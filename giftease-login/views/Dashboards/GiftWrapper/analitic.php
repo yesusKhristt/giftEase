@@ -45,7 +45,7 @@
             </div>
 
             <div class="card">
-                <div class="cardColour">
+                <div class="card">
                     <div class="stat-header">
                         <span class="stat-label">Total Orders</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #9c27b0, #ba68c8);"> -->
@@ -62,7 +62,7 @@
 
 
 
-                <div class="cardColour">
+                <div class="card">
                     <div class="stat-header">
                         <span class="stat-label">Customer Retention</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #4caf50, #66bb6a);"> -->
@@ -78,7 +78,7 @@
 
 
 
-                <div class="cardColour">
+                <div class="card">
                     <div class="stat-header">
                         <span class="stat-label">Peak Hours</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #ff9800, #ffb74d);"> -->
@@ -94,7 +94,7 @@
 
 
 
-                <div class="cardColour">
+                <div class="card">
                     <div class="stat-header">
                         <span class="stat-label">Efficiency Score</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #2196f3, #42a5f5);"> -->
@@ -225,17 +225,17 @@
                     Business Insights & Recommendations
                 </h3>
                 <div class="card">
-                    <div class="cardColour">
+                    <div class="card">
                         <h4>Growth Opportunity</h4>
                         <p>Your premium wrapping service has 23% higher demand. Consider expanding your premium material
                             inventory.</p>
                     </div>
-                    <div class="cardColour">
+                    <div class="card">
                         <h4>Peak Time Insight</h4>
                         <p>Most orders come between 2-6 PM. Consider offering express service during these hours for
                             premium pricing.</p>
                     </div>
-                    <div class="cardColour">
+                    <div class="card">
                         <h4>Customer Loyalty</h4>
                         <p>78% customer retention rate is excellent! Consider implementing a loyalty program to reward
                             repeat customers.</p>
