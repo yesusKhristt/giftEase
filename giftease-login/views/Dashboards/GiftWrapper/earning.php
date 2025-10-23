@@ -243,7 +243,7 @@
                             <i class="fas fa-receipt" style="color: #e91e63; margin-right: 8px;"></i>
                             Recent Payment History
                         </h3>
-                        <button class="btn btn-outline" onclick="exportPayments()">
+                        <button class="btn1" onclick="exportPayments()">
                             <i class="fas fa-download"></i>
                             Export
                         </button>
