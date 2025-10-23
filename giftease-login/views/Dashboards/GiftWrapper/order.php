@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wrapping Partner Dashboard - GiftEase</title>
+    <title>Delivery Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/style.css" />
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-   
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
+        async defer></script>
 </head>
 
 <body>
@@ -39,15 +41,15 @@
                 <div class="card">
                     <div class="title">WRP-001</div>
                     <div class="subtitle">
-                        Premium Rose Bouquet → Sarah Johnson
+                        Premium Rose Bouquet → Sara Dissanayaka
                     </div>
                     <span class="urgency-badge urgency-urgent">Urgent</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <!-- <i class="fas fa-clock"></i>  -->
+                           
                             Due: Today 2:00 PM<br>
-                            <!-- <i class="fas fa-dollar-sign"></i> -->
-                             Fee: Rs25.00
+                            
+                             Fee: Rs2500.00
                         </div>
                     </div>
 
@@ -71,15 +73,13 @@
 
                     <div class="title">WRP-002</div>
                     <div class="subtitle">
-                        Wedding Gift Set → Michael & Emma
+                        Wedding Gift Set → Kasun wijerathna & methmi
                     </div>
                     <span class="urgency-badge urgency-urgent">Normal</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <!-- <i class="fas fa-clock"></i>  -->
                             Due: Tomorrow 10:00 AM<br>
-                            <!-- <i class="fas fa-dollar-sign"></i> -->
-                             Fee: Rs35.00
+                             Fee: Rs3500.00
                         </div>
                     </div>
 
@@ -104,15 +104,46 @@
 
                     <div class="title">WRP-003</div>
                     <div class="subtitle">
-                        Birthday Surprise → David Chen
+                        Birthday Surprise → Saneth Siriwardana
+                    </div>
+                    <span class="urgency-badge urgency-low">Low Priority</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">  
+                             Due: Friday 3:00 PM<br> 
+                            Fee: Rs900.00
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-header">
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+
+                        <div class="summary-grid">
+                            <button class="btn1" onclick="startWrapping('WRP-003')">
+                                <i class="fas fa-play"></i>
+                                Start Wrapping
+                            </button>
+                            <button class="btn1" onclick="markComplete('WRP-001')">
+                                <i class="fas fa-check"></i>
+                                Mark Complete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="title">WRP-004</div>
+                    <div class="subtitle">
+                        Birthday Surprise → Chathu Ruwanthika
                     </div>
                     <span class="urgency-badge urgency-low">Low Priority</span>
                     <div style="margin-bottom: 16px;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            <!-- <i class="fas fa-clock"></i>  -->
-                             Due: Friday 3:00 PM<br> 
-                            <!-- <i class="fas fa-dollar-sign"></i>  -->
-                            Fee: Rs18.00
+                            
+                            Due: Friday 2:00 PM<br>
+                            <i class="fas fa-rupee-sign"></i> 
+                            Fee: Rs1800.00
                         </div>
                     </div>
 
@@ -124,9 +155,9 @@
                         </div>
 
                         <div class="summary-grid">
-                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                            <button class="btn1" onclick="startWrapping('WRP-003')">
                                 <i class="fas fa-play"></i>
-                                Continue
+                                Start Wrapping
                             </button>
                             <button class="btn1" onclick="markComplete('WRP-001')">
                                 <i class="fas fa-check"></i>
@@ -135,17 +166,19 @@
                         </div>
                     </div>
 
-                <div class="title">WRP-004</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">Low Priority</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                    <div class="title">WRP-005</div>
+                    <div class="subtitle">
+                        Aniversery Surprise → Dilma Jayathissa
                     </div>
-                </div>
+                    <span class="urgency-badge urgency-low">Normal</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                           
+                            Due: Friday 3:00 PM<br>
+                            
+                            Fee: Rs2000.00
+                        </div>
+                    </div>
 
                     <div class="progress-section">
                         <div class="progress-header">
@@ -155,9 +188,9 @@
                         </div>
 
                         <div class="summary-grid">
-                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                            <button class="btn1" onclick="startWrapping('WRP-003')">
                                 <i class="fas fa-play"></i>
-                                Continue
+                                Start Wrapping
                             </button>
                             <button class="btn1" onclick="markComplete('WRP-001')">
                                 <i class="fas fa-check"></i>
@@ -166,17 +199,17 @@
                         </div>
                     </div>
 
-                <div class="title">WRP-005</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">Normal</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                    <div class="title">WRP-006</div>
+                    <div class="subtitle">
+                        Birthday Surprise → Jeshani Shavindya
                     </div>
-                </div>
+                    <span class="urgency-badge urgency-low">High</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            Due: Friday 1:00 PM.<br>
+                            Fee: Rs400.00
+                        </div>
+                    </div>
 
                     <div class="progress-section">
                         <div class="progress-header">
@@ -186,9 +219,9 @@
                         </div>
 
                         <div class="summary-grid">
-                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                            <button class="btn1" onclick="startWrapping('WRP-003')">
                                 <i class="fas fa-play"></i>
-                                Continue
+                                Start Wrapping
                             </button>
                             <button class="btn1" onclick="markComplete('WRP-001')">
                                 <i class="fas fa-check"></i>
@@ -197,17 +230,19 @@
                         </div>
                     </div>
 
-                <div class="title">WRP-006</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">High</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                    <div class="title">WRP-007</div>
+                    <div class="subtitle">
+                        Birthday Surprise → Thenuka Ranasinghe
                     </div>
-                </div>
+                    <span class="urgency-badge urgency-low">Low Priority</span>
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                            
+                            Due: Friday 3:00 PM.<br>
+                            
+                            Fee: Rs3000.00
+                        </div>
+                    </div>
 
                     <div class="progress-section">
                         <div class="progress-header">
@@ -217,40 +252,9 @@
                         </div>
 
                         <div class="summary-grid">
-                            <button class="btn1" onclick="continueWrapping('WRP-003')">
+                            <button class="btn1" onclick="startWrapping('WRP-003')">
                                 <i class="fas fa-play"></i>
-                                Continue
-                            </button>
-                            <button class="btn1" onclick="markComplete('WRP-001')">
-                                <i class="fas fa-check"></i>
-                                Mark Complete
-                            </button>
-                        </div>
-                    </div>
-
-                <div class="title">WRP-007</div>
-                <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
-                <span class="urgency-badge urgency-low">Low Priority</span>
-                <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <i class="fas fa-clock"></i> Due: Friday 3:00 PM •
-                        <i class="fas fa-dollar-sign"></i> Fee: $18.00
-                    </div>
-                </div>
-
-                    <div class="progress-section">
-                        <div class="progress-header">
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%"></div>
-                        </div>
-
-                        <div class="summary-grid">
-                            <button class="btn1" onclick="continueWrapping('WRP-003')">
-                                <i class="fas fa-play"></i>
-                                Continue
+                                Start Wrapping
                             </button>
                             <button class="btn1" onclick="markComplete('WRP-001')">
                                 <i class="fas fa-check"></i>

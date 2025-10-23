@@ -18,33 +18,30 @@
         ?>
         <div class="main-content">
             <div id="overview" class="tab-content active">
-                <!-- <div class="card"> -->
+              
                 
                     <div class="summary-grid">
                         <div class="card">
-                                 <!-- <i class="stat-icon" style="background: linear-gradient(135deg, #ff5722, #ff7043);"></i> -->
+                                
                                     <i class="fas fa-exclamation-triangle"></i>
-                            <!-- <i class="fas fa-exclamation-triangle" style="color: #e91e63; margin-left: 8px;"></i> -->
+                         
                             <h4>Urgent Orders : 3</h4>
 
                             
-                            <!-- <div class="stat-description">
-                                <i class="fas fa-arrow-up trend-up"></i>
-                                <span>2 due today, 1 overdue</span>
-                            </div> -->
+                           
                              <i class="fas fa-arrow-up trend-up"></i>
-                                <!-- <span>2 due today, 1 overdue</span> -->
+                                
                             <div class="subtitle">2 due today, 1 overdue</div>
                         </div>
                         <div class="card">
-                            <!-- <div class="title">Pending Orders : 12</div> -->
+                           
                              <i class="fas fa-clock"></i>
                              <h4>Pending Orders : 12</h4>
                                     <i class="fas fa-arrow-up trend-up"></i>
                             <div class="subtitle">+3 from yesterday</div>
                         </div>
                         <div class="card">
-                            <!-- <div class="title">Completed Today : 8</div> -->
+                            
                              <i class="fas fa-check-circle"></i>
                              <h4>Completed Today : 8</h4>
                                     <i class="fas fa-arrow-up trend-up"></i>
@@ -54,34 +51,34 @@
 
                     <div class="summary-grid">
                         <div class="card">
-                            <!-- <div class="title">Today's Revenue : $156</div> -->
-                               <i class="fas fa-dollar-sign"></i>
-                            <h4>Today's Avenue : $156</h4>
+                            
+                               <i class="fas fa-rupee-sign"></i>
+                            <h4>Today's Avenue : Rs156</h4>
                                    <i class="fas fa-arrow-up trend-up"></i>
-                            <div class="subtitle">Avg $19.50 per order</div>
+                            <div class="subtitle">Avg Rs19.50 per order</div>
                         </div>
                         <div class="card">
-                            <!-- <div class="title">Customer Rating : 4.9 </div> -->
+                            
                               <i class="fas fa-star"></i>
                             <h4>Customer Rating : 4.9</h4>
                                    <i class="fas fa-arrow-up trend-up"></i>
                             <div class="subtitle">Based on 187 reviews</div>
                         </div>
                         <div class="card">
-                            <!-- <div class="title">Response Time : 12m </div> -->
+                            
                              <i class="fas fa-stopwatch"></i>
                             <h4>Response Time : 12min</h4>
                                    <i class="fas fa-arrow-up trend-up"></i>
                             <div class="subtitle">Average response time</div>
                         </div>
                     </div>
-                <!-- </div> -->
+              
 
                 <div class="card">
                     <div class="summary-grid">
                         <div>
-                            <h2>Urgent Orders Requiring Attention</h2>
-                            <p class="section-subtitle">Orders with tight deadlines or special requirements</p>
+                            <h2>Refreshing Orders</h2>
+                            <p class="section-subtitle">Orders with tight deadlines</p>
                         </div>
                         <div style="display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap; width: 100%;">
                             <button class="btn1" onclick="refreshOrders()">
@@ -111,11 +108,11 @@
                             </div>
                             <div class="detail-item">
                                 <i class="fas fa-user"></i>
-                                <span>Customer: <span class="detail-value">Sarah Johnson</span></span>
+                                <span>Customer: <span class="detail-value">Sara Dissanayake</span></span>
                             </div>
                             <div class="detail-item">
                                 <i class="fas fa-phone"></i> 
-                                <span>Contact: <span class="detail-value">+1 (555) 123-4567</span></span>
+                                <span>Contact: <span class="detail-value">+94 7601306</span></span>
                             </div>
                         </div>
                         <div class="summary-grid">
@@ -124,12 +121,12 @@
                                 <span>Due: <span class="detail-value" ;">Today 2:00PM</span></span>
                             </div>
                             <div class="detail-item">
-                                <i class="fas fa-dollar-sign"></i>
-                                <span>Fee: <span class="detail-value">$25.00</span></span>
+                                <i class="fas fa-rupee-sign"></i>
+                                <span>Fee: <span class="detail-value">Rs2500.00</span></span>
                             </div>
                             <div class="detail-item">
                                 <i class="fas fa-map-marker-alt"></i>
-                                <span>Delivery: <span class="detail-value">Downtown Office</span></span>
+                                <span>Delivery: <span class="detail-value">Colombo Office</span></span>
                             </div>
                         </div>
                     </div>
@@ -166,72 +163,18 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- <div class="progress-section">
-                        <div class="progress-header">
-                            <span class="progress-label">
-                                <i class="fas fa-tasks"></i>
-                                Progress Status
-                            </span>
-                            <span class="progress-percentage">0%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 0%"></div>
-                        </div>
-                        <div style="margin-top: 8px; font-size: 0.8rem; color: #666;">
-                            Status: Waiting to start
-                        </div>
-                    </div> -->
-
-                    <!-- <div style="display: flex; gap: 12px; flex-wrap: wrap;"> -->
-                    <!-- <div class="summary-grid">
-                        <button class="btn1" onclick="startWrapping('WRP-001')">
-                            <i class="fas fa-play"></i>
-                            Start Wrapping
-                        </button>
-                        <button class="btn1" onclick="viewOrderDetails('WRP-001')">
-                            <i class="fas fa-eye"></i>
-                            View Details 
-                        </button>
-                        <button class="btn1" onclick="contactCustomer('WRP-001')">
-                            <i class="fas fa-phone"></i>
-                            Contact Customer
-                        </button>
-                        <button class="btn1" onclick="requestExtension('WRP-001')">
-                            <i class="fas fa-clock"></i>
-                            Request Extension
-                        </button>
-                    </div> -->
-                <!-- </div>
-                <div class="card">
-                    <div class="title">
-                        <i class="fas fa-bolt" style="color: #e91e63; margin-right: 8px;"></i>
-                        Quick Actions
-                    </div>
-                    <p class="section-subtitle">Frequently used tools and shortcuts</p>
-                    <div class="summary-grid">
-                        <div class="card" onclick="createNewOrder()"> -->
-                            <!-- <i class="fas fa-plus"></i> -->
-                            <!-- <div class="title">New Order</div> -->
-                            <!-- <h4>New Order</h4>
-                            <p class="service-description">Create a new wrapping order manually</p>
-                        </div>
-                        <div class="card" onclick="scanQRCode()"> -->
-                            <!-- <i class="fas fa-qrcode"></i> -->
-                            <!-- <div class="title">Scan QR Code</div> -->
-                            <!-- <h4>Scan QR Code</h4>
-                            <p class="service-description">Scan customer QR code for quick order access</p>
-                        </div>
-                    </div> -->
+                   
+               
                     <div class="summary-grid">
                         <div class="card" onclick="viewInventory()">
                             <i class="fas fa-boxes"></i>
-                            <!-- <div class="title">Check Inventory</div> -->
+                            
                             <h4>Check Inventory</h4>
                             <p class="service-description">View available wrapping materials</p>
                         </div>
                         <div class="card" onclick="generateReport()">
                             <i class="fas fa-chart-bar"></i>
-                            <!-- <div class="title">Generate Report</div> -->
+                            
                             <h4>Generate Report</h4>
                             <p class="service-description">Create daily or weekly performance reports</p>
                         </div>
