@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Wrapping Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/style.css" />
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
-        async defer></script>
+   
 </head>
 
 <body>
@@ -259,7 +257,7 @@
                                 <th>Customer</th>
                                 <th>Amount</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <!-- <th>Actions</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -270,12 +268,12 @@
                                 <td>Sarah Johnson</td>
                                 <td style="font-weight: 600;">$25.00</td>
                                 <td><span class="status-badge status-paid">Paid</span></td>
-                                <td>
+                                <!-- <td>
                                     <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;"
                                         onclick="viewReceipt('WRP-001')">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                </td>
+                                </td> -->
                             </tr>
                             <tr>
                                 <td>Jan 19, 2024</td>
@@ -284,12 +282,12 @@
                                 <td>Michael Chen</td>
                                 <td style="font-weight: 600;">$12.00</td>
                                 <td><span class="status-badge status-paid">Paid</span></td>
-                                <td>
+                                <!-- <td>
                                     <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;"
                                         onclick="viewReceipt('WRP-002')">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                </td>
+                                </td> -->
                             </tr>
                             <tr>
                                 <td>Jan 18, 2024</td>
@@ -298,12 +296,12 @@
                                 <td>Emma Wilson</td>
                                 <td style="font-weight: 600;">$35.00</td>
                                 <td><span class="status-badge status-pending">Pending</span></td>
-                                <td>
+                                <!-- <td>
                                     <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;"
                                         onclick="followUpPayment('WRP-003')">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                </td>
+                                </td> -->
                             </tr>
                             <tr>
                                 <td>Jan 17, 2024</td>
@@ -312,12 +310,12 @@
                                 <td>David Lee</td>
                                 <td style="font-weight: 600;">$28.00</td>
                                 <td><span class="status-badge status-paid">Paid</span></td>
-                                <td>
+                                <!-- <td>
                                     <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;"
                                         onclick="viewReceipt('WRP-004')">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>

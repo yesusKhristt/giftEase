@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Wrapping Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/style.css" />
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
-        async defer></script>
+   
 </head>
 
 <body>
@@ -163,7 +161,7 @@
 
                 <div class="title">WRP-004</div>
                 <div class="subtitle">
-                    Birthday Surprise → David Chen
+                    Birthday Surprise → Edvad Marker
                 </div>
                 <span class="urgency-badge urgency-low">Low Priority</span>
                 <div style="margin-bottom: 16px;">
@@ -196,8 +194,7 @@
 
                 <div class="title">WRP-005</div>
                 <div class="subtitle">
-                    Birthday Surprise → David Chen
-                </div>
+                    Aniversary Surprise → Robhin  Williams                </div>
                 <span class="urgency-badge urgency-low">Normal</span>
                 <div style="margin-bottom: 16px;">
                     <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
@@ -229,7 +226,7 @@
 
                 <div class="title">WRP-006</div>
                 <div class="subtitle">
-                    Birthday Surprise → David Chen
+                    Christmas Surprise → Shain banes
                 </div>
                 <span class="urgency-badge urgency-low">High</span>
                 <div style="margin-bottom: 16px;">
@@ -262,7 +259,7 @@
 
                 <div class="title">WRP-007</div>
                 <div class="subtitle">
-                    Birthday Surprise → David Chen
+                    Valentine Surprise → Baker hood
                 </div>
                 <span class="urgency-badge urgency-low">Low Priority</span>
                 <div style="margin-bottom: 16px;">

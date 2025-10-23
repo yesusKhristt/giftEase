@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Wrapping Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/style.css" />
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
-        async defer></script>
+
 </head>
 <body>
     <div class="container">
@@ -21,35 +19,59 @@
         <div class="main-content">
             <div id="overview" class="tab-content active">
                 <!-- <div class="card"> -->
+                
                     <div class="summary-grid">
                         <div class="card">
-                            <i class="fas fa-exclamation-triangle" style="color: #e91e63; margin-left: 8px;"></i>
+                                 <!-- <i class="stat-icon" style="background: linear-gradient(135deg, #ff5722, #ff7043);"></i> -->
+                                    <i class="fas fa-exclamation-triangle"></i>
+                            <!-- <i class="fas fa-exclamation-triangle" style="color: #e91e63; margin-left: 8px;"></i> -->
                             <h4>Urgent Orders : 3</h4>
+
                             
-                            
+                            <!-- <div class="stat-description">
+                                <i class="fas fa-arrow-up trend-up"></i>
+                                <span>2 due today, 1 overdue</span>
+                            </div> -->
+                             <i class="fas fa-arrow-up trend-up"></i>
+                                <!-- <span>2 due today, 1 overdue</span> -->
                             <div class="subtitle">2 due today, 1 overdue</div>
                         </div>
                         <div class="card">
-                            <div class="title">Pending Orders : 12</div>
+                            <!-- <div class="title">Pending Orders : 12</div> -->
+                             <i class="fas fa-clock"></i>
+                             <h4>Pending Orders : 12</h4>
+                                    <i class="fas fa-arrow-up trend-up"></i>
                             <div class="subtitle">+3 from yesterday</div>
                         </div>
                         <div class="card">
-                            <div class="title">Completed Today : 8</div>
+                            <!-- <div class="title">Completed Today : 8</div> -->
+                             <i class="fas fa-check-circle"></i>
+                             <h4>Completed Today : 8</h4>
+                                    <i class="fas fa-arrow-up trend-up"></i>
                             <div class="subtitle">+2 from yesterday</div>
                         </div>
                     </div>
 
                     <div class="summary-grid">
                         <div class="card">
-                            <div class="title">Today's Revenue : $156</div>
+                            <!-- <div class="title">Today's Revenue : $156</div> -->
+                               <i class="fas fa-dollar-sign"></i>
+                            <h4>Today's Avenue : $156</h4>
+                                   <i class="fas fa-arrow-up trend-up"></i>
                             <div class="subtitle">Avg $19.50 per order</div>
                         </div>
                         <div class="card">
-                            <div class="title">Customer Rating : 4.9 </div>
+                            <!-- <div class="title">Customer Rating : 4.9 </div> -->
+                              <i class="fas fa-star"></i>
+                            <h4>Customer Rating : 4.9</h4>
+                                   <i class="fas fa-arrow-up trend-up"></i>
                             <div class="subtitle">Based on 187 reviews</div>
                         </div>
                         <div class="card">
-                            <div class="title">Response Time : 12m </div>
+                            <!-- <div class="title">Response Time : 12m </div> -->
+                             <i class="fas fa-stopwatch"></i>
+                            <h4>Response Time : 12min</h4>
+                                   <i class="fas fa-arrow-up trend-up"></i>
                             <div class="subtitle">Average response time</div>
                         </div>
                     </div>
@@ -179,7 +201,7 @@
                             Request Extension
                         </button>
                     </div> -->
-                </div>
+                <!-- </div>
                 <div class="card">
                     <div class="title">
                         <i class="fas fa-bolt" style="color: #e91e63; margin-right: 8px;"></i>
@@ -187,26 +209,30 @@
                     </div>
                     <p class="section-subtitle">Frequently used tools and shortcuts</p>
                     <div class="summary-grid">
-                        <div class="card" onclick="createNewOrder()">
-                            <i class="fas fa-plus"></i>
-                            <div class="title">New Order</div>
+                        <div class="card" onclick="createNewOrder()"> -->
+                            <!-- <i class="fas fa-plus"></i> -->
+                            <!-- <div class="title">New Order</div> -->
+                            <!-- <h4>New Order</h4>
                             <p class="service-description">Create a new wrapping order manually</p>
                         </div>
-                        <div class="card" onclick="scanQRCode()">
-                            <i class="fas fa-qrcode"></i>
-                            <div class="title">Scan QR Code</div>
+                        <div class="card" onclick="scanQRCode()"> -->
+                            <!-- <i class="fas fa-qrcode"></i> -->
+                            <!-- <div class="title">Scan QR Code</div> -->
+                            <!-- <h4>Scan QR Code</h4>
                             <p class="service-description">Scan customer QR code for quick order access</p>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="summary-grid">
                         <div class="card" onclick="viewInventory()">
                             <i class="fas fa-boxes"></i>
-                            <div class="title">Check Inventory</div>
+                            <!-- <div class="title">Check Inventory</div> -->
+                            <h4>Check Inventory</h4>
                             <p class="service-description">View available wrapping materials</p>
                         </div>
                         <div class="card" onclick="generateReport()">
                             <i class="fas fa-chart-bar"></i>
-                            <div class="title">Generate Report</div>
+                            <!-- <div class="title">Generate Report</div> -->
+                            <h4>Generate Report</h4>
                             <p class="service-description">Create daily or weekly performance reports</p>
                         </div>
                     </div>

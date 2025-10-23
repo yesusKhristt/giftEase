@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Wrapping Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/style.css" />
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
-        async defer></script>
+    
 </head>
 
 <body>
@@ -50,24 +48,6 @@
 
         <div class="inventory-grid">
             <a class="inventory-item" data-status="active" id="item">
-                <img src="resources/paper.jpeg" class="item-image">
-                <div class="item-content">
-                    <div class="item-header">
-                        <div>
-                            <h3 class="item-name">Vintage Wedding Style</h3>
-                            <p class="gallery-description">Classic brown kraft paper with natural twine and dried
-                                flowers for rustic wedding gifts. </p></br>
-                            <h4> Customer rating: 5/5 stars.</h4>
-                        </div>
-                    </div>
-                    <div class="item-details">
-                        <div class="detail-item">
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <a class="inventory-item" data-status="active" id="item">
                 <img src="resources/premium gold.jpeg" class="item-image">
                 <div class="item-content">
                     <div class="item-header">
@@ -84,7 +64,39 @@
                     </div>
                 </div>
             </a>
-
+             
+             <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/metalic.jpg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Metallic Gradient</h3>
+                            <p class="gallery-description">  a design that gradually transitions from gold to another metallic color, or from gold to a deep, dark color</p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/f.jpg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">furoshiki wrapping</h3>
+                            <p class="gallery-description"> a traditional Japanese wrapping technique using a square piece of fabric to bundle and carry item  </p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
             <a class="inventory-item" data-status="active" id="item">
                 <img src="resources/luxury box.jpeg" class="item-image">
                 <div class="item-content">
@@ -102,6 +114,29 @@
                     </div>
                 </div>
             </a>
+            <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/paper.jpeg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Vintage Wedding Style</h3>
+                            <p class="gallery-description">Classic brown kraft paper with natural twine and dried
+                                flowers for rustic wedding gifts. </p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+           
+
+
+            
+
+           
 
             <a class="inventory-item" data-status="active" id="item">
                 <img src="resources/geometric.jpeg" class="item-image">
@@ -156,6 +191,25 @@
                     </div>
                 </div>
             </a>
+           
+             <a class="inventory-item" data-status="active" id="item">
+                <img src="resources/floral.jpg" class="item-image">
+                <div class="item-content">
+                    <div class="item-header">
+                        <div>
+                            <h3 class="item-name">Floral wrapping paper</h3>
+                            <p class="gallery-description">   Elegant and timeless, available in a variety of colors and styles</p></br>
+                            <h4> Customer rating: 5/5 stars.</h4>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="detail-item">
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+
 
 
 

@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Wrapping Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/style.css" />
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
-        async defer></script>
+   
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -47,7 +45,7 @@
 
             <div class="card">
                 <div class="summary-grid">
-                <div class="cardColour">
+                <div class="card">
                     <div class="stat-header">
                         <span class="stat-label">Total Orders</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #9c27b0, #ba68c8);"> -->
@@ -64,7 +62,7 @@
 
 
 
-                <div class="cardColour">
+                <div class="card">
                     <div class="stat-header">
                         <span class="stat-label">Customer Retention</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #4caf50, #66bb6a);"> -->
@@ -82,7 +80,7 @@
 
 
                 <div class="summary-grid">
-                <div class="cardColour">
+                <div class="card">
                     <div class="stat-header">
                         <span class="stat-label">Peak Hours</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #ff9800, #ffb74d);"> -->
@@ -98,7 +96,7 @@
 
 
 
-                <div class="cardColour">
+                <div class="card">
                     <div class="stat-header">
                         <span class="stat-label">Efficiency Score</span>
                         <!-- <div class="stat-icon" style="background: linear-gradient(135deg, #2196f3, #42a5f5);"> -->
@@ -233,7 +231,7 @@
                     <i class="fas fa-lightbulb" style="color: #e91e63; margin-right: 8px;"></i>
                     Business Insights & Recommendations
                 </h3>
-                <div class="cardColour">
+                <div class="card">
                     <div class="summary-grid">
                     <div class="card">
                         <h4>Growth Opportunity</h4>
