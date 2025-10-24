@@ -42,12 +42,15 @@
           </thead>
           <tbody>
             <?php
+            $subtotal = 0; // track total
             foreach ($cartItems as $row):
+              $subtotal += $row['quantity'] * $row['price'];
               ?>
               <tr>
                 <td>
                   <div class="product-cell">
-                    <img src="resources/uploads/vendor/products/<?= htmlspecialchars($row['displayImage']) ?>" alt="Gift 1" class="product-thumbnail">
+                    <img src="resources/uploads/vendor/products/<?= htmlspecialchars($row['displayImage']) ?>"
+                      alt="<?= htmlspecialchars($row['name']) ?>" class="product-thumbnail">
                     <div>
                       <div class="product-name"><?= htmlspecialchars($row['name']) ?></div>
                       <div class="product-category">-not implemented-</div>
@@ -56,22 +59,23 @@
                 </td>
                 <td>
                   <div class="qty-control" style="display:flex;gap:6px;align-items:center;">
-                    <a class="btn1 btn-small" href="?controller=client&action=dashboard/cart/<?= $row['id'] ?>&state=dec">-</a>
+                    <a class="btn1 btn-small"
+                      href="?controller=client&action=dashboard/cart&id=<?= $row['id'] ?>&state=dec">-</a>
                     <span><?= htmlspecialchars($row['quantity']) ?></span>
-                    <a class="btn1 btn-small" href="?controller=client&action=dashboard/cart/<?= $row['id'] ?>&state=inc">+</a>
+                    <a class="btn1 btn-small"
+                      href="?controller=client&action=dashboard/cart&id=<?= $row['id'] ?>&state=inc">+</a>
                   </div>
                 </td>
                 <td>Rs. <?= htmlspecialchars($row['price']) ?></td>
-                <td><?= htmlspecialchars($row['quantity'] * $row['price']) ?></td>
-                <td> 
-                  <a class="view-btn remove-from-cart" href="?controller=client&action=dashboard/cart/<?= $row['id'] ?>&state=remove">
+                <td>Rs. <?= htmlspecialchars($row['quantity'] * $row['price']) ?></td>
+                <td>
+                  <a class="view-btn remove-from-cart" data-id="<?= $row['id'] ?>"
+                    href="?controller=client&action=dashboard/cart&id=<?= $row['id'] ?>&state=remove">
                     Remove
                   </a>
                 </td>
               </tr>
-              <?php
-            endforeach;
-            ?>
+            <?php endforeach; ?>
           </tbody>
         </table>
 
@@ -79,9 +83,9 @@
         <!-- Order Summary -->
         <div class="cardColour">
           <h4>Order Summary</h4>
-          <p class="summary-line">Subtotal: <strong>-not implemented-</strong></p>
+          <p class="summary-line">Subtotal: <strong>Rs. <?= htmlspecialchars($subtotal) ?></strong></p>
           <p class="summary-line">Shipping Fee: <strong>-not implemented-</strong></p>
-          <p class="summary-line">Total: <strong>-not implemented-</strong></p>
+          <p class="summary-line">Total: <strong>Rs. <?= htmlspecialchars($subtotal) ?></strong></p>
 
           <div style="margin:15px 0;">
             <input type="text" placeholder="Enter Voucher Code" style="width:70%;margin-bottom:10px;">
@@ -91,28 +95,27 @@
           <a href="?controller=client&action=dashboard/wrap" class="btn2">Choose Wrapping</a>
         </div>
 
+        <script>
+          document.querySelectorAll('.remove-from-cart').forEach(link => {
+            link.addEventListener('click', async (event) => {
+              event.preventDefault();
 
-
-
-
-      </div>
-      <script>
-        document.querySelectorAll('.remove-from-cart').forEach(link => {
-          link.addEventListener('click', async (event) => {
-            event.preventDefault();
-
-            const productId = link.dataset.id;
-            const url = ? controller = client & action=dashboard/items/${ productId }& state=remove;
-
-            try {
-              const response = await fetch(url, { method: 'GET' });
-            } catch (err) {
-              console.error('Remove cart failed:', err);
-              alert('Could not remove from cart. Try again.');
-            }
+              try {
+                const response = await fetch(link.href, { method: 'GET' });
+                if (response.ok) {
+                  // Reload the page to reflect removal
+                  window.location.reload();
+                } else {
+                  alert('Could not remove from cart. Try again.');
+                }
+              } catch (err) {
+                console.error('Remove cart failed:', err);
+                alert('Could not remove from cart. Try again.');
+              }
+            });
           });
-        });
-      </script>
+        </script>
+
 </body>
 
 </html>

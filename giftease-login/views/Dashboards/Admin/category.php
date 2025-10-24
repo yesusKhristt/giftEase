@@ -21,10 +21,7 @@
             <div class="page-header">
                 <h1 class="title">Add Product Categories</h1>
                 <p class="subtitle">Add Product Categories for efficient searching</p>
-
             </div>
-
-
 
             <div class="card">
                 <div class="services-grid">
