@@ -19,7 +19,6 @@ class VendorController
     {
 
         $exists = $this->vendor->getVendorID($_SESSION['user']['id']);
-        var_dump($exists);
 
         if (!$exists) {
             $this->employeeForm($_SESSION['user']['id']);
@@ -105,6 +104,8 @@ class VendorController
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
                 $uploadDir = "resources/uploads/vendor/products/";
+                if (!is_dir($uploadDir))
+                    mkdir($uploadDir, 0777, true);
                 $fileName = time() . "_" . basename($_FILES['images']['name'][$key]);
                 $targetFile = $uploadDir . $fileName;
 
@@ -205,6 +206,12 @@ class VendorController
         require_once __DIR__ . '/../views/Dashboards/Vendor/manageInventory.php';
     }
 
+    public function handleLogout()
+    {
+        $_SESSION['vendor'] = null;
+        header("Location: index.php?controller=auth&action=handleLogout");
+        exit;
+    }
 
     public function Vendor($parts)
     {

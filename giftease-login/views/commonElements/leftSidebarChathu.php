@@ -14,8 +14,8 @@
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
-    <a href="?controller=admin&action=dashboard/front" class="nav-item <?= isActive('front', $activePage) ?>">
-      Front
+    <a href="?controller=admin&action=dashboard/reports" class="nav-item <?= isActive('reports', $activePage) ?>">
+      Reports
     </a>
     <a href="?controller=admin&action=dashboard/customer" class="nav-item <?= isActive('customer', $activePage) ?>">
       Customer
@@ -29,18 +29,17 @@
     <a href="?controller=admin&action=dashboard/items" class="nav-item <?= isActive('items', $activePage) ?>">
       Items
     </a>
-    <a href="?controller=admin&action=dashboard/giftWrapping" class="nav-item <?= isActive('giftWrapping', $activePage) ?>">
+    <a href="?controller=admin&action=dashboard/giftWrapping"
+      class="nav-item <?= isActive('giftWrapping', $activePage) ?>">
       Gift Wrapping
     </a>
     <a href="?controller=admin&action=dashboard/category" class="nav-item <?= isActive('category', $activePage) ?>">
       Category
     </a>
-    <a href="?controller=admin&action=dashboard/reports" class="nav-item <?= isActive('reports', $activePage) ?>">
-      Reports
-    </a>
+
     </nav>
     <div class="button-section">
-      <a href="#logout" class="btn1">
+      <a href="?controller=admin&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
       </a>

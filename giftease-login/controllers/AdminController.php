@@ -223,6 +223,12 @@ class AdminController
         }
         require_once __DIR__ . '/../views/Dashboards/Admin/addGiftWrappingItems.php';
     }
+    public function handleLogout()
+    {
+        $_SESSION['admin'] = null;
+        header("Location: index.php?controller=auth&action=handleLogout");
+        exit;
+    }
     public function Admin($parts)
     {
         switch ($parts[1]) {
@@ -234,9 +240,6 @@ class AdminController
                 break;
             case 'items':
                 require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
-                break;
-            case 'reports':
-                require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
                 break;
             case 'settings':
                 require_once __DIR__ . '/../views/Dashboards/Admin/settings new.php';
@@ -263,7 +266,7 @@ class AdminController
                 $this->editGiftWrappingItems($parts);
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Admin/front.php';
+                require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
                 break;
         }
     }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Client Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/Dilma/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -65,7 +65,7 @@
                     <div class="form-group">
                         <label class="subtitle">Emergency Contact</label>
                         <div type="tel" class="form-input">
-                            12918989261819
+                            0740862316
                         </div>
                     </div>
                 </div>

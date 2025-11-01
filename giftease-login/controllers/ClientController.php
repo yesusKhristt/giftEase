@@ -115,36 +115,51 @@ class ClientController
         require_once __DIR__ . '/../views/Dashboards/Client/Viewitem.php';
     }
 
+    // public function cart($parts)
+    // {
+    //     $state = $parts[3] ?? '';
+
+    //     if ($state === 'remove') {
+    //         $product_id = (int)$parts[2];
+    //         $client_id = $_SESSION['client']['id'];
+
+    //         $this->cart->removeFromCart($product_id, $client_id);
+
+    //         header("Location: index.php?controller=client&action=dashboard/cart");
+    //         exit;
+    //     }
+    //     $cartItems = $this->cart->getCartForClient($_SESSION['client']['id']);
+    //     // var_dump($cartItems);
+    //     require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
+    // }
+
     public function cart($parts)
     {
-        $state = $_GET['state'] ?? NULL;
-
-        if ($state === 'remove') {
-            $product_id = $parts[2];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $state = $parts[3] ?? '';
+            $product_id = $parts[2] ?? '';
             $client_id = $_SESSION['client']['id'];
 
-            $this->cart->removeFromCart($product_id, $client_id);
 
-            header("Location: index.php?controller=client&action=dashboard/cart");
-            exit;
-        }
-        if ($state === 'inc') {
-            $product_id = $parts[2];
-            $client_id = $_SESSION['client']['id'];
+            if ($state == 'remove') {
+                $this->cart->removeFromCart($product_id, $client_id);
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
 
-            $this->cart->increaseCartQuantity($client_id, $product_id);
+            if ($state == 'inc') {
+                $this->cart->increaseCartQuantity($client_id, $product_id);
 
-            header("Location: index.php?controller=client&action=dashboard/cart");
-            exit;
-        }
-        if ($state === 'dec') {
-            $product_id = $parts[2];
-            $client_id = $_SESSION['client']['id'];
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
+            if ($state == 'dec') {
+                $this->cart->decreaseCartQuantity($client_id, $product_id);
 
-            $this->cart->decreaseCartQuantity($client_id, $product_id);
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
 
-            header("Location: index.php?controller=client&action=dashboard/cart");
-            exit;
         }
         $cartItems = $this->cart->getCartForClient($_SESSION['client']['id']);
         require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
@@ -232,6 +247,14 @@ class ClientController
         }
     }
 
+    public function handleLogout()
+    {
+        $_SESSION['client'] = null;
+        header("Location: index.php?controller=auth&action=handleLogout");
+        exit;
+
+    }
+
     public function editProfile()
     {
         // Logic to handle profile editing
@@ -259,6 +282,8 @@ class ClientController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle file upload if user selected a new image
             $uploadDir = "resources/uploads/client/profilePictures/";
+            if (!is_dir($uploadDir))
+                mkdir($uploadDir, 0777, true);
 
             // Get file info
             $tmpName = $_FILES['profilePic']['tmp_name'];

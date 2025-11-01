@@ -15,7 +15,7 @@
   <div class="container">
     <?php
     $activePage = 'profile';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
+    include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
       <div class="cardColour">
@@ -25,7 +25,7 @@
           <div class="">
             <h4>Chathu Ruwanthika</h4>
             <p>Vendor • Member since Jan 2025</p>
-            <p><i class="fas fa-star"></i> 4.9 Rating • 
+            <p><i class="fas fa-star"></i> 4.9 Rating •
 
           </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="subtitle">Total Items Sold</div>
           </div>
           <div class="card">
-            <div class="title">$18,650</div>
+            <div class="title">Rs.18,650</div>
             <div class="subtitle">Total Earnings</div>
           </div>
           <div class="card">
@@ -108,7 +108,7 @@
             <div>+15% vs last month</div>
           </div>
           <div class="cardColour">
-            <div class="title">$420</div>
+            <div class="title">Rs.420</div>
             <div class="subtitle">Monthly Earnings</div>
             <div>+8% vs last month</div>
           </div>

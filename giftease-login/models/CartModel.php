@@ -43,9 +43,16 @@ class CartModel
     }
 
 
+    // public function getCartForClient($client_id)
+    // {
+    //     $stmt1 = $this->getpdo()->prepare("SELECT * FROM products WHERE id IN (SELECT product_id FROM cart WHERE client_id = ?)");
+    //     $stmt1->execute([$client_id]);
+    //     return $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    // }
+
     public function getCartForClient($client_id)
     {
-        $stmt2 = $this->getpdo()->prepare("SELECT * FROM products INNER JOIN cart ON products.id = cart.product_id WHERE client_id = ?");
+        $stmt2 = $this->getpdo()->prepare("SELECT * FROM products JOIN cart ON products.id = cart.product_id WHERE products.id IN (SELECT product_id FROM cart WHERE client_id = ?)");
         $stmt2->execute([$client_id]);
         return $stmt2->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -59,15 +66,19 @@ class CartModel
         ]);
     }
 
-    
+
     public function increaseCartQuantity($client_id, $product_id)
     {
-        $stmt1 = $this->pdo->prepare("SELECT quantity FROM cart WHERE client_id = ? AND product_id = ?");
+        $stmt1 = $this->pdo->prepare("SELECT quantity FROM cart WHERE client_id = ? AND id = ?");
         $stmt1->execute([$client_id, $product_id]);
         $currQuantity = $stmt1->fetchColumn();
-        $stmt2 = $this->pdo->prepare("UPDATE cart SET quantity = ? WHERE client_id = ? AND product_id = ?");
+        // var_dump($currQuantity);
+        // var_dump($client_id);
+        // var_dump($product_id);
+        // exit;
+        $stmt2 = $this->pdo->prepare("UPDATE cart SET quantity = ? WHERE client_id = ? AND id = ?");
         return $stmt2->execute([
-            $currQuantity +1,
+            $currQuantity + 1,
             $client_id,
             $product_id
         ]);
@@ -75,12 +86,13 @@ class CartModel
 
     public function decreaseCartQuantity($client_id, $product_id)
     {
-        $stmt1 = $this->pdo->prepare("SELECT quantity FROM cart WHERE client_id = ? AND product_id = ?");
+        $stmt1 = $this->pdo->prepare("SELECT quantity FROM cart WHERE client_id = ? AND id = ?");
         $stmt1->execute([$client_id, $product_id]);
         $currQuantity = $stmt1->fetchColumn();
         $newItem = $currQuantity - 1;
-        if($newItem < 0)$newItem = 0;
-        $stmt2 = $this->pdo->prepare("UPDATE cart SET quantity = ? WHERE client_id = ? AND product_id = ?");
+        if ($newItem < 0)
+            $newItem = 0;
+        $stmt2 = $this->pdo->prepare("UPDATE cart SET quantity = ? WHERE client_id = ? AND id = ?");
         return $stmt2->execute([
             $newItem,
             $client_id,
@@ -90,7 +102,7 @@ class CartModel
 
     public function removeFromCart($product_id, $client_id)
     {
-        $stmt = $this->pdo->prepare("DELETE FROM cart WHERE product_id = ? AND client_id = ?");
+        $stmt = $this->pdo->prepare("DELETE FROM cart WHERE id = ? AND client_id = ?");
         $stmt->execute([
             $product_id,
             $client_id

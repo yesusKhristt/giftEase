@@ -55,6 +55,10 @@
             ?>
             <label class="form-label">Phone Number</label>
             <input type="text" name="phone" placeholder="Phone No" class="form-input" required>
+            <label>
+                <input type="checkbox" name="terms" style="width: 20px" required>
+                I’ve read and agree to the <a href="terms.html" target="_blank">Terms and Conditions</a>.
+            </label>
             <button type="submit" class="btn2 form-input">Submit</button>
         </form>
     </div>
