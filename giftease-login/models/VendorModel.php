@@ -41,7 +41,7 @@ class VendorModel
         $stmt = $this->getpdo()->prepare("SELECT id FROM vendors WHERE user_id = ?");
         $stmt->execute([$id]);
 
-        return $stmt->fetch()[0];
+        return $stmt->fetchColumn();
     }
 
     public function addVendor($user_id, $shopname, $phone, $address)

@@ -33,10 +33,10 @@
       </a>
     </nav>
     <div class="button-section">
-      <a href="#logout" class="btn1">
+      <a href="?controller=vendor&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
-      </a>
+        </a>
     </div>
   </div>
   <div class="topbar-container">
@@ -52,10 +52,12 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?controller=vendor&action=dashboard/settings" class="settings-btn <?= isActive('settings', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/settings"
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?controller=vendor&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/profile"
+        class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>

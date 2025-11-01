@@ -14,7 +14,7 @@
   <div class="container">
     <?php
     $activePage = 'proof';
-    include 'views/commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
     <div class="main-content">
       <div class="page-header">

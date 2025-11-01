@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="dashboard-layout">
-        <!-- Sidebar -->
+       
         <aside class="left_sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-gift logo-icon"></i>
@@ -72,9 +72,9 @@
             </nav>
         </aside>
 
-        <!-- Main Content -->
+        
         <main class="dashboard-main">
-            <!-- Header -->
+            
             <header class="main-header">
                 <div>
                     <button class="mobile-menu-btn" onclick="toggleSidebar()">
@@ -101,11 +101,11 @@
                 </div>
             </header>
 
-            <!-- Main Content Area -->
+            
             <div class="main-content">
-                <!-- Overview Tab -->
+               
                 <div id="overview" class="tab-content active">
-                    <!-- Stats Cards -->
+                 
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-header">
@@ -156,10 +156,10 @@
                                     <i class="fas fa-dollar-sign"></i>
                                 </div>
                             </div>
-                            <div class="stat-value">$156</div>
+                            <div class="stat-value">Rs156</div>
                             <div class="stat-description">
                                 <i class="fas fa-arrow-up trend-up"></i>
-                                <span>Avg $19.50 per order</span>
+                                <span>Avg Rs19.50 per order</span>
                             </div>
                         </div>
                         
@@ -192,7 +192,7 @@
                         </div>
                     </div>
 
-                    <!-- Urgent Orders Section -->
+                    
                     <div class="section-header">
                         <div>
                             <h2 class="section-title">
@@ -239,7 +239,7 @@
                             </div>
                             <div class="detail-item">
                                 <i class="fas fa-dollar-sign"></i>
-                                <span>Fee: <span class="detail-value">$25.00</span></span>
+                                <span>Fee: <span class="detail-value">Rs25.00</span></span>
                             </div>
                             <div class="detail-item">
                                 <i class="fas fa-map-marker-alt"></i>
@@ -306,7 +306,7 @@
                         </div>
                     </div>
 
-                    <!-- Quick Actions -->
+                   
                     <div class="section-header">
                         <div>
                             <h2 class="section-title">
@@ -352,7 +352,7 @@
                     </div>
                 </div>
 
-                <!-- Orders Tab -->
+               
                 <div id="orders" class="tab-content">
                     <div class="section-header">
                         <div>
@@ -374,9 +374,9 @@
                         </div>
                     </div>
 
-                    <!-- Order Cards -->
+                   
                     <div id="orders-container">
-                        <!-- Urgent Order -->
+                        
                         <div class="order-card" data-status="urgent">
                             <div class="order-header">
                                 <div>
@@ -391,7 +391,7 @@
                             <div style="margin-bottom: 16px;">
                                 <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
                                     <i class="fas fa-clock"></i> Due: Today 2:00 PM • 
-                                    <i class="fas fa-dollar-sign"></i> Fee: $25.00
+                                    <i class="fas fa-dollar-sign"></i> Fee: Rs25.00
                                 </div>
                             </div>
                             
@@ -417,7 +417,6 @@
                             </div>
                         </div>
 
-                        <!-- Normal Order -->
                         <div class="order-card" data-status="pending">
                             <div class="order-header">
                                 <div>
@@ -432,7 +431,7 @@
                             <div style="margin-bottom: 16px;">
                                 <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
                                     <i class="fas fa-clock"></i> Due: Tomorrow 10:00 AM • 
-                                    <i class="fas fa-dollar-sign"></i> Fee: $35.00
+                                    <i class="fas fa-dollar-sign"></i> Fee: Rs35.00
                                 </div>
                             </div>
                             
@@ -458,7 +457,7 @@
                             </div>
                         </div>
 
-                        <!-- In Progress Order -->
+                        
                         <div class="order-card" data-status="in-progress">
                             <div class="order-header">
                                 <div>
@@ -473,7 +472,7 @@
                             <div style="margin-bottom: 16px;">
                                 <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
                                     <i class="fas fa-clock"></i> Due: Friday 3:00 PM • 
-                                    <i class="fas fa-dollar-sign"></i> Fee: $18.00
+                                    <i class="fas fa-dollar-sign"></i> Fee: Rs18.00
                                 </div>
                             </div>
                             
@@ -501,7 +500,7 @@
                     </div>
                 </div>
 
-                <!-- Services Tab -->
+               
                 <div id="services" class="tab-content">
                     <div class="section-header">
                         <div>
@@ -521,7 +520,7 @@
                             </div>
                             <h3 class="service-title">Premium Gift Wrapping</h3>
                             <p class="service-description">High-quality wrapping paper with elegant ribbons and bows. Perfect for special occasions and luxury gifts.</p>
-                            <div class="service-price">$15 - $35</div>
+                            <div class="service-price">Rs15 - Rs35</div>
                             <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
                                 <button class="btn btn-outline" onclick="editService('premium-wrapping')">
                                     <i class="fas fa-edit"></i>
@@ -540,7 +539,7 @@
                             </div>
                             <h3 class="service-title">Custom Ribbons & Bows</h3>
                             <p class="service-description">Personalized ribbon designs with custom colors, patterns, and embossed messages.</p>
-                            <div class="service-price">$5 - $15</div>
+                            <div class="service-price">Rs5 - Rs15</div>
                             <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
                                 <button class="btn btn-outline" onclick="editService('custom-ribbons')">
                                     <i class="fas fa-edit"></i>
@@ -559,7 +558,7 @@
                             </div>
                             <h3 class="service-title">Handwritten Gift Cards</h3>
                             <p class="service-description">Beautiful handwritten messages on premium cardstock with calligraphy options.</p>
-                            <div class="service-price">$3 - $8</div>
+                            <div class="service-price">Rs3 - Rs8</div>
                             <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
                                 <button class="btn btn-outline" onclick="editService('gift-cards')">
                                     <i class="fas fa-edit"></i>
@@ -578,7 +577,7 @@
                             </div>
                             <h3 class="service-title">Luxury Gift Boxes</h3>
                             <p class="service-description">Premium presentation boxes in various sizes with magnetic closures and tissue paper.</p>
-                            <div class="service-price">$10 - $25</div>
+                            <div class="service-price">Rs10 - Rs25</div>
                             <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
                                 <button class="btn btn-outline" onclick="editService('gift-boxes')">
                                     <i class="fas fa-edit"></i>
@@ -597,7 +596,7 @@
                             </div>
                             <h3 class="service-title">Express Delivery</h3>
                             <p class="service-description">Same-day delivery service for urgent orders within the city limits.</p>
-                            <div class="service-price">$8 - $20</div>
+                            <div class="service-price">Rs8 - Rs20</div>
                             <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
                                 <button class="btn btn-outline" onclick="editService('express-delivery')">
                                     <i class="fas fa-edit"></i>
@@ -616,7 +615,7 @@
                             </div>
                             <h3 class="service-title">Theme Wrapping</h3>
                             <p class="service-description">Specialized wrapping for holidays, birthdays, weddings, and corporate events.</p>
-                            <div class="service-price">$12 - $30</div>
+                            <div class="service-price">Rs12 - Rs30</div>
                             <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;">
                                 <button class="btn btn-outline" onclick="editService('theme-wrapping')">
                                     <i class="fas fa-edit"></i>
@@ -631,7 +630,7 @@
                     </div>
                 </div>
 
-                <!-- Gallery Tab -->
+                
                 <div id="gallery" class="tab-content">
                     <div class="section-header">
                         <div>
@@ -782,20 +781,19 @@
                     </div>
                 </div>
 
-                <!-- Earnings Tab -->
                 <div id="earnings" class="tab-content">
                     <div class="stats-grid" style="margin-bottom: 32px;">
                         <div class="stat-card" style="grid-column: span 2;">
                             <div style="text-align: center; padding: 20px;">
-                                <div style="font-size: 3rem; font-weight: bold; background: linear-gradient(135deg, #9c27b0, #ba68c8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px;">$1,847</div>
+                                <div style="font-size: 3rem; font-weight: bold; background: linear-gradient(135deg, #9c27b0, #ba68c8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px;">Rs1,847</div>
                                 <div style="font-size: 1.1rem; color: #666; margin-bottom: 16px;">Total Earnings This Month</div>
                                 <div style="display: flex; justify-content: center; gap: 24px; font-size: 0.9rem;">
                                     <div>
-                                        <div style="font-weight: 600; color: #333;">$156</div>
+                                        <div style="font-weight: 600; color: #333;">Rs156</div>
                                         <div style="color: #666;">Today</div>
                                     </div>
                                     <div>
-                                        <div style="font-weight: 600; color: #333;">$892</div>
+                                        <div style="font-weight: 600; color: #333;">Rs892</div>
                                         <div style="color: #666;">This Week</div>
                                     </div>
                                     <div>
@@ -813,7 +811,7 @@
                                     <i class="fas fa-chart-line"></i>
                                 </div>
                             </div>
-                            <div class="stat-value">$39.30</div>
+                            <div class="stat-value">Rs39.30</div>
                             <div class="stat-description">
                                 <i class="fas fa-arrow-up trend-up"></i>
                                 <span>+12% from last month</span>
@@ -848,7 +846,7 @@
                                         <span style="font-size: 0.9rem; color: #666;">Premium Wrapping</span>
                                     </div>
                                     <div style="text-align: right;">
-                                        <div style="font-weight: 600; color: #333;">$1,247</div>
+                                        <div style="font-weight: 600; color: #333;">Rs1,247</div>
                                         <div style="font-size: 0.8rem; color: #666;">67.5%</div>
                                     </div>
                                 </div>
@@ -858,7 +856,7 @@
                                         <span style="font-size: 0.9rem; color: #666;">Custom Ribbons</span>
                                     </div>
                                     <div style="text-align: right;">
-                                        <div style="font-weight: 600; color: #333;">$324</div>
+                                        <div style="font-weight: 600; color: #333;">Rs324</div>
                                         <div style="font-size: 0.8rem; color: #666;">17.5%</div>
                                     </div>
                                 </div>
@@ -868,7 +866,7 @@
                                         <span style="font-size: 0.9rem; color: #666;">Gift Cards</span>
                                     </div>
                                     <div style="text-align: right;">
-                                        <div style="font-weight: 600; color: #333;">$156</div>
+                                        <div style="font-weight: 600; color: #333;">Rs156</div>
                                         <div style="font-size: 0.8rem; color: #666;">8.4%</div>
                                     </div>
                                 </div>
@@ -878,7 +876,7 @@
                                         <span style="font-size: 0.9rem; color: #666;">Gift Boxes</span>
                                     </div>
                                     <div style="text-align: right;">
-                                        <div style="font-weight: 600; color: #333;">$120</div>
+                                        <div style="font-weight: 600; color: #333;">Rs120</div>
                                         <div style="font-size: 0.8rem; color: #666;">6.5%</div>
                                     </div>
                                 </div>
@@ -897,7 +895,7 @@
                                         <div style="width: 60px; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
                                             <div style="height: 100%; background: #9c27b0; width: 80%;"></div>
                                         </div>
-                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">$124</span>
+                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Rs124</span>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -906,7 +904,7 @@
                                         <div style="width: 60px; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
                                             <div style="height: 100%; background: #9c27b0; width: 65%;"></div>
                                         </div>
-                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">$98</span>
+                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Rs98</span>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -915,7 +913,7 @@
                                         <div style="width: 60px; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
                                             <div style="height: 100%; background: #9c27b0; width: 90%;"></div>
                                         </div>
-                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">$142</span>
+                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Rs142</span>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -924,7 +922,7 @@
                                         <div style="width: 60px; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
                                             <div style="height: 100%; background: #9c27b0; width: 100%;"></div>
                                         </div>
-                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">$156</span>
+                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Rs156</span>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -933,7 +931,7 @@
                                         <div style="width: 60px; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
                                             <div style="height: 100%; background: #9c27b0; width: 75%;"></div>
                                         </div>
-                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">$118</span>
+                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Rs118</span>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -942,7 +940,7 @@
                                         <div style="width: 60px; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
                                             <div style="height: 100%; background: #9c27b0; width: 95%;"></div>
                                         </div>
-                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">$148</span>
+                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Rs148</span>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
@@ -951,7 +949,7 @@
                                         <div style="width: 60px; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
                                             <div style="height: 100%; background: #9c27b0; width: 60%;"></div>
                                         </div>
-                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">$92</span>
+                                        <span style="font-weight: 600; color: #333; font-size: 0.9rem;">Rs92</span>
                                     </div>
                                 </div>
                             </div>
@@ -987,7 +985,7 @@
                                     <td>WRP-001</td>
                                     <td>Premium Gift Wrapping</td>
                                     <td>Sarah Johnson</td>
-                                    <td style="font-weight: 600;">$25.00</td>
+                                    <td style="font-weight: 600;">Rs25.00</td>
                                     <td><span class="status-badge status-paid">Paid</span></td>
                                     <td>
                                         <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-001')">
@@ -1000,7 +998,7 @@
                                     <td>WRP-002</td>
                                     <td>Custom Ribbon + Card</td>
                                     <td>Michael Chen</td>
-                                    <td style="font-weight: 600;">$12.00</td>
+                                    <td style="font-weight: 600;">Rs12.00</td>
                                     <td><span class="status-badge status-paid">Paid</span></td>
                                     <td>
                                         <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-002')">
@@ -1013,7 +1011,7 @@
                                     <td>WRP-003</td>
                                     <td>Luxury Gift Box</td>
                                     <td>Emma Wilson</td>
-                                    <td style="font-weight: 600;">$35.00</td>
+                                    <td style="font-weight: 600;">Rs35.00</td>
                                     <td><span class="status-badge status-pending">Pending</span></td>
                                     <td>
                                         <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="followUpPayment('WRP-003')">
@@ -1026,7 +1024,7 @@
                                     <td>WRP-004</td>
                                     <td>Theme Wrapping</td>
                                     <td>David Lee</td>
-                                    <td style="font-weight: 600;">$28.00</td>
+                                    <td style="font-weight: 600;">Rs28.00</td>
                                     <td><span class="status-badge status-paid">Paid</span></td>
                                     <td>
                                         <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-004')">
@@ -1039,7 +1037,7 @@
                     </div>
                 </div>
 
-                <!-- Analytics Tab -->
+               
                 <div id="analytics" class="tab-content">
                     <div class="section-header">
                         <div>
@@ -1232,7 +1230,7 @@
                     </div>
                 </div>
 
-                <!-- Profile Tab -->
+               
                 <div id="profile" class="tab-content">
                     <div class="section-header">
                         <div>

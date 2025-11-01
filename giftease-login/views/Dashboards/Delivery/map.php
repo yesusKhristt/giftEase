@@ -18,7 +18,7 @@
   <div class="container">
     <?php
     $activePage = 'map';
-    include 'views/commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
     <div class="main-content">
       <div class="page-header">

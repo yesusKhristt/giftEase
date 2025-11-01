@@ -11,11 +11,9 @@
 </head>
 
 <body>
-    <form method="POST"
-        action="?controller=vendor&action=dashboard/item/<?php echo $parts[2] ?><?php if ($parts[2] == 'edit') {
-              echo "/$parts[3]";
-          } ?>"
-        id="uploadForm" enctype="multipart/form-data">
+    <form method="POST" action="?controller=vendor&action=dashboard/item/<?php echo $parts[2] ?><?php if ($parts[2] == 'edit') {
+           echo "/$parts[3]";
+       } ?>" id="uploadForm" enctype="multipart/form-data">
         <table class="table">
             <tr>
                 <td style="width:15%" class="subtitle">Product Title</td>
@@ -28,24 +26,21 @@
             <tr>
                 <td class="subtitle">Product Category</td>
                 <td>
-                    <select id="category" name="category" style="width:80%">
-                        <option value="1">Electronics</option>
-                        <option value="2">Fashion</option>
-                        <option value="1">Home</option>
-                        <option value="2">Beauty</option>
-                        <option value="1">Sports</option>
-                        <option value="2">Toys</option>
-                        <option value="1">Books</option>
-                        <option value="2">Groceries</option>
-                    </select>
-                </td>
-                <td>
-                    <select id="subcategory" name="subcategory" style="width:80%">
-                        <option value="1">Apple</option>
-                        <option value="2">Banana</option>
-                        <option value="1">Orange</option>
-                        <option value="2">Mango</option>
-                    </select>
+                    <div style="padding: 10px">
+                        <select id="category" name="category" style="width:80%">
+                            <?php foreach ($categories as $row): ?>
+                                <option value="<?= htmlspecialchars($row['id']) ?>">
+                                    <?= htmlspecialchars($row['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div style="padding: 10px">
+                        <select id="subcategory" name="subcategory" style="width:80%">
+                            <option value="">-- Select a subcategory --</option>
+                        </select>
+                    </div>
+
                 </td>
             </tr>
 
@@ -221,6 +216,61 @@
 
             // Now the form will POST with reordered files
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            const categorySelect = document.getElementById('category');
+            const subcategorySelect = document.getElementById('subcategory');
+
+            const savedCategoryId = "<?= htmlspecialchars($productDetails['category'] ?? '') ?>";
+            const savedSubcategoryId = "<?= htmlspecialchars($productDetails['subcategory'] ?? '') ?>";
+            const defaultCategoryId = <?= json_encode($categories[0]['id'] ?? null) ?>;
+
+            function loadSubcategories(categoryId, selectedSubcategoryId = null) {
+                if (!categoryId) return;
+
+                subcategorySelect.innerHTML = '<option value="">Loading...</option>';
+
+                fetch('?controller=vendor&action=dashboard/getCategory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'category_id=' + encodeURIComponent(categoryId)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        subcategorySelect.innerHTML = '';
+                        if (data.length > 0) {
+                            data.forEach(subcat => {
+                                const opt = document.createElement('option');
+                                opt.value = subcat.id;
+                                opt.textContent = subcat.name;
+                                if (subcat.id == selectedSubcategoryId) opt.selected = true;
+                                subcategorySelect.appendChild(opt);
+                            });
+                        } else {
+                            subcategorySelect.innerHTML = '<option value="">No subcategories found</option>';
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error fetching subcategories:', err);
+                        subcategorySelect.innerHTML = '<option value="">Error loading subcategories</option>';
+                    });
+            }
+
+            categorySelect.addEventListener('change', function () {
+                loadSubcategories(this.value);
+            });
+
+            // Initialize on page load
+            if (savedCategoryId) {
+                categorySelect.value = savedCategoryId;
+                loadSubcategories(savedCategoryId, savedSubcategoryId);
+            } else if (defaultCategoryId) {
+                categorySelect.value = defaultCategoryId;
+                loadSubcategories(defaultCategoryId);
+            }
+        });
+
+
+
     </script>
 </body>
 

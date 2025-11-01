@@ -37,6 +37,18 @@
             /* maintain aspect ratio and fill box */
             border-radius: 8px;
         }
+
+        .center-vertical {
+            display: flex;
+            flex-direction: row;
+            /* Stack elements vertically */
+            justify-content: center;
+            /* Center vertically */
+            align-items: center;
+            /* Center horizontally (optional) */
+            height: 100vh;
+            /* Full viewport height (or any height you need) */
+        }
     </style>
     <link rel="stylesheet" href="public/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
@@ -57,20 +69,26 @@
             <div class="card">
                 <div>
                     <div style="display:flex">
-                        <button class="btn1" id="scroll-left">◀</button>
-                        <div class="image-scroll">
-                            <?php
-                            foreach ($productDetails['images'] as $image): ?>
-                                <div class="image-item">
-                                    <img src="resources/uploads/vendor/products/<?= htmlspecialchars($image['image_loc']) ?>"
-                                        class="item-image">
-                                </div>
-                            <?php endforeach; ?>
+                        <div class="center-vertical">
+                            <button class="btn1"
+                                style="border-radius: 100%; height: 40px;width: 40px; text-align: center;"
+                                id="scroll-left">◀</button>
+                            <div class="image-scroll">
+                                <?php
+                                foreach ($productDetails['images'] as $image): ?>
+                                    <div class="image-item">
+                                        <img src="resources/uploads/vendor/products/<?= htmlspecialchars($image['image_loc']) ?>"
+                                            class="item-image">
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+
+
+
+                            <button id="scroll-right" class="btn1"
+                                style="border-radius: 100%; height: 40px;width: 40px; text-align: center;">▶</button>
+
                         </div>
-
-
-
-                        <button id="scroll-right" class="btn1">▶</button>
 
 
 
@@ -88,29 +106,30 @@
                             <table class="table">
                                 <tr>
                                     <td>Available Stock</td>
-                                    <td><?=htmlspecialchars($productDetails['totalStock'] - $productDetails['reservedStock'])?></td>
+                                    <td><?= htmlspecialchars($productDetails['totalStock'] - $productDetails['reservedStock']) ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Quantity Sold</td>
-                                    <td><?=htmlspecialchars($productDetails['sold'])?></td>
+                                    <td><?= htmlspecialchars($productDetails['sold']) ?></td>
                                 </tr>
                                 <tr>
                                     <td>Impressions</td>
-                                    <td><?=htmlspecialchars($productDetails['impressions'])?></td>
+                                    <td><?= htmlspecialchars($productDetails['impressions']) ?></td>
                                 </tr>
                                 <tr>
                                     <td>Clicks</td>
-                                    <td><?=htmlspecialchars($productDetails['clicks'])?></td>
+                                    <td><?= htmlspecialchars($productDetails['clicks']) ?></td>
                                 </tr>
                             </table>
                             </p>
                         </div>
                     </div>
-                    
+
                     <div style="padding: 20px">
-                        
-                            <?php echo nl2br(htmlspecialchars($productDetails['description'])) ?>
-                        
+
+                        <?php echo nl2br(htmlspecialchars($productDetails['description'])) ?>
+
                     </div>
                     <div class="card">
                         <h4>Review</h4>

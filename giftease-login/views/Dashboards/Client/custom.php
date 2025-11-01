@@ -4,40 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/Dilma/style.css" />
+    <title>Client Partner Dashboard - GiftEase</title>
+    <link rel="stylesheet" href="public/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        :root {
-            --bg: #f6f8fb;
-            --card: #fff;
-            --muted: #6b7280;
-            --accent: #6c5ce7
-        }
-
-        * {
-            box-sizing: border-box;
-            font-family: Inter, Segoe UI, Roboto, system-ui, Arial
-        }
-
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: #111
-        }
-
-        header {
-            padding: 18px 24px;
-            background: linear-gradient(90deg, #ffffff, #f0f3ff);
-            border-bottom: 1px solid #e6e9f2
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 18px
-        }
 
         .wrap {
             display: grid;
@@ -441,13 +413,13 @@
                     totalPrice += price;
 
                     const row = el('div', { class: 'preview-item' },
-                        `<span>${item.name}</span><span style="margin-left:auto;">$${price.toFixed(2)}</span>`
+                        `<span>${item.name}</span><span style="margin-left:auto;">Rs ${price.toFixed(2)}</span>`
                     );
                     listDiv.appendChild(row);
                 });
 
                 const totalRow = el('div', { class: 'preview-total' },
-                    `<strong>Total:</strong><strong style="margin-left:auto;">$${totalPrice.toFixed(2)}</strong>`
+                    `<strong>Total:</strong><strong style="margin-left:auto;">Rs ${totalPrice.toFixed(2)}</strong>`
                 );
                 listDiv.appendChild(totalRow);
             } else {

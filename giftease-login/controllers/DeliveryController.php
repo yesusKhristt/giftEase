@@ -1,7 +1,7 @@
 <?php
 class DeliveryController
 {
-     private $model;
+    private $model;
 
     public function __construct($pdo)
     {
@@ -19,7 +19,7 @@ class DeliveryController
         $stmt = $this->model->getpdo()->prepare("SELECT COUNT(*) FROM delivery WHERE user_id = ?");
         $stmt->execute([$user_id]);
 
-        $exists = (int)$stmt->fetchColumn();
+        $exists = (int) $stmt->fetchColumn();
         var_dump($exists);
 
         if (!$exists) {
@@ -38,9 +38,9 @@ class DeliveryController
             $LAST_NAME = $_POST['last_name'] ?? '';
             $PHONE = $_POST['phone'] ?? '';
             $ADDRESS = $_POST['address'] ?? '';
-            
 
-            $this->model->addDelivery($user_id, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS );
+
+            $this->model->addDelivery($user_id, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
             header("Location: index.php?controller=delivery&action=dashboard/primary");
             exit;
         }
@@ -87,7 +87,14 @@ class DeliveryController
                 break;
         }
     }
-    public function editProfile() 
+    public function handleLogout()
+    {
+        $_SESSION['delivery'] = null;
+        header("Location: index.php?controller=auth&action=handleLogout");
+        exit;
+
+    }
+    public function editProfile()
     {
         // Logic to handle profile editing
         $USER_ID = $_SESSION['user']['id'];
@@ -98,15 +105,15 @@ class DeliveryController
         $stmt2->execute([$USER_ID]);
         $user2 = $stmt2->fetch();
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $FIRST_NAME = $_POST['first_name'] ?? '';
             $LAST_NAME = $_POST['last_name'] ?? '';
             $PHONE = $_POST['phone'] ?? '';
             $ADDRESS = $_POST['address'] ?? '';
-            
+
 
             $this->model->updateDelivery($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
-        header("Location: index.php?controller=delivery&action=dashboard/account");
+            header("Location: index.php?controller=delivery&action=dashboard/account");
             exit;
 
             // Redirect or show a success message

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Client Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/Dilma/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -39,15 +39,18 @@
             <option value="all">All Status</option>
             <option value="delivered">Delivered</option>
             <option value="cancelled">Cancelled</option>
-            <option value="returned">Pending</option>
+            <option value="returned">Returned</option>
           </select>
         </div>
-       
+       <div class="btn1">
+        <lable>Customer;</lable>
+        <input type="text" id="customerSearch" class="form-input" placeholder="Search customer..."/>
+       </div>
 
         <button class="btn1" onclick="exportHistory()">
           <i class="fas fa-download"></i> Export
         </button>
-        <button class="btn2" onclick="resetFilters()">
+        <button class="btn1" onclick="resetFilters()">
           <i class="fas fa-undo"></i> Reset
         </button>
 
@@ -61,7 +64,7 @@
             <th>Delivery Date</th>
             <th>Status</th>
             <th>Rating</th>
-            <th>Actions</th>
+            
           </tr>
         </thead>
         <tbody id="historyTableBody">
@@ -92,19 +95,7 @@
               </div>
             </td>
             
-            <td>
-              <div class="action-buttons">
-                <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-098')" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="downloadReceipt('DEL-098')" title="Download Receipt">
-                  <i class="fas fa-download"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="repeatOrder('DEL-098')" title="Repeat Order">
-                  <i class="fas fa-redo"></i>
-                </button>
-              </div>
-            </td>
+            
           </tr>
           <tr>
             <td>DEL-097</td>
@@ -133,19 +124,7 @@
               </div>
             </td>
             
-            <td>
-              <div class="action-buttons">
-                <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-097')" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="downloadReceipt('DEL-097')" title="Download Receipt">
-                  <i class="fas fa-download"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="repeatOrder('DEL-097')" title="Repeat Order">
-                  <i class="fas fa-redo"></i>
-                </button>
-              </div>
-            </td>
+           
           </tr>
           <tr>
             <td>DEL-096</td>
@@ -174,19 +153,7 @@
               </div>
             </td>
            
-            <td>
-              <div class="action-buttons">
-                <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-096')" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="downloadReceipt('DEL-096')" title="Download Receipt">
-                  <i class="fas fa-download"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="repeatOrder('DEL-096')" title="Repeat Order">
-                  <i class="fas fa-redo"></i>
-                </button>
-              </div>
-            </td>
+           
           </tr>
         </tbody>
       </table>

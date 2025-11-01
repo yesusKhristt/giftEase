@@ -19,7 +19,7 @@
   <div class="container">
     <?php
     $activePage = 'home';
-    include 'views/commonElements/leftSidebarSaneth.php';
+    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
     ?>
     
     <div class="main-content">

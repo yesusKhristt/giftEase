@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Client Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/Dilma/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -25,19 +25,26 @@
             </div>
 
             <!-- Filter Tabs -->
+             <h4 class="subtitle" style="padding: 10px">Filter by:</h4>
             <div class="filter-tabs">
 
                 <select class="btn1" onchange="filterProducts('category', this.value)">
-                    <option value="">All Categories</option>
+                    <option value="">Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="computers">Computers</option>
+                </select>
+                <select class="btn1" onchange="filterProducts('subcategory', this.value)">
+                    <option value="">Subcategories</option>
                     <option value="electronics">Electronics</option>
                     <option value="accessories">Accessories</option>
                     <option value="computers">Computers</option>
                 </select>
                 <select class="btn1" onchange="filterProducts('price', this.value)">
                     <option value="">All Prices</option>
-                    <option value="0-100">$0 - $100</option>
-                    <option value="100-500">$100 - $500</option>
-                    <option value="500+">$500+</option>
+                    <option value="0-100">Rs 0 - 100</option>
+                    <option value="100-500">Rs 100 - 500</option>
+                    <option value="500+">500+</option>
                 </select>
                 <select class="btn1" onchange="sortProducts(this.value)">
                     <option value="">Sort By</option>
@@ -66,7 +73,7 @@
                                 <div class="item-details">
                                     <div class="detail-item">
                                         <span class="detail-label">Price</span>
-                                        <span class="detail-value">$<?= htmlspecialchars($row['price']) ?></span>
+                                        <span class="detail-value">Rs <?= htmlspecialchars($row['price']) ?></span>
                                     </div>
                                 </div>
                             </div>

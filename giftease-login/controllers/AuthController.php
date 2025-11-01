@@ -27,7 +27,7 @@ class AuthController
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             $type = $_GET['type'] ?? 'client';
-            $role= $_POST['role'] ?? '';
+            $role = $_POST['role'] ?? '';
             $user = $this->model->authenticate($email, $password, $role);
             if ($user) {
                 $_SESSION['user'] = $user;
@@ -298,6 +298,15 @@ class AuthController
                 require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
                 break;
         }
+    }
+
+    public function handleLogout()
+    {
+
+        $_SESSION['user'] = null;
+
+        require_once __DIR__. '/../views/LandingPage/landingPage.php';
+
     }
 
 }

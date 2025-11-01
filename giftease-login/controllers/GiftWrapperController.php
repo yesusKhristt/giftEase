@@ -13,7 +13,7 @@ class giftWrapperController
 
         $this->GiftWrapper($parts[1]);
     }
-    
+
     public function GiftWrapper($level1)
     {
         switch ($level1) {
@@ -42,5 +42,13 @@ class giftWrapperController
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/overview.php';
                 break;
         }
+    }
+
+    public function handleLogout()
+    {
+        $_SESSION['giftWrapper'] = null;
+        header("Location: index.php?controller=auth&action=handleLogout");
+        exit;
+
     }
 }
