@@ -19,10 +19,9 @@
   <div class="container">
     <?php
     $activePage = 'home';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
+    include 'views/commonElements/leftSidebarSaneth.php';
     ?>
-    <!-- <div id="home" class="tab-content active"> -->
-    <!-- Home page -->
+    
     <div class="main-content">
       <div class="page-header">
         <h1 class="title">Welcome Back, Saneth!</h1>
