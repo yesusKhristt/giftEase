@@ -12,44 +12,63 @@
   <div class="container">
     <?php
     $activePage = 'delivery';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
+    include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
-      <section id="deliveries" class="page active">
+
+      <section id="customers" class="page active">
         <div class="page-header">
-          <div>
-            <h3>Deliveries</h3>
-            <p class="muted">Delivery overview (demo)</p>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table>
+          <h1 class="title">Deliver</h1>
+          <p class="subtitle">Deliver List</p>
+
+          </button>
+          <table class="table">
             <thead>
               <tr>
-                <th>Order</th>
-                <th>Vendor</th>
-                <th>Status</th>
-                <th>Date</th>
+                <th>date</th>
+                <th>Vendor id</th>
+                <th>method</th>
+                <th>Address</th>
+                <th>oder id</th>
+                <th>deliver id</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>#ORD-001</td>
-                <td>kamal</td>
-                <td><span class="badge warn">Pending</span></td>
-                <td>2025-01-16</td>
+                <td>Jan 20, 2024</td>
+                <td>WRP-001</td>
+                <td>Premium Gift Wrapping</td>
+                <td>wawrukannala ,kadurupokuna,tangalle</td>
+                <td style="font-weight: 600;">001</td>
+                <td><span class="status-badge status-paid">#997</span></td>
+
               </tr>
               <tr>
-                <td>#ORD-002</td>
-                <td>nimal</td>
-                <td><span class="badge ok">Delivered</span></td>
-                <td>2025-01-14</td>
+                <td>Jan 19, 2024</td>
+                <td>WRP-002</td>
+                <td>Custom Ribbon + Card</td>
+                <td>ashen home,kadurupokuna ,tanglle</td>
+                <td style="font-weight: 600;">002</td>
+                <td><span class="status-badge status-paid">#998</span></td>
+
               </tr>
               <tr>
-                <td>#ORD-003</td>
-                <td>saman</td>
-                <td><span class="badge info">In Transit</span></td>
-                <td>2025-01-13</td>
+                <td>Jan 18, 2024</td>
+                <td>WRP-003</td>
+                <td>Luxury Gift Box</td>
+                <td>100/5, colombo 7</td>
+                <td style="font-weight: 600;">003</td>
+                <td><span class="status-badge status-pending">#999</span></td>
+
+              </tr>
+              <tr>
+                <td>Jan 17, 2024</td>
+                <td>WRP-004</td>
+                <td>Theme Wrapping</td>
+                <td>100/10 ,goyambokka,tanglle</td>
+                <td style="font-weight: 600;">004</td>
+                <td><span class="status-badge status-paid">#992</span></td>
+
               </tr>
             </tbody>
           </table>
@@ -58,5 +77,3 @@
     </div>
   </div>
 </body>
-
-</html>

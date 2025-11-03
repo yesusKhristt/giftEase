@@ -13,7 +13,7 @@ class VendorController
 
         $this->Deliveryman($parts[1]);
     }
-        public function Deliveryman($level1)
+    public function Deliveryman($level1)
     {
         switch ($level1) {
             case 'primary':
@@ -26,5 +26,13 @@ class VendorController
                 require_once __DIR__ . '/../views/Dashboards/Deliveryman/deliverymanDashboard.php';
                 break;
         }
+    }
+
+    public function handleLogout()
+    {
+        $_SESSION['deliveryman'] = null;
+        header("Location: index.php?controller=auth&action=handleLogout");
+        exit;
+
     }
 }

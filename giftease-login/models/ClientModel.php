@@ -20,25 +20,32 @@ class ClientModel
     public function createTables()
     {
         // --- Clients table (linked to users table) ---
-        $clientSql = "CREATE TABLE IF NOT EXISTS clients (
+        $sql1 = "CREATE TABLE IF NOT EXISTS clients (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
             first_name VARCHAR(50),
             last_name VARCHAR(50),
-                        phone VARCHAR(20),
+            phone VARCHAR(20),
             address VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            image_loc VARCHAR(500) DEFAULT NULL,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        ) ENGINE=InnoDB;";
-
-
+        );";
 
         try {
-            $this->pdo->exec($clientSql);
+            $this->pdo->exec($sql1);
 
         } catch (PDOException $e) {
-            die("❌ Error creating tables: " . $e->getMessage());
+            die("Error creating tables: " . $e->getMessage());
         }
+    }
+
+    public function getClient($id)
+    {
+        $stmt = $this->getpdo()->prepare("SELECT * FROM clients WHERE user_id = ?");
+        $stmt->execute([$id]);
+
+        return $stmt->fetch();
     }
 
     public function addClient($user_id, $first_name, $last_name, $phone, $address)
@@ -50,9 +57,16 @@ class ClientModel
             $last_name,
             $phone,
             $address
-            
         ]);
+    }
 
+        public function updateProfilePicture($client_id, $profilePicPath)
+    {
+        $stmt = $this->pdo->prepare("UPDATE clients SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $client_id
+        ]);
     }
 
     public function updateClient($user_id, $first_name, $last_name, $phone, $address)
@@ -63,7 +77,7 @@ class ClientModel
             $last_name,
             $phone,
             $address,
-            
+
             $user_id
         ]);
     }

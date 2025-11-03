@@ -18,9 +18,9 @@
     <div class="container">
         <?php
         $activePage = 'analytics';
-        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
+        include 'views\commonElements/leftSidebarJeshani.php';
         ?>
-       
+
         <div class="main-content">
             <div class="section-header">
                 <div>
@@ -63,9 +63,9 @@
                     <div class="card">
                         <div class="stat-header">
                             <span class="stat-label">Customer Retention</span>
-                           
+
                             <i class="fas fa-users"></i>
-                            
+
                         </div>
                         <div class="stat-value">78%</div>
                         <div class="stat-description">
@@ -81,9 +81,9 @@
                     <div class="card">
                         <div class="stat-header">
                             <span class="stat-label">Peak Hours</span>
-                           
+
                             <i class="fas fa-clock"></i>
-                           
+
                         </div>
                         <div class="stat-value">2-6 PM</div>
                         <div class="stat-description">
@@ -97,9 +97,9 @@
                     <div class="card">
                         <div class="stat-header">
                             <span class="stat-label">Efficiency Score</span>
-                            
+
                             <i class="fas fa-tachometer-alt"></i>
-                           
+
                         </div>
                         <div class="stat-value">94%</div>
                         <div class="stat-description">
@@ -188,38 +188,39 @@
                     </div>
                 </div>
             </div>
-    <div style="background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-        <h3 style="margin-bottom: 24px; color: #333; font-size: 1.2rem;">
-            <i class="fas fa-lightbulb" style="color: #e91e63; margin-right: 8px;"></i>
-            Business Insights & Recommendations
-        </h3>
-            <div class="summary-grid">
-                <div class="card">
-                    <h4>Growth Opportunity</h4>
-                    <p>Your premium wrapping service has 23% higher demand. Consider expanding your premium material
-                        inventory.</p>
+            <div
+                style="background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <h3 style="margin-bottom: 24px; color: #333; font-size: 1.2rem;">
+                    <i class="fas fa-lightbulb" style="color: #e91e63; margin-right: 8px;"></i>
+                    Business Insights & Recommendations
+                </h3>
+                <div class="summary-grid">
+                    <div class="card">
+                        <h4>Growth Opportunity</h4>
+                        <p>Your premium wrapping service has 23% higher demand. Consider expanding your premium material
+                            inventory.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Peak Time Insight</h4>
+                        <p>Most orders come between 2-6 PM. Consider offering express service during these hours for
+                            premium pricing.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Customer Loyalty</h4>
+                        <p>78% customer retention rate is excellent! Consider implementing a loyalty program to reward
+                            repeat customers.</p>
+                    </div>
                 </div>
-                <div class="card">
-                    <h4>Peak Time Insight</h4>
-                    <p>Most orders come between 2-6 PM. Consider offering express service during these hours for
-                        premium pricing.</p>
-                </div>
-                <div class="card">
-                    <h4>Customer Loyalty</h4>
-                    <p>78% customer retention rate is excellent! Consider implementing a loyalty program to reward
-                        repeat customers.</p>
-                </div>
+
+
             </div>
-     
+        </div>
+    </div>
 
-    </div>
-    </div>
-    </div>
-   
 
-    
+
     <script>
-       
+
         const riskCtx = document.getElementById('riskChart').getContext('2d');
 
         const riskData = {
@@ -228,7 +229,7 @@
                 {
                     label: '',
                     data: [7, 11, 13, 2, 3],
-                    backgroundColor: '#e91e63', 
+                    backgroundColor: '#e91e63',
                     borderRadius: 6,
                     barThickness: 28
                 },
@@ -287,20 +288,20 @@
 
         new Chart(riskCtx, riskConfig);
 
-       
+
         const vaccCtx = document.getElementById('vaccChart').getContext('2d');
 
-        
+
         const vaccData = {
             labels: ['Completed', 'Pending', 'Upcoming'],
             datasets: [{
-                data: [150, 80, 24], 
+                data: [150, 80, 24],
                 backgroundColor: ['#0EA5A4', '#FBC88D', '#F08B77'],
                 hoverOffset: 8
             }]
         };
 
-       
+
         const centerTextPlugin = {
             id: 'centerText',
             beforeDraw(chart) {
@@ -310,7 +311,7 @@
                 const centerY = (chartArea.top + chartArea.bottom) / 2;
 
                 ctx.save();
-              
+
                 ctx.font = '700 30px Inter, Arial';
                 ctx.fillStyle = '#111827';
                 ctx.textAlign = 'center';
@@ -351,4 +352,3 @@
 </body>
 
 </html>
-

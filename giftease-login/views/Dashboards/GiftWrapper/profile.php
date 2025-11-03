@@ -17,7 +17,7 @@
   <div class="container">
     <?php
     $activePage = 'profile';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
+    include 'views\commonElements/leftSidebarJeshani.php';
     ?>
    
     <div class="main-content">

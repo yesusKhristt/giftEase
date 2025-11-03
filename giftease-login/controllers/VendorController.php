@@ -3,20 +3,22 @@ class VendorController
 {
     private $vendor;
     private $product;
+    private $category;
 
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/VendorModel.php';
         require_once __DIR__ . '/../models/ProductsModel.php';
+        require_once __DIR__ . '/../models/CategoryModel.php';
         $this->vendor = new VendorModel($pdo);
         $this->product = new ProductsModel($pdo);
+        $this->category = new CategoryModel($pdo);
     }
 
     public function checkID()
     {
 
         $exists = $this->vendor->getVendorID($_SESSION['user']['id']);
-        var_dump($exists);
 
         if (!$exists) {
             $this->employeeForm($_SESSION['user']['id']);
@@ -76,7 +78,7 @@ class VendorController
     {
         $productId = $parts[3];
         $productDetails = $this->product->fetchProduct($productId);
-        require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewItem.php';
+        require_once __DIR__ . '/../views/Dashboards/Vendor/ViewItem.php';
     }
 
     public function deleteItem($parts)
@@ -102,6 +104,8 @@ class VendorController
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
                 $uploadDir = "resources/uploads/vendor/products/";
+                if (!is_dir($uploadDir))
+                    mkdir($uploadDir, 0777, true);
                 $fileName = time() . "_" . basename($_FILES['images']['name'][$key]);
                 $targetFile = $uploadDir . $fileName;
 
@@ -140,7 +144,20 @@ class VendorController
             $productId = $parts[3];
             $productDetails = $this->product->fetchProduct($productId);
         }
-        require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
+        $categories = $this->category->getCategory();
+        $subcategories = $this->category->getAllSubcategory();
+        require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
+    }
+
+    public function ajaxCategory()
+    {
+        $categoryId = intval($_POST['category_id'] ?? 0);
+
+        $subcategories = $this->category->getSubcategory($categoryId);
+
+        header('Content-Type: application/json');
+        echo json_encode($subcategories);
+
     }
 
     public function test($profilePicPath)
@@ -150,10 +167,51 @@ class VendorController
 
     public function showInventory($parts)
     {
-        $allProducts = $this->product->fetchAll($this->vendor->getVendorID($_SESSION['user']['id']));
-        require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardInventory.php';
+        $allProducts = $this->product->fetchAllfromVendor($this->vendor->getVendorID($_SESSION['user']['id']));
+        require_once __DIR__ . '/../views/Dashboards/Vendor/Inventory.php';
     }
 
+    public function manageInventory($parts)
+    {
+        $products = $this->product->fetchAllfromVendor($this->vendor->getVendorID($_SESSION['user']['id']));
+        $stock = $parts[2] ?? 'NULL';
+        if ($stock === 'Total') {
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $product_id = $_POST['productId'];
+                $quantity = $_POST['quantity'];
+                $state = $_GET['state'];
+                if ($state === 'add') {
+                    $this->product->addStock($product_id, $quantity);
+                } else if ($state === 'sub') {
+                    $this->product->substractStock($product_id, $quantity);
+                }
+                header("Location: index.php?controller=vendor&action=dashboard/manageInventory");
+                exit;
+            }
+        } else if ($stock === 'Reserved') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $product_id = $_POST['productId'];
+                $quantity = $_POST['quantity'];
+                $state = $_GET['state'];
+                if ($state === 'add') {
+                    $this->product->addReserved($product_id, $quantity);
+                } else if ($state === 'sub') {
+                    $this->product->substractReserved($product_id, $quantity);
+                }
+                header("Location: index.php?controller=vendor&action=dashboard/manageInventory");
+                exit;
+            }
+        }
+        require_once __DIR__ . '/../views/Dashboards/Vendor/manageInventory.php';
+    }
+
+    public function handleLogout()
+    {
+        $_SESSION['vendor'] = null;
+        header("Location: index.php?controller=auth&action=handleLogout");
+        exit;
+    }
 
     public function Vendor($parts)
     {
@@ -161,32 +219,38 @@ class VendorController
             case 'inventory':
                 $this->showInventory($parts);
                 break;
+            case 'manageInventory':
+                $this->manageInventory($parts);
+                break;
+            case 'getCategory':
+                $this->ajaxCategory();
+                break;
             case 'messages':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardMesseges.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Messeges.php';
                 break;
             case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardAnalysis.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
                 break;
             case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardProfile.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Profile.php';
                 break;
             case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardHistory.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
                 break;
             case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardSettings.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Settings.php';
                 break;
             case 'item':
                 $this->handleitems($parts);
                 break;
             case 'vieworder':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewOrder.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
                 break;
             case 'edititem':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
                 break;
         }
     }

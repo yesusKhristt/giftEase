@@ -15,7 +15,7 @@
     }
     ?>
     <nav class="nav-section">
-       <a href="?controller=giftWrapper&action=dashboard/overview"
+      <a href="?controller=giftWrapper&action=dashboard/overview"
         class="nav-item <?= isActive('overview', $activePage) ?>">
         Overview
       </a>
@@ -38,13 +38,13 @@
         class="nav-item <?= isActive('analytics', $activePage) ?>">
         Analytics
       </a>
-      
+
     </nav>
     <div class="button-section">
-      <a href="#logout" class="btn1">
+      <a href="?controller=giftWrapper&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
-      </a>
+</a>
     </div>
   </div>
   <div class="topbar-container">

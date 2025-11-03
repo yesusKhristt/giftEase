@@ -9,7 +9,7 @@
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-   
+
 </head>
 
 <body>
@@ -17,9 +17,9 @@
     <div class="container">
         <?php
         $activePage = 'earnings';
-        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
+        include 'views\commonElements/leftSidebarJeshani.php';
         ?>
-        
+
         <div class="main-content">
             <div class="stats-grid" style="margin-bottom: 32px;">
                 <div class="card" style="grid-column: span 2;">
@@ -46,39 +46,39 @@
                     </div>
                 </div>
 
-        
-                    <div class="summary-grid">
-                        <div class="card">
 
-                            <div class="stat-header">
-                                <span class="stat-label">Average Order Value</span>
-                                <div class="stat-icon" style="background: linear-gradient(135deg, #e91e63, #fed2ed);">
-                                    <i class="fas fa-chart-line"></i>
-                                </div>
-                            </div>
-                            <div class="stat-value">Rs3900.30</div>
-                            <div class="stat-description">
-                                <i class="fas fa-arrow-up trend-up"></i>
-                                <span>+12% from last month</span>
+                <div class="summary-grid">
+                    <div class="card">
+
+                        <div class="stat-header">
+                            <span class="stat-label">Average Order Value</span>
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #e91e63, #fed2ed);">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                         </div>
-
-
-
-                        <div class="card">
-                            <div class="stat-header">
-                                <span class="stat-label">Completion Rate</span>
-                                <div class="stat-icon" style="background: linear-gradient(135deg, #e91e63, #fed2ed);">
-                                    <i class="fas fa-percentage"></i>
-                                </div>
-                            </div>
-                            <div class="stat-value">98.5%</div>
-                            <div class="stat-description">
-                                <i class="fas fa-arrow-up trend-up"></i>
-                                <span>Excellent performance</span>
-                            </div>
+                        <div class="stat-value">Rs3900.30</div>
+                        <div class="stat-description">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span>+12% from last month</span>
                         </div>
                     </div>
+
+
+
+                    <div class="card">
+                        <div class="stat-header">
+                            <span class="stat-label">Completion Rate</span>
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #e91e63, #fed2ed);">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">98.5%</div>
+                        <div class="stat-description">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span>Excellent performance</span>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="cardColour">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
@@ -255,7 +255,7 @@
                                 <th>Customer</th>
                                 <th>Amount</th>
                                 <th>Status</th>
-                               
+
                             </tr>
                         </thead>
                         <tbody>
@@ -266,7 +266,7 @@
                                 <td>Sarah Johnson</td>
                                 <td style="font-weight: 600;">Rs2500.00</td>
                                 <td><span class="status-badge status-paid">Paid</span></td>
-                               
+
                             </tr>
                             <tr>
                                 <td>Jan 19, 2024</td>
@@ -275,7 +275,7 @@
                                 <td>Michael Chen</td>
                                 <td style="font-weight: 600;">Rs1200.00</td>
                                 <td><span class="status-badge status-paid">Paid</span></td>
-                                
+
                             </tr>
                             <tr>
                                 <td>Jan 18, 2024</td>
@@ -284,7 +284,7 @@
                                 <td>Emma Wilson</td>
                                 <td style="font-weight: 600;">Rs3500.00</td>
                                 <td><span class="status-badge status-pending">Pending</span></td>
-                               
+
                             </tr>
                             <tr>
                                 <td>Jan 17, 2024</td>
@@ -293,7 +293,7 @@
                                 <td>David Lee</td>
                                 <td style="font-weight: 600;">Rs2800.00</td>
                                 <td><span class="status-badge status-paid">Paid</span></td>
-                             
+
                             </tr>
                         </tbody>
                     </table>

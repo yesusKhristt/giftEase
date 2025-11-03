@@ -41,7 +41,7 @@
                                 First Name
                             </td>
                             <td colspan="2">
-                                <input type="text" id="first_name" name="first_name" placeholder="First Name" value="<?php echo htmlspecialchars($user2['first_name']); ?>">
+                                <input type="text" id="first_name" name="first_name" placeholder="First Name" value="<?php echo isset($user2['first_name']) ? htmlspecialchars($user2['first_name']) : ''; ?>">
                             </td>
 
 
@@ -51,19 +51,19 @@
                                 Last Name
                             </td>
                             <td colspan="2">
-                                <input type="text" id="last_name" name="last_name" placeholder="Last Name" value="<?php echo htmlspecialchars($user2['last_name']); ?>">
+                                <input type="text" id="last_name" name="last_name" placeholder="Last Name" value="<?php echo isset($user2['last_name']) ? htmlspecialchars($user2['last_name']) : ''; ?>">
                             </td>
                         </tr>
                         <tr>
                             <td class="subtitle">Email</td>
                             <td colspan="2">
-                                <input type="email" id="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($user1['email']); ?>" readonly>
+                                <input type="email" id="email" name="email" placeholder="Email" value="<?php echo isset($user1['email']) ? htmlspecialchars($user1['email']) : ''; ?>" readonly>
                             </td>
                         </tr>
                         <tr>
                             <td class="subtitle">Mobile Phone number</td>
                             <td colspan="2">
-                                <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number" value="<?php echo htmlspecialchars($user2['phone']); ?>">
+                                <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number" value="<?php echo isset($user2['phone']) ? htmlspecialchars($user2['phone']) : ''; ?>">
                             </td>
                         </tr>
                         
