@@ -36,10 +36,10 @@
       </a>
     </nav>
     <div class="button-section">
-      <a href="#logout" class="btn1">
+      <a href="?controller=delivery&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
-      </a>
+</a>
     </div>
   </div>
   <div class="topbar-container">

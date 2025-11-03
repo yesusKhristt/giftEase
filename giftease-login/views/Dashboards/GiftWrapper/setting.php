@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Delivery Partner Dashboard - GiftEase</title>
+    <title>Wrapping Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/style.css" />
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
-        async defer></script>
+
 </head>
 
 <body>
@@ -19,10 +17,9 @@
     <div class="container">
         <?php
         $activePage = 'settings';
-        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
+        include 'views\commonElements/leftSidebarJeshani.php';
         ?>
-        <!-- <div id="home" class="tab-content active"> -->
-        <!-- Home page -->
+       
         <div class="main-content">
             <div class="section-header">
                 <div>
@@ -114,11 +111,6 @@
                             </select>
                         </div>
                     </div>
-
-                    <div style="display: flex; gap: 15px;">
-                        <button class="btn1" onclick="saveSettings()">Save Changes</button>
-                        <button class="btn1" onclick="resetSettings()">Reset</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -126,7 +118,6 @@
     </div>
     </div>
 
-    <script src="main.js"></script>
 </body>
 
 </html>

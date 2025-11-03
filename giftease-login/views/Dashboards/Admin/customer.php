@@ -12,51 +12,73 @@
   <div class="container">
     <?php
     $activePage = 'customer';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
+    include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
+
       <section id="customers" class="page active">
         <div class="page-header">
-          <div>
-            <h3>Customers</h3>
-            <p class="muted">Customer list (demo)</p>
-          </div>
+          <h1 class="title">Customer</h1>
+          <p class="subtitle">Customer List</p>
+
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Joined</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>C-101</td>
-                <td>Amal</td>
-                <td>0711111111</td>
-                <td>2025-01-05</td>
-              </tr>
-              <tr>
-                <td>C-102</td>
-                <td>Nadee</td>
-                <td>0722222222</td>
-                <td>2025-01-07</td>
-              </tr>
-              <tr>
-                <td>C-103</td>
-                <td>Ruwan</td>
-                <td>0755555555</td>
-                <td>2025-01-12</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+
+
+
+
+        <table class="table" style="border: 20px;">
+          <thead>
+            <tr>
+              <th>oredr ID</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>coustomer ID</th>
+              <th>Date</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>001</td>
+              <td>chathu</td>
+              <td>0786607436</td>
+              <td>*009</td>
+              <td style="font-weight: 600;">2026/02/03</td>
+
+
+            </tr>
+            <tr>
+              <td>002</td>
+              <td>oshani</td>
+              <td>0786607436</td>
+              <td>*008 </td>
+              <td style="font-weight: 600;">2026/02/05</td>
+
+
+            </tr>
+            <tr>
+              <td>003</td>
+              <td>ruwanthika</td>
+              <td>0786607436</td>
+              <td>*001</td>
+              <td style="font-weight: 600;">2026/02/04</td>
+
+
+            </tr>
+            <tr>
+              <td>003</td>
+              <td>sadunika</td>
+              <td>0786607436</td>
+              <td>*007</td>
+              <td style="font-weight: 600;">2026/03/04</td>
+
+
+            </tr>
+          </tbody>
+        </table>
     </div>
   </div>
+  </section>
+  </div>
+  </div>
 </body>
-
-</html>

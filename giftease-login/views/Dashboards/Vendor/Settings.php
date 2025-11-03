@@ -14,7 +14,7 @@
     <div class="container">
         <?php
         $activePage = 'settings';
-        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
+        include 'views\commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
             <div class="page-header">

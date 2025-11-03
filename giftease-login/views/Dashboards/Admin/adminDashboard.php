@@ -12,9 +12,13 @@
   <div class="container">
     <?php
     $activePage = 'dashboard';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
+        include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
+      <div class="page-header">
+                <h1 class="title">Account</h1>
+                <p class="subtitle">Manage your Personal Information</p>
+            </div>
       <header class="topbar">
         <div class="left">
           <button class="hamburger" id="sidebarToggle" aria-label="Toggle sidebar">
@@ -318,6 +322,11 @@
               <p class="muted">Delivery overview (demo)</p>
             </div>
           </div>
+          <div class="card">
+        <button class="btn1" onclick="shareLocation()">
+          <i class="fas fa-share"></i> Share Location
+        </button>
+      </div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -449,5 +458,3 @@
 
   <script src="script.js"></script>
 </body>
-
-</html>

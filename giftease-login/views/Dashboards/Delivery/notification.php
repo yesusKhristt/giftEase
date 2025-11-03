@@ -14,15 +14,15 @@
   <div class="container">
     <?php
     $activePage = 'notification';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
     <div class="main-content">
       <div class="page-header">
         <h1 class="title">Notifications</h1>
         <p class="subtitle">Stay updated with important alerts and messages.</p>
       </div>
-      <div class ="filter-tabs">
-        <button class="btn1" onclick="markAllRead()">Mark All Read</button>
+      <div class="filter-tabs">
+        <button class="btn2" onclick="markAllRead()">Mark All Read</button>
         <button class="btn1" onclick="clearNotifications()">Clear All</button>
       </div>
 
@@ -34,13 +34,46 @@
           <div class="notification-title">New Order Assigned</div>
           <div class="notification-text">You have been assigned order DEL-004 for delivery today. Priority: High</div>
           <div class="notification-actions">
-            <button class="btn2" onclick="acceptOrder('DEL-004')">Accept</button>
-            <button class="btn2" onclick="viewOrderDetails('DEL-004')">View Details</button>
+            <button class="btn1" onclick="acceptOrder('DEL-004')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-004')">View Details</button> -->
+          </div>
+        </div>
+        <div class="notification-time">1 minutes ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
+      </div>
+
+      <div class="notification-item unread" data-notification-id="2">
+        <div class="notification-icon notification-info">
+          <i class="fas fa-info"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">New Order Assigned</div>
+          <div class="notification-text">You have been assigned order DEL-005 for delivery today. Priority: Normal</div>
+          <div class="notification-actions">
+            <button class="btn1" onclick="acceptOrder('DEL-005')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-005')">View Details</button> -->
+          </div>
+        </div>
+        <div class="notification-time">3 minutes ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(2)">&times;</button>
+      </div>
+
+      <div class="notification-item unread" data-notification-id="3">
+        <div class="notification-icon notification-info">
+          <i class="fas fa-info"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">New Order Assigned</div>
+          <div class="notification-text">You have been assigned order DEL-006 for delivery today. Priority: Normal</div>
+          <div class="notification-actions">
+            <button class="btn1" onclick="acceptOrder('DEL-006')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-006')">View Details</button> -->
           </div>
         </div>
         <div class="notification-time">5 minutes ago</div>
-        <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
+        <button class="notification-dismiss" onclick="dismissNotification(3)">&times;</button>
       </div>
+
 
       <div class="notification-item">
         <div class="notification-icon notification-success">
@@ -55,18 +88,42 @@
       </div>
 
       <div class="notification-item">
+        <div class="notification-icon notification-info">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">Customer Rating</div>
+          <div class="notification-text">You received a 4.5-star rating from Thenuka for order DEL-001.</div>
+        </div>
+        <div class="notification-time">1 hours ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(4)">&times;</button>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-icon notification-success">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">Delivery Completed</div>
+          <div class="notification-text">Order DEL-002 has been successfully delivered and confirmed.</div>
+        </div>
+        <div class="notification-time">1 hours ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(2)">&times;</button>
+      </div>
+
+      <div class="notification-item">
         <div class="notification-icon notification-warning">
           <i class="fas fa-exclamation-triangle"></i>
         </div>
         <div class="notification-content">
           <div class="notification-title">Route Update</div>
-          <div class="notification-text">Traffic detected on your route. Consider alternative path to DEL-002.</div>
+          <div class="notification-text">Traffic detected on your route. Consider alternative path to DEL-003.</div>
           <div class="notification-actions">
             <button class="btn2" onclick="showRoute('DEL-002')">View Route</button>
             <button class="btn2" onclick="optimizeRoute()">Optimize</button>
           </div>
         </div>
-        <div class="notification-time">1 hour ago</div>
+        <div class="notification-time">1/2 hour ago</div>
         <button class="notification-dismiss" onclick="dismissNotification(3)">&times;</button>
       </div>
 
@@ -76,14 +133,45 @@
         </div>
         <div class="notification-content">
           <div class="notification-title">Customer Rating</div>
-          <div class="notification-text">You received a 5-star rating from Sarah Johnson for order DEL-098.</div>
+          <div class="notification-text">You received a 5-star rating from Saneth Tharushika for order DEL-097.</div>
         </div>
         <div class="notification-time">Yesterday</div>
         <button class="notification-dismiss" onclick="dismissNotification(4)">&times;</button>
       </div>
     </div>
   </div>
-  <script src="main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <button class="btn1" onclick="acceptOrder('DEL-006')">Accept</button>
+  <button class="btn2" onclick="markAllRead()">Mark All Read</button>
+  <button class="btn1" onclick="clearNotifications()">Clear All</button>
+
+  <script>
+    function acceptOrder(orderId) {
+      Swal.fire({
+        title: 'Oder Accept!',
+        text: `You have accepted order ${orderId} for delivery.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+    function markAllRead(orderId) {
+      Swal.fire({
+        title: 'Marked as Read',
+        text: `All your notifications have been marked as read.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+    function clearNotifications(orderId) {
+      Swal.fire({
+        title: 'Notifications Cleared',
+        text: `All your notifications have been cleared.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+  </script>
 </body>
 
 </html>

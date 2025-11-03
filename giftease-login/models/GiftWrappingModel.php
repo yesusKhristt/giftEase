@@ -265,6 +265,125 @@ class GiftWrapppingModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function updateBoxWrap($id, $name, $price, $layer)
+    {
+        $stmt = $this->pdo->prepare("UPDATE boxWrap SET name = ?, price = ?, layer = ? WHERE id = ?");
+        return $stmt->execute([
+            $name,
+            $price,
+            $layer,
+            $id
+        ]);
+
+    }
+
+    public function updateBoxRibbon($id, $name, $price, $layer)
+    {
+        $stmt = $this->pdo->prepare("UPDATE boxRibbon SET name = ?, price = ?, layer = ? WHERE id = ?");
+        return $stmt->execute([
+            $name,
+            $price,
+            $layer,
+            $id
+        ]);
+
+    }
+
+    public function updatePaperBag($id, $name, $price, $layer)
+    {
+        $stmt = $this->pdo->prepare("UPDATE paperBag SET name = ?, price = ?, layer = ? WHERE id = ?");
+        return $stmt->execute([
+            $name,
+            $price,
+            $layer,
+            $id
+        ]);
+
+    }
+
+    public function updatePaperBagRibbon($id, $name, $price, $layer)
+    {
+        $stmt = $this->pdo->prepare("UPDATE paperBagRibbon SET name = ?, price = ?, layer = ? WHERE id = ?");
+        return $stmt->execute([
+            $name,
+            $price,
+            $layer,
+            $id
+        ]);
+
+    }
+
+    public function updateChocolates($id, $name, $price, $layer)
+    {
+        $stmt = $this->pdo->prepare("UPDATE chocolates SET name = ?, price = ?, layer = ? WHERE id = ?");
+        return $stmt->execute([
+            $name,
+            $price,
+            $layer,
+            $id
+        ]);
+
+    }
+
+    public function updateCard($id, $name, $price, $layer)
+    {
+        $stmt = $this->pdo->prepare("UPDATE cards SET name = ?, price = ?, layer = ? WHERE id = ?");
+        return $stmt->execute([
+            $name,
+            $price,
+            $layer,
+            $id
+        ]);
+
+    }
+
+    public function updateSoftToy($id, $name, $price, $layer)
+    {
+        $stmt = $this->pdo->prepare("UPDATE softToys SET name = ?, price = ?, layer = ? WHERE id = ?");
+        return $stmt->execute([
+            $name,
+            $price,
+            $layer,
+            $id
+        ]);
+
+    }
+
+    public function deleteBoxWrap($id){
+        $stmt = $this->pdo->prepare("DELETE FROM boxWrap WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
+    public function deleteBoxRibbon($id){
+        $stmt = $this->pdo->prepare("DELETE FROM boxRibbon WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
+    public function deletePaperBag($id){
+        $stmt = $this->pdo->prepare("DELETE FROM paperBag WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
+    public function deletePaperBagRibbon($id){
+        $stmt = $this->pdo->prepare("DELETE FROM paperBagRibbon WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
+    public function deleteChocolates($id){
+        $stmt = $this->pdo->prepare("DELETE FROM chocolates WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
+    public function deleteCard($id){
+        $stmt = $this->pdo->prepare("DELETE FROM cards WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
+    public function deleteSoftToy($id){
+        $stmt = $this->pdo->prepare("DELETE FROM softToys WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
     // Add a new customWrap
     public function addCustomWrap($box, $boxDeco, $bag, $bagDeco, $softToy, $chocolate, $card, $price)
     {

@@ -15,35 +15,36 @@
     }
     ?>
     <nav class="nav-section">
-      <a href="?controller=giftWrapper&action=dashboard/analytics"
-        class="nav-item <?= isActive('analytics', $activePage) ?>">
-        Analytics
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/earnings"
-        class="nav-item <?= isActive('earnings', $activePage) ?>">
-        Earning
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/order" class="nav-item <?= isActive('order', $activePage) ?>">
-        Order
-      </a>
       <a href="?controller=giftWrapper&action=dashboard/overview"
         class="nav-item <?= isActive('overview', $activePage) ?>">
         Overview
       </a>
-      <a href="?controller=giftWrapper&action=dashboard/portfolio"
-        class="nav-item <?= isActive('portfolio', $activePage) ?>">
-        Portfolio
+      <a href="?controller=giftWrapper&action=dashboard/order" class="nav-item <?= isActive('order', $activePage) ?>">
+        Wrapping Orders
       </a>
       <a href="?controller=giftWrapper&action=dashboard/service"
         class="nav-item <?= isActive('service', $activePage) ?>">
         Service
       </a>
+      <a href="?controller=giftWrapper&action=dashboard/portfolio"
+        class="nav-item <?= isActive('portfolio', $activePage) ?>">
+        Portfolio
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/earnings"
+        class="nav-item <?= isActive('earnings', $activePage) ?>">
+        Earning
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/analytics"
+        class="nav-item <?= isActive('analytics', $activePage) ?>">
+        Analytics
+      </a>
+
     </nav>
     <div class="button-section">
-      <a href="#logout" class="btn1">
+      <a href="?controller=giftWrapper&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
-      </a>
+</a>
     </div>
   </div>
   <div class="topbar-container">

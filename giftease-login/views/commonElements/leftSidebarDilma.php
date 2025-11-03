@@ -35,7 +35,7 @@
       </a>
     </nav>
     <div class="button-section">
-      <a href="#logout" class="btn1">
+      <a href="?controller=client&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
       </a>
@@ -58,7 +58,8 @@
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?controller=client&action=dashboard/account" class="settings-btn <?= isActive('account', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/account"
+        class="settings-btn <?= isActive('account', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>
