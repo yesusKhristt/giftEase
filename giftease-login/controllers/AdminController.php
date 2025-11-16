@@ -1,16 +1,28 @@
 <?php
+
 class AdminController
 {
     private $giftWrapping;
     private $category;
 
+    private $vendor;
+    
+    private $delivery;
+
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/CategoryModel.php';
         require_once __DIR__ . '/../models/GiftWrappingModel.php';
+        require_once __DIR__ . '/../models/VendorModel.php';
+        require_once __DIR__ . '/../models/DeliveryModel.php';
         $this->giftWrapping = new GiftWrapppingModel($pdo);
         $this->category = new CategoryModel($pdo);
+        $this->vendor = new VendorModel($pdo);
+        $this->delivery = new DeliveryModel($pdo);
+        
     }
+
+   
     public function dashboard()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'admin') {
@@ -229,6 +241,19 @@ class AdminController
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
     }
+
+    public function showVendors()
+    {
+        $allVendors = $this->vendor->getAllVendors();
+        require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
+    }
+
+    public function showDelivery()
+{
+    $allDelivery = $this->delivery->getAllDelivery();
+    require_once __DIR__ . '/../views/Dashboards/Admin/deliver.php';
+}
+
     public function Admin($parts)
     {
         switch ($parts[1]) {
@@ -236,8 +261,9 @@ class AdminController
                 require_once __DIR__ . '/../views/Dashboards/Admin/customer.php';
                 break;
             case 'delivery':
-                require_once __DIR__ . '/../views/Dashboards/Admin/deliver.php';
+                $this->showDelivery();
                 break;
+
             case 'items':
                 require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
                 break;
@@ -254,8 +280,9 @@ class AdminController
                 require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
                 break;
             case 'vendor':
-                require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
+                $this->showVendors($parts);
                 break;
+            
             case 'category':
                 $this->addCategory($parts);
                 break;
@@ -265,6 +292,7 @@ class AdminController
             case 'editGiftWrappingItems':
                 $this->editGiftWrappingItems($parts);
                 break;
+            
             default:
                 require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
                 break;

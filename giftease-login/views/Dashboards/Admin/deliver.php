@@ -20,56 +20,30 @@
         <div class="page-header">
           <h1 class="title">Deliver</h1>
           <p class="subtitle">Deliver List</p>
+          </div>
 
-          </button>
           <table class="table">
             <thead>
               <tr>
-                <th>date</th>
-                <th>Vendor id</th>
-                <th>method</th>
+                <th>Delivery id</th>
+                <th>Phone</th>
+                <th>vehicle Number</th>
                 <th>Address</th>
-                <th>oder id</th>
-                <th>deliver id</th>
+                <th>Created at</th>
               </tr>
             </thead>
             <tbody>
+              
+              <?php foreach ($allDelivery as $row): ?>
               <tr>
-                <td>Jan 20, 2024</td>
-                <td>WRP-001</td>
-                <td>Premium Gift Wrapping</td>
-                <td>wawrukannala ,kadurupokuna,tangalle</td>
-                <td style="font-weight: 600;">001</td>
-                <td><span class="status-badge status-paid">#997</span></td>
-
-              </tr>
-              <tr>
-                <td>Jan 19, 2024</td>
-                <td>WRP-002</td>
-                <td>Custom Ribbon + Card</td>
-                <td>ashen home,kadurupokuna ,tanglle</td>
-                <td style="font-weight: 600;">002</td>
-                <td><span class="status-badge status-paid">#998</span></td>
-
-              </tr>
-              <tr>
-                <td>Jan 18, 2024</td>
-                <td>WRP-003</td>
-                <td>Luxury Gift Box</td>
-                <td>100/5, colombo 7</td>
-                <td style="font-weight: 600;">003</td>
-                <td><span class="status-badge status-pending">#999</span></td>
-
-              </tr>
-              <tr>
-                <td>Jan 17, 2024</td>
-                <td>WRP-004</td>
-                <td>Theme Wrapping</td>
-                <td>100/10 ,goyambokka,tanglle</td>
-                <td style="font-weight: 600;">004</td>
-                <td><span class="status-badge status-paid">#992</span></td>
-
-              </tr>
+                <td><?= htmlspecialchars($row['id']); ?></td>
+                <td><?=htmlspecialchars($row['phone']); ?></td>
+                <td><?=htmlspecialchars($row['vehicleNumber']); ?></td>
+                <td><?=htmlspecialchars($row['address']); ?></td>
+                <td><?=htmlspecialchars( $row['created_at']);?></td>              
+              
+              <?php endforeach ?>
+              
             </tbody>
           </table>
         </div>

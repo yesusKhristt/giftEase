@@ -44,6 +44,14 @@ class VendorModel
         return $stmt->fetchColumn();
     }
 
+    public function getAllVendors()
+    {
+        $stmt = $this->getpdo()->prepare("SELECT * FROM vendors");
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     public function addVendor($user_id, $shopname, $phone, $address)
     {
         $stmt = $this->pdo->prepare("INSERT INTO vendors (user_id, shopName, phone, address, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");

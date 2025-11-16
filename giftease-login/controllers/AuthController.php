@@ -44,13 +44,13 @@ class AuthController
                         header("Location: index.php?controller=admin&action=dashboard/primary");
                         exit;
                     case 'delivery':
-                        header("Location: index.php?controller=delivery&action=dashboard/primary");
+                        header("Location: index.php?controller=delivery&action=checkID/primary");
                         exit;
                     case 'deliveryman':
-                        header("Location: index.php?controller=deliveryman&action=dashboard/primary");
+                        header("Location: index.php?controller=deliveryman&action=checkID/primary");
                         exit;
                     case 'giftWrapper':
-                        header("Location: index.php?controller=giftWrapper&action=dashboard/primary");
+                        header("Location: index.php?controller=giftWrapper&action=checkID/primary");
                         exit;
                 }
 

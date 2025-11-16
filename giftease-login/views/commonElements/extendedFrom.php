@@ -41,6 +41,8 @@
                     break;
                 case 'delivery':
                     echo '
+                    <label class="form-label">Address</label>
+                    <input type="textarea" name="address" placeholder="Address" class="form-input" required>
                     <label class="form-label">Vehicle Number Plate</label>
                     <input type="text" name="vehiclePlate" placeholder="no-Plate" class="form-input" required>
                     ';
