@@ -1,54 +1,17 @@
 <?php
 class DeliveryController
 {
-    private $model;
+    private $delivery;
 
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/DeliveryModel.php';
-        $this->model = new DeliveryModel($pdo);
+        $this->delivery = new DeliveryModel($pdo);
     }
 
-
-
-    public function checkID()
-    {
-        $user = $_SESSION['user'];
-        $user_id = $user['id'];
-
-        $stmt = $this->model->getpdo()->prepare("SELECT COUNT(*) FROM delivery WHERE user_id = ?");
-        $stmt->execute([$user_id]);
-
-        $exists = (int) $stmt->fetchColumn();
-        var_dump($exists);
-
-        if (!$exists) {
-            $this->deliveryForm($user_id);
-        } else {
-            header("Location: index.php?controller=delivery&action=dashboard/primary");
-            exit;
-        }
-
-    }
-
-    public function deliveryForm($user_id)
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $FIRST_NAME = $_POST['first_name'] ?? '';
-            $LAST_NAME = $_POST['last_name'] ?? '';
-            $PHONE = $_POST['phone'] ?? '';
-            $ADDRESS = $_POST['address'] ?? '';
-
-
-            $this->model->addDelivery($user_id, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
-            header("Location: index.php?controller=delivery&action=dashboard/primary");
-            exit;
-        }
-        require_once __DIR__ . '/../views/commonElements/extendedFrom.php';
-    }
     public function dashboard()
     {
-        if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'delivery') {
+        if (!$this->delivery->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
         }
@@ -98,8 +61,8 @@ class DeliveryController
     {
         // Logic to handle profile editing
         $USER_ID = $_SESSION['user']['id'];
-        $stmt1 = $this->model->getpdo()->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt2 = $this->model->getpdo()->prepare("SELECT * FROM delivery WHERE user_id = ?");
+        $stmt1 = $this->delivery->getpdo()->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt2 = $this->delivery->getpdo()->prepare("SELECT * FROM delivery WHERE user_id = ?");
         $stmt1->execute([$USER_ID]);
         $user1 = $stmt1->fetch();
         $stmt2->execute([$USER_ID]);
@@ -112,7 +75,7 @@ class DeliveryController
             $ADDRESS = $_POST['address'] ?? '';
 
 
-            $this->model->updateDelivery($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
+            $this->delivery->updateDelivery($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
             header("Location: index.php?controller=delivery&action=dashboard/account");
             exit;
 

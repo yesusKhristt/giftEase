@@ -2,18 +2,32 @@
 class AdminController
 {
     private $giftWrapping;
+    private $giftWrapper;
     private $category;
+    private $deliveryman;
+    private $delivery;
+    private $admin;
 
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/CategoryModel.php';
         require_once __DIR__ . '/../models/GiftWrappingModel.php';
-        $this->giftWrapping = new GiftWrapppingModel($pdo);
+        require_once __DIR__ . '/../models/GiftWrapperModel.php';
+        require_once __DIR__ . '/../models/DeliveryModel.php';
+        require_once __DIR__ . '/../models/DeliverymanModel.php';
+        require_once __DIR__ . '/../models/AdminModel.php';
+        $this->giftWrapping = new GiftWrappingModel($pdo);
+        $this->giftWrapper = new GiftWrapperModel($pdo);
         $this->category = new CategoryModel($pdo);
+        $this->deliveryman = new DeliverymanModel($pdo);
+        $this->delivery = new DeliveryModel($pdo);
+        $this->admin = new AdminModel($pdo);
     }
+
+
     public function dashboard()
     {
-        if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'admin') {
+        if (!$this->admin->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
         }
@@ -238,6 +252,9 @@ class AdminController
             case 'delivery':
                 require_once __DIR__ . '/../views/Dashboards/Admin/deliver.php';
                 break;
+            case 'deliveryman':
+                require_once __DIR__ . '/../views/Dashboards/Admin/deliveryMan.php';
+                break;
             case 'items':
                 require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
                 break;
@@ -269,5 +286,13 @@ class AdminController
                 require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
                 break;
         }
+    }
+
+        public function deactivateUser()
+    {
+        $USER_ID = $_SESSION['user']['id'];
+        $this->user->deactivateUser($USER_ID);
+        header("Location: index.php");
+        exit;
     }
 }

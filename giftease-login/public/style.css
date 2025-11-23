@@ -70,6 +70,7 @@ textarea {
     margin-top: 100px;
     padding: 20px;
     min-height: 100vh;
+    border-radius: 25px;
 }
 
 /* Page Header */
@@ -242,12 +243,12 @@ textarea {
     flex-direction: column;
     position: fixed;
     left: 0;
+    top: 0;
     height: 100vh;
     /* Fill remaining height below top bar */
     color: white;
     z-index: 100;
     overflow-y: auto;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
 .topbar-container {
@@ -258,7 +259,7 @@ textarea {
     width: calc(100% - 280px);
     /* Fill the rest of the space */
     height: 100px;
-    background: linear-gradient(0deg, #FFFFFF 0%, #f6f6f6 100%);
+    background: #FFFFFF;
     display: flex;
     align-items: center;
     z-index: 999;

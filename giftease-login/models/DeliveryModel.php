@@ -8,7 +8,7 @@ class DeliveryModel
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
-        $this->createTables(); // Create the table if not there
+        $this->createTableIfNotExists(); // Create the table if not there
     }
 
     public function getpdo()
@@ -16,67 +16,91 @@ class DeliveryModel
         return $this->pdo;
     }
 
-
-    public function createTables()
+    public function createTableIfNotExists()
     {
-        // --- Delivery table (linked to users table) ---
-        $deliverySql = "CREATE TABLE IF NOT EXISTS delivery (
+        $sql1 = "CREATE TABLE IF NOT EXISTS delivery (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
-            first_name VARCHAR(50),
-            last_name VARCHAR(50),
-                        phone VARCHAR(20),
+            first_name VARCHAR(100) NOT NULL,
+            last_name VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            status ENUM('active', 'inactive') DEFAULT 'active',
             address VARCHAR(255),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        ) ENGINE=InnoDB;";
-
-
+            vehiclePlate VARCHAR(20),
+            phone VARCHAR(10),
+            image_loc VARCHAR(500) DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );";
 
         try {
-            
-            $this->pdo->exec($deliverySql);
-
+            $this->pdo->exec($sql1);
         } catch (PDOException $e) {
-            die("❌ Error creating tables: " . $e->getMessage());
+            die("Error creating tables: " . $e->getMessage());
         }
     }
 
-    public function addDelivery($user_id, $first_name, $last_name, $phone, $address)
+        public function authenticate($email, $password, $type)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO delivery (user_id, first_name, last_name, phone, address, created_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password']) && $type == 'delivery') {
+            return $user;
+        }
+        return null;
+    }
+
+        public function getUserByEmail($email)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function addUser($data)
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO delivery (first_name, last_name, email, password, vehiclePlate, phone, image_loc, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         return $stmt->execute([
-            $user_id,
-            $first_name,
-            $last_name,
-            $phone,
-            $address
-            
+            $data['first_name'],
+            $data['last_name'],
+            $data['email'],
+            $data['password'],
+            $data['vehiclePlate'],
+            $data['phone'],
+            $data['imageloc'],
+            $data['address'],
         ]);
-
     }
 
-    public function updateDelivery($user_id, $first_name, $last_name, $phone, $address)
+    public function updateUser($data)
     {
-        $stmt = $this->pdo->prepare("UPDATE delivery SET first_name = ?, last_name = ?, phone = ?, address = ? WHERE user_id = ?");
+        $stmt = $this->pdo->prepare("UPDATE delivery SET first_name = ?, last_name = ?, vehiclePlate = ?, phone = ?, address = ? WHERE id = ?");
         return $stmt->execute([
-            $first_name,
-            $last_name,
-            $phone,
-            $address,
-            
-            $user_id
+            $data['first_name'],
+            $data['last_name'],
+            $data['vehiclePlate'],
+            $data['phone'],
+            $data['address'],
+            $data['id']
         ]);
     }
 
-    public function deleteDelivery($user_id)
+    public function deleteUser($id)
     {
-        $stmt = $this->pdo->prepare("DELETE  FROM users WHERE id = ?");
-        $stmt->execute([$user_id]);
-        $stmt = $this->pdo->prepare("DELETE FROM delivery WHERE user_id = ?");
-        return $stmt->execute([$user_id]);
+        $stmt = $this->pdo->prepare("UPDATE delivery SET status = 'inactive' WHERE id = ?");
+        $stmt->execute($id);
     }
+
+
+    public function getAllDelivery()
+    {
+        $stmt = $this->getpdo()->prepare("SELECT * FROM delivery");
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
 }
-
 
 ?>

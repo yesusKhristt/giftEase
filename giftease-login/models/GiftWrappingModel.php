@@ -1,7 +1,7 @@
 <?php
 // ClientModel.php***
 
-class GiftWrapppingModel
+class GiftWrappingModel
 {
     private $pdo;
 
@@ -349,37 +349,44 @@ class GiftWrapppingModel
 
     }
 
-    public function deleteBoxWrap($id){
+    public function deleteBoxWrap($id)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM boxWrap WHERE id = ?");
         return $stmt->execute([$id]);
     }
 
-    public function deleteBoxRibbon($id){
+    public function deleteBoxRibbon($id)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM boxRibbon WHERE id = ?");
         return $stmt->execute([$id]);
     }
 
-    public function deletePaperBag($id){
+    public function deletePaperBag($id)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM paperBag WHERE id = ?");
         return $stmt->execute([$id]);
     }
 
-    public function deletePaperBagRibbon($id){
+    public function deletePaperBagRibbon($id)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM paperBagRibbon WHERE id = ?");
         return $stmt->execute([$id]);
     }
 
-    public function deleteChocolates($id){
+    public function deleteChocolates($id)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM chocolates WHERE id = ?");
         return $stmt->execute([$id]);
     }
 
-    public function deleteCard($id){
+    public function deleteCard($id)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM cards WHERE id = ?");
         return $stmt->execute([$id]);
     }
 
-    public function deleteSoftToy($id){
+    public function deleteSoftToy($id)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM softToys WHERE id = ?");
         return $stmt->execute([$id]);
     }
@@ -389,9 +396,9 @@ class GiftWrapppingModel
     {
         $stmt = $this->pdo->prepare(
             "INSERT INTO customWrap (box, boxDeco, bag, bagDeco, softToy, chocolate, card, price)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         );
-        return $stmt->execute([
+        $stmt->execute([
             $box,
             $boxDeco,
             $bag,
@@ -401,6 +408,7 @@ class GiftWrapppingModel
             $card,
             $price
         ]);
+        return $this->pdo->lastInsertId();
     }
 
     // Add a new giftWrapPackage
@@ -408,7 +416,7 @@ class GiftWrapppingModel
     {
         $stmt = $this->pdo->prepare(
             "INSERT INTO giftWrapPackage (box, boxDeco, bag, bagDeco, softToy, chocolate, card, price, description, displayImage)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
         return $stmt->execute([
             $box,
