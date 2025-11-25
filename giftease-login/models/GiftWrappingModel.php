@@ -424,7 +424,39 @@ class GiftWrapppingModel
         ]);
     }
 
+    public function getGiftWrapperID($id){
 
+        $stmt = $this->getpdo()->prepare("SELECT id FROM giftWrapper WHERE user_id = ?");
+        $stmt->execute([$id]);
+
+        return $stmt->fetchColumn();
+    }
+
+    public function getAllGiftWrapper()
+    {
+        $stmt = $this->getpdo()->prepare("SELECT * FROM giftWrapper");
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function addGiftWrapper($user_id, $phone, $address)
+{
+    $stmt = $this->pdo->prepare("
+        INSERT INTO giftWrapper (user_id, phone,  address, created_at)
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+    ");
+
+    return $stmt->execute([
+        $user_id,
+        $phone,         // corrected
+        $address
+    ]);
+
+
+
+
+}
 }
 
 

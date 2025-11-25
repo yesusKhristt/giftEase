@@ -9,6 +9,8 @@ class AdminController
     
     private $delivery;
 
+    private $giftwrappers;
+
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/CategoryModel.php';
@@ -254,6 +256,12 @@ class AdminController
     require_once __DIR__ . '/../views/Dashboards/Admin/deliver.php';
 }
 
+public function showGiftWrappers()
+    {
+        $allVendors = $this->giftwrappers->getAllGiftWrappers();
+        require_once __DIR__ . '/../views/Dashboards/Admin/giftWrapping.php';
+    }
+
     public function Admin($parts)
     {
         switch ($parts[1]) {
@@ -271,7 +279,7 @@ class AdminController
                 require_once __DIR__ . '/../views/Dashboards/Admin/settings new.php';
                 break;
             case 'giftWrapping':
-                require_once __DIR__ . '/../views/Dashboards/Admin/giftWrapping.php';
+                $this->showGiftWrappers();
                 break;
             case 'Admin':
                 require_once __DIR__ . '/../views/Dashboards/Admin/Admins.php';

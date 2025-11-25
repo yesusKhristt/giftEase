@@ -1,6 +1,43 @@
 <?php
 class giftWrapperController
 {
+
+    private $giftwrapper;
+
+    public function __construct($pdo)
+    {
+        require_once __DIR__ . '/../models/GiftwrappingModel.php';
+        $this->giftwrapper = new GiftWrapppingModel($pdo);
+    }
+
+    public function checkID()
+    {
+
+        $exists = $this->giftwrapper->getGiftWrapperID($_SESSION['user']['id']);
+
+        if (!$exists) {
+            $this->employeeForm($_SESSION['user']['id']);
+        } else {
+            header("Location: index.php?controller=giftWrapper&action=dashboard/primary");
+            exit;
+        }
+
+    }
+
+    public function employeeForm($user_id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $phone = $_POST['phone'] ?? '';
+            $address = $_POST['address'] ?? '';
+
+            $this->giftwrapper->addGiftWrapper($user_id, $phone, $address);
+            header("Location: index.php?controller=giftWrapper&action=dashboard/primary");
+            exit;
+        }
+        require_once __DIR__ . '/../views/commonElements/extendedFrom.php';
+    }
+
+
     public function dashboard()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'giftWrapper') {
