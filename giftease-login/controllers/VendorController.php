@@ -15,36 +15,9 @@ class VendorController
         $this->category = new CategoryModel($pdo);
     }
 
-    public function checkID()
-    {
-
-        $exists = $this->vendor->getVendorID($_SESSION['user']['id']);
-
-        if (!$exists) {
-            $this->employeeForm($_SESSION['user']['id']);
-        } else {
-            header("Location: index.php?controller=vendor&action=dashboard/primary");
-            exit;
-        }
-
-    }
-
-    public function employeeForm($user_id)
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $phone = $_POST['phone'] ?? '';
-            $shopname = $_POST['shopName'] ?? '';
-            $address = $_POST['address'] ?? '';
-
-            $this->vendor->addVendor($user_id, $shopname, $phone, $address);
-            header("Location: index.php?controller=vendor&action=dashboard/primary");
-            exit;
-        }
-        require_once __DIR__ . '/../views/commonElements/extendedFrom.php';
-    }
     public function dashboard()
     {
-        if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'vendor') {
+        if (!$this->vendor->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
         }
@@ -118,7 +91,7 @@ class VendorController
 
             switch ($parts[2]) {
                 case 'add':
-                    $productID = $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+                    $productID = $this->product->addProduct($_SESSION['user']['id'], $title, $price, $description, $category, $subcategory, $profilePicPath);
                     header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
                     exit;
                 case 'edit':
@@ -167,7 +140,7 @@ class VendorController
 
     public function showInventory($parts)
     {
-        $allProducts = $this->product->fetchAllfromVendor($this->vendor->getVendorID($_SESSION['user']['id']));
+        $allProducts = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Vendor/Inventory.php';
     }
 
@@ -253,5 +226,12 @@ class VendorController
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
                 break;
         }
+    }
+            public function deactivateUser()
+    {
+        $USER_ID = $_SESSION['user']['id'];
+        $this->user->deactivateUser($USER_ID);
+        header("Location: index.php");
+        exit;
     }
 }

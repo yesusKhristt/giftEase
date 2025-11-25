@@ -6,6 +6,8 @@ class ProductController
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/ProdyctsModel.php';
+        require_once __DIR__ . '/../models/UserModel.php';
+        $this->user = new UserModel($pdo);
         $this->model = new ProductsModel($pdo);
     }
     
