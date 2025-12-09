@@ -1,9 +1,15 @@
 <?php
 class giftWrapperController
 {
+    private $giftwrapper;
+        public function __construct($pdo)
+    {
+        require_once __DIR__ . '/../models/GiftWrapperModel.php';
+        $this->giftwrapper = new GiftWrapperModel($pdo); //bruh
+    }
     public function dashboard()
     {
-        if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'giftWrapper') {
+        if (!$this->giftwrapper->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
         }
@@ -50,5 +56,13 @@ class giftWrapperController
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
 
+    }
+
+            public function deactivateUser()
+    {
+        $USER_ID = $_SESSION['user']['id'];
+        $this->user->deactivateUser($USER_ID);
+        header("Location: index.php");
+        exit;
     }
 }

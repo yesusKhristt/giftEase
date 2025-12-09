@@ -58,7 +58,8 @@
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?action=dashboard&type=client&level=account" class="settings-btn <?= isActive('account', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/account"
+        class="settings-btn <?= isActive('account', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>

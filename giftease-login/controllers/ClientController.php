@@ -6,62 +6,29 @@ class ClientController
     private $cart;
     private $giftWrapper;
 
+    private $orders;
+
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/ClientModel.php';
         require_once __DIR__ . '/../models/ProductsModel.php';
-        require_once __DIR__ . '/../models/cartModel.php';
-        require_once __DIR__ . '/../models/giftWrappingModel.php';
+        require_once __DIR__ . '/../models/CartModel.php';
+        require_once __DIR__ . '/../models/GiftWrappingModel.php';
+        require_once __DIR__ . '/../models/OrderModel.php';
         $this->client = new ClientModel($pdo);
         $this->products = new ProductsModel($pdo);
         $this->cart = new CartModel($pdo);
-        $this->giftWrapper = new GiftWrapppingModel($pdo);
+        $this->giftWrapper = new GiftWrappingModel($pdo);
+        $this->orders = new OrderModel($pdo);
     }
 
-
-
-    public function checkID()
-    {
-        $user = $_SESSION['user'];
-        $user_id = $user['id'];
-
-        $stmt = $this->client->getpdo()->prepare("SELECT COUNT(*) FROM clients WHERE user_id = ?");
-        $stmt->execute([$user_id]);
-
-        $exists = (int) $stmt->fetchColumn();
-
-        if (!$exists) {
-            $this->clientForm($user_id);
-        } else {
-            header("Location: index.php?controller=client&action=dashboard/primary");
-            exit;
-        }
-
-    }
-
-    public function clientForm($user_id)
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $FIRST_NAME = $_POST['First_Name'] ?? '';
-            $LAST_NAME = $_POST['Last_Name'] ?? '';
-            $PHONE = $_POST['phone'] ?? '';
-            $ADDRESS = $_POST['address'] ?? '';
-
-
-            $this->client->addClient($user_id, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
-            header("Location: index.php?controller=client&action=dashboard/primary");
-            exit;
-        }
-        require_once __DIR__ . '/../views/commonElements/extendedFrom.php';
-    }
     public function dashboard()
     {
-        if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'client') {
+        if (!$this->client->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=client");
             exit;
         }
         global $pdo;
-        $_SESSION['client'] = $this->client->getClient($_SESSION['user']['id']);
         $path = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
@@ -75,7 +42,7 @@ class ClientController
 
         if ($state === 'cart') {
             $product_id = $parts[2];
-            $client_id = $_SESSION['client']['id'];
+            $client_id = $_SESSION['user']['id'];
 
             // If it's already there, remove it. Otherwise, add it.
 
@@ -90,7 +57,7 @@ class ClientController
             exit;
         } else if ($state === 'cartCheck') {
             $product_id = $parts[2];
-            $client_id = $_SESSION['client']['id'];
+            $client_id = $_SESSION['user']['id'];
 
             // If it's already there, remove it. Otherwise, add it.
 
@@ -138,7 +105,7 @@ class ClientController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $state = $parts[3] ?? '';
             $product_id = $parts[2] ?? '';
-            $client_id = $_SESSION['client']['id'];
+            $client_id = $_SESSION['user']['id'];
 
 
             if ($state == 'remove') {
@@ -161,7 +128,7 @@ class ClientController
             }
 
         }
-        $cartItems = $this->cart->getCartForClient($_SESSION['client']['id']);
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
     }
 
@@ -193,13 +160,28 @@ class ClientController
             $softToy = $data['softToy'];
             $total = $data['totalPrice'];
 
-            $this->giftWrapper->addCustomWrap($box, $boxDeco, $paperBag, $paperBagDeco, $softToy, $chocolate, $card, $total);
+            $wrap_id = $this->giftWrapper->addCustomWrap($box, $boxDeco, $paperBag, $paperBagDeco, $softToy, $chocolate, $card, $total);
+
+            $this->placeOrder($wrap_id, "custom");
             header("Location: index.php?controller=client&action=dashboard/primary");
             exit;
 
         }
 
         require_once __DIR__ . '/../views/Dashboards/Client/custom.php';
+    }
+
+    public function placeOrder($wrap_id, $mode)
+    {
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+        $this->orders->confirmOrder([
+                            'mode' => $mode,
+                            'cartItems' => $cartItems,
+                            'client_id' => $_SESSION['user']['id']
+        ], $wrap_id);
+        $this->cart->emptyCart($_SESSION['user']['id']);
+        header("Location: index.php?controller=client&action=dashboard/tracking");
+            exit;
     }
 
     public function Client($parts)
@@ -249,7 +231,7 @@ class ClientController
 
     public function handleLogout()
     {
-        $_SESSION['client'] = null;
+        $_SESSION['user'] = null;
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
 
@@ -258,9 +240,7 @@ class ClientController
     public function editProfile()
     {
         // Logic to handle profile editing
-        $USER_ID = $_SESSION['user']['id'];
-        $user1 = $_SESSION['user'];
-        $user2 = $_SESSION['client'];
+        $user = $_SESSION['user'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $FIRST_NAME = $_POST['first_name'] ?? '';
@@ -268,7 +248,7 @@ class ClientController
             $PHONE = $_POST['phone'] ?? '';
             $ADDRESS = $_POST['address'] ?? '';
 
-            $this->client->updateClient($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
+            // $this->client->updateUser($data);
             header("Location: index.php?controller=client&action=dashboard/account");
             exit;
 
@@ -298,7 +278,7 @@ class ClientController
             } else {
                 echo "File upload failed.";
             }
-            $this->client->updateProfilePicture($_SESSION['client']['id'], $profilePicPath);
+            $this->client->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
             header("Location: index.php?controller=client&action=dashboard/account");
             exit;
 
@@ -310,15 +290,9 @@ class ClientController
     }
 
 
-    public function deleteProfile()
+    public function deactivateUser()
     {
         $USER_ID = $_SESSION['user']['id'];
-        $stmt1 = $this->client->getpdo()->prepare('SELECT * FROM users WHERE id = ?');
-        $stmt1->execute([$USER_ID]);
-        $stmt2 = $this->client->getpdo()->prepare('SELECT * FROM clients WHERE user_id = ?');
-        $stmt2->execute([$USER_ID]);
-
-        $this->client->deleteClient($USER_ID);
         header("Location: index.php");
         exit;
     }
@@ -327,7 +301,7 @@ class ClientController
     {
         $USER_ID = $_SESSION['user']['id'];
         $user1 = $_SESSION['user'];
-        $user2 = $_SESSION['client'];
+        $user2 = $_SESSION['user'];
 
         $stmt3 = $this->client->getpdo()->prepare(
             "SELECT DATE_FORMAT(c.created_at, '%d %M %Y') AS join_month_year 
