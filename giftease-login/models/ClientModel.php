@@ -30,12 +30,10 @@ class ClientModel
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
         // --- Clients table (linked to users table) ---
-        $sql2 = "CREATE TABLE IF NOT EXISTS clientAdress (
+        $sql2 = "CREATE TABLE IF NOT EXISTS clientAddress (
             client_id INT NOT NULL,
             address VARCHAR(255),
             PRIMARY KEY (client_id, address),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            image_loc VARCHAR(500) DEFAULT NULL,
             FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );";
 
@@ -68,10 +66,25 @@ class ClientModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+        public function addAddress($adress, $id)
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO clientAddress (client_id, address) VALUES (?, ?)");
+        return $stmt->execute([
+            $id,
+            $adress
+        ]);
+    }
+
+    public function getAddress($id){
+        $stmt = $this->pdo->prepare("SELECT * FROM clientAddress WHERE client_id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function addUser($data)
     {
         $stmt = $this->pdo->prepare("INSERT INTO clients (first_name, last_name, email, password, phone, image_loc) VALUES (?, ?, ?, ?, ?, ?)");
-        return $stmt->execute([
+        $stmt->execute([
             $data['first_name'],
             $data['last_name'],
             $data['email'],
@@ -79,6 +92,8 @@ class ClientModel
             $data['phone'],
             $data['imageloc'],
         ]);
+        $last_id = $this->pdo->lastInsertId();
+        $this->addAddress($data['address'], $last_id);
     }
 
     public function updateUser($data)

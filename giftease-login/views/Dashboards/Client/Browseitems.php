@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/Dilma/style.css" />
+    <link rel="stylesheet" href="public/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -25,7 +25,7 @@
             </div>
 
             <!-- Filter Tabs -->
-             <h4 class="subtitle" style="padding: 10px">Filter by:</h4>
+            <h4 class="subtitle" style="padding: 10px">Filter by:</h4>
             <div class="filter-tabs">
 
                 <select class="btn1" onchange="filterProducts('category', this.value)">
@@ -80,9 +80,7 @@
                         </a>
 
                         <div class="item-actions">
-                            <a class="btn1 btn-outline btn-small add-to-cart"
-                                href="#"
-                                data-id="<?= $row['id'] ?>">
+                            <a class="btn1 btn-outline btn-small add-to-cart" href="#" data-id="<?= $row['id'] ?>">
                                 Add to cart
                             </a>
 

@@ -16,6 +16,39 @@ class DeliveryModel
         return $this->pdo;
     }
 
+    public function getAllOrders()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE is_delivered = 0 AND is_wrapped = 1 AND delivery_id IS NULL");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAssignedOrders($id)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT orders.id, client_id, deliveryDate, is_delivered, delivery_id, deliveryPrice, clients.first_name, clients.last_name FROM orders JOIN clients ON orders.client_id = clients.id WHERE is_delivered = 0 AND is_wrapped = 1 AND delivery_id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function acceptOrder($order_id, $delivery_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET delivery_id = ? WHERE `id` = ?");
+        $stmt->execute([$delivery_id, $order_id]);
+    }
+
+    public function markComplete($order_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET is_delivered = 1 WHERE `id` = ?");
+        $stmt->execute([$order_id]);
+    }
+
+    public function cancelOrder($order_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET delivery_id = null WHERE `id` = ?");
+        $stmt->execute([$order_id]);
+    }
+
     public function createTableIfNotExists()
     {
         $sql1 = "CREATE TABLE IF NOT EXISTS delivery (
@@ -39,7 +72,7 @@ class DeliveryModel
         }
     }
 
-        public function authenticate($email, $password, $type)
+    public function authenticate($email, $password, $type)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email = ?");
         $stmt->execute([$email]);
@@ -51,7 +84,7 @@ class DeliveryModel
         return null;
     }
 
-        public function getUserByEmail($email)
+    public function getUserByEmail($email)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email = ?");
         $stmt->execute([$email]);

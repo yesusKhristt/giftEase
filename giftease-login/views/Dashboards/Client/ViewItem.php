@@ -46,8 +46,6 @@
             /* Center vertically */
             align-items: center;
             /* Center horizontally (optional) */
-            height: 100vh;
-            /* Full viewport height (or any height you need) */
         }
     </style>
     <link rel="stylesheet" href="public/style.css" />
@@ -87,7 +85,7 @@
 
                             <button id="scroll-right" class="btn1"
                                 style="border-radius: 100%; height: 40px;width: 40px; text-align: center;">▶</button>
-                            
+
                         </div>
 
 
@@ -110,7 +108,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            </p>
+
                         </div>
                     </div>
                     <div class="card">

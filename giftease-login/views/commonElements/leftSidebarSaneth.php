@@ -18,18 +18,18 @@
       <a href="?controller=delivery&action=dashboard/home" class="nav-item <?= isActive('home', $activePage) ?>">
         Home
       </a>
-      <a href="?controller=delivery&action=dashboard/order" class="nav-item <?= isActive('order', $activePage) ?>">
-        Order
+      <a href="?controller=delivery&action=dashboard/allOrder"
+        class="nav-item <?= isActive('allOrder', $activePage) ?>">
+        All Orders
+      </a>
+      <a href="?controller=delivery&action=dashboard/assignedOrder" class="nav-item <?= isActive('assignedOrder', $activePage) ?>">
+        Assigned Order
       </a>
       <a href="?controller=delivery&action=dashboard/map" class="nav-item <?= isActive('map', $activePage) ?>">
         Map
       </a>
       <a href="?controller=delivery&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
-      </a>
-      <a href="?controller=delivery&action=dashboard/notification"
-        class="nav-item <?= isActive('notification', $activePage) ?>">
-        Notification
       </a>
       <a href="?controller=delivery&action=dashboard/proof" class="nav-item <?= isActive('proof', $activePage) ?>">
         Proof

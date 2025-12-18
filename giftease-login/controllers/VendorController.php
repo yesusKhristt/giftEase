@@ -71,6 +71,7 @@ class VendorController
             $subcategory = $_POST['subcategory'];
             $price = $_POST['price'];
             $description = $_POST['description'];
+            $deliverable = $_POST['hours24'];
 
             // Handle file upload if user selected a new image
             $profilePicPath = []; // start with empty array
@@ -91,7 +92,7 @@ class VendorController
 
             switch ($parts[2]) {
                 case 'add':
-                    $productID = $this->product->addProduct($_SESSION['user']['id'], $title, $price, $description, $category, $subcategory, $profilePicPath);
+                    $productID = $this->product->addProduct($_SESSION['user']['id'], $title, $price, $description, $category, $subcategory, $profilePicPath, $deliverable);
                     header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
                     exit;
                 case 'edit':
@@ -102,7 +103,8 @@ class VendorController
                         $description,
                         $category,
                         $subcategory,
-                        $profilePicPath
+                        $profilePicPath,
+                        $deliverable
                     );
                     header("Location: index.php?controller=vendor&action=dashboard/item/view/" . urlencode($parts[3]));
                     exit;

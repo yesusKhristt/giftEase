@@ -21,6 +21,43 @@ class DeliveryController
 
         $this->Delivery($parts);
     }
+
+    public function allOrder($parts)
+    {
+        $orders = $this->delivery->getAllOrders();
+        require_once __DIR__ . '/../views/Dashboards/Delivery/allOrders.php';
+    }
+
+    public function assignedOrder($parts)
+    {
+        $myOrders = $this->delivery->getAssignedOrders($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Delivery/assignedOrders.php';
+    }
+
+    public function acceptOrder($parts)
+    {
+
+        $this->delivery->acceptOrder($parts[2], $_SESSION['user']['id']);
+        header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
+        exit;
+    }
+
+    public function markComplete($parts)
+    {
+
+        $this->delivery->markComplete($parts[2]);
+        header("Location: index.php?controller=delivery&action=dashboard/proof");
+        exit;
+    }
+
+    public function cancelOrder($parts)
+    {
+
+        $this->delivery->cancelOrder($parts[2]);
+        header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
+        exit;
+    }
+
     public function Delivery($parts)
     {
         switch ($parts[1]) {
@@ -33,11 +70,20 @@ class DeliveryController
             case 'map':
                 require_once __DIR__ . '/../views/Dashboards/Delivery/map.php';
                 break;
-            case 'notification':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/notification.php';
+            case 'allOrder':
+                $this->allOrder($parts);
                 break;
-            case 'order':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/order.php';
+            case 'assignedOrder':
+                $this->assignedOrder($parts);
+                break;
+            case 'markComplete':
+                $this->markComplete($parts);
+                break;
+            case 'acceptOrder':
+                $this->acceptOrder($parts);
+                break;
+            case 'cancelOrder':
+                $this->cancelOrder($parts);
                 break;
             case 'proof':
                 require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';

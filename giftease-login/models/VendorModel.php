@@ -27,6 +27,7 @@ class VendorModel
             shopName VARCHAR(50),
             phone VARCHAR(10),
             image_loc VARCHAR(500) DEFAULT NULL,
+            rating FLOAT DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
 

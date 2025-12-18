@@ -40,7 +40,7 @@ class GiftWrapperModel
         }
     }
 
-        public function authenticate($email, $password, $type)
+    public function authenticate($email, $password, $type)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM giftWrappers WHERE email = ?");
         $stmt->execute([$email]);
@@ -52,7 +52,7 @@ class GiftWrapperModel
         return null;
     }
 
-        public function getUserByEmail($email)
+    public function getUserByEmail($email)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM giftWrappers WHERE email = ?");
         $stmt->execute([$email]);
@@ -91,6 +91,52 @@ class GiftWrapperModel
     {
         $stmt = $this->pdo->prepare("UPDATE giftWrappers SET status = 'inactive' WHERE id = ?");
         $stmt->execute($id);
+    }
+
+    public function getAllOrders()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id IS NULL");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAssignedOrders($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT *  FROM orders WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
+        $stmt->execute([$id]);
+        $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($order) {
+            if ($order[0]['customWrap_id']) {
+                $stmt1 = $this->pdo->prepare("SELECT orders.id, client_id, customWrap_id, deliveryDate, is_wrapped, giftWrapper_id, customwrap.price, clients.first_name, clients.last_name FROM orders JOIN customwrap ON orders.customWrap_id = customwrap.id JOIN clients ON orders.client_id = clients.id WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
+                $stmt1->execute([$id]);
+                return $stmt1->fetchAll(PDO::FETCH_ASSOC);
+            } else if ($order[0]['wrapPackage_id']) {
+                $stmt1 = $this->pdo->prepare("SELECT orders.id, client_id, wrapPackage_id, deliveryDate, is_wrapped, giftWrapper_id, customwrap.price, clients.first_name, clients.last_name FROM orders JOIN giftwrappackage ON orders.customWrap_id = customwrap.id JOIN clients ON orders.client_id = clients.id WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
+                $stmt1->execute([$id]);
+                return $stmt1->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } else {
+            return $order;
+        }
+    }
+
+    public function acceptOrder($order_id, $giftWrapper_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET giftWrapper_id = ? WHERE `id` = ?");
+        $stmt->execute([(int)$giftWrapper_id, (int)$order_id]);
+    }
+
+    public function markComplete($order_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET is_wrapped = 1 WHERE `id` = ?");
+        $stmt->execute([$order_id]);
+    }
+
+    public function cancelOrder($order_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET giftWrapper_id = null WHERE `id` = ?");
+        $stmt->execute([$order_id]);
     }
 
 }
