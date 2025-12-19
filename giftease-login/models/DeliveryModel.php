@@ -62,6 +62,7 @@ class DeliveryModel
             vehiclePlate VARCHAR(20),
             phone VARCHAR(10),
             image_loc VARCHAR(500) DEFAULT NULL,
+            verified BOOL DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
 

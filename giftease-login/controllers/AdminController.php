@@ -243,17 +243,44 @@ class AdminController
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
     }
+
+
+    public function admins($parts){
+        $allAdmins = $this->admin->getAllAdmins();
+        require_once __DIR__ . '/../views/Dashboards/Admin/admins.php';
+    }
+    public function vendors($parts){
+        $allVendors = $this->admin->getAllUnverifiedVendors();
+        require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
+    }
+    public function giftwrappers($parts){
+        $allGiftWrappers = $this->admin->getAllUnverifiedGiftwrapper();
+        require_once __DIR__ . '/../views/Dashboards/Admin/giftWrappers.php';
+    }
+    public function delivery($parts){
+        $allDelivery = $this->admin->getAllUnverifiedDelivery();
+        require_once __DIR__ . '/../views/Dashboards/Admin/delivery.php';
+    }
+    public function deliveryman($parts){
+        $allDeliveryman = $this->admin->getAllUnverifiedDeliveryman();
+        require_once __DIR__ . '/../views/Dashboards/Admin/deliveryMan.php';
+    }
+    public function clients($parts){
+        $allClients = $this->admin->getAllClients();
+        require_once __DIR__ . '/../views/Dashboards/Admin/customer.php';
+    }
+
     public function Admin($parts)
     {
         switch ($parts[1]) {
             case 'customer':
-                require_once __DIR__ . '/../views/Dashboards/Admin/customer.php';
+                $this->clients($parts);
                 break;
             case 'delivery':
-                require_once __DIR__ . '/../views/Dashboards/Admin/deliver.php';
+                $this->delivery($parts);
                 break;
             case 'deliveryman':
-                require_once __DIR__ . '/../views/Dashboards/Admin/deliveryMan.php';
+                $this->deliveryman($parts);
                 break;
             case 'items':
                 require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
@@ -264,14 +291,17 @@ class AdminController
             case 'giftWrapping':
                 require_once __DIR__ . '/../views/Dashboards/Admin/giftWrapping.php';
                 break;
-            case 'Admin':
-                require_once __DIR__ . '/../views/Dashboards/Admin/Admins.php';
+            case 'giftWrappers':
+                $this->giftwrappers($parts);
+                break;
+            case 'admins':
+                $this->admins($parts);
                 break;
             case 'profile':
                 require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
                 break;
             case 'vendor':
-                require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
+                $this->vendors($parts);
                 break;
             case 'category':
                 $this->addCategory($parts);

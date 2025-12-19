@@ -11,22 +11,18 @@
 <body>
   <div class="container">
     <?php
-    $activePage = 'customer';
+    $activePage = 'delivery';
     include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
 
       <section id="customers" class="page active">
         <div class="page-header">
-          <h1 class="title">Customer</h1>
-          <p class="subtitle">Customer List</p>
-
+          <h1 class="title">Delivery</h1>
+          <p class="subtitle">Delivery List</p>
+          </button>
         </div>
-
-
-
-
-        <table class = "table">
+        <table class="table">
           <thead>
             <tr>
               <th>ID</th>
@@ -34,28 +30,29 @@
               <th>Last Name</th>
               <th>Email</th>
               <th>Status</th>
+              <th>Address</th>
+              <th>Vehicle Plate</th>
               <th>Phone</th>
               <th>Created At</th>
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($allClients as $row): ?>
+            <?php foreach ($allDelivery as $delivery): ?>
               <tr>
-                <td><?= $row['id'] ?></td>
-                <td><?= $row['first_name'] ?></td>
-                <td><?= $row['last_name'] ?></td>
-                <td><?= $row['email'] ?></td>
-                <td><?= $row['status'] ?></td>
-                <td><?= $row['phone'] ?></td>
-                <td><?= $row['created_at'] ?></td>
+                <td><?= $delivery['id'] ?></td>
+                <td><?= $delivery['first_name'] ?></td>
+                <td><?= $delivery['last_name'] ?></td>
+                <td><?= $delivery['email'] ?></td>
+                <td><?= $delivery['status'] ?></td>
+                <td><?= $delivery['address'] ?></td>
+                <td><?= $delivery['vehiclePlate'] ?></td>
+                <td><?= $delivery['phone'] ?></td>
+                <td><?= $delivery['created_at'] ?></td>
               </tr>
             <?php endforeach; ?>
           </tbody>
         </table>
-
-    </div>
-  </div>
-  </section>
+    </section>
   </div>
   </div>
 </body>

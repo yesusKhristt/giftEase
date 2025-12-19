@@ -11,17 +11,17 @@
 <body>
     <div class="container">
         <?php
-        $activePage = 'deliveryman';
+        $activePage = 'admin';
         include 'views/commonElements/leftSidebarChathu.php';
         ?>
         <div class="main-content">
 
             <section id="customers" class="page active">
                 <div class="page-header">
-                    <h1 class="title">Deliverman</h1>
-                    <p class="subtitle">Deliverman List</p>
-                </div>
+                    <h1 class="title">Admins</h1>
+                    <p class="subtitle">Admin List</p>
 
+                </div>
                 <table class="table">
                     <thead>
                         <tr>
@@ -31,13 +31,13 @@
                             <th>Email</th>
                             <th>Status</th>
                             <th>Address</th>
-                            <th>Vehicle Plate</th>
+                            <th>Designation</th>
                             <th>Phone</th>
                             <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($allDeliveryman as $row): ?>
+                        <?php foreach ($allAdmins as $row): ?>
                             <tr>
                                 <td><?= $row['id'] ?></td>
                                 <td><?= $row['first_name'] ?></td>
@@ -45,15 +45,17 @@
                                 <td><?= $row['email'] ?></td>
                                 <td><?= $row['status'] ?></td>
                                 <td><?= $row['address'] ?></td>
-                                <td><?= $row['vehiclePlate'] ?></td>
+                                <td><?= $row['designation'] ?></td>
                                 <td><?= $row['phone'] ?></td>
                                 <td><?= $row['created_at'] ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+
         </div>
-        </section>
+    </div>
+    </section>
     </div>
     </div>
 </body>
