@@ -78,7 +78,6 @@ class ClientController
     {
         $productId = $parts[2];
         $productDetails = $this->products->fetchProduct($productId);
-        //var_dump($productDetails);
 
         require_once __DIR__ . '/../views/Dashboards/Client/Viewitem.php';
     }
@@ -163,26 +162,46 @@ class ClientController
 
             $wrap_id = $this->giftWrapper->addCustomWrap($box, $boxDeco, $paperBag, $paperBagDeco, $softToy, $chocolate, $card, $total);
 
-            $this->placeOrder($wrap_id, "custom");
-            header("Location: index.php?controller=client&action=dashboard/primary");
+            header("Location: index.php?controller=client&action=dashboard/checkout/$wrap_id/custom");
             exit;
-
         }
 
         require_once __DIR__ . '/../views/Dashboards/Client/custom.php';
     }
 
-    public function placeOrder($wrap_id, $mode)
+    public function checkout($parts)
     {
-        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
-        $this->orders->confirmOrder([
-                            'mode' => $mode,
-                            'cartItems' => $cartItems,
-                            'client_id' => $_SESSION['user']['id']
-        ], $wrap_id);
-        $this->cart->emptyCart($_SESSION['user']['id']);
-        header("Location: index.php?controller=client&action=dashboard/tracking");
+        $wrap_id = $parts[2];
+        $mode = $parts[3];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $orderType = $_POST['orderType'] ?? null;
+            $recipientName = $_POST['recipientName'] ?? null;
+            $recipientPhone = $_POST['recipientPhone'] ?? null;
+            $deliveryAddress = $_POST['deliveryAddress'] ?? null;
+            $locationType = $_POST['locationType'] ?? null;
+            $deliveryDate = $_POST['deliveryDate'] ?? null;
+            $deliveryPrice = $_POST['deliveryPrice'] ?? null;
+
+            $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+            $this->orders->confirmOrder([
+                'mode' => $mode,
+                'orderType' => $orderType,
+                'recipientName' => $recipientName,
+                'recipientPhone' => $recipientPhone,
+                'deliveryAddress' => $deliveryAddress,
+                'locationType' => $locationType,
+                'deliveryDate' => $deliveryDate,
+                'cartItems' => $cartItems,
+                'deliveryPrice' => $deliveryPrice,
+                'client_id' => $_SESSION['user']['id']
+            ], $wrap_id);
+            $this->cart->emptyCart($_SESSION['user']['id']);
+
+            header("Location: index.php?controller=client&action=dashboard/tracking  ");
             exit;
+        }
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/checkout.php';
     }
 
     public function Client($parts)
@@ -200,6 +219,9 @@ class ClientController
             case 'history':
                 require_once __DIR__ . '/../views/Dashboards/Client/history.php';
                 break;
+            case 'messeges':
+                require_once __DIR__ . '/../views/Dashboards/Client/messeges.php';
+                break;
             case 'wrap':
                 $this->wrapping();
                 break;
@@ -215,8 +237,8 @@ class ClientController
             case 'viewitem':
                 $this->displayproduct($parts);
                 break;
-            case 'Checkout':
-                require_once __DIR__ . '/../views/Dashboards/Client/checkout.php';
+            case 'checkout':
+                $this->checkout($parts);
                 break;
             case 'custom':
                 $this->custom($parts);

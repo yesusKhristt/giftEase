@@ -49,7 +49,7 @@ class AdminModel
         return null;
     }
 
-        public function getUserByEmail($email)
+    public function getUserByEmail($email)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE email = ?");
         $stmt->execute([$email]);
@@ -90,6 +90,69 @@ class AdminModel
         $stmt->execute($id);
     }
 
+    public function getAllClients()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM clients");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
 
+    public function getAllVerifiedVendors()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE verified = 1");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
+    public function getAllUnverifiedVendors()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE verified = 0");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
 
+    public function getAllAdmins()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM admins");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllVerifiedDelivery()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE verified = 1");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
+    public function getAllUnverifiedDelivery()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE verified = 0");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllVerifiedDeliveryman()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM deliveryman WHERE verified = 1");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
+    public function getAllUnverifiedDeliveryman()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM deliveryman WHERE verified = 0");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllVerifiedGiftwrapper()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers WHERE verified = 1");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
+    public function getAllUnverifiedGiftwrapper()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers WHERE verified = 0");
+        $stmt->execute([]);
+        return $stmt->fetchall(PDO::FETCH_ASSOC);
+    }
 }

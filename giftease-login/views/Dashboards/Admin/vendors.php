@@ -25,67 +25,33 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>oredr ID</th>
-                            <th>Vendor id</th>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Address</th>
+                            <th>Shop Name</th>
                             <th>Phone</th>
-                            <th>company name</th>
-                            <th>rating</th>
-                            <th>other details</th>
+                            <th>Rating</th>
+                            <th>Created At</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>001</td>
-                            <td>WRP-001</td>
-                            <td>0786607436</td>
-                            <td>Premium Gift Wrapping</td>
-                            <td style="font-weight: 600;">⭐⭐⭐⭐⭐</td>
-                            <td><span class="status-badge status-paid">Paid</span></td>
-                            <!-- <td>
-                                        <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-001')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td> -->
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>WRP-002</td>
-                            <td>0740792252</td>
-                            <td>Custom Ribbon + Card</td>
-                            <td style="font-weight: 600;">⭐⭐⭐⭐⭐</td>
-                            <td><span class="status-badge status-paid">Paid</span></td>
-                            <!-- <td>
-                                        <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-002')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td> -->
-                        </tr>
-                        <tr>
-                            <td>003</td>
-                            <td>WRP-003</td>
-                            <td>078570015</td>
-                            <td>Luxury Gift Box</td>
-                            <td style="font-weight: 600;">⭐⭐⭐⭐⭐</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                            <!-- <td>
-                                        <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="followUpPayment('WRP-003')">
-                                            <i class="fas fa-phone"></i>
-                                        </button>
-                                    </td> -->
-                        </tr>
-                        <tr>
-                            <td>005</td>
-                            <td>WRP-004</td>
-                            <td>076792354</td>
-                            <td>cake</td>
-                            <td style="font-weight: 600;">⭐⭐⭐⭐⭐</td>
-                            <td><span class="status-badge status-paid">Paid</span></td>
-                            <!-- <td>
-                                        <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-004')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td> -->
-                        </tr>
+                        <?php foreach ($allVendors as $row): ?>
+                            <tr>
+                                <td><?= $row['id'] ?></td>
+                                <td><?= $row['first_name'] ?></td>
+                                <td><?= $row['last_name'] ?></td>
+                                <td><?= $row['email'] ?></td>
+                                <td><?= $row['status'] ?></td>
+                                <td><?= $row['address'] ?></td>
+                                <td><?= $row['shopName'] ?></td>
+                                <td><?= $row['phone'] ?></td>
+                                <td><?= number_format($row['rating'], 1) ?></td>
+                                <td><?= $row['created_at'] ?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
         </div>

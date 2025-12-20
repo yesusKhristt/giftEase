@@ -29,6 +29,7 @@ class GiftWrapperModel
             years_of_experience VARCHAR(20),
             phone VARCHAR(10),
             image_loc VARCHAR(500) DEFAULT NULL,
+            verified BOOL DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
 
@@ -40,7 +41,7 @@ class GiftWrapperModel
         }
     }
 
-        public function authenticate($email, $password, $type)
+    public function authenticate($email, $password, $type)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM giftWrappers WHERE email = ?");
         $stmt->execute([$email]);
@@ -52,7 +53,7 @@ class GiftWrapperModel
         return null;
     }
 
-        public function getUserByEmail($email)
+    public function getUserByEmail($email)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM giftWrappers WHERE email = ?");
         $stmt->execute([$email]);
@@ -93,46 +94,53 @@ class GiftWrapperModel
         $stmt->execute($id);
     }
 
-}
-
-// 
-public function createTables()
+    public function getAllOrders()
     {
-        
-        $sql1 = "CREATE TABLE IF NOT EXISTS orderStatus (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            giftwrapper_id INT NOT NULL,
-            order_id INT,
-            is_wrapped BOOLEAN DEFAULT FALSE,
-            is_delivered BOOLEAN DEFAULT FALSE,
-            FOREIGN KEY (giftwrapper_id) REFERENCES giftwrappers(id) ON DELETE CASCADE,
-            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-        );";
-        
-        try {
-            $this->pdo->exec($sql1);
-            $this->pdo->exec($sql2);
+        $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id IS NULL");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-        } catch (PDOException $e) {
-            die("Error creating tables: " . $e->getMessage());
+    public function getAssignedOrders($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT *  FROM orders WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
+        $stmt->execute([$id]);
+        $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($order) {
+            if ($order[0]['customWrap_id']) {
+                $stmt1 = $this->pdo->prepare("SELECT orders.id, client_id, customWrap_id, deliveryDate, is_wrapped, giftWrapper_id, customwrap.price, clients.first_name, clients.last_name FROM orders JOIN customwrap ON orders.customWrap_id = customwrap.id JOIN clients ON orders.client_id = clients.id WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
+                $stmt1->execute([$id]);
+                return $stmt1->fetchAll(PDO::FETCH_ASSOC);
+            } else if ($order[0]['wrapPackage_id']) {
+                $stmt1 = $this->pdo->prepare("SELECT orders.id, client_id, wrapPackage_id, deliveryDate, is_wrapped, giftWrapper_id, customwrap.price, clients.first_name, clients.last_name FROM orders JOIN giftwrappackage ON orders.customWrap_id = customwrap.id JOIN clients ON orders.client_id = clients.id WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
+                $stmt1->execute([$id]);
+                return $stmt1->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } else {
+            return $order;
         }
     }
 
-     public function ($level1){
-        $stmt = "SELECT * FROM orderStatus JOIN orders ON orderStatus.order_id = orders.id JOIN clients ON orders.clients_id = clients.id";
-
-        
-    }
-    
-   public function addGiftWrapperOrder($giftwrapper_id, $order_id)
+    public function acceptOrder($order_id, $giftWrapper_id)
     {
-        $sql = "INSERT INTO giftwrapperorder (giftwrapper_id, order_id) VALUES (:giftwrapper_id, :order_id)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':giftwrapper_id', $giftwrapper_id);
-        $stmt->bindParam(':order_id', $order_id);
-        return $stmt->execute();
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET giftWrapper_id = ? WHERE `id` = ?");
+        $stmt->execute([(int)$giftWrapper_id, (int)$order_id]);
     }
 
+    public function markComplete($order_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET is_wrapped = 1 WHERE `id` = ?");
+        $stmt->execute([$order_id]);
+    }
+
+    public function cancelOrder($order_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET giftWrapper_id = null WHERE `id` = ?");
+        $stmt->execute([$order_id]);
+    }
+
+}
 
 
 ?>

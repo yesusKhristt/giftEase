@@ -17,14 +17,24 @@
     <a href="?controller=admin&action=dashboard/reports" class="nav-item <?= isActive('reports', $activePage) ?>">
       Reports
     </a>
+    <a href="?controller=admin&action=dashboard/admins" class="nav-item <?= isActive('admin', $activePage) ?>">
+      Admins
+    </a>
     <a href="?controller=admin&action=dashboard/customer" class="nav-item <?= isActive('customer', $activePage) ?>">
       Customer
+    </a>
+    <a href="?controller=admin&action=dashboard/deliveryman" class="nav-item <?= isActive('deliveryman', $activePage) ?>">
+      Deliveryman
     </a>
     <a href="?controller=admin&action=dashboard/delivery" class="nav-item <?= isActive('delivery', $activePage) ?>">
       Delivery
     </a>
     <a href="?controller=admin&action=dashboard/vendor" class="nav-item <?= isActive('vendor', $activePage) ?>">
       Vendor
+    </a>
+    <a href="?controller=admin&action=dashboard/giftWrappers"
+      class="nav-item <?= isActive('giftWrappers', $activePage) ?>">
+      Gift Wrappers
     </a>
     <a href="?controller=admin&action=dashboard/items" class="nav-item <?= isActive('items', $activePage) ?>">
       Items
