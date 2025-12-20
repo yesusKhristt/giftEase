@@ -78,6 +78,7 @@ class ClientController
     {
         $productId = $parts[2];
         $productDetails = $this->products->fetchProduct($productId);
+        //var_dump($productDetails);
 
         require_once __DIR__ . '/../views/Dashboards/Client/Viewitem.php';
     }

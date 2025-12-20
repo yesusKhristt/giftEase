@@ -20,6 +20,12 @@ class giftWrapperController
         $this->GiftWrapper($parts[1]);
     }
 
+    public function orders($level1){
+
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/order.php';
+        
+    }
+
     public function GiftWrapper($level1)
     {
         switch ($level1) {
@@ -30,7 +36,7 @@ class giftWrapperController
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/earning.php';
                 break;
             case 'order':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/order.php';
+                $this->orders($level1);
                 break;
             case 'portfolio':
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/portfolio.php';
@@ -64,5 +70,10 @@ class giftWrapperController
         $this->user->deactivateUser($USER_ID);
         header("Location: index.php");
         exit;
+    }
+
+    public function orderGiftWrapper($giftwrapper_id, $order_id)
+    {
+        return $this->giftwrapper->addGiftWrapperOrder($giftwrapper_id, $order_id);
     }
 }

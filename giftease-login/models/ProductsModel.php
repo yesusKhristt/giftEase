@@ -73,7 +73,7 @@ class ProductsModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function fetchProduct($productId)
+  public function fetchProduct($productId)
     {
         $stmt1 = $this->pdo->prepare("SELECT * FROM products WHERE id = $productId");
         $stmt1->execute();
@@ -82,6 +82,11 @@ class ProductsModel
         $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
         $stmt2->execute();
         $product2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt3 = $this->pdo->prepare("SELECT shopName, phone, rating FROM vendors WHERE id = ?");
+        $stmt3->execute([$product1[0]['vendor_id']]);
+        $product3 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+        
 
         return [
             'id' => $product1[0]['id'],
@@ -96,11 +101,13 @@ class ProductsModel
             'sold' => $product1[0]['sold'],
             'clicks' => $product1[0]['clicks'],
             'rating' => $product1[0]['raiting'],
-            'images' => $product2
+            'images' => $product2,
+            'shop' => $product3[0]['shopName'],
+            'phone' => $product3[0]['phone'],
+            'vendorRating' => $product3[0]['rating']
         ];
 
     }
-
     public function fetchProductPic($productId)
     {
         $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");

@@ -95,5 +95,44 @@ class GiftWrapperModel
 
 }
 
+// 
+public function createTables()
+    {
+        
+        $sql1 = "CREATE TABLE IF NOT EXISTS orderStatus (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            giftwrapper_id INT NOT NULL,
+            order_id INT,
+            is_wrapped BOOLEAN DEFAULT FALSE,
+            is_delivered BOOLEAN DEFAULT FALSE,
+            FOREIGN KEY (giftwrapper_id) REFERENCES giftwrappers(id) ON DELETE CASCADE,
+            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+        );";
+        
+        try {
+            $this->pdo->exec($sql1);
+            $this->pdo->exec($sql2);
+
+        } catch (PDOException $e) {
+            die("Error creating tables: " . $e->getMessage());
+        }
+    }
+
+     public function ($level1){
+        $stmt = "SELECT * FROM orderStatus JOIN orders ON orderStatus.order_id = orders.id JOIN clients ON orders.clients_id = clients.id";
+
+        
+    }
+    
+   public function addGiftWrapperOrder($giftwrapper_id, $order_id)
+    {
+        $sql = "INSERT INTO giftwrapperorder (giftwrapper_id, order_id) VALUES (:giftwrapper_id, :order_id)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':giftwrapper_id', $giftwrapper_id);
+        $stmt->bindParam(':order_id', $order_id);
+        return $stmt->execute();
+    }
+
+
 
 ?>

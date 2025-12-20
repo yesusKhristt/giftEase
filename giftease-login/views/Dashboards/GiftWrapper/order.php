@@ -22,274 +22,168 @@
         include 'views\commonElements/leftSidebarJeshani.php';
         ?>
 
-        <div class="main-content">
-            <div class="page-header">
-                <h1 class="title">All Wrapping Orders</h2>
-                    <p class="subtitle">Manage and track all your wrapping assignments</p>
-                    <div style="display: flex; gap: 12px; align-items: center;">
-                        <select style="padding: 8px 12px; border: 1px solid #e0e0e0; border-radius: 6px;"
-                            onchange="filterOrders(this.value)">
-                            <option value="all">All Orders</option>
-                            <option value="urgent">Urgent</option>
-                            <option value="pending">My Orders</option>
-                            <option value="completed">Completed</option>
-                        </select>
-                    </div>
-            </div>
-            <div class="card">
-                <div class="title">All Orders</div>
-                <div class="card">
-                    <div class="title">WRP-001</div>
-                    <div class="subtitle">
-                        Premium Rose Bouquet → Sara Dissanayaka
-                    </div>
-                    <span class="urgency-badge urgency-urgent">Urgent</span>
-                    <div style="margin-bottom: 16px;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                           
-                            Due: Today 2:00 PM<br>
-                            
-                             Fee: Rs2500.00
-                        </div>
-                    </div>
+      <div class="main-content">
+      <div class="page-header">
+        <h1 class="title">Notifications</h1>
+        <p class="subtitle">Stay updated with important alerts and messages.</p>
+      </div>
+      <div class="filter-tabs">
+        <button class="btn2" onclick="markAllRead()">Mark All Read</button>
+        <button class="btn1" onclick="clearNotifications()">Clear All</button>
+      </div>
 
-                    <div class="progress-section">
-                        <div class="progress-header">
-                        </div>
-
-                        <div class="summary-grid">
-                            <button class="btn1" onclick="startWrapping('WRP-001')">
-                                <i class="fas fa-play"></i>
-                                Start Wrapping
-                            </button>
-
-                            <button class="btn1" onclick="markComplete('WRP-001')">
-                                <i class="fas fa-check"></i>
-                                Mark Complete
-                            </button>
-                        </div>
-
-                    </div>
-
-                    <div class="title">WRP-002</div>
-                    <div class="subtitle">
-                        Wedding Gift Set → Kasun wijerathna & methmi
-                    </div>
-                    <span class="urgency-badge urgency-urgent">Normal</span>
-                    <div style="margin-bottom: 16px;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            Due: Tomorrow 10:00 AM<br>
-                             Fee: Rs3500.00
-                        </div>
-                    </div>
-
-                    <div class="progress-section">
-                        <div class="progress-header">
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 0%"></div>
-                        </div>
-
-                        <div class="summary-grid">
-                            <button class="btn1" onclick="startWrapping('WRP-002')">
-                                <i class="fas fa-play"></i>
-                                Start Wrapping
-                            </button>
-                            <button class="btn1" onclick="markComplete('WRP-002')">
-                                <i class="fas fa-check"></i>
-                                Mark Complete
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="title">WRP-003</div>
-                    <div class="subtitle">
-                        Birthday Surprise → Saneth Siriwardana
-                    </div>
-                    <span class="urgency-badge urgency-low">Low Priority</span>
-                    <div style="margin-bottom: 16px;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">  
-                             Due: Friday 3:00 PM<br> 
-                            Fee: Rs900.00
-                        </div>
-                    </div>
-
-                    <div class="progress-section">
-                        <div class="progress-header">
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%"></div>
-                        </div>
-
-                        <div class="summary-grid">
-                            <button class="btn1" onclick="startWrapping('WRP-003')">
-                                <i class="fas fa-play"></i>
-                                Start Wrapping
-                            </button>
-                            <button class="btn1" onclick="markComplete('WRP-001')">
-                                <i class="fas fa-check"></i>
-                                Mark Complete
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="title">WRP-004</div>
-                    <div class="subtitle">
-                        Birthday Surprise → Chathu Ruwanthika
-                    </div>
-                    <span class="urgency-badge urgency-low">Low Priority</span>
-                    <div style="margin-bottom: 16px;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            
-                            Due: Friday 2:00 PM<br>
-                            <i class="fas fa-rupee-sign"></i> 
-                            Fee: Rs1800.00
-                        </div>
-                    </div>
-
-                    <div class="progress-section">
-                        <div class="progress-header">
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%"></div>
-                        </div>
-
-                        <div class="summary-grid">
-                            <button class="btn1" onclick="startWrapping('WRP-003')">
-                                <i class="fas fa-play"></i>
-                                Start Wrapping
-                            </button>
-                            <button class="btn1" onclick="markComplete('WRP-001')">
-                                <i class="fas fa-check"></i>
-                                Mark Complete
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="title">WRP-005</div>
-                    <div class="subtitle">
-                        Aniversery Surprise → Dilma Jayathissa
-                    </div>
-                    <span class="urgency-badge urgency-low">Normal</span>
-                    <div style="margin-bottom: 16px;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                           
-                            Due: Friday 3:00 PM<br>
-                            
-                            Fee: Rs2000.00
-                        </div>
-                    </div>
-
-                    <div class="progress-section">
-                        <div class="progress-header">
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%"></div>
-                        </div>
-
-                        <div class="summary-grid">
-                            <button class="btn1" onclick="startWrapping('WRP-003')">
-                                <i class="fas fa-play"></i>
-                                Start Wrapping
-                            </button>
-                            <button class="btn1" onclick="markComplete('WRP-001')">
-                                <i class="fas fa-check"></i>
-                                Mark Complete
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="title">WRP-006</div>
-                    <div class="subtitle">
-                        Birthday Surprise → Jeshani Shavindya
-                    </div>
-                    <span class="urgency-badge urgency-low">High</span>
-                    <div style="margin-bottom: 16px;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            Due: Friday 1:00 PM.<br>
-                            Fee: Rs400.00
-                        </div>
-                    </div>
-
-                    <div class="progress-section">
-                        <div class="progress-header">
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%"></div>
-                        </div>
-
-                        <div class="summary-grid">
-                            <button class="btn1" onclick="startWrapping('WRP-003')">
-                                <i class="fas fa-play"></i>
-                                Start Wrapping
-                            </button>
-                            <button class="btn1" onclick="markComplete('WRP-001')">
-                                <i class="fas fa-check"></i>
-                                Mark Complete
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="title">WRP-007</div>
-                    <div class="subtitle">
-                        Birthday Surprise → Thenuka Ranasinghe
-                    </div>
-                    <span class="urgency-badge urgency-low">Low Priority</span>
-                    <div style="margin-bottom: 16px;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                            
-                            Due: Friday 3:00 PM.<br>
-                            
-                            Fee: Rs3000.00
-                        </div>
-                    </div>
-
-                    <div class="progress-section">
-                        <div class="progress-header">
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%"></div>
-                        </div>
-
-                        <div class="summary-grid">
-                            <button class="btn1" onclick="startWrapping('WRP-003')">
-                                <i class="fas fa-play"></i>
-                                Start Wrapping
-                            </button>
-                            <button class="btn1" onclick="markComplete('WRP-001')">
-                                <i class="fas fa-check"></i>
-                                Mark Complete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="notification-item unread" data-notification-id="1">
+        <div class="notification-icon notification-info">
+          <i class="fas fa-info"></i>
         </div>
+        <div class="notification-content">
+          <div class="notification-title">WRP-001</div>
+          <div class="notification-text">Premium Rose Bouquet → Sara Dissanayaka</div>
+          <div class="notification-text">Due: Today 2:00 PM</div>
+          <div class="notification-actions">
+            <button class="btn1" onclick="acceptOrder('DEL-004')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-004')">View Details</button> -->
+          </div>
+        </div>
+        <div class="notification-time">1 minutes ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
+      </div>
+
+      <div class="notification-item unread" data-notification-id="2">
+        <div class="notification-icon notification-info">
+          <i class="fas fa-info"></i>
+        </div>
+
+        <div class="notification-content">
+          <div class="notification-title">WRP-001</div>
+          <div class="notification-text">Premium Rose Bouquet → Sara Dissanayaka</div>
+          <div class="notification-text">Due: Today 2:00 PM</div>
+          <div class="notification-actions">
+            <button class="btn1" onclick="acceptOrder('DEL-004')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-004')">View Details</button> -->
+          </div>
+        </div>
+        <div class="notification-time">1 minutes ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
+      </div>
+
+      <div class="notification-item unread" data-notification-id="3">
+        <div class="notification-icon notification-info">
+          <i class="fas fa-info"></i>
+        </div>
+
+        
+        <div class="notification-content">
+          <div class="notification-title">WRP-001</div>
+          <div class="notification-text">Premium Rose Bouquet → Sara Dissanayaka</div>
+          <div class="notification-text">Due: Today 2:00 PM</div>
+          <div class="notification-actions">
+            <button class="btn1" onclick="acceptOrder('DEL-006')">Accept</button>
+            <!-- <button class="btn2" onclick="viewOrderDetails('DEL-006')">View Details</button> -->
+          </div>
+        </div>
+        <div class="notification-time">5 minutes ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(3)">&times;</button>
+      </div>
+
+
+      <div class="notification-item">
+        <div class="notification-icon notification-success">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">Delivery Completed</div>
+          <div class="notification-text">Order DEL-001 has been successfully delivered and confirmed.</div>
+        </div>
+        <div class="notification-time">2 hours ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(2)">&times;</button>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-icon notification-info">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">Customer Rating</div>
+          <div class="notification-text">You received a 4.5-star rating from Thenuka for order DEL-001.</div>
+        </div>
+        <div class="notification-time">1 hours ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(4)">&times;</button>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-icon notification-success">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">Delivery Completed</div>
+          <div class="notification-text">Order DEL-002 has been successfully delivered and confirmed.</div>
+        </div>
+        <div class="notification-time">1 hours ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(2)">&times;</button>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-icon notification-warning">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">Route Update</div>
+          <div class="notification-text">Traffic detected on your route. Consider alternative path to DEL-003.</div>
+          <div class="notification-actions">
+            <button class="btn2" onclick="showRoute('DEL-002')">View Route</button>
+            <button class="btn2" onclick="optimizeRoute()">Optimize</button>
+          </div>
+        </div>
+        <div class="notification-time">1/2 hour ago</div>
+        <button class="notification-dismiss" onclick="dismissNotification(3)">&times;</button>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-icon notification-info">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="notification-content">
+          <div class="notification-title">Customer Rating</div>
+          <div class="notification-text">You received a 5-star rating from Saneth Tharushika for order DEL-097.</div>
+        </div>
+        <div class="notification-time">Yesterday</div>
+        <button class="notification-dismiss" onclick="dismissNotification(4)">&times;</button>
+      </div>
     </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <button class="btn1" onclick="acceptOrder('DEL-006')">Accept</button>
+  <button class="btn2" onclick="markAllRead()">Mark All Read</button>
+  <button class="btn1" onclick="clearNotifications()">Clear All</button>
+
+  <script>
+    function acceptOrder(orderId) {
+      Swal.fire({
+        title: 'Oder Accept!',
+        text: `You have accepted order ${orderId} for delivery.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+    function markAllRead(orderId) {
+      Swal.fire({
+        title: 'Marked as Read',
+        text: `All your notifications have been marked as read.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+    function clearNotifications(orderId) {
+      Swal.fire({
+        title: 'Notifications Cleared',
+        text: `All your notifications have been cleared.`,
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+  </script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <button class="btn1" onclick="startWrapping('DEL-001')">Start Wrapping</button>
-    <button class="btn1" onclick="markComplete('DEL-001')">Mark Complete</button>
-
-<script>
-    function startWrapping(orderId) {
-        Swal.fire({
-            title: 'Wrapping Started!',
-            text: 'You have started wrapping order ' + orderId + '.',
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
-    }
-
-    function markComplete(orderId) {
-        Swal.fire({
-            title: 'Mark Complete!',
-            text: 'You have marked order ' + orderId + ' as complete.',
-            icon: 'success',
-            confirmButtonText: 'Great!'
-        });
-    }
-</script>
 
 </html>
