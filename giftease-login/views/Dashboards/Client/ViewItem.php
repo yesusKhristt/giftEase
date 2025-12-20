@@ -85,7 +85,7 @@
 
                             <button id="scroll-right" class="btn1"
                                 style="border-radius: 100%; height: 40px;width: 40px; text-align: center;">▶</button>
-
+                            
                         </div>
 
 
@@ -108,7 +108,15 @@
                                     </td>
                                 </tr>
                             </table>
-
+                            <h4 class="subtitle">Sold By</h4>
+                            <h3 class ="subtitle"><?= htmlspecialchars($productDetails['shop']) ?></h3>
+                            <?php
+                                $rating = $productDetails['vendorRating'];
+                                echo render_stars($rating);
+                                echo "<div class='rating-text'>$rating Rating</div>"
+                                    ?>
+				<div class = "btn1">Contact Now</div>
+                            </p>
                         </div>
                     </div>
                     <div class="card">
