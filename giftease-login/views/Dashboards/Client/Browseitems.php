@@ -73,7 +73,7 @@
                                 <div class="item-details">
                                     <div class="detail-item">
                                         <span class="detail-label">Price</span>
-                                        <span class="detail-value">Rs <?= htmlspecialchars($row['price']) ?></span>
+                                        <span class="detail-label">Rs <?= htmlspecialchars($row['price']) ?></span>
                                     </div>
                                 </div>
                             </div>
