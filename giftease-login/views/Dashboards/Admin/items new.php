@@ -12,72 +12,69 @@
   <div class="container">
     <?php
     $activePage = 'items';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
+    include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
       <section id="items" class="page active" aria-labelledby="items-title">
         <div class="page-header">
-          <div>
-            <h3 id="items-title">Items</h3>
-            <p class="muted">Inventory overview</p>
-          </div>
-          <button class="btn primary" disabled title="Demo">＋ Add Item</button>
+          <h1 class="title">items</h1>
+          <p class="subtitle">items list</p>
         </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>oder id</th>
+              <th>Vendor id </td>
+              <th>product name </th>
+              <th>quantity</th>
+              <th>price</th>
+              <th>category</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>001</td>
+              <td>WRP-001</td>
+              <td>mugs</td>
+              <td>589</td>
+              <td style="font-weight: 600;">Rs.2500.00</td>
+              <td><span class="status-badge status-paid">pakeging</span></td>
 
-        <div class="table">
-          <div class="table-controls">
-            <div class="left-controls">
-              <select id="itemsSort" class="select" aria-label="Sort items">
-                <option value="date">Sort by Date</option>
-                <option value="name">Sort by Name</option>
-                <option value="sku">Sort by SKU</option>
-              </select>
-            </div>
-            <div class="right-controls">
-              <button class="btn outline btn-sm" disabled title="Demo">⬇️ Export</button>
-              <button class="btn outline btn-sm" disabled title="Demo">🖨️ Print</button>
-            </div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>SKU</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Stock</th>
-                  <th>Updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>#ITM-001</td>
-                  <td>Wrapping Paper</td>
-                  <td>Supplies</td>
-                  <td>320</td>
-                  <td>2025-01-12</td>
-                </tr>
-                <tr>
-                  <td>#ITM-002</td>
-                  <td>Gift Box</td>
-                  <td>Supplies</td>
-                  <td>180</td>
-                  <td>2025-01-10</td>
-                </tr>
-                <tr>
-                  <td>#ITM-003</td>
-                  <td>Ribbon</td>
-                  <td>Supplies</td>
-                  <td>540</td>
-                  <td>2025-01-16</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+            </tr>
+            <tr>
+              <td>004</td>
+              <td>WRP-002</td>
+              <td>flowers</td>
+              <td>900</td>
+              <td style="font-weight: 600;">Rs.1200.00</td>
+              <td><span class="status-badge status-paid">cards></td></span>
+
+            </tr>
+            <tr>
+              <td>007</td>
+              <td>WRP-003</td>
+              <td>chocolates</td>
+              <td>10000</td>
+              <td style="font-weight: 600;">Rs.3500.00</td>
+              <td><span class="status-badge status-pending">cards</td></span>
+
+            </tr>
+            <tr>
+              <td>0011</td>
+              <td>WRP-004</td>
+              <td>cats</td>
+              <td>200</td>
+              <td style="font-weight: 600;">Rs.2800.00</td>
+              <td><span class="status-badge status-paid">ass</td></span>
+
+            </tr>
+          </tbody>
+        </table>
     </div>
+
+  </div>
+  </div>
+  </section>
+  </div>
   </div>
 </body>
-
-</html>

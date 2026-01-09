@@ -18,7 +18,7 @@
   <div class="container">
     <?php
     $activePage = 'map';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
     <div class="main-content">
       <div class="page-header">
@@ -50,8 +50,8 @@
         </select>
       </div>
       <div class="card">
-        <button class="btn2" onclick="shareLocation()">
-          <i class="fas fa-share-alt"></i> Share Location
+        <button class="btn1" onclick="shareLocation()">
+          <i class="fas fa-share"></i> Share Location
         </button>
       </div>
 

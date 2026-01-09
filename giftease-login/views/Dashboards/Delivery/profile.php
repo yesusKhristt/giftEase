@@ -12,10 +12,10 @@
 
 <body>
 
-  <div class="container">
+   <div class="container">
     <?php
     $activePage = 'profile';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
     <div class="main-content">
       <div class="cardColour">
@@ -81,7 +81,7 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           <div class="form-group">
             <label class="subtitle">Vehicle Type</label>
-            <select class="">
+            <select class="form-select">
               <option selected>Motorcycle</option>
               <option>Car</option>
               <option>Van</option>
@@ -127,12 +127,14 @@
             <div>+12 this month</div>
           </div>
         </div>
-      </div>
+      </div> 
 
-      <div style="display: flex; gap: 15px;">
-        <button class="btn1" onclick="updateProfile()">Update Profile</button>
-        <button class="btn1" onclick="changePassword()">Change Password</button>
-      </div>
+       <div style="display: flex; gap: 15px;">
+                <a href="?controller=delivery&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update
+                    Profile</a>
+                <a href="?controller=delivery&action=deleteProfile" class="btn1" onclick="deleteProfile()">Delete
+                    Profile</a>
+            </div>
     </div>
   </div>
   <script src="main.js"></script>

@@ -12,7 +12,7 @@
   <div class="container">
     <?php
     $activePage = 'settings';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
+    include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
       <section id="settings" class="page active" aria-labelledby="settings-title">

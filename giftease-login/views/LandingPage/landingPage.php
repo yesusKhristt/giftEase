@@ -42,11 +42,11 @@
             <div style="max-width: 1200px; margin: 0 auto;">
                 <div
                     style="background: #e91e63; color: white; padding: 8px 20px; border-radius: 25px; display: inline-block; margin-bottom: 30px; font-size: 14px; font-weight: 600;">
-                    Global Gift Delivery Platform
+                    Gift Delivery Platform
                 </div>
                 <h1 style="font-size: 48px; font-weight: 700; color: #2C2C2C; margin-bottom: 20px; line-height: 1.2;">
                     Send Love <span style="color: #e91e63;">Anywhere</span><br>
-                    in the World
+                    and Everywhere
                 </h1>
                 <p
                     style="font-size: 18px; color: #666; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
@@ -142,16 +142,7 @@
                     you need for seamless global gift delivery</p>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-                    <div class="card">
-                        <div
-                            style="width: 60px; height: 60px; background: #e91e63; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                            <i class="fas fa-globe" style="font-size: 24px;"></i>
-                        </div>
-                        <h3 style="font-size: 20px; font-weight: 600; color: #2C2C2C; margin-bottom: 15px;">Global
-                            Delivery</h3>
-                        <p style="color: #666; line-height: 1.6;">Send gifts to over 190 countries with real-time
-                            tracking and reliable delivery partners</p>
-                    </div>
+
                     <div class="card">
                         <div
                             style="width: 60px; height: 60px; background: #e91e63; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
@@ -172,26 +163,8 @@
                         <p style="color: #666; line-height: 1.6;">Curated selection of trusted vendors offering unique
                             and high-quality gift options</p>
                     </div>
-                    <div class="card">
-                        <div
-                            style="width: 60px; height: 60px; background: #e91e63; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                            <i class="fas fa-truck" style="font-size: 24px;"></i>
-                        </div>
-                        <h3 style="font-size: 20px; font-weight: 600; color: #2C2C2C; margin-bottom: 15px;">Reliable
-                            Logistics</h3>
-                        <p style="color: #666; line-height: 1.6;">Professional delivery network ensuring your gifts
-                            arrive safely and on time</p>
-                    </div>
-                    <div class="card">
-                        <div
-                            style="width: 60px; height: 60px; background: #e91e63; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                            <i class="fas fa-users" style="font-size: 24px;"></i>
-                        </div>
-                        <h3 style="font-size: 20px; font-weight: 600; color: #2C2C2C; margin-bottom: 15px;">
-                            Multi-Stakeholder</h3>
-                        <p style="color: #666; line-height: 1.6;">Seamless coordination between customers, vendors,
-                            delivery staff, and wrapping services</p>
-                    </div>
+                    
+
                     <div class="card">
                         <div
                             style="width: 60px; height: 60px; background: #e91e63; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
@@ -247,17 +220,7 @@
                             customization services</p>
 
                     </div>
-                    <div class="card" style="text-align: center;">
-                        <div
-                            style="width: 60px; height: 60px; background: #f59e0b; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                            <i class="fas fa-user-friends" style="font-size: 24px;"></i>
-                        </div>
-                        <h3 style="font-size: 20px; font-weight: 600; color: #2C2C2C; margin-bottom: 15px;">Customers
-                        </h3>
-                        <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">Send meaningful gifts to your
-                            loved ones worldwide</p>
 
-                    </div>
                 </div>
             </div>
         </section>
@@ -266,75 +229,11 @@
         <section style="background: #2C2C2C; padding: 80px 20px; text-align: center; color: white;">
             <div style="max-width: 800px; margin: 0 auto;">
                 <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 20px;">Ready to Send Your First Gift?</h2>
-                <p style="font-size: 18px; opacity: 0.9; margin-bottom: 40px;">Join thousands of customers who trust
-                    GiftEase for their global gift delivery needs</p>
+                <p style="font-size: 18px; opacity: 0.9; margin-bottom: 40px;">giftEase... The gift that keeps on giving
+                </p>
 
             </div>
         </section>
-
-        <!-- Footer  -->
-        <footer style="background: #f9f9f9; padding: 60px 20px 30px;">
-            <div style="max-width: 1200px; margin: 0 auto;">
-                <div
-                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
-                    <div>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                            <img src="resources/ge5.png" style="width:50px; height:50px;" class="logo_img">
-                            <div class="gift">
-                                gift<span class="Ease">Ease
-                                </span>
-                            </div>
-                        </div>
-                        <p style="color: #666; line-height: 1.6;">Global gift delivery platform connecting hearts
-                            worldwide</p>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 18px; font-weight: 600; color: #2C2C2C; margin-bottom: 20px;">For
-                            Customers</h3>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 10px;"><a href="browse.html"
-                                    style="color: #666; text-decoration: none;">Browse Gifts</a></li>
-                            <li style="margin-bottom: 10px;"><a href="track.html"
-                                    style="color: #666; text-decoration: none;">Track Order</a></li>
-                            <li style="margin-bottom: 10px;"><a href="support.html"
-                                    style="color: #666; text-decoration: none;">Customer Support</a></li>
-                            <li style="margin-bottom: 10px;"><a href="returns.html"
-                                    style="color: #666; text-decoration: none;">Returns & Refunds</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 18px; font-weight: 600; color: #2C2C2C; margin-bottom: 20px;">For Partners
-                        </h3>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 10px;"><a href="vendor-register.html"
-                                    style="color: #666; text-decoration: none;">Become a Vendor</a></li>
-                            <li style="margin-bottom: 10px;"><a href="delivery-register.html"
-                                    style="color: #666; text-decoration: none;">Delivery Partner</a></li>
-                            <li style="margin-bottom: 10px;"><a href="wrapping-register.html"
-                                    style="color: #666; text-decoration: none;">Wrapping Service</a></li>
-                            <li style="margin-bottom: 10px;"><a href="api.html"
-                                    style="color: #666; text-decoration: none;">API Documentation</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 18px; font-weight: 600; color: #2C2C2C; margin-bottom: 20px;">Company</h3>
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="margin-bottom: 10px;"><a href="about.html"
-                                    style="color: #666; text-decoration: none;">About Us</a></li>
-                            <li style="margin-bottom: 10px;"><a href="careers.html"
-                                    style="color: #666; text-decoration: none;">Careers</a></li>
-                            <li style="margin-bottom: 10px;"><a href="press.html"
-                                    style="color: #666; text-decoration: none;">Press</a></li>
-                            <li style="margin-bottom: 10px;"><a href="contact.html"
-                                    style="color: #666; text-decoration: none;">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div style="text-align: center; padding-top: 30px; border-top: 1px solid #ddd;">
-                    <p style="color: #666; margin: 0;">&copy; 2024 GiftEase. All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
     </main>
 
     <script src="main.js"></script>

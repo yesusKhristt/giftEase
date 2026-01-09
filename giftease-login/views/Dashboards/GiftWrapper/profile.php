@@ -4,14 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delivery Partner Dashboard - GiftEase</title>
+  <title>Wrapping Partner Dashboard - GiftEase</title>
   <link rel="stylesheet" href="public/style.css" />
   <link rel="profile" href="profile.php" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
-    async defer></script>
+  
 </head>
 
 <body>
@@ -19,20 +17,16 @@
   <div class="container">
     <?php
     $activePage = 'profile';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
+    include 'views\commonElements/leftSidebarJeshani.php';
     ?>
-    <!-- <div id="home" class="tab-content active"> -->
-    <!-- Home page -->
+   
     <div class="main-content">
       <div class="section-header">
         <div>
           <h2 class="section-title">Profile Overview</h2>
           <p class="section-subtitle">Manage your personal and vehicle information</p>
         </div>
-        <button class="btn1" onclick="editProfile()">
-          <i class="fas fa-edit"></i>
-          Edit Profile
-        </button>
+       
       </div>
       <div class="cardColour">
 
@@ -52,7 +46,7 @@
             <div class="subtitle">Total Gift Wrappings</div>
           </div>
           <div class="card">
-            <div class="title">$18,650</div>
+            <div class="title">Rs18,650</div>
             <div class="subtitle">Total Earnings</div>
           </div>
           <div class="card">
@@ -105,7 +99,7 @@
             <div>+15% vs last month</div>
           </div>
           <div class="cardColour">
-            <div class="title">$420</div>
+            <div class="title">Rs420</div>
             <div class="subtitle">Monthly Earnings</div>
             <div>+8% vs last month</div>
           </div>
