@@ -1,5 +1,4 @@
 <?php
-// DeliveryModel.php***
 
 class DeliveryModel
 {
@@ -8,7 +7,7 @@ class DeliveryModel
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
-        $this->createTableIfNotExists(); // Create the table if not there
+        $this->createTableIfNotExists();
     }
 
     public function getpdo()
@@ -16,51 +15,34 @@ class DeliveryModel
         return $this->pdo;
     }
 
-    public function createTableIfNotExists()
+    private function createTableIfNotExists()
     {
-        $sql1 = "CREATE TABLE IF NOT EXISTS delivery (
+        $sql = "CREATE TABLE IF NOT EXISTS delivery (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            first_name VARCHAR(100) NOT NULL,
-            last_name VARCHAR(100) NOT NULL,
-            email VARCHAR(100) NOT NULL UNIQUE,
-            password VARCHAR(255) NOT NULL,
-            status ENUM('active', 'inactive') DEFAULT 'active',
+            first_name VARCHAR(100),
+            last_name VARCHAR(100),
+            email VARCHAR(100) UNIQUE,
+            password VARCHAR(255),
+            status ENUM('active','inactive') DEFAULT 'active',
             address VARCHAR(255),
             vehiclePlate VARCHAR(20),
-            phone VARCHAR(10),
-            image_loc VARCHAR(500) DEFAULT NULL,
+            phone VARCHAR(15),
+            image_loc VARCHAR(500),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );";
+        )";
 
-        try {
-            $this->pdo->exec($sql1);
-        } catch (PDOException $e) {
-            die("Error creating tables: " . $e->getMessage());
-        }
+        $this->pdo->exec($sql);
     }
 
-        public function authenticate($email, $password, $type)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password']) && $type == 'delivery') {
-            return $user;
-        }
-        return null;
-    }
-
-        public function getUserByEmail($email)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email = ?");
-        $stmt->execute([$email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
+    // ---------------- SIGN UP ----------------
     public function addUser($data)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO delivery (first_name, last_name, email, password, vehiclePlate, phone, image_loc, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO delivery 
+            (first_name, last_name, email, password, vehiclePlate, phone, address)
+            VALUES (?, ?, ?, ?, ?, ?, ?)"
+        );
+
         return $stmt->execute([
             $data['first_name'],
             $data['last_name'],
@@ -68,39 +50,37 @@ class DeliveryModel
             $data['password'],
             $data['vehiclePlate'],
             $data['phone'],
-            $data['imageloc'],
-            $data['address'],
+            $data['address']
         ]);
     }
 
-    public function updateUser($data)
-    {
-        $stmt = $this->pdo->prepare("UPDATE delivery SET first_name = ?, last_name = ?, vehiclePlate = ?, phone = ?, address = ? WHERE id = ?");
-        return $stmt->execute([
-            $data['first_name'],
-            $data['last_name'],
-            $data['vehiclePlate'],
-            $data['phone'],
-            $data['address'],
-            $data['id']
-        ]);
-    }
-
-    public function deleteUser($id)
-    {
-        $stmt = $this->pdo->prepare("UPDATE delivery SET status = 'inactive' WHERE id = ?");
-        $stmt->execute($id);
-    }
-
-
-    public function getAllDelivery()
-    {
-        $stmt = $this->getpdo()->prepare("SELECT * FROM delivery");
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
+    // ---------------- GET ALL (ADMIN) ----------------
+public function getAllDelivery()
+{
+    $stmt = $this->pdo->prepare("SELECT * FROM delivery");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-?>
+
+
+    // ---------------- AUTH ----------------
+    public function authenticate($email, $password)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email=?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            return $user;
+        }
+        return null;
+    }
+
+    public function getUserByEmail($email)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email=?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+}

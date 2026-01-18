@@ -312,25 +312,7 @@
   </div>
 </div>
 
-<script>
-  function startDelivery(orderId) {
-    Swal.fire({
-      title: 'Delivery Started!',
-      text: 'Order ' + orderId + ' is now on the way.',
-      icon: 'info',
-      confirmButtonText: 'OK'
-    });
-  }
-
-  function markDelivered(orderId) {
-    Swal.fire({
-      title: 'Delivered!',
-      text: 'Order ' + orderId + ' has been successfully delivered.',
-      icon: 'success',
-      confirmButtonText: 'Great!'
-    });
-  }
-</script>
+<script src ="public/main.js"></script>
       </div>
 
     </div>

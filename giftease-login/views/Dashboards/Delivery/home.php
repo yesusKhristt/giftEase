@@ -9,9 +9,7 @@
   <link rel="profile" href="profile.php" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dkmvuFiYMuEv20&libraries=geometry,places"
-    async defer></script>
+
 </head>
 
 <body>
@@ -78,7 +76,8 @@
     </div>
   </div>
   <!-- <div id="profile" class="tab-content"> -->
-  <script src="main.js"></script>
+ 
+<script src ="public/main.js"></script>
 </body>
 
 </html>

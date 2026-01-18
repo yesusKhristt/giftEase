@@ -43,25 +43,34 @@
     </div>
   </div>
   <div class="topbar-container">
+
+  <div class="topbar-ui">
+
     <!-- Search Bar -->
     <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Search..." />
-    </div>
+  <input type="text" class="search-input" placeholder="Search..." />
+</div>
+
 
     <div class="gift">
-      gift<span class="Ease">Ease
-      </span>
+      gift<span class="Ease">Ease</span>
     </div>
 
-    <!-- Right Side Links/Buttons -->
+    <!-- Right Side Buttons -->
     <nav class="topbar-actions">
       <a href="?controller=delivery&action=dashboard/settings"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?controller=delivery&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
+      <a href="?controller=delivery&action=dashboard/profile"
+        class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>
+
   </div>
+
+
+  <div class="gift-fall-layer"></div>
+
 </div>

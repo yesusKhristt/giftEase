@@ -174,11 +174,17 @@ class ClientController
     public function placeOrder($wrap_id, $mode)
     {
         $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
-        $this->orders->confirmOrder([
+        $orderId = $this->orders->confirmOrder([
                             'mode' => $mode,
                             'cartItems' => $cartItems,
                             'client_id' => $_SESSION['user']['id']
         ], $wrap_id);
+
+        // Create an in-app notification for the client
+        require_once __DIR__ . '/../models/NotificationModel.php';
+        $notificationModel = new NotificationModel($this->orders->getpdo());
+        $notificationModel->createNotification($_SESSION['user']['id'], $orderId, 'order', "Your order #{$orderId} has been placed.");
+
         $this->cart->emptyCart($_SESSION['user']['id']);
         header("Location: index.php?controller=client&action=dashboard/tracking");
             exit;

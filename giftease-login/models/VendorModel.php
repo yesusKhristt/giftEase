@@ -89,5 +89,12 @@ class VendorModel
         $stmt = $this->pdo->prepare("UPDATE vendors SET status = 'inactive' WHERE id = ?");
         $stmt->execute($id);
     }
+    
+    public function getAllVendors()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM vendors");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }   
 
 }

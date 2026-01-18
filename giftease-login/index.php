@@ -1,4 +1,5 @@
 <?php
+define('BASE_PATH', __DIR__);
 session_start();
 //BYOP!
 // 1. Get controller & action from URL

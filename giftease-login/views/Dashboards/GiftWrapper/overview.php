@@ -188,7 +188,7 @@
     </div>
 
 
-    <script src="script.js"></script>
+    <script src="public/main.js"></script>
 </body>
 
 </html>

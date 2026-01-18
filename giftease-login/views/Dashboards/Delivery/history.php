@@ -287,7 +287,8 @@
       </table>
 
     </div>
-    <script src="main.js"></script>
+    <script src ="public/main.js"></script>
+
   </div>
 </body>
 

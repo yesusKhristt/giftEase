@@ -146,32 +146,7 @@
   <button class="btn2" onclick="markAllRead()">Mark All Read</button>
   <button class="btn1" onclick="clearNotifications()">Clear All</button>
 
-  <script>
-    function acceptOrder(orderId) {
-      Swal.fire({
-        title: 'Oder Accept!',
-        text: `You have accepted order ${orderId} for delivery.`,
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    }
-    function markAllRead(orderId) {
-      Swal.fire({
-        title: 'Marked as Read',
-        text: `All your notifications have been marked as read.`,
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    }
-    function clearNotifications(orderId) {
-      Swal.fire({
-        title: 'Notifications Cleared',
-        text: `All your notifications have been cleared.`,
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    }
-  </script>
+<script src ="public/main.js"></script>
 </body>
 
 </html>

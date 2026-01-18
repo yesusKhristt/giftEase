@@ -126,16 +126,11 @@
             </select>
           </div>
         </div>
-
-        <!-- <div style="display: flex; gap: 15px;">
-          <button class="btn1" onclick="saveSettings()">Save Changes</button>
-          <button class="btn1" onclick="resetSettings()">Reset</button>
-        </div> -->
       </div>
     </div>
   </div>
 
-  <script src="main.js"></script>
+  <script src="public/main.js"></script>
 </body>
 
 </html>

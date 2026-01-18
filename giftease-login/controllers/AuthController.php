@@ -66,6 +66,8 @@ class AuthController
             }
             if ($user) {
                 $_SESSION['user'] = $user;
+                // Set role-specific session variable for authorization
+                $_SESSION[$role] = $user;
 
                 // 🔑 Navigation happens here
                 switch ($role) {
@@ -99,6 +101,31 @@ class AuthController
         require_once __DIR__ . '/../views/Login/login.php';
 
     }
+
+        public function deliverySignup()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        $data = [
+            'first_name'   => $_POST['first_name'],
+            'last_name'    => $_POST['last_name'],
+            'email'        => $_POST['email'],
+            'password'     => password_hash($_POST['password'], PASSWORD_DEFAULT),
+            'vehiclePlate' => $_POST['vehiclePlate'],
+            'phone'        => $_POST['phone'],
+            'address'      => $_POST['address'],
+            'created_at'   => date('Y-m-d H:i:s'),
+        ];
+
+        $this->delivery->addUser($data);
+
+        // Redirect after signup
+        header("Location: index.php?controller=auth&action=handleLogin&type=delivery");
+        exit;
+    }
+
+    require '../views/auth/deliverySignup.php';
+}
 
     public function handleSignup()
     {

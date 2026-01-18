@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-<body>
+<body data-page="vendor">
     <div class="container">
         <?php
         $activePage = 'vendor';
@@ -25,68 +25,31 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>oredr ID</th>
                             <th>Vendor id</th>
+                            <th>Name</th>
                             <th>Phone</th>
-                            <th>company name</th>
-                            <th>rating</th>
-                            <th>other details</th>
+                            <th>Shop name</th>
+                            <th>Address</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>001</td>
-                            <td>WRP-001</td>
-                            <td>0786607436</td>
-                            <td>Premium Gift Wrapping</td>
-                            <td style="font-weight: 600;">⭐⭐⭐⭐⭐</td>
-                            <td><span class="status-badge status-paid">Paid</span></td>
-                            <!-- <td>
-                                        <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-001')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td> -->
-                        </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>WRP-002</td>
-                            <td>0740792252</td>
-                            <td>Custom Ribbon + Card</td>
-                            <td style="font-weight: 600;">⭐⭐⭐⭐⭐</td>
-                            <td><span class="status-badge status-paid">Paid</span></td>
-                            <!-- <td>
-                                        <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-002')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td> -->
-                        </tr>
-                        <tr>
-                            <td>003</td>
-                            <td>WRP-003</td>
-                            <td>078570015</td>
-                            <td>Luxury Gift Box</td>
-                            <td style="font-weight: 600;">⭐⭐⭐⭐⭐</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                            <!-- <td>
-                                        <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="followUpPayment('WRP-003')">
-                                            <i class="fas fa-phone"></i>
-                                        </button>
-                                    </td> -->
-                        </tr>
-                        <tr>
-                            <td>005</td>
-                            <td>WRP-004</td>
-                            <td>076792354</td>
-                            <td>cake</td>
-                            <td style="font-weight: 600;">⭐⭐⭐⭐⭐</td>
-                            <td><span class="status-badge status-paid">Paid</span></td>
-                            <!-- <td>
-                                        <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.8rem;" onclick="viewReceipt('WRP-004')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td> -->
-                        </tr>
-                    </tbody>
+                        <?php if (!empty($vendors)) : ?>
+                            <?php foreach ($vendors as $row) : ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($row['id']) ?></td>
+                                    <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
+                                    <td><?= htmlspecialchars($row['phone']) ?></td>
+                                    <td><?= htmlspecialchars($row['shopName']) ?></td>
+                                    <td><?= htmlspecialchars($row['address']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="6" style="text-align:center;color:red;">
+                                    No vendors found
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                 </table>
         </div>
         </section>

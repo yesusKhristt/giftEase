@@ -6,6 +6,88 @@
   <title>Vendor Analysis</title>
   <link rel="stylesheet" href="public/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      console.log("=== Search Script Started ===");
+      const searchInput = document.getElementById("searchInput");
+      console.log("searchInput element:", searchInput);
+      
+      if (searchInput) {
+        console.log("Search input found, setting up event listener");
+        let resultBox = document.getElementById("searchResults");
+        
+        if (!resultBox) {
+          resultBox = document.createElement("div");
+          resultBox.id = "searchResults";
+          resultBox.className = "search-results-box";
+          resultBox.style.display = "none";
+          resultBox.style.position = "absolute";
+          resultBox.style.top = "100%";
+          resultBox.style.left = "0";
+          resultBox.style.right = "0";
+          resultBox.style.backgroundColor = "white";
+          resultBox.style.border = "1px solid #ddd";
+          resultBox.style.zIndex = "10000";
+          
+          const searchWrap = searchInput.closest(".search-wrap");
+          if (searchWrap) {
+            console.log("search-wrap found, appending results box");
+            searchWrap.style.position = "relative";
+            searchWrap.appendChild(resultBox);
+          } else {
+            console.log("search-wrap NOT found, appending to input parent");
+            searchInput.parentNode.appendChild(resultBox);
+          }
+        }
+
+        searchInput.addEventListener("keyup", function () {
+          const keyword = this.value.trim();
+          console.log("User typed:", keyword);
+
+          if (keyword === "") {
+            resultBox.style.display = "none";
+            resultBox.innerHTML = "";
+            return;
+          }
+
+          // Get page from URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const page = urlParams.get('action')?.split('/')?.[1] || '';
+          console.log("Page:", page, "Keyword:", keyword);
+
+          // Make the search request
+          fetch("index.php?controller=search&action=search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              keyword: keyword,
+              page: page
+            })
+          })
+          .then(res => {
+            console.log("Response status:", res.status);
+            return res.text();
+          })
+          .then(html => {
+            console.log("Response HTML length:", html.length);
+            console.log("Response HTML:", html);
+            if (html.trim() === "") {
+              resultBox.style.display = "none";
+            } else {
+              resultBox.innerHTML = html;
+              resultBox.style.display = "block";
+              console.log("Results displayed");
+            }
+          })
+          .catch(err => {
+            console.error("Search error:", err);
+          });
+        });
+      } else {
+        console.log("ERROR: searchInput element not found!");
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -456,5 +538,5 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>

@@ -77,7 +77,8 @@
     </style>
 </head>
 
-<body>
+<body data-page="reports">
+
     <div class="container">
         <?php
         $activePage = 'reports';
@@ -132,6 +133,7 @@
 
 
 
+   <script src="/giftEase/giftease-login/public/main.js"></script>
 
 </body>
 

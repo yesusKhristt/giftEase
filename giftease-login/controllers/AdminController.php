@@ -8,6 +8,8 @@ class AdminController
     private $delivery;
     private $admin;
 
+    private $pdo;
+
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/CategoryModel.php';
@@ -22,7 +24,39 @@ class AdminController
         $this->deliveryman = new DeliverymanModel($pdo);
         $this->delivery = new DeliveryModel($pdo);
         $this->admin = new AdminModel($pdo);
+        $this->pdo = $pdo;
+
     }
+public function deliveryList()
+{
+    require_once BASE_PATH . '/models/DeliveryModel.php';
+    $deliveryModel = new DeliveryModel($this->pdo);
+
+    $deliveries = $deliveryModel->getAllDelivery();
+
+    require BASE_PATH . '/views/Dashboards/Admin/deliver.php';
+}
+
+public function vendorList()
+{
+    require_once BASE_PATH . '/models/VendorModel.php';
+    $vendorModel = new VendorModel($this->pdo);
+
+    $vendors = $vendorModel->getAllVendors();
+
+    require BASE_PATH . '/views/Dashboards/Admin/vendors.php';
+}
+
+public function clientsList()
+{
+    require_once BASE_PATH . '/models/ClientModel.php';
+    $clientModel = new ClientModel($this->pdo);
+
+    $clients = $clientModel->getAllClients();
+
+    require BASE_PATH . '/views/Dashboards/Admin/customer.php';
+}
+
 
 
     public function dashboard()
@@ -247,13 +281,13 @@ class AdminController
     {
         switch ($parts[1]) {
             case 'customer':
-                require_once __DIR__ . '/../views/Dashboards/Admin/customer.php';
+                $this->clientsList();
                 break;
             case 'delivery':
-                require_once __DIR__ . '/../views/Dashboards/Admin/deliver.php';
+                $this->deliveryList();
                 break;
             case 'deliveryman':
-                require_once __DIR__ . '/../views/Dashboards/Admin/deliveryMan.php';
+                $this->deliveryList();
                 break;
             case 'items':
                 require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
@@ -271,7 +305,7 @@ class AdminController
                 require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
                 break;
             case 'vendor':
-                require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
+                $this->vendorList();
                 break;
             case 'category':
                 $this->addCategory($parts);

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-<body>
+<body data-page="delivery">
   <div class="container">
     <?php
     $activePage = 'delivery';
@@ -21,56 +21,38 @@
           <h1 class="title">Deliver</h1>
           <p class="subtitle">Deliver List</p>
 
-          </button>
           <table class="table">
             <thead>
               <tr>
-                <th>date</th>
-                <th>Vendor id</th>
-                <th>method</th>
-                <th>Address</th>
-                <th>oder id</th>
-                <th>deliver id</th>
+                <th>Deliver id</th>
+                <th>Name</th>
+                <th>Address </th>
+                <th>Phone</th>
+                <th>Vehical</th>
+                <th>Created at</th>
+                
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Jan 20, 2024</td>
-                <td>WRP-001</td>
-                <td>Premium Gift Wrapping</td>
-                <td>wawrukannala ,kadurupokuna,tangalle</td>
-                <td style="font-weight: 600;">001</td>
-                <td><span class="status-badge status-paid">#997</span></td>
-
-              </tr>
-              <tr>
-                <td>Jan 19, 2024</td>
-                <td>WRP-002</td>
-                <td>Custom Ribbon + Card</td>
-                <td>ashen home,kadurupokuna ,tanglle</td>
-                <td style="font-weight: 600;">002</td>
-                <td><span class="status-badge status-paid">#998</span></td>
-
-              </tr>
-              <tr>
-                <td>Jan 18, 2024</td>
-                <td>WRP-003</td>
-                <td>Luxury Gift Box</td>
-                <td>100/5, colombo 7</td>
-                <td style="font-weight: 600;">003</td>
-                <td><span class="status-badge status-pending">#999</span></td>
-
-              </tr>
-              <tr>
-                <td>Jan 17, 2024</td>
-                <td>WRP-004</td>
-                <td>Theme Wrapping</td>
-                <td>100/10 ,goyambokka,tanglle</td>
-                <td style="font-weight: 600;">004</td>
-                <td><span class="status-badge status-paid">#992</span></td>
-
-              </tr>
-            </tbody>
+           <tbody>
+<?php if (!empty($deliveries)) : ?>
+    <?php foreach ($deliveries as $row) : ?>
+        <tr>
+            <td><?= htmlspecialchars($row['id']) ?></td>
+           <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
+             <td><?= htmlspecialchars($row['address']) ?></td>
+             <td><?= htmlspecialchars($row['phone']) ?></td>
+            <td><?= htmlspecialchars($row['vehiclePlate']) ?></td>
+            <td><?= htmlspecialchars($row['created_at']) ?></td>
+        </tr>
+    <?php endforeach; ?>
+<?php else : ?>
+    <tr>
+        <td colspan="5" style="text-align:center;color:red;">
+            No delivery persons found
+        </td>
+    </tr>
+<?php endif; ?>
+</tbody>
           </table>
         </div>
       </section>
