@@ -46,10 +46,10 @@
         </div>
 
         <button class="btn1" onclick="exportHistory()">
-          <i class="fas fa-cloud-upload-alt"></i> Export
+          <i class="fas fa-download"></i> Export
         </button>
         <button class="btn2" onclick="resetFilters()">
-          <i class="fas fa-cloud-upload-alt"></i> Reset
+          <i class="fas fa-undo"></i> Reset
         </button>
 
       </div>

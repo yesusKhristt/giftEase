@@ -46,7 +46,7 @@ class ClientModel
         }
     }
 
-    public function authenticate($email, $password, $type)
+    public function authenticate($email, $password, $type, &$error)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM clients WHERE email = ?");
         $stmt->execute([$email]);
@@ -56,6 +56,7 @@ class ClientModel
             
             return $user;
         }
+        $error = "Invalid Username or Password";
         return null;
     }
 

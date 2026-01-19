@@ -25,7 +25,7 @@
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
-      <img src="resources/ge5.png" class="logo_img">
+      <img src="resources/iconL.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease
         </span>
@@ -48,8 +48,8 @@
       <a href="?controller=vendor&action=dashboard/analysis" class="nav-item <?= isActive('analysis', $activePage) ?>">
         Analysis
       </a>
-      <a href="?controller=vendor&action=dashboard/messages" class="nav-item <?= isActive('messages', $activePage) ?>">
-        Messages
+      <a href="?controller=vendor&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
+        Messeges
       </a>
       <a href="?controller=vendor&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History

@@ -43,25 +43,26 @@ class AuthController
             $password = $_POST['password'] ?? '';
             $type = $_GET['type'] ?? 'client';
             $role = $_POST['role'] ?? '';
+            $error;
 
             switch ($role) {
                 case 'client':
-                    $user = $this->client->authenticate($email, $password, $role);
+                    $user = $this->client->authenticate($email, $password, $role, $error);
                     break;
                 case 'vendor':
-                    $user = $this->vendor->authenticate($email, $password, $role);
+                    $user = $this->vendor->authenticate($email, $password, $role, $error);
                     break;
                 case 'admin':
-                    $user = $this->admin->authenticate($email, $password, $role);
+                    $user = $this->admin->authenticate($email, $password, $role, $error);
                     break;
                 case 'delivery':
-                    $user = $this->delivery->authenticate($email, $password, $role);
+                    $user = $this->delivery->authenticate($email, $password, $role, $error);
                     break;
                 case 'deliveryman':
-                    $user = $this->deliveryman->authenticate($email, $password, $role);
+                    $user = $this->deliveryman->authenticate($email, $password, $role, $error);
                     break;
                 case 'giftWrapper':
-                    $user = $this->giftWrapper->authenticate($email, $password, $role);
+                    $user = $this->giftWrapper->authenticate($email, $password, $role, $error);
                     break;
             }
             if ($user) {
@@ -89,9 +90,6 @@ class AuthController
                         exit;
                 }
 
-            } else {
-                $error = 'FUCK! Invalid email or password .';
-                var_dump($error);
             }
         }
 

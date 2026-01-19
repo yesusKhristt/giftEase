@@ -73,7 +73,7 @@
                                 <div class="item-details">
                                     <div class="detail-item">
                                         <span class="detail-label">Price</span>
-                                        <span class="detail-label">Rs <?= htmlspecialchars($row['price']) ?></span>
+                                        <span class="detail-value">Rs <?= htmlspecialchars($row['price']) ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -90,6 +90,35 @@
                 <?php endforeach; ?>
 
             </div>
+
+            <!-- PAGINATION -->
+        <?php if ($totalPages > 1): ?>
+            <div class="pagination">
+
+                <?php if ($page > 1): ?>
+                    <a class="btn1"
+                       href="?controller=client&action=dashboard/items&page=<?= $page - 1 ?>">
+                        Prev
+                    </a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <a class="btn1 <?= ($i == $page) ? 'btn-danger' : '' ?>"
+                       href="?controller=client&action=dashboard/items&page=<?= $i ?>">
+                        <?= $i ?>
+                    </a>
+                <?php endfor; ?>
+
+                <?php if ($page < $totalPages): ?>
+                    <a class="btn1"
+                       href="?controller=client&action=dashboard/items&page=<?= $page + 1 ?>">
+                        Next
+                    </a>
+                <?php endif; ?>
+
+            </div>
+        <?php endif; ?>
+
 
         </div>
     </div>

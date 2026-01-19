@@ -115,7 +115,7 @@
                                 echo render_stars($rating);
                                 echo "<div class='rating-text'>$rating Rating</div>"
                                     ?>
-				<div class = "btn1">Contact Now</div>
+				<a class = "btn1" href="?controller=client&action=dashboard/messeges/vendor/view/<?= htmlspecialchars($productDetails['vendor_id']) ?>">Contact Now</a>
                             </p>
                         </div>
                     </div>

@@ -36,6 +36,19 @@ class DeliveryModel
         $stmt = $this->pdo->prepare("UPDATE `orders` SET delivery_id = ? WHERE `id` = ?");
         $stmt->execute([$delivery_id, $order_id]);
     }
+    public function verifyUser($user_id)
+    {
+        $sql  = "UPDATE delivery SET verified = 1 WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$user_id]);
+    }
+
+    public function unverifyUser($user_id)
+    {
+        $sql  = "UPDATE delivery SET verified = 0 WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$user_id]);
+    }
 
     public function markComplete($order_id)
     {
@@ -73,15 +86,20 @@ class DeliveryModel
         }
     }
 
-    public function authenticate($email, $password, $type)
+    public function authenticate($email, $password, $type, &$error)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password']) && $type == 'delivery') {
+            if (!$user['verified']){
+                $error = "User Not verified";
+            return null;
+            }
             return $user;
         }
+        $error = "Invalid Username or Password";
         return null;
     }
 
@@ -116,7 +134,7 @@ class DeliveryModel
             $data['vehiclePlate'],
             $data['phone'],
             $data['address'],
-            $data['id']
+            $data['id'],
         ]);
     }
 
@@ -125,7 +143,6 @@ class DeliveryModel
         $stmt = $this->pdo->prepare("UPDATE delivery SET status = 'inactive' WHERE id = ?");
         $stmt->execute($id);
     }
-
 
     public function getAllDelivery()
     {
@@ -136,5 +153,3 @@ class DeliveryModel
     }
 
 }
-
-?>

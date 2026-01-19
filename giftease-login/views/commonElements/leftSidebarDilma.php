@@ -2,7 +2,7 @@
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
-      <img src="resources/ge5.png" class="logo_img">
+      <img src="resources/iconL.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease
         </span>
@@ -18,7 +18,7 @@
       <a href="?controller=client&action=dashboard/items" class="nav-item <?= isActive('items', $activePage) ?>">
         Browse Items
       </a>
-      <a href="?controller=client&action=dashboard/messeges" class="nav-item <?= isActive('messeges', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/messeges/vendor/view" class="nav-item <?= isActive('messeges', $activePage) ?>">
         Messeges
       </a>
       <a href="?controller=client&action=dashboard/wishlist" class="nav-item <?= isActive('whishlist', $activePage) ?>">

@@ -5,7 +5,7 @@ class ClientController
     private $products;
     private $cart;
     private $giftWrapper;
-
+    private $messeges;
     private $orders;
 
     public function __construct($pdo)
@@ -15,68 +15,122 @@ class ClientController
         require_once __DIR__ . '/../models/CartModel.php';
         require_once __DIR__ . '/../models/GiftWrappingModel.php';
         require_once __DIR__ . '/../models/OrderModel.php';
-        $this->client = new ClientModel($pdo);
-        $this->products = new ProductsModel($pdo);
-        $this->cart = new CartModel($pdo);
+        require_once __DIR__ . '/../models/MessegesModel.php';
+        $this->client      = new ClientModel($pdo);
+        $this->products    = new ProductsModel($pdo);
+        $this->cart        = new CartModel($pdo);
         $this->giftWrapper = new GiftWrappingModel($pdo);
-        $this->orders = new OrderModel($pdo);
+        $this->orders      = new OrderModel($pdo);
+        $this->messeges    = new MessegesModel($pdo);
     }
 
     public function dashboard()
     {
-        if (!$this->client->getUserByEmail($_SESSION['user']['email'])) {
+        if (! $this->client->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=client");
             exit;
         }
         global $pdo;
-        $path = $_GET['action'];
+        $path  = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
         $this->Client($parts);
     }
 
+    // public function items($parts)
+    // {
+    //     $allProducts = $this->products->fetchAll();
+    //     $state       = $_GET['state'] ?? null;
+
+    //     if ($state === 'cart') {
+    //         $product_id = $parts[2];
+    //         $client_id  = $_SESSION['user']['id'];
+
+    //         // If it's already there, remove it. Otherwise, add it.
+
+    //         if ($this->cart->isInCart($client_id, $product_id)) {
+    //             $this->cart->removeFromCart($product_id, $client_id);
+    //             echo json_encode(['inCart' => false]);
+    //         } else {
+    //             $this->cart->addToCart($client_id, $product_id);
+    //             echo json_encode(['inCart' => true]);
+    //         }
+
+    //         exit;
+    //     } else if ($state === 'cartCheck') {
+    //         $product_id = $parts[2];
+    //         $client_id  = $_SESSION['user']['id'];
+
+    //         // If it's already there, remove it. Otherwise, add it.
+
+    //         if ($this->cart->isInCart($client_id, $product_id)) {
+    //             echo json_encode(['inCart' => true]);
+    //         } else {
+    //             echo json_encode(['inCart' => false]);
+    //         }
+
+    //         exit;
+    //     }
+
+    //     require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
+    // }
+
     public function items($parts)
-    {
-        $allProducts = $this->products->fetchAll();
-        $state = $_GET['state'] ?? NULL;
+{
+    /* ================= PAGINATION LOGIC ================= */
 
-        if ($state === 'cart') {
-            $product_id = $parts[2];
-            $client_id = $_SESSION['user']['id'];
+    $itemsPerPage = 2;
 
-            // If it's already there, remove it. Otherwise, add it.
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    if ($page < 1) $page = 1;
 
-            if ($this->cart->isInCart($client_id, $product_id)) {
-                $this->cart->removeFromCart($product_id, $client_id);
-                echo json_encode(['inCart' => false]);
-            } else {
-                $this->cart->addToCart($client_id, $product_id);
-                echo json_encode(['inCart' => true]);
-            }
+    $offset = ($page - 1) * $itemsPerPage;
 
-            exit;
-        } else if ($state === 'cartCheck') {
-            $product_id = $parts[2];
-            $client_id = $_SESSION['user']['id'];
+    // Fetch paginated products
+    $allProducts = $this->products->fetchPaginated($itemsPerPage, $offset);
 
-            // If it's already there, remove it. Otherwise, add it.
+    // Count total products
+    $totalItems = $this->products->countAllProducts();
+    $totalPages = ceil($totalItems / $itemsPerPage);
 
-            if ($this->cart->isInCart($client_id, $product_id)) {
-                echo json_encode(['inCart' => true]);
-            } else {
-                echo json_encode(['inCart' => false]);
-            }
+    /* ================= CART AJAX LOGIC ================= */
 
-            exit;
+    $state = $_GET['state'] ?? NULL;
+
+    if ($state === 'cart') {
+        $product_id = $parts[2];
+        $client_id = $_SESSION['user']['id'];
+
+        if ($this->cart->isInCart($client_id, $product_id)) {
+            $this->cart->removeFromCart($product_id, $client_id);
+            echo json_encode(['inCart' => false]);
+        } else {
+            $this->cart->addToCart($client_id, $product_id);
+            echo json_encode(['inCart' => true]);
         }
-
-        require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
+        exit;
     }
+    else if ($state === 'cartCheck') {
+        $product_id = $parts[2];
+        $client_id = $_SESSION['user']['id'];
+
+        if ($this->cart->isInCart($client_id, $product_id)) {
+            echo json_encode(['inCart' => true]);
+        } else {
+            echo json_encode(['inCart' => false]);
+        }
+        exit;
+    }
+
+    /* ================= LOAD VIEW ================= */
+
+    require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
+}
 
 
     public function displayProduct($parts)
     {
-        $productId = $parts[2];
+        $productId      = $parts[2];
         $productDetails = $this->products->fetchProduct($productId);
 
         require_once __DIR__ . '/../views/Dashboards/Client/Viewitem.php';
@@ -103,10 +157,9 @@ class ClientController
     public function cart($parts)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $state = $parts[3] ?? '';
+            $state      = $parts[3] ?? '';
             $product_id = $parts[2] ?? '';
-            $client_id = $_SESSION['user']['id'];
-
+            $client_id  = $_SESSION['user']['id'];
 
             if ($state == 'remove') {
                 $this->cart->removeFromCart($product_id, $client_id);
@@ -139,26 +192,26 @@ class ClientController
 
     public function custom($parts)
     {
-        $boxWrap = $this->giftWrapper->getBoxWrap();
-        $boxRibbon = $this->giftWrapper->getBoxRibbon();
-        $paperBag = $this->giftWrapper->getPaperBag();
+        $boxWrap        = $this->giftWrapper->getBoxWrap();
+        $boxRibbon      = $this->giftWrapper->getBoxRibbon();
+        $paperBag       = $this->giftWrapper->getPaperBag();
         $paperBagRibbon = $this->giftWrapper->getPaperBagRibbon();
-        $chocolates = $this->giftWrapper->getChocolates();
-        $softToys = $this->giftWrapper->getSoftToys();
-        $cards = $this->giftWrapper->getCards();
+        $chocolates     = $this->giftWrapper->getChocolates();
+        $softToys       = $this->giftWrapper->getSoftToys();
+        $cards          = $this->giftWrapper->getCards();
 
         if (isset($_POST['array'])) {
             // Decode the JSON string into an associative array
             $data = json_decode($_POST['array'], true);
 
-            $box = $data['box'];
-            $boxDeco = $data['boxDeco'];
-            $paperBag = $data['paper'];
+            $box          = $data['box'];
+            $boxDeco      = $data['boxDeco'];
+            $paperBag     = $data['paper'];
             $paperBagDeco = $data['paperDeco'];
-            $card = $data['card'];
-            $chocolate = $data['chocolate'];
-            $softToy = $data['softToy'];
-            $total = $data['totalPrice'];
+            $card         = $data['card'];
+            $chocolate    = $data['chocolate'];
+            $softToy      = $data['softToy'];
+            $total        = $data['totalPrice'];
 
             $wrap_id = $this->giftWrapper->addCustomWrap($box, $boxDeco, $paperBag, $paperBagDeco, $softToy, $chocolate, $card, $total);
 
@@ -172,28 +225,28 @@ class ClientController
     public function checkout($parts)
     {
         $wrap_id = $parts[2];
-        $mode = $parts[3];
+        $mode    = $parts[3];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $orderType = $_POST['orderType'] ?? null;
-            $recipientName = $_POST['recipientName'] ?? null;
-            $recipientPhone = $_POST['recipientPhone'] ?? null;
+            $orderType       = $_POST['orderType'] ?? null;
+            $recipientName   = $_POST['recipientName'] ?? null;
+            $recipientPhone  = $_POST['recipientPhone'] ?? null;
             $deliveryAddress = $_POST['deliveryAddress'] ?? null;
-            $locationType = $_POST['locationType'] ?? null;
-            $deliveryDate = $_POST['deliveryDate'] ?? null;
-            $deliveryPrice = $_POST['deliveryPrice'] ?? null;
+            $locationType    = $_POST['locationType'] ?? null;
+            $deliveryDate    = $_POST['deliveryDate'] ?? null;
+            $deliveryPrice   = $_POST['deliveryPrice'] ?? null;
 
             $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
             $this->orders->confirmOrder([
-                'mode' => $mode,
-                'orderType' => $orderType,
-                'recipientName' => $recipientName,
-                'recipientPhone' => $recipientPhone,
+                'mode'            => $mode,
+                'orderType'       => $orderType,
+                'recipientName'   => $recipientName,
+                'recipientPhone'  => $recipientPhone,
                 'deliveryAddress' => $deliveryAddress,
-                'locationType' => $locationType,
-                'deliveryDate' => $deliveryDate,
-                'cartItems' => $cartItems,
-                'deliveryPrice' => $deliveryPrice,
-                'client_id' => $_SESSION['user']['id']
+                'locationType'    => $locationType,
+                'deliveryDate'    => $deliveryDate,
+                'cartItems'       => $cartItems,
+                'deliveryPrice'   => $deliveryPrice,
+                'client_id'       => $_SESSION['user']['id'],
             ], $wrap_id);
             $this->cart->emptyCart($_SESSION['user']['id']);
 
@@ -202,6 +255,63 @@ class ClientController
         }
         $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Client/checkout.php';
+    }
+
+    public function messeges($parts)
+    {
+        $staff_id = $parts[4];
+
+        if ($parts[3] === 'send') {
+            if ($parts[2] === 'vendor') {
+                $message = trim($_POST['message'] ?? '');
+
+                if ($message === '' && empty($_FILES['attachments']['name'][0])) {
+                    echo json_encode(['success' => false, 'error' => 'Empty message']);
+                    exit;
+                }
+
+                $attatchmentPath = [];
+
+                if (! empty($_FILES['attachments']['tmp_name'])) {
+
+                    $uploadDir = "resources/uploads/vendor/attatchments/";
+                    if (! is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    foreach ($_FILES['attachments']['tmp_name'] as $key => $tmpName) {
+
+                        $fileName   = time() . "_" . basename($_FILES['attachments']['name'][$key]);
+                        $targetFile = $uploadDir . $fileName;
+
+                        if (move_uploaded_file($tmpName, $targetFile)) {
+                            $attatchmentPath[] = $fileName;
+                        }
+                    }
+                }
+
+                $this->messeges->sendVendorMessege(
+                    $staff_id,
+                    $_SESSION['user']['id'],
+                    [
+                        'message'      => $message,
+                        'attatchments' => $attatchmentPath,
+                    ],
+                    1
+                );
+
+                echo json_encode(['success' => true]);
+                exit;
+            } else if ($parts[2] == 'giftWrapper') {
+
+            } else if ($parts[2] == 'delivery') {
+
+            }
+        }
+        if ($parts[3] === 'view') {
+            $myMessages = $this->messeges->getMessage($_SESSION['user']['id']);
+            require_once __DIR__ . '/../views/Dashboards/Client/messeges.php';
+        }
     }
 
     public function Client($parts)
@@ -220,7 +330,7 @@ class ClientController
                 require_once __DIR__ . '/../views/Dashboards/Client/history.php';
                 break;
             case 'messeges':
-                require_once __DIR__ . '/../views/Dashboards/Client/messeges.php';
+                $this->messeges($parts);
                 break;
             case 'wrap':
                 $this->wrapping();
@@ -254,22 +364,12 @@ class ClientController
 
     public function handleLogout()
     {
-        $_SESSION['user'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
-        exit;
-
-    }
-
-    public function editProfile()
-    {
-        // Logic to handle profile editing
-        $user = $_SESSION['user'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $FIRST_NAME = $_POST['first_name'] ?? '';
-            $LAST_NAME = $_POST['last_name'] ?? '';
-            $PHONE = $_POST['phone'] ?? '';
-            $ADDRESS = $_POST['address'] ?? '';
+            $LAST_NAME  = $_POST['last_name'] ?? '';
+            $PHONE      = $_POST['phone'] ?? '';
+            $ADDRESS    = $_POST['address'] ?? '';
 
             // $this->client->updateUser($data);
             header("Location: index.php?controller=client&action=dashboard/account");
@@ -285,12 +385,13 @@ class ClientController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle file upload if user selected a new image
             $uploadDir = "resources/uploads/client/profilePictures/";
-            if (!is_dir($uploadDir))
+            if (! is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
+            }
 
             // Get file info
-            $tmpName = $_FILES['profilePic']['tmp_name'];
-            $fileName = time() . "_" . basename($_FILES['profilePic']['name']);
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
             $targetFile = $uploadDir . $fileName;
 
             // Move file to upload folder
@@ -309,31 +410,9 @@ class ClientController
         }
 
         require_once __DIR__ . '/../views/commonElements/addImage.php';
-
     }
 
 
-    public function deactivateUser()
-    {
-        $USER_ID = $_SESSION['user']['id'];
-        header("Location: index.php");
-        exit;
-    }
 
-    public function account()
-    {
-        $USER_ID = $_SESSION['user']['id'];
-        $user1 = $_SESSION['user'];
-        $user2 = $_SESSION['user'];
 
-        $stmt3 = $this->client->getpdo()->prepare(
-            "SELECT DATE_FORMAT(c.created_at, '%d %M %Y') AS join_month_year 
-            FROM clients c
-            WHERE c.user_id = ?"
-        );
-        $stmt3->execute([$USER_ID]);
-        $joinData = $stmt3->fetch(PDO::FETCH_ASSOC);
-
-        require_once __DIR__ . '/../views/Dashboards/Client/account.php';
-    }
 }

@@ -3,205 +3,281 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Vendor Messeges</title>
+    <title>client Messages</title>
+
     <link rel="stylesheet" href="public/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="resources/icon.png">
+
+    <style>
+        .file-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 6px 0;
+        }
+
+        .file-preview .file-item {
+            background-color: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .file-preview .remove-file {
+            cursor: pointer;
+            color: #ff4d4f;
+            font-weight: bold;
+        }
+
+        .imageBox {
+            height: 100px;
+            width: 150px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
 <body>
-    <?php
+
+<?php
     $activePage = 'messeges';
-    include 'views/commonElements/leftSidebar.php';
-    ?>
-    <div class="container">
-        <div class="main-content">
-            <div class="chat-dashboard">
-                <div class="client-list">
-                    <div class="bold">Clients</div>
-                    <p class="active" onclick="selectClient('Thenuka')">Manjusri</p>
-                    <p onclick="selectClient('Umaya')">Umaya</p>
-                    <p onclick="selectClient('Kasun')">Kasun</p>
-                    <p onclick="selectClient('Nimal')">Nimal</p>
-                    <p onclick="selectClient('Saman')">Saman</p>
-                    <p onclick="selectClient('Ruwan')">Ruwan</p>
-                    <p onclick="selectClient('Chamara')">Chamara</p>
-                    <p onclick="selectClient('Dilshan')">Dilshan</p>
-                </div>
+    include 'views/commonElements/leftSidebarDilma.php';
 
-                <div class="message-box">
-                    <div class="bold">Messages</div>
-                    <div class="message-history" id="messageHistory">
-                        <div class="message client">Hi, can I change the wrap color?</div>
-                        <div class="message vendor">No.</div>
-                    </div>
-                    <div class="message-input">
-                        <input type="text" id="messageInput" placeholder="Type your message..."
-                            onkeypress="handleKeyPress(event)">
-                        <button onclick="sendMessage()">Send</button>
-                    </div>
-                </div>
+    /* =======================
+       GROUP MESSAGES (PHP)
+       ======================= */
 
-                <div class="right_sidebar">
-                    <div class="profile-section">
-                        <div class="profile-picture">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="username">Manjusri</div>
-                        <div class="rating">
-                            <div class="svg-cute-star">
+    $groupedMessages = [];
 
-                                <?php
-                                require_once 'views/commonElements/rating.php';
-                                $rating = 3.3;
-                                echo render_stars($rating);
-                                echo "<div class='rating-text'>$rating Rating</div>"
-                                    ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="button-section">
-                        <div class="btn1">View Order</div>
-                        <div class="btn2">Cancel Order</div>
-                    </div>
-                </div>
+    foreach ($myMessages as $row) {
+        $key = $row['client_id'] . '|' . $row['messege'] . '|' . $row['created_at'];
+
+        if (! isset($groupedMessages[$key])) {
+            $groupedMessages[$key] = [
+                'clientName'       => $row['client'],
+                'client_id'      => $row['client_id'],
+                'messege'        => $row['messege'],
+                'created_at'     => $row['created_at'],
+                'sent'           => $row['sent'],
+                'attachments'    => [],
+            ];
+        }
+
+        if (! empty($row['file_loc'])) {
+            $groupedMessages[$key]['attachments'][] = $row['file_loc'];
+        }
+    }
+
+    $clients = [];
+    foreach ($groupedMessages as $msg) {
+        if (! empty($msg['client_id'])) {
+            $clients[$msg['client_id']] = $msg['clientName'];
+        }
+    }
+?>
+
+<div class="container">
+    <div class="main-content">
+        <div class="chat-dashboard">
+
+            <!-- =======================
+                 client LIST
+                 ======================= -->
+            <div class="mesager-list" id="clientList">
+                <div class="bold">client</div>
             </div>
+
+            <!-- =======================
+                 MESSAGE BOX
+                 ======================= -->
+            <div class="message-box">
+                <div class="bold">Messages</div>
+
+                <div class="message-history" id="messageHistory"></div>
+                <div class="message-input">
+                    <label for="fileInput" class="attachment-button">📎</label>
+                    <input type="file" id="fileInput" multiple hidden onchange="handleFileAttach(event)">
+
+                    <input type="text" id="messageInput"
+                        placeholder="Type your message..."
+                        onkeypress="handleKeyPress(event)">
+
+                    <button onclick="sendMessage()" class="btn1">Send</button>
+                </div>
+
+                <div id="filePreview" class="file-preview"></div>
+            </div>
+
         </div>
     </div>
+</div>
 
-    <script>
-        // Client data
-        const clientData = {
-            'Thenuka': {
-                fullName: 'Thenuka Ranasinghe',
-                deadline: '2025-08-10',
-                status: 'In Progress',
-                value: '$125.00',
-                messages: [
-                    { type: 'client', text: 'Hi, can I change the wrap color?' },
-                    { type: 'vendor', text: 'Sure, please confirm the new color.' },
-                    { type: 'client', text: 'I\'d like it in royal blue instead of red.' },
-                    { type: 'vendor', text: 'Perfect! I\'ll update your order. The royal blue wrap will look great.' },
-                    { type: 'client', text: 'Thank you! When will it be ready?' },
-                    { type: 'vendor', text: 'It should be ready by tomorrow evening. I\'ll send you a photo once it\'s done.' }
-                ]
-            },
-            'Umaya': {
-                fullName: 'Umaya Perera',
-                deadline: '2025-08-15',
-                status: 'Pending',
-                value: '$89.50',
-                messages: [
-                    { type: 'client', text: 'Hello! I need a custom gift box for my anniversary.' },
-                    { type: 'vendor', text: 'Congratulations! I\'d be happy to help. What size and theme are you looking for?' },
-                    { type: 'client', text: 'Something elegant, maybe gold and white theme?' },
-                    { type: 'vendor', text: 'That sounds beautiful! Let me prepare some options for you.' }
-                ]
-            },
-            'Kasun': {
-                fullName: 'Kasun Silva',
-                deadline: '2025-08-12',
-                status: 'Completed',
-                value: '$67.25',
-                messages: [
-                    { type: 'client', text: 'Is my order ready for pickup?' },
-                    { type: 'vendor', text: 'Yes! Your order is ready. You can pick it up anytime today.' },
-                    { type: 'client', text: 'Great! I\'ll be there around 3 PM.' },
-                    { type: 'vendor', text: 'Perfect, see you then!' }
-                ]
-            }
-        };
+<!-- =======================
+     DATA FROM PHP → JS
+     ======================= -->
+<script>
+const GROUPED_MESSAGES =                         <?php echo json_encode(array_values($groupedMessages)) ?>;
+const CLIENTS =                <?php echo json_encode($clients) ?>;
+const client_ID =                 <?php echo (int) $client_id ?>;
+let currentClientId = null;
+let attachedFiles = [];
 
-        let currentClient = 'Thenuka';
+/* =======================
+   RENDER VENDORS
+   ======================= */
+function renderClients() {
+    const list = document.getElementById('clientList');
 
-        function selectClient(clientName) {
-            // Remove active class from all clients
-            document.querySelectorAll('.client-list p').forEach(p => p.classList.remove('active'));
+    Object.entries(CLIENTS).forEach(([id, name]) => {
+        const p = document.createElement('p');
+        p.className = 'client-item';
+        p.dataset.clientId = id;
+        p.textContent = name;
+        p.onclick = () => selectClient(id, p);
+        list.appendChild(p);
+    });
+}
 
-            // Add active class to selected client
-            event.target.classList.add('active');
+/* =======================
+   RENDER MESSAGES
+   ======================= */
+function renderMessages(clientId) {
+    const history = document.getElementById('messageHistory');
+    history.innerHTML = '';
 
-            currentClient = clientName;
-            updateClientDetails(clientName);
-            updateMessages(clientName);
+    GROUPED_MESSAGES
+        .filter(m => m.client_id == clientId)
+        .forEach(msg => {
+            const div = document.createElement('div');
+            div.className = `message ${msg.sent ? 'user' : 'other'}`;
+
+            div.innerHTML = `
+                <div class="text">${escapeHtml(msg.messege)}</div>
+
+                ${msg.attachments.length ? `
+                    <div class="attachments">
+                        ${msg.attachments.map(f =>
+                            `<img src="resources/uploads/vendor/attatchments/${f}" class="imageBox">`
+                        ).join('')}
+                    </div>
+                ` : ''}
+
+                <div class="timestamp">${msg.created_at}</div>
+            `;
+
+            history.appendChild(div);
+        });
+
+    history.scrollTop = history.scrollHeight;
+}
+
+/* =======================
+   client SELECT
+   ======================= */
+function selectClient(clientId, el) {
+    document.querySelectorAll('.client-item')
+        .forEach(p => p.classList.remove('active'));
+
+    el.classList.add('active');
+    currentClientId = clientId;
+    renderMessages(clientId);
+}
+
+/* =======================
+   SEND MESSAGE
+   ======================= */
+function sendMessage() {
+    if (!currentClientId)currentClientId = <?php echo json_encode($client_id); ?>;
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+
+    if (!message && attachedFiles.length === 0) return;
+
+    const formData = new FormData();
+    formData.append('message', message);
+    attachedFiles.forEach(f => formData.append('attachments[]', f));
+
+    fetch(`?controller=vendor&action=dashboard/messeges/send/${currentClientId}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            sessionStorage.setItem('activeClientId', currentClientId);
+            location.reload();
         }
+    });
+}
 
-        function updateClientDetails(clientName) {
-            const client = clientData[clientName];
-            if (client) {
-                document.getElementById('clientName').textContent = client.fullName;
-                document.getElementById('orderDeadline').textContent = `Order Deadline: ${client.deadline}`;
-                document.getElementById('orderStatus').textContent = `Status: ${client.status}`;
-                document.getElementById('orderValue').textContent = `Order Value: ${client.value}`;
-            }
-        }
+/* =======================
+   FILE HANDLING
+   ======================= */
+function handleFileAttach(e) {
+    attachedFiles.push(...e.target.files);
+    updateFilePreview();
+    e.target.value = '';
+}
 
-        function updateMessages(clientName) {
-            const client = clientData[clientName];
-            const messageHistory = document.getElementById('messageHistory');
+function updateFilePreview() {
+    const preview = document.getElementById('filePreview');
+    preview.innerHTML = '';
 
-            if (client && client.messages) {
-                messageHistory.innerHTML = '';
-                client.messages.forEach(message => {
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = `message ${message.type}`;
-                    messageDiv.textContent = message.text;
-                    messageHistory.appendChild(messageDiv);
-                });
+    attachedFiles.forEach((f, i) => {
+        preview.innerHTML += `
+            <div class="file-item">
+                ${f.name}
+                <span class="remove-file" onclick="removeFile(${i})">&times;</span>
+            </div>
+        `;
+    });
+}
 
-                // Scroll to bottom
-                messageHistory.scrollTop = messageHistory.scrollHeight;
-            }
-        }
+function removeFile(i) {
+    attachedFiles.splice(i, 1);
+    updateFilePreview();
+}
 
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const messageText = input.value.trim();
+function handleKeyPress(e) {
+    if (e.key === 'Enter') sendMessage();
+}
 
-            if (messageText) {
-                const messageHistory = document.getElementById('messageHistory');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message vendor';
-                messageDiv.textContent = messageText;
-                messageHistory.appendChild(messageDiv);
+/* =======================
+   HELPERS
+   ======================= */
+function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
 
-                // Add to client data
-                if (!clientData[currentClient]) {
-                    clientData[currentClient] = { messages: [] };
-                }
-                if (!clientData[currentClient].messages) {
-                    clientData[currentClient].messages = [];
-                }
-                clientData[currentClient].messages.push({ type: 'vendor', text: messageText });
+/* =======================
+   INIT
+   ======================= */
+renderClients();
 
-                // Clear input and scroll to bottom
-                input.value = '';
-                messageHistory.scrollTop = messageHistory.scrollHeight;
-            }
-        }
+document.addEventListener('DOMContentLoaded', () => {
+    const savedClientId = sessionStorage.getItem('activeClientId');
 
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
+    let clientIdToSelect = savedClientId ?? client_ID;
 
-        function viewOrder() {
-            alert(`Viewing order for ${clientData[currentClient]?.fullName || currentClient}`);
-            // Implement order viewing logic
-        }
+    const el = document.querySelector(
+        `.client-item[data-client-id="${clientIdToSelect}"]`
+    );
 
-        function cancelOrder() {
-            if (confirm(`Are you sure you want to cancel the order for ${clientData[currentClient]?.fullName || currentClient}?`)) {
-                alert('Order cancelled successfully');
-                // Implement order cancellation logic
-            }
-        }
+    if (el) el.click();
 
-        // Initialize with default client
-        updateClientDetails(currentClient);
-        updateMessages(currentClient);
-    </script>
+    // cleanup so normal navigation works later
+    sessionStorage.removeItem('activeClientId');
+});
+
+</script>
+
 </body>
-
 </html>
+
