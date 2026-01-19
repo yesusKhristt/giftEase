@@ -90,6 +90,7 @@ class ProductsModel
 
         return [
             'id' => $product1[0]['id'],
+            'vendor_id' => $product1[0]['vendor_id'],
             'name' => $product1[0]['name'],
             'price' => $product1[0]['price'],
             'description' => $product1[0]['description'],

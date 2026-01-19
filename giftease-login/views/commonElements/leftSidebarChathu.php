@@ -2,7 +2,7 @@
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
-      <img src="resources/ge5.png" class="logo_img">
+      <img src="resources/iconL.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease
         </span>

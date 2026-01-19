@@ -37,7 +37,7 @@ class AdminModel
         }
     }
 
-    public function authenticate($email, $password, $type)
+    public function authenticate($email, $password, $type, &$error)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE email = ?");
         $stmt->execute([$email]);
@@ -46,6 +46,7 @@ class AdminModel
         if ($user && password_verify($password, $user['password']) && $type == 'admin') {
             return $user;
         }
+        $error = "Invalid Username or Password";
         return null;
     }
 
@@ -105,7 +106,7 @@ class AdminModel
     }
     public function getAllUnverifiedVendors()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE verified = 0");
+        $stmt = $this->pdo->prepare("SELECT * FROM vendors");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
@@ -125,7 +126,7 @@ class AdminModel
     }
     public function getAllUnverifiedDelivery()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE verified = 0");
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
@@ -138,7 +139,7 @@ class AdminModel
     }
     public function getAllUnverifiedDeliveryman()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM deliveryman WHERE verified = 0");
+        $stmt = $this->pdo->prepare("SELECT * FROM deliveryman");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
@@ -151,7 +152,7 @@ class AdminModel
     }
     public function getAllUnverifiedGiftwrapper()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers WHERE verified = 0");
+        $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }

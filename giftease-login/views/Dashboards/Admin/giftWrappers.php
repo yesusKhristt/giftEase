@@ -35,6 +35,7 @@
                             <th>Years of Experience</th>
                             <th>Phone</th>
                             <th>Created At</th>
+                            <th>Verified</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,19 @@
                                 <td><?= $row['years_of_experience'] ?></td>
                                 <td><?= $row['phone'] ?></td>
                                 <td><?= $row['created_at'] ?></td>
+                                <?php if ($row['verified']) { ?>
+                                <td>
+                                    <a class="btn2" href="?controller=admin&action=dashboard/vendor/unverify/<?= htmlspecialchars($row['id']) ?>">
+                                        Unverify
+                                    </a>
+                                </td>
+                            <?php } else { ?>
+                                <td>
+                                    <a class="btn1" href="?controller=admin&action=dashboard/vendor/verify/<?= htmlspecialchars($row['id']) ?>">
+                                        Verify
+                                    </a>
+                                </td>
+                            <?php } ?>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

@@ -11,8 +11,8 @@
 <body>
   <div class="container">
     <?php
-    $activePage = 'delivery';
-    include 'views/commonElements/leftSidebarChathu.php';
+        $activePage = 'delivery';
+        include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
 
@@ -34,20 +34,34 @@
               <th>Vehicle Plate</th>
               <th>Phone</th>
               <th>Created At</th>
+              <th>Verified</th>
             </tr>
           </thead>
           <tbody>
             <?php foreach ($allDelivery as $delivery): ?>
               <tr>
-                <td><?= $delivery['id'] ?></td>
-                <td><?= $delivery['first_name'] ?></td>
-                <td><?= $delivery['last_name'] ?></td>
-                <td><?= $delivery['email'] ?></td>
-                <td><?= $delivery['status'] ?></td>
-                <td><?= $delivery['address'] ?></td>
-                <td><?= $delivery['vehiclePlate'] ?></td>
-                <td><?= $delivery['phone'] ?></td>
-                <td><?= $delivery['created_at'] ?></td>
+                <td><?php echo $delivery['id']?></td>
+                <td><?php echo $delivery['first_name']?></td>
+                <td><?php echo $delivery['last_name']?></td>
+                <td><?php echo $delivery['email']?></td>
+                <td><?php echo $delivery['status']?></td>
+                <td><?php echo $delivery['address']?></td>
+                <td><?php echo $delivery['vehiclePlate']?></td>
+                <td><?php echo $delivery['phone']?></td>
+                <td><?php echo $delivery['created_at']?></td>
+                <?php if ($row['verified']) {?>
+                                <td>
+                                    <a class="btn2" href="?controller=admin&action=dashboard/vendor/unverify/<?php echo htmlspecialchars($row['id'])?>">
+                                        Unverify
+                                    </a>
+                                </td>
+                            <?php } else {?>
+                                <td>
+                                    <a class="btn1" href="?controller=admin&action=dashboard/vendor/verify/<?php echo htmlspecialchars($row['id'])?>">
+                                        Verify
+                                    </a>
+                                </td>
+                            <?php }?>
               </tr>
             <?php endforeach; ?>
           </tbody>

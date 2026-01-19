@@ -4,25 +4,28 @@ class VendorController
     private $vendor;
     private $product;
     private $category;
+    private $messeges;
 
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/VendorModel.php';
         require_once __DIR__ . '/../models/ProductsModel.php';
         require_once __DIR__ . '/../models/CategoryModel.php';
-        $this->vendor = new VendorModel($pdo);
-        $this->product = new ProductsModel($pdo);
+        require_once __DIR__ . '/../models/MessegesModel.php';
+        $this->vendor   = new VendorModel($pdo);
+        $this->product  = new ProductsModel($pdo);
         $this->category = new CategoryModel($pdo);
+        $this->messeges = new MessegesModel($pdo);
     }
 
     public function dashboard()
     {
-        if (!$this->vendor->getUserByEmail($_SESSION['user']['email'])) {
+        if (! $this->vendor->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
         }
         global $pdo;
-        $path = $_GET['action'];
+        $path  = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
         $this->Vendor($parts);
@@ -49,7 +52,7 @@ class VendorController
 
     public function viewItem($parts)
     {
-        $productId = $parts[3];
+        $productId      = $parts[3];
         $productDetails = $this->product->fetchProduct($productId);
         require_once __DIR__ . '/../views/Dashboards/Vendor/ViewItem.php';
     }
@@ -62,25 +65,77 @@ class VendorController
         exit;
     }
 
+    public function messeges($parts)
+    {
+        $client_id = $parts[3] ?? '';
+
+        if ($parts[2] === 'send') {
+            $message = trim($_POST['message'] ?? '');
+
+            if ($message === '' && empty($_FILES['attachments']['name'][0])) {
+                echo json_encode(['success' => false, 'error' => 'Empty message']);
+                exit;
+            }
+
+            $attatchmentPath = [];
+
+            if (! empty($_FILES['attachments']['tmp_name'])) {
+
+                $uploadDir = "resources/uploads/vendor/attatchments/";
+                if (! is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                foreach ($_FILES['attachments']['tmp_name'] as $key => $tmpName) {
+
+                    $fileName   = time() . "_" . basename($_FILES['attachments']['name'][$key]);
+                    $targetFile = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($tmpName, $targetFile)) {
+                        $attatchmentPath[] = $fileName;
+                    }
+                }
+            }
+
+            $this->messeges->sendVendorMessege(
+                $client_id,
+                $_SESSION['user']['id'],
+                [
+                    'message'      => $message,
+                    'attatchments' => $attatchmentPath,
+                ],
+                0
+            );
+
+            echo json_encode(['success' => true]);
+            exit;
+        }
+        if ($parts[2] === 'view') {
+            $myMessages = $this->messeges->getMessageVendor($_SESSION['user']['id']);
+            require_once __DIR__ . '/../views/Dashboards/Vendor/Messeges.php';
+        }
+    }
 
     public function handleItem($parts)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $title = $_POST['title'];
-            $category = $_POST['category'];
+            $title       = $_POST['title'];
+            $category    = $_POST['category'];
             $subcategory = $_POST['subcategory'];
-            $price = $_POST['price'];
+            $price       = $_POST['price'];
             $description = $_POST['description'];
             $deliverable = $_POST['hours24'];
 
-            // Handle file upload if user selected a new image
+                                  // Handle file upload if user selected a new image
             $profilePicPath = []; // start with empty array
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
                 $uploadDir = "resources/uploads/vendor/products/";
-                if (!is_dir($uploadDir))
+                if (! is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
-                $fileName = time() . "_" . basename($_FILES['images']['name'][$key]);
+                }
+
+                $fileName   = time() . "_" . basename($_FILES['images']['name'][$key]);
                 $targetFile = $uploadDir . $fileName;
 
                 if (move_uploaded_file($tmpName, $targetFile)) {
@@ -97,7 +152,7 @@ class VendorController
                     exit;
                 case 'edit':
                     $this->product->editProduct(
-                        $parts[3],       // product ID
+                        $parts[3], // product ID
                         $title,
                         $price,
                         $description,
@@ -116,10 +171,10 @@ class VendorController
             }
         }
         if ($parts[2] == 'edit') {
-            $productId = $parts[3];
+            $productId      = $parts[3];
             $productDetails = $this->product->fetchProduct($productId);
         }
-        $categories = $this->category->getCategory();
+        $categories    = $this->category->getCategory();
         $subcategories = $this->category->getAllSubcategory();
         require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
     }
@@ -149,13 +204,13 @@ class VendorController
     public function manageInventory($parts)
     {
         $products = $this->product->fetchAllfromVendor($this->vendor->getVendorID($_SESSION['user']['id']));
-        $stock = $parts[2] ?? 'NULL';
+        $stock    = $parts[2] ?? 'NULL';
         if ($stock === 'Total') {
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $product_id = $_POST['productId'];
-                $quantity = $_POST['quantity'];
-                $state = $_GET['state'];
+                $quantity   = $_POST['quantity'];
+                $state      = $_GET['state'];
                 if ($state === 'add') {
                     $this->product->addStock($product_id, $quantity);
                 } else if ($state === 'sub') {
@@ -167,8 +222,8 @@ class VendorController
         } else if ($stock === 'Reserved') {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $product_id = $_POST['productId'];
-                $quantity = $_POST['quantity'];
-                $state = $_GET['state'];
+                $quantity   = $_POST['quantity'];
+                $state      = $_GET['state'];
                 if ($state === 'add') {
                     $this->product->addReserved($product_id, $quantity);
                 } else if ($state === 'sub') {
@@ -200,8 +255,8 @@ class VendorController
             case 'getCategory':
                 $this->ajaxCategory();
                 break;
-            case 'messages':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/Messeges.php';
+            case 'messeges':
+                $this->messeges($parts);
                 break;
             case 'analysis':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
@@ -229,7 +284,7 @@ class VendorController
                 break;
         }
     }
-            public function deactivateUser()
+    public function deactivateUser()
     {
         $USER_ID = $_SESSION['user']['id'];
         $this->user->deactivateUser($USER_ID);

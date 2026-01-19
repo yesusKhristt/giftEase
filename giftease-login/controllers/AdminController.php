@@ -7,6 +7,7 @@ class AdminController
     private $deliveryman;
     private $delivery;
     private $admin;
+    private $vendor;
 
     public function __construct($pdo)
     {
@@ -16,12 +17,14 @@ class AdminController
         require_once __DIR__ . '/../models/DeliveryModel.php';
         require_once __DIR__ . '/../models/DeliverymanModel.php';
         require_once __DIR__ . '/../models/AdminModel.php';
+        require_once __DIR__ . '/../models/VendorModel.php';
         $this->giftWrapping = new GiftWrappingModel($pdo);
         $this->giftWrapper = new GiftWrapperModel($pdo);
         $this->category = new CategoryModel($pdo);
         $this->deliveryman = new DeliverymanModel($pdo);
         $this->delivery = new DeliveryModel($pdo);
         $this->admin = new AdminModel($pdo);
+        $this->vendor = new VendorModel($pdo);
     }
 
 
@@ -251,18 +254,58 @@ class AdminController
     }
     public function vendors($parts){
         $allVendors = $this->admin->getAllUnverifiedVendors();
+        if($parts[2] == 'verify'){
+            $this->vendor->verifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/vendor");
+            exit;
+        }
+        else if($parts[2] == 'unverify'){
+            $this->vendor->unverifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/vendor");
+            exit;
+        }
         require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
     }
     public function giftwrappers($parts){
         $allGiftWrappers = $this->admin->getAllUnverifiedGiftwrapper();
+        if($parts[2] == 'verify'){
+            $this->giftWrapper->verifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/giftWrappers");
+            exit;
+        }
+        else if($parts[2] == 'unverify'){
+            $this->giftWrapper->unverifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/vendor");
+            exit;
+        }
         require_once __DIR__ . '/../views/Dashboards/Admin/giftWrappers.php';
     }
     public function delivery($parts){
         $allDelivery = $this->admin->getAllUnverifiedDelivery();
+        if($parts[2] == 'verify'){
+            $this->delivery->verifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/delivery");
+            exit;
+        }
+        else if($parts[2] == 'unverify'){
+            $this->delivery->unverifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/delivery");
+            exit;
+        }
         require_once __DIR__ . '/../views/Dashboards/Admin/delivery.php';
     }
     public function deliveryman($parts){
         $allDeliveryman = $this->admin->getAllUnverifiedDeliveryman();
+        if($parts[2] == 'verify'){
+            $this->deliveryman->verifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/deliveryman");
+            exit;
+        }
+        else if($parts[2] == 'unverify'){
+            $this->deliveryman->unverifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/deliveryman");
+            exit;
+        }
         require_once __DIR__ . '/../views/Dashboards/Admin/deliveryMan.php';
     }
     public function clients($parts){

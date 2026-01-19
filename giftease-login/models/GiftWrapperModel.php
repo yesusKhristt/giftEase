@@ -41,15 +41,34 @@ class GiftWrapperModel
         }
     }
 
-    public function authenticate($email, $password, $type)
+    public function verifyUser($user_id)
+    {
+        $sql  = "UPDATE giftWrappers SET verified = 1 WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$user_id]);
+    }
+
+    public function unverifyUser($user_id)
+    {
+        $sql  = "UPDATE giftWrappers SET verified = 0 WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$user_id]);
+    }
+
+    public function authenticate($email, $password, $type, &$error)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM giftWrappers WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password']) && $type == 'giftWrapper') {
+            if (!$user['verified']){
+                $error = "User Not verified";
+            return null;
+            }
             return $user;
         }
+        $error = "Invalid Username or Password";
         return null;
     }
 
@@ -84,7 +103,7 @@ class GiftWrapperModel
             $data['years_of_experience'],
             $data['phone'],
             $data['address'],
-            $data['id']
+            $data['id'],
         ]);
     }
 
@@ -125,7 +144,7 @@ class GiftWrapperModel
     public function acceptOrder($order_id, $giftWrapper_id)
     {
         $stmt = $this->pdo->prepare("UPDATE `orders` SET giftWrapper_id = ? WHERE `id` = ?");
-        $stmt->execute([(int)$giftWrapper_id, (int)$order_id]);
+        $stmt->execute([(int) $giftWrapper_id, (int) $order_id]);
     }
 
     public function markComplete($order_id)
@@ -141,6 +160,3 @@ class GiftWrapperModel
     }
 
 }
-
-
-?>
