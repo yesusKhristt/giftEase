@@ -28,7 +28,7 @@ class DeliveryController
                 require_once __DIR__ . '/../views/Dashboards/Delivery/profile.php';
                 break;
             case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
+                $this->history();
                 break;
             case 'map':
                 require_once __DIR__ . '/../views/Dashboards/Delivery/map.php';
@@ -84,5 +84,114 @@ class DeliveryController
         require_once __DIR__ . '/../views/Dashboards/Delivery/edit.php';
     }
 
+   
 
+      public function history() {
+    require_once __DIR__ . '/../models/DeliveryModel.php';
+
+    // 1. Read filter values from GET
+    $filters = [
+        'dateFrom' => $_GET['dateFrom'] ?? '',
+        'dateTo'   => $_GET['dateTo'] ?? '',
+        'status'   => $_GET['status'] ?? 'all',
+        'customer' => $_GET['customer'] ?? ''
+    ];
+
+    // 2. Hard-coded delivery history (temporary until DB ready)
+    $allHistory = [
+        [
+            'id' => 'DEL-001',
+            'customer_name' => 'Saneth Tharushika',
+            'product_name' => 'Premium Rose Bouquet',
+            'delivery_date' => '2024-01-15',
+            'status' => 'delivered',
+            'earnings' => 'Rs.150.00',
+            'rating' => '5.0',
+            'distance' => '5.2 km'
+        ],
+        [
+            'id' => 'DEL-002',
+            'customer_name' => 'Thenuka Ransinghne',
+            'product_name' => 'Chocolate Collection',
+            'delivery_date' => '2024-01-14',
+            'status' => 'delivered',
+            'earnings' => 'Rs.1250.00',
+            'rating' => '5.0',
+            'distance' => '7.8 km'
+        ],
+        [
+            'id' => 'DEL-003',
+            'customer_name' => 'Mahinda Rajapaksha',
+            'product_name' => 'Birthday Cake & Balloons',
+            'delivery_date' => '2024-01-13',
+            'status' => 'delivered',
+            'earnings' => 'Rs.180.00',
+            'rating' => '4.0',
+            'distance' => '4.25 km'
+        ],
+        [
+            'id' => 'DEL-004',
+            'customer_name' => 'Kumar Sangakkara',
+            'product_name' => 'Fruit Basket',
+            'delivery_date' => '2024-01-12',
+            'status' => 'cancelled',
+            'earnings' => 'RS.200.00',
+            'rating' => '5.0',
+            'distance' => '6.0 km'
+        ],
+        [
+            'id' => 'DEL-005',
+            'customer_name' => 'Angelo Mathews',
+            'product_name' => 'Gourmet Hamper',
+            'delivery_date' => '2024-01-11',
+            'status' => 'returned',
+            'earnings' => 'Rs.1500.00',
+            'rating' => '3.5',
+            'distance' => '8.5 km'
+        ],
+        [
+            'id' => 'DEL-006',
+            'customer_name' => 'Dilshan Munaweera',
+            'product_name' => 'Spa Gift Set',
+            'delivery_date' => '2024-01-10',
+            'status' => 'delivered',
+            'earnings' => 'Rs.2000.00',
+            'rating' => '5.0',
+            'distance' => '3.75 km'
+        ],
+        [
+            'id' => 'DEL-007',
+            'customer_name' => 'Mahela Jayawardena',
+            'product_name' => 'Wine & Cheese Basket',
+            'delivery_date' => '2024-01-09',
+            'status' => 'delivered',
+            'earnings' => 'Rs.220.00',
+            'rating' => '4.5',
+            'distance' => '9.0 km'
+        ],
+        [
+            'id' => 'DEL-008',
+            'customer_name' => 'Aravinda de Silva',
+            'product_name' => 'Customized Mug',
+            'delivery_date' => '2024-01-08',
+            'status' => 'cancelled',
+            'earnings' => 'Rs.500.00',
+            'rating' => '0.0',
+            'distance' => '2.5 km'
+        ]
+       
+    ];
+
+    // 3. Apply filters in PHP
+    $history = array_filter($allHistory, function($item) use ($filters) {
+        if (!empty($filters['dateFrom']) && $item['delivery_date'] < $filters['dateFrom']) return false;
+        if (!empty($filters['dateTo'])   && $item['delivery_date'] > $filters['dateTo'])   return false;
+        if ($filters['status'] !== 'all' && $item['status'] !== $filters['status']) return false;
+        if (!empty($filters['customer']) && stripos($item['customer_name'], $filters['customer']) === false) return false;
+        return true;
+    });
+
+    // 4. Send filtered data to view
+    require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
+}
 }

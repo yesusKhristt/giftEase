@@ -31,19 +31,12 @@ class OrderModel
             PRIMARY KEY (order_id, item_id),
             FOREIGN KEY (item_id) REFERENCES products(id) ON DELETE CASCADE
         );";
-        $sql3 = "CREATE TABLE IF NOT EXISTS notifications (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            order_id INT NOT NULL,
-            message VARCHAR(255) NOT NULL,
-            is_read TINYINT(1) DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-        );";
+      
 
         try {
             $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
-            $this->pdo->exec($sql3);
+           
 
 
         } catch (PDOException $e) {
@@ -67,11 +60,7 @@ class OrderModel
             ]);
         }
         $order_id = $this->pdo->lastInsertId();
-        $message = "New order received (Order ID: $order_id)";
-        $stmtNotify = $this->pdo->prepare(
-            "INSERT INTO notifications (order_id, message) VALUES (?, ?)"
-        );
-        $stmtNotify->execute([$order_id, $message]);
+       
 
         foreach ($data['cartItems'] as $items) {
             $stmt2 = $this->pdo->prepare("INSERT INTO orderItems (order_id, item_id, quantity) VALUES (?, ?, ?)");

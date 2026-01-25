@@ -83,4 +83,17 @@ public function getAllDelivery()
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    // ---------- UPDATE DELIVERY PROFILE ----------
+    public function updateDelivery($id, $firstName, $lastName, $phone, $address)
+    {
+        $stmt = $this->pdo->prepare(
+            "UPDATE delivery SET first_name = ?, last_name = ?, phone = ?, address = ? WHERE id = ?"
+        );
+        return $stmt->execute([$firstName, $lastName, $phone, $address, $id]);
+    }
+
+
+
+
 }
