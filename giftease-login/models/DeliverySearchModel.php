@@ -9,7 +9,7 @@ class DeliverySearchModel
         $this->pdo = $pdo;
     }
 
-    public function search($keyword, $page)
+    // public function search($keyword, $page)
     {
         // Page content for delivery dashboard
         $pageContent = [
