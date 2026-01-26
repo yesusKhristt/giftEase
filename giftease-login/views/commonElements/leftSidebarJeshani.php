@@ -2,7 +2,7 @@
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
-      <img src="resources/ge5.png" class="logo_img">
+      <img src="resources/iconL.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease
         </span>
@@ -19,8 +19,13 @@
         class="nav-item <?= isActive('overview', $activePage) ?>">
         Overview
       </a>
-      <a href="?controller=giftWrapper&action=dashboard/order" class="nav-item <?= isActive('order', $activePage) ?>">
-        Wrapping Orders
+      <a href="?controller=giftWrapper&action=dashboard/allOrder"
+        class="nav-item <?= isActive('allOrder', $activePage) ?>">
+        All Orders
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/assignedOrder"
+        class="nav-item <?= isActive('assignedOrder', $activePage) ?>">
+        Assigned Order
       </a>
       <a href="?controller=giftWrapper&action=dashboard/service"
         class="nav-item <?= isActive('service', $activePage) ?>">
@@ -44,7 +49,7 @@
       <a href="?controller=giftWrapper&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
-</a>
+      </a>
     </div>
   </div>
   <div class="topbar-container">

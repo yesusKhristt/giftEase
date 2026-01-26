@@ -2,7 +2,7 @@
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
-      <img src="resources/ge5.png" class="logo_img">
+      <img src="resources/iconL.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease
         </span>
@@ -18,8 +18,8 @@
       <a href="?controller=client&action=dashboard/items" class="nav-item <?= isActive('items', $activePage) ?>">
         Browse Items
       </a>
-      <a href="?controller=client&action=dashboard/cart" class="nav-item <?= isActive('cart', $activePage) ?>">
-        Cart
+      <a href="?controller=client&action=dashboard/messeges/vendor/view" class="nav-item <?= isActive('messeges', $activePage) ?>">
+        Messeges
       </a>
       <a href="?controller=client&action=dashboard/wishlist" class="nav-item <?= isActive('whishlist', $activePage) ?>">
         Wishlist
@@ -54,6 +54,10 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
+      <a href="?controller=client&action=dashboard/cart"
+        class="settings-btn <?= isActive('cart', $activePage) ?>">
+        <i class="fas fa-shopping-cart"></i>
+      </a>
       <a href="?controller=client&action=dashboard/settings"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>

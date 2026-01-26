@@ -7,8 +7,7 @@ class AdminController
     private $deliveryman;
     private $delivery;
     private $admin;
-
-    private $pdo;
+    private $vendor;
 
     public function __construct($pdo)
     {
@@ -18,45 +17,15 @@ class AdminController
         require_once __DIR__ . '/../models/DeliveryModel.php';
         require_once __DIR__ . '/../models/DeliverymanModel.php';
         require_once __DIR__ . '/../models/AdminModel.php';
+        require_once __DIR__ . '/../models/VendorModel.php';
         $this->giftWrapping = new GiftWrappingModel($pdo);
         $this->giftWrapper = new GiftWrapperModel($pdo);
         $this->category = new CategoryModel($pdo);
         $this->deliveryman = new DeliverymanModel($pdo);
         $this->delivery = new DeliveryModel($pdo);
         $this->admin = new AdminModel($pdo);
-        $this->pdo = $pdo;
-
+        $this->vendor = new VendorModel($pdo);
     }
-public function deliveryList()
-{
-    require_once BASE_PATH . '/models/DeliveryModel.php';
-    $deliveryModel = new DeliveryModel($this->pdo);
-
-    $deliveries = $deliveryModel->getAllDelivery();
-
-    require BASE_PATH . '/views/Dashboards/Admin/deliver.php';
-}
-
-public function vendorList()
-{
-    require_once BASE_PATH . '/models/VendorModel.php';
-    $vendorModel = new VendorModel($this->pdo);
-
-    $vendors = $vendorModel->getAllVendors();
-
-    require BASE_PATH . '/views/Dashboards/Admin/vendors.php';
-}
-
-public function clientsList()
-{
-    require_once BASE_PATH . '/models/ClientModel.php';
-    $clientModel = new ClientModel($this->pdo);
-
-    $clients = $clientModel->getAllClients();
-
-    require BASE_PATH . '/views/Dashboards/Admin/customer.php';
-}
-
 
 
     public function dashboard()
@@ -277,17 +246,84 @@ public function clientsList()
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
     }
+
+
+    public function admins($parts){
+        $allAdmins = $this->admin->getAllAdmins();
+        require_once __DIR__ . '/../views/Dashboards/Admin/admins.php';
+    }
+    public function vendors($parts){
+        $allVendors = $this->admin->getAllUnverifiedVendors();
+        if($parts[2] == 'verify'){
+            $this->vendor->verifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/vendor");
+            exit;
+        }
+        else if($parts[2] == 'unverify'){
+            $this->vendor->unverifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/vendor");
+            exit;
+        }
+        require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
+    }
+    public function giftwrappers($parts){
+        $allGiftWrappers = $this->admin->getAllUnverifiedGiftwrapper();
+        if($parts[2] == 'verify'){
+            $this->giftWrapper->verifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/giftWrappers");
+            exit;
+        }
+        else if($parts[2] == 'unverify'){
+            $this->giftWrapper->unverifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/vendor");
+            exit;
+        }
+        require_once __DIR__ . '/../views/Dashboards/Admin/giftWrappers.php';
+    }
+    public function delivery($parts){
+        $allDelivery = $this->admin->getAllUnverifiedDelivery();
+        if($parts[2] == 'verify'){
+            $this->delivery->verifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/delivery");
+            exit;
+        }
+        else if($parts[2] == 'unverify'){
+            $this->delivery->unverifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/delivery");
+            exit;
+        }
+        require_once __DIR__ . '/../views/Dashboards/Admin/delivery.php';
+    }
+    public function deliveryman($parts){
+        $allDeliveryman = $this->admin->getAllUnverifiedDeliveryman();
+        if($parts[2] == 'verify'){
+            $this->deliveryman->verifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/deliveryman");
+            exit;
+        }
+        else if($parts[2] == 'unverify'){
+            $this->deliveryman->unverifyUser($parts[3]);
+            header("Location: index.php?controller=admin&action=dashboard/deliveryman");
+            exit;
+        }
+        require_once __DIR__ . '/../views/Dashboards/Admin/deliveryMan.php';
+    }
+    public function clients($parts){
+        $allClients = $this->admin->getAllClients();
+        require_once __DIR__ . '/../views/Dashboards/Admin/customer.php';
+    }
+
     public function Admin($parts)
     {
         switch ($parts[1]) {
             case 'customer':
-                $this->clientsList();
+                $this->clients($parts);
                 break;
             case 'delivery':
-                $this->deliveryList();
+                $this->delivery($parts);
                 break;
             case 'deliveryman':
-                $this->deliveryList();
+                $this->deliveryman($parts);
                 break;
             case 'items':
                 require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
@@ -298,14 +334,17 @@ public function clientsList()
             case 'giftWrapping':
                 require_once __DIR__ . '/../views/Dashboards/Admin/giftWrapping.php';
                 break;
-            case 'Admin':
-                require_once __DIR__ . '/../views/Dashboards/Admin/Admins.php';
+            case 'giftWrappers':
+                $this->giftwrappers($parts);
+                break;
+            case 'admins':
+                $this->admins($parts);
                 break;
             case 'profile':
                 require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
                 break;
             case 'vendor':
-                $this->vendorList();
+                $this->vendors($parts);
                 break;
             case 'category':
                 $this->addCategory($parts);

@@ -29,6 +29,7 @@ class DeliverymanModel
             vehiclePlate VARCHAR(20),
             phone VARCHAR(10),
             image_loc VARCHAR(500) DEFAULT NULL,
+            verified BOOL DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
 
@@ -37,17 +38,37 @@ class DeliverymanModel
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
+
     }
 
-    public function authenticate($email, $password, $type)
+    public function verifyUser($user_id)
+    {
+        $sql  = "UPDATE deliveryman SET verified = 1 WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$user_id]);
+    }
+
+    public function unverifyUser($user_id)
+    {
+        $sql  = "UPDATE deliveryman SET verified = 0 WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$user_id]);
+    }
+
+    public function authenticate($email, $password, $type, &$error)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM deliveryman WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password']) && $type == 'deliveryman') {
+            if (!$user['verified']){
+                $error = "User Not verified";
+            return null;
+            }
             return $user;
         }
+        $error = "Invalid Username or Password";
         return null;
     }
 
@@ -82,7 +103,7 @@ class DeliverymanModel
             $data['vehiclePlate'],
             $data['phone'],
             $data['address'],
-            $data['id']
+            $data['id'],
         ]);
     }
 
@@ -100,6 +121,3 @@ class DeliverymanModel
     }
 
 }
-
-
-?>

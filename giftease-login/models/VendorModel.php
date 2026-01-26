@@ -27,6 +27,8 @@ class VendorModel
             shopName VARCHAR(50),
             phone VARCHAR(10),
             image_loc VARCHAR(500) DEFAULT NULL,
+            rating FLOAT DEFAULT 0,
+            verified BOOL DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
 
@@ -37,15 +39,33 @@ class VendorModel
         }
     }
 
-    public function authenticate($email, $password, $type)
+    public function verifyUser($user_id)
+    {
+        $sql  = "UPDATE vendors SET verified = 1 WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$user_id]);
+    }
+    public function unverifyUser($user_id)
+    {
+        $sql  = "UPDATE vendors SET verified = 0 WHERE id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$user_id]);
+    }
+
+    public function authenticate($email, $password, $type, &$error)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password']) && $type == 'vendor') {
+            if (!$user['verified']){
+                $error = "User Not verified";
+            return null;
+            }
             return $user;
         }
+        $error = "Invalid Username or Password";
         return null;
     }
 
@@ -80,7 +100,7 @@ class VendorModel
             $data['shopName'],
             $data['phone'],
             $data['address'],
-            $data['id']
+            $data['id'],
         ]);
     }
 
@@ -89,12 +109,5 @@ class VendorModel
         $stmt = $this->pdo->prepare("UPDATE vendors SET status = 'inactive' WHERE id = ?");
         $stmt->execute($id);
     }
-    
-    public function getAllVendors()
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM vendors");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }   
 
 }

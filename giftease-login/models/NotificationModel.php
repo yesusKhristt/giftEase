@@ -1,112 +1,175 @@
 <?php
-
 class NotificationModel
 {
     private $pdo;
 
-    public function __construct(?PDO $pdo = null)
+    public function __construct(PDO $pdo)
     {
-        if ($pdo) {
-            $this->pdo = $pdo;
-        } else {
-            $host = 'localhost';
-            $db = 'giftease';
-            $user = 'root';
-            $pass = '';
-
-            try {
-                $this->pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
-                $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
-                die("❌ Database connection failed: " . $e->getMessage());
-            }
-        }
-
-        $this->createTableIfNotExists();
+        $this->pdo = $pdo;
+        $this->createTableIfNotExists(); // Create the table if not there
     }
 
-    private function createTableIfNotExists()
+    public function getpdo()
     {
-        
-        $sql = "CREATE TABLE IF NOT EXISTS notifications (
+        return $this->pdo;
+    }
+
+    public function createTableIfNotExists()
+    {
+        $sql1 = "CREATE TABLE IF NOT EXISTS notificationsClient (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NULL,
-            sender_id INT NULL,
-            order_id INT NULL,
-            type VARCHAR(50) DEFAULT 'info',
-            message TEXT NOT NULL,
-            data TEXT NULL,
-            is_read TINYINT(1) DEFAULT 0,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            user_id INT,
+            title VARCHAR(255),
+            message VARCHAR(1023),
+            is_read BOOLEAN DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );";
+
+        $sql2 = "CREATE TABLE IF NOT EXISTS notificationsVendor (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            title VARCHAR(255),
+            message VARCHAR(1023),
+            is_read BOOLEAN DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );";
+
+        $sql3 = "CREATE TABLE IF NOT EXISTS notificationsAdmin (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            title VARCHAR(255),
+            message VARCHAR(1023),
+            is_read BOOLEAN DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );";
+
+        $sql4 = "CREATE TABLE IF NOT EXISTS notificationsDelivery (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            title VARCHAR(255),
+            message VARCHAR(1023),
+            is_read BOOLEAN DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );";
+
+        $sql5 = "CREATE TABLE IF NOT EXISTS notificationsDeliveryman (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            title VARCHAR(255),
+            message VARCHAR(1023),
+            is_read BOOLEAN DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );";
+
+        $sql6 = "CREATE TABLE IF NOT EXISTS notificationsGiftWrapper (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT,
+            title VARCHAR(255),
+            message VARCHAR(1023),
+            is_read BOOLEAN DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
 
         try {
-            $this->pdo->exec($sql);
+            $this->pdo->exec($sql1);
+            $this->pdo->exec($sql2);
+            $this->pdo->exec($sql3);
+            $this->pdo->exec($sql4);
+            $this->pdo->exec($sql5);
+            $this->pdo->exec($sql6);
         } catch (PDOException $e) {
-            die("Error creating notifications table: " . $e->getMessage());
-        }
-
-        
-        try {
-            $this->pdo->exec("ALTER TABLE notifications ADD COLUMN IF NOT EXISTS tmp INT NULL;");
-            
-        } catch (PDOException $e) {
-           
+            die("Error creating tables: " . $e->getMessage());
         }
     }
 
-    public function createNotification($userId = null, $orderId = null, $type = 'info', $message = '', $data = null, $senderId = null)
+    public function notifyClient($userId, $title, $message)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO notifications (user_id, sender_id, order_id, type, message, data) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $userId,
-            $senderId,
-            $orderId,
-            $type,
-            $message,
-            $data ? json_encode($data) : null
-        ]);
-        return $this->pdo->lastInsertId();
+        $stmt = $pdo->prepare(
+            "INSERT INTO notificationsClient (user_id, title, message) VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$userId, $title, $message]);
     }
 
-    public function getNotifications($userId, $limit = 20)
+    public function notifyAdmin($userId, $title, $message)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT ?");
-        $stmt->bindValue(1, $userId, PDO::PARAM_INT);
-        $stmt->bindValue(2, (int)$limit, PDO::PARAM_INT);
-        $stmt->execute();
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($rows as &$r) {
-            if ($r['data']) {
-                $r['data'] = json_decode($r['data'], true);
-            }
-        }
-        return $rows;
+        $stmt = $pdo->prepare(
+            "INSERT INTO notificationsAdmin (user_id, title, message) VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$userId, $title, $message]);
     }
 
-    public function getUnreadCount($userId)
+    public function notifyVendor($userId, $title, $message)
     {
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) as cnt FROM notifications WHERE user_id = ? AND is_read = 0");
+        $stmt = $pdo->prepare(
+            "INSERT INTO notificationsVendor (user_id, title, message) VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$userId, $title, $message]);
+    }
+
+    public function notifyDelivery($userId, $title, $message)
+    {
+        $stmt = $pdo->prepare(
+            "INSERT INTO notificationsDelivery (user_id, title, message) VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$userId, $title, $message]);
+    }
+
+    public function notifyDeliveryman($userId, $title, $message)
+    {
+        $stmt = $pdo->prepare(
+            "INSERT INTO notificationsDeliveryman (user_id, title, message) VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$userId, $title, $message]);
+    }
+
+    public function notifyGiftWrapper($userId, $title, $message)
+    {
+        $stmt = $pdo->prepare(
+            "INSERT INTO notificationsGiftWrapper (user_id, title, message) VALUES (?, ?, ?)"
+        );
+        $stmt->execute([$userId, $title, $message]);
+    }
+
+    public function getClientNotifications($userId)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM notificationsClient WHERE user_id = ? ORDER BY created_at");
         $stmt->execute([$userId]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (int)$row['cnt'];
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function markAsRead($id)
+    public function getAdminNotifications($userId)
     {
-        $stmt = $this->pdo->prepare("UPDATE notifications SET is_read = 1 WHERE id = ?");
-        return $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("SELECT * FROM notificationsAdmin WHERE user_id = ? ORDER BY created_at");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function markAllRead($userId)
+    public function getVendorNotifications($userId)
     {
-        $stmt = $this->pdo->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ?");
-        return $stmt->execute([$userId]);
+        $stmt = $this->pdo->prepare("SELECT * FROM notificationsVendor WHERE user_id = ? ORDER BY created_at");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function deleteNotification($id)
+    public function getDeliveryNotifications($userId)
     {
-        $stmt = $this->pdo->prepare("DELETE FROM notifications WHERE id = ?");
-        return $stmt->execute([$id]);
+        $stmt = $this->pdo->prepare("SELECT * FROM notificationsDelivery WHERE user_id = ? ORDER BY created_at");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getDeliverymanNotifications($userId)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM notificationsDeliveryman WHERE user_id = ? ORDER BY created_at");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getGiftWrapperNotifications($userId)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM notificationsGiftWrapper WHERE user_id = ? ORDER BY created_at");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }

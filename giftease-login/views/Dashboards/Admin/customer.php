@@ -26,38 +26,33 @@
 
 
 
-        <table class="table" style="border: 20px;">
+        <table class = "table">
           <thead>
             <tr>
-              <th>oredr ID</th>
-              <th>Name</th>
-              <th>Phone</th>
+              <th>ID</th>
+              <th>First Name</th>
+              <th>Last Name</th>
               <th>Email</th>
-              <th>Date</th>
-
+              <th>Status</th>
+              <th>Phone</th>
+              <th>Created At</th>
             </tr>
           </thead>
           <tbody>
-            <?php if (!empty($clients)) : ?>
-              <?php foreach ($clients as $row) : ?>
-                <tr>
-                  <td><?= htmlspecialchars($row['id']) ?></td>
-                  <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
-                  <td><?= htmlspecialchars($row['phone']) ?></td>
-                  <td><?= htmlspecialchars($row['email']) ?></td>
-                  <td><?= htmlspecialchars($row['created_at']) ?></td>
-                </tr>
-              <?php endforeach; ?>
-            <?php else : ?>
+            <?php foreach ($allClients as $row): ?>
               <tr>
-                <td colspan="5" style="text-align:center;color:red;">
-                  No customers found
-                </td>
+                <td><?= $row['id'] ?></td>
+                <td><?= $row['first_name'] ?></td>
+                <td><?= $row['last_name'] ?></td>
+                <td><?= $row['email'] ?></td>
+                <td><?= $row['status'] ?></td>
+                <td><?= $row['phone'] ?></td>
+                <td><?= $row['created_at'] ?></td>
               </tr>
-            <?php endif; ?>
-
+            <?php endforeach; ?>
           </tbody>
         </table>
+
     </div>
   </div>
   </section>

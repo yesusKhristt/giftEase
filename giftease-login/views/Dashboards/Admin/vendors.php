@@ -25,31 +25,48 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Vendor id</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Shop name</th>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
                             <th>Address</th>
+                            <th>Shop Name</th>
+                            <th>Phone</th>
+                            <th>Rating</th>
+                            <th>Created At</th>
+                            <th>Verified</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($vendors)) : ?>
-                            <?php foreach ($vendors as $row) : ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($row['id']) ?></td>
-                                    <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
-                                    <td><?= htmlspecialchars($row['phone']) ?></td>
-                                    <td><?= htmlspecialchars($row['shopName']) ?></td>
-                                    <td><?= htmlspecialchars($row['address']) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
+                        <?php foreach ($allVendors as $row): ?>
                             <tr>
-                                <td colspan="6" style="text-align:center;color:red;">
-                                    No vendors found
+                                <td><?= $row['id'] ?></td>
+                                <td><?= $row['first_name'] ?></td>
+                                <td><?= $row['last_name'] ?></td>
+                                <td><?= $row['email'] ?></td>
+                                <td><?= $row['status'] ?></td>
+                                <td><?= $row['address'] ?></td>
+                                <td><?= $row['shopName'] ?></td>
+                                <td><?= $row['phone'] ?></td>
+                                <td><?= number_format($row['rating'], 1) ?></td>
+                                <td><?= $row['created_at'] ?></td>
+                                <?php if ($row['verified']) { ?>
+                                <td>
+                                    <a class="btn2" href="?controller=admin&action=dashboard/vendor/unverify/<?= htmlspecialchars($row['id']) ?>">
+                                        Unverify
+                                    </a>
                                 </td>
+                            <?php } else { ?>
+                                <td>
+                                    <a class="btn1" href="?controller=admin&action=dashboard/vendor/verify/<?= htmlspecialchars($row['id']) ?>">
+                                        Verify
+                                    </a>
+                                </td>
+                            <?php } ?>
                             </tr>
-                        <?php endif; ?>
+                        <?php endforeach; ?>
+                    </tbody>
                 </table>
         </div>
         </section>

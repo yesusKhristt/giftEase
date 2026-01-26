@@ -46,8 +46,6 @@
             /* Center vertically */
             align-items: center;
             /* Center horizontally (optional) */
-            height: 100vh;
-            /* Full viewport height (or any height you need) */
         }
     </style>
     <link rel="stylesheet" href="public/style.css" />
@@ -110,6 +108,14 @@
                                     </td>
                                 </tr>
                             </table>
+                            <h4 class="subtitle">Sold By</h4>
+                            <h3 class ="subtitle"><?= htmlspecialchars($productDetails['shop']) ?></h3>
+                            <?php
+                                $rating = $productDetails['vendorRating'];
+                                echo render_stars($rating);
+                                echo "<div class='rating-text'>$rating Rating</div>"
+                                    ?>
+				<a class = "btn1" href="?controller=client&action=dashboard/messeges/vendor/view/<?= htmlspecialchars($productDetails['vendor_id']) ?>">Contact Now</a>
                             </p>
                         </div>
                     </div>

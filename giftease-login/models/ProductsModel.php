@@ -30,6 +30,7 @@ class ProductsModel
             clicks INT NOT NULL,
             raiting INT NOT NULL,
             displayImage VARCHAR(500) NOT NULL,
+            deliverable BOOL NOT NULL DEFAULT 1,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE,
             FOREIGN KEY (mainCategory) REFERENCES categories(id) ON DELETE CASCADE,
@@ -83,8 +84,13 @@ class ProductsModel
         $stmt2->execute();
         $product2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
+        $stmt3 = $this->pdo->prepare("SELECT shopName, phone, Rating FROM vendors WHERE id = ?");
+        $stmt3->execute([$product1[0]['vendor_id']]);
+        $product3 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+
         return [
             'id' => $product1[0]['id'],
+            'vendor_id' => $product1[0]['vendor_id'],
             'name' => $product1[0]['name'],
             'price' => $product1[0]['price'],
             'description' => $product1[0]['description'],
@@ -96,7 +102,10 @@ class ProductsModel
             'sold' => $product1[0]['sold'],
             'clicks' => $product1[0]['clicks'],
             'rating' => $product1[0]['raiting'],
-            'images' => $product2
+            'images' => $product2,
+            'shop' => $product3[0]['shopName'],
+            'phone' => $product3[0]['phone'],
+            'vendorRating' => (int)$product3[0]['Rating']
         ];
 
     }
@@ -124,9 +133,9 @@ class ProductsModel
         $stmt1->execute();
     }
 
-    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath)
+    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath, $deliverable)
     {
-        $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, status, mainCategory, subCategory, totalStock, reservedStock, sold, impressions, clicks, raiting, displayImage, created_at) VALUES (?, ?, ?, ?, 'active',? ,  ? , 0 ,0, 0, 0, 0, 0, ? ,CURRENT_TIMESTAMP)");
+        $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, status, mainCategory, subCategory, totalStock, reservedStock, sold, impressions, clicks, raiting, displayImage, deliverable, created_at) VALUES (?, ?, ?, ?, 'active',? ,  ? , 0 ,0, 0, 0, 0, 0, ? , ?, CURRENT_TIMESTAMP)");
         $stmt1->execute([
             $vendor_id,
             $name,
@@ -134,7 +143,8 @@ class ProductsModel
             $description,
             $mainC,
             $subC,
-            $profilePath[0]
+            $profilePath[0],
+            ($deliverable === "1")
         ]);
         $productID = $this->pdo->lastInsertId();
         ;
@@ -222,7 +232,7 @@ class ProductsModel
         }
     }
 
-    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath)
+    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath, $deliverable)
     {
         // fallback to DB images if $profilePath is empty
         if (empty($profilePath)) {
@@ -243,7 +253,7 @@ class ProductsModel
         // update products table
         $stmt1 = $this->pdo->prepare('
         UPDATE products 
-        SET name = ?, price = ?, description = ?, mainCategory = ?, subCategory = ?, displayImage = ?  
+        SET name = ?, price = ?, description = ?, mainCategory = ?, subCategory = ?, displayImage = ? , deliverable = ? 
         WHERE id = ?
     ');
         $stmt1->execute([
@@ -253,6 +263,7 @@ class ProductsModel
             $mainC,
             $subC,
             $displayImage,
+            $deliverable,
             $product_id
         ]);
 

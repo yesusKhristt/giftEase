@@ -8,59 +8,78 @@
     <link rel="stylesheet" href="public/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .radio-inline {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 15px;
+            gap: 5px;
+        }
+    </style>
 </head>
 
 <body>
-    <form method="POST" action="?controller=vendor&action=dashboard/item/<?php echo $parts[2] ?><?php if ($parts[2] == 'edit') {
-           echo "/$parts[3]";
-       } ?>" id="uploadForm" enctype="multipart/form-data">
-        <table class="table">
-            <tr>
-                <td style="width:15%" class="subtitle">Product Title</td>
-                <td colspan="2">
-                    <input type="text" id="title" name="title" placeholder="Title"
-                        value="<?php echo $parts[2] == 'edit' ? htmlspecialchars($productDetails['name']) : ''; ?>">
-                </td>
-            </tr>
+    <div class="container">
+        <?php
+        $activePage = 'inventory';
+        include 'views\commonElements/leftSidebar.php';
+        ?>
+        <div class="main-content">
 
-            <tr>
-                <td class="subtitle">Product Category</td>
-                <td>
-                    <div style="padding: 10px">
-                        <select id="category" name="category" style="width:80%">
-                            <?php foreach ($categories as $row): ?>
-                                <option value="<?= htmlspecialchars($row['id']) ?>">
-                                    <?= htmlspecialchars($row['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div style="padding: 10px">
-                        <select id="subcategory" name="subcategory" style="width:80%">
-                            <option value="">-- Select a subcategory --</option>
-                        </select>
-                    </div>
+            <div class="page-header">
+                <h1 class="title">Add Item</h1>
+                <p class="subtitle">Create your online store for clients to see</p>
+            </div>
+            <form method="POST" action="?controller=vendor&action=dashboard/item/<?php echo $parts[2] ?><?php if ($parts[2] == 'edit') {
+                   echo "/$parts[3]";
+               } ?>" id="uploadForm" enctype="multipart/form-data">
+                <table class="table">
+                    <tr>
+                        <td style="width:15%" class="subtitle">Product Title</td>
+                        <td colspan="2">
+                            <input type="text" id="title" name="title" placeholder="Title"
+                                value="<?php echo $parts[2] == 'edit' ? htmlspecialchars($productDetails['name']) : ''; ?>">
+                        </td>
+                    </tr>
 
-                </td>
-            </tr>
+                    <tr>
+                        <td class="subtitle">Product Category</td>
+                        <td>
+                            <div style="padding: 10px">
+                                <select id="category" name="category" style="width:80%">
+                                    <?php foreach ($categories as $row): ?>
+                                        <option value="<?= htmlspecialchars($row['id']) ?>">
+                                            <?= htmlspecialchars($row['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div style="padding: 10px">
+                                <select id="subcategory" name="subcategory" style="width:80%">
+                                    <option value="">-- Select a subcategory --</option>
+                                </select>
+                            </div>
 
-            <tr>
-                <td class="subtitle">Price</td>
-                <td colspan="2">
-                    <input type="number" id="price" name="price" placeholder="Price" min="1"
-                        value="<?php echo $parts[2] == 'edit' ? htmlspecialchars($productDetails['price']) : ''; ?>">
-                </td>
-            </tr>
+                        </td>
+                    </tr>
 
-            <tr>
-                <td class="subtitle">Description</td>
-                <td colspan="2">
-                    <textarea name="description" rows="10" cols="50"
-                        placeholder="Enter Product Description"><?php echo $parts[2] == 'edit' ? htmlspecialchars($productDetails['description']) : ''; ?></textarea>
-                </td>
-            </tr>
+                    <tr>
+                        <td class="subtitle">Price</td>
+                        <td colspan="2">
+                            <input type="number" id="price" name="price" placeholder="Price" min="1"
+                                value="<?php echo $parts[2] == 'edit' ? htmlspecialchars($productDetails['price']) : ''; ?>">
+                        </td>
+                    </tr>
 
-            <!-- <tr>
+                    <tr>
+                        <td class="subtitle">Description</td>
+                        <td colspan="2">
+                            <textarea name="description" rows="10" cols="50"
+                                placeholder="Enter Product Description"><?php echo $parts[2] == 'edit' ? htmlspecialchars($productDetails['description']) : ''; ?></textarea>
+                        </td>
+                    </tr>
+
+                    <!-- <tr>
                 <td class="subtitle">Upload Images</td>
                 <td colspan="2">
                     <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
@@ -80,28 +99,42 @@
                     </button>
                 </td>
             </tr> -->
-            <tr>
-                <td class="subtitle">Upload Images</td>
-                <td colspan="2">
-                    <input type="file" id="fileInput" name="images[]" multiple style="display:none;" accept="image/*">
+                    <tr>
+                        <td class="subtitle">Can be prepared in 24 hours</td>
+                        <td colspan="2">
+                            <label class="radio-inline">
+                                <input type="radio" name="hours24" value="1"> Yes
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="hours24" value="0"> No
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="subtitle">Upload Images</td>
+                        <td colspan="2">
+                            <input type="file" id="fileInput" name="images[]" multiple style="display:none;"
+                                accept="image/*">
 
-                    <div class="upload-area" id="uploadArea">
-                        <i class="fas fa-cloud-upload-alt" style="font-size:3rem; color:#3498db;"></i>
-                        <h4>Drop files here or click to upload</h4>
-                        <p>Supported formats: JPG, PNG (Max 10MB)</p>
-                    </div>
+                            <div class="upload-area" id="uploadArea">
+                                <i class="fas fa-cloud-upload-alt" style="font-size:3rem; color:#3498db;"></i>
+                                <h4>Drop files here or click to upload</h4>
+                                <p>Supported formats: JPG, PNG (Max 10MB)</p>
+                            </div>
 
-                    <div id="preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;"></div>
+                            <div id="preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;"></div>
 
-                </td>
-            </tr>
+                        </td>
+                    </tr>
 
-            <tr>
-                <td><button type="submit" class="btn1">Submit</button></td>
-                <td><button type="reset" class="btn2">Reset</button></td>
-            </tr>
-        </table>
-    </form>
+                    <tr>
+                        <td><button type="submit" class="btn1">Submit</button></td>
+                        <td><button type="reset" class="btn2">Reset</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
 
     <script>
         let selectedFiles = [];

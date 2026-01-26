@@ -65,6 +65,7 @@
         <div class="main-content">
             <div class="page-header">
                 <h1 class="title">View Item</h1>
+                <p class="subtitle">Your product details</p>
             </div>
             <div class="card">
                 <div>
