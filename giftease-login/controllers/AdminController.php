@@ -254,12 +254,13 @@ class AdminController
     }
     public function vendors($parts){
         $allVendors = $this->admin->getAllUnverifiedVendors();
-        if($parts[2] == 'verify'){
+        if(isset($parts[2]) && $parts[2] == 'verify'){
+        
             $this->vendor->verifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/vendor");
             exit;
         }
-        else if($parts[2] == 'unverify'){
+        else if(isset($parts[2]) && $parts[2] == 'unverify'){
             $this->vendor->unverifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/vendor");
             exit;
@@ -268,26 +269,26 @@ class AdminController
     }
     public function giftwrappers($parts){
         $allGiftWrappers = $this->admin->getAllUnverifiedGiftwrapper();
-        if($parts[2] == 'verify'){
+        if(isset($parts[2]) && $parts[2] == 'verify'){
             $this->giftWrapper->verifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/giftWrappers");
             exit;
         }
-        else if($parts[2] == 'unverify'){
+        else if(isset($parts[2]) && $parts[2] == 'unverify'){
             $this->giftWrapper->unverifyUser($parts[3]);
-            header("Location: index.php?controller=admin&action=dashboard/vendor");
+            header("Location: index.php?controller=admin&action=dashboard/giftWrappers");
             exit;
         }
         require_once __DIR__ . '/../views/Dashboards/Admin/giftWrappers.php';
     }
     public function delivery($parts){
         $allDelivery = $this->admin->getAllUnverifiedDelivery();
-        if($parts[2] == 'verify'){
+        if(isset($parts[2]) && $parts[2] == 'verify'){
             $this->delivery->verifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/delivery");
             exit;
         }
-        else if($parts[2] == 'unverify'){
+        else if(isset($parts[2]) && $parts[2] == 'unverify'){
             $this->delivery->unverifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/delivery");
             exit;
@@ -296,12 +297,12 @@ class AdminController
     }
     public function deliveryman($parts){
         $allDeliveryman = $this->admin->getAllUnverifiedDeliveryman();
-        if($parts[2] == 'verify'){
+        if(isset($parts[2]) && $parts[2] == 'verify'){
             $this->deliveryman->verifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/deliveryman");
             exit;
         }
-        else if($parts[2] == 'unverify'){
+        else if(isset($parts[2]) && $parts[2] == 'unverify'){
             $this->deliveryman->unverifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/deliveryman");
             exit;
