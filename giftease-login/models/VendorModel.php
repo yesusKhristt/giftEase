@@ -34,6 +34,17 @@ class VendorModel
 
         try {
             $this->pdo->exec($sql1);
+            // Add avg_rating column if missing (older MySQL lacks IF NOT EXISTS)
+            $avgCol = $this->pdo->query("SHOW COLUMNS FROM vendors LIKE 'avg_rating'")->fetch();
+            if (! $avgCol) {
+                $this->pdo->exec("ALTER TABLE vendors ADD COLUMN avg_rating DECIMAL(2,1) DEFAULT 0.0");
+            }
+
+            // Add rating_count column if missing
+            $countCol = $this->pdo->query("SHOW COLUMNS FROM vendors LIKE 'rating_count'")->fetch();
+            if (! $countCol) {
+                $this->pdo->exec("ALTER TABLE vendors ADD COLUMN rating_count INT DEFAULT 0");
+            }
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }

@@ -7,6 +7,7 @@ class ClientController
     private $giftWrapper;
     private $messeges;
     private $orders;
+    private $ratings;
 
     public function __construct($pdo)
     {
@@ -16,12 +17,14 @@ class ClientController
         require_once __DIR__ . '/../models/GiftWrappingModel.php';
         require_once __DIR__ . '/../models/OrderModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
+        require_once __DIR__ . '/../models/VendorRatingModel.php';
         $this->client      = new ClientModel($pdo);
         $this->products    = new ProductsModel($pdo);
         $this->cart        = new CartModel($pdo);
         $this->giftWrapper = new GiftWrappingModel($pdo);
         $this->orders      = new OrderModel($pdo);
         $this->messeges    = new MessegesModel($pdo);
+        $this->ratings     = new VendorRatingModel($pdo);
     }
 
     public function dashboard()
@@ -274,7 +277,7 @@ class ClientController
                 require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
                 break;
             case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Client/history.php';
+                $this->history();
                 break;
             case 'messeges':
                 $this->messeges($parts);
@@ -302,6 +305,9 @@ class ClientController
                 break;
             case 'updateProfilePicture':
                 $this->updateProfilePicture();
+                break;
+            case 'rate':
+                $this->rate();
                 break;
             default:
                 $this->items($parts);
@@ -357,6 +363,61 @@ class ClientController
         }
 
         require_once __DIR__ . '/../views/commonElements/addImage.php';
+    }
+
+    public function history()
+    {
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?controller=auth&action=login");
+            exit;
+        }
+
+        $clientId = $_SESSION['user']['id'];
+        $orders = $this->orders->getOrdersByClient($clientId);
+        
+        // Check which orders have been rated
+        foreach ($orders as &$order) {
+            // Prefer resolved delivery status (from orderStatus) when available
+            if (isset($order['resolved_is_delivered'])) {
+                $order['is_delivered'] = (bool) $order['resolved_is_delivered'];
+            }
+            $order['has_rated'] = false;
+            if ($order['vendor_id']) {
+                $order['has_rated'] = $this->ratings->hasRated($order['vendor_id'], $clientId, $order['id']);
+            }
+        }
+
+        include BASE_PATH . '/views/Dashboards/Client/history.php';
+    }
+
+    public function rate()
+    {
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?controller=auth&action=login");
+            exit;
+        }
+
+        $clientId = $_SESSION['user']['id'];
+        $orders = $this->orders->getOrdersByClient($clientId);
+
+        foreach ($orders as &$order) {
+            if (isset($order['resolved_is_delivered'])) {
+                $order['is_delivered'] = (bool) $order['resolved_is_delivered'];
+            }
+            $order['has_rated'] = false;
+            if ($order['vendor_id']) {
+                $order['has_rated'] = $this->ratings->hasRated($order['vendor_id'], $clientId, $order['id']);
+            }
+        }
+
+        // Reuse history view but highlight Rate tab
+        $activePage = 'rate';
+        include BASE_PATH . '/views/Dashboards/Client/history.php';
+    }
+
+    public function account()
+    {
+        require_once __DIR__ . '/../views/Dashboards/Client/account.php';
     }
 
 

@@ -5,6 +5,8 @@ class VendorController
     private $product;
     private $category;
     private $messeges;
+    private $ratings;
+    private $pdo;
 
     public function __construct($pdo)
     {
@@ -12,10 +14,13 @@ class VendorController
         require_once __DIR__ . '/../models/ProductsModel.php';
         require_once __DIR__ . '/../models/CategoryModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
+        require_once __DIR__ . '/../models/VendorRatingModel.php';
         $this->vendor   = new VendorModel($pdo);
         $this->product  = new ProductsModel($pdo);
         $this->category = new CategoryModel($pdo);
         $this->messeges = new MessegesModel($pdo);
+        $this->ratings  = new VendorRatingModel($pdo);
+        $this->pdo      = $pdo;
     }
 
     public function dashboard()
@@ -270,6 +275,9 @@ class VendorController
             case 'settings':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Settings.php';
                 break;
+            case 'vendor_ratings':
+                $this->viewRatings();
+                break;
             case 'item':
                 $this->handleitems($parts);
                 break;
@@ -290,5 +298,35 @@ class VendorController
         $this->user->deactivateUser($USER_ID);
         header("Location: index.php");
         exit;
+    }
+
+    public function viewRatings()
+    {
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?controller=auth&action=login");
+            exit;
+        }
+
+        // The vendor ID is already in the session
+        $vendorId = $_SESSION['user']['id'];
+        
+        if (!$vendorId) {
+            die("Vendor profile not found");
+        }
+
+        // DEBUG: Show vendor info
+        error_log("Vendor viewing ratings - ID: $vendorId, Email: " . $_SESSION['user']['email']);
+
+        // Get all ratings for this vendor
+        $ratings = $this->ratings->getVendorRatings($vendorId, 100);
+        error_log("Found " . count($ratings) . " ratings for vendor ID: $vendorId");
+        
+        // Get vendor's average rating from database
+        $stmt = $this->pdo->prepare("SELECT id, shopName, avg_rating, rating_count FROM vendors WHERE id = ?");
+        $stmt->execute([$vendorId]);
+        $vendorStats = $stmt->fetch(PDO::FETCH_ASSOC);
+        error_log("Vendor stats: " . var_export($vendorStats, true));
+
+        include BASE_PATH . '/views/Dashboards/vendor_ratings.php';
     }
 }

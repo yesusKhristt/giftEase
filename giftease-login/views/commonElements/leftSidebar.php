@@ -54,6 +54,9 @@
       <a href="?controller=vendor&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
+      <a href="?controller=vendor&action=dashboard/vendor_ratings" class="nav-item <?= isActive('vendor_ratings', $activePage) ?>">
+        Vendor Ratings
+      </a>
     </nav>
     <div class="button-section">
       <a href="?controller=vendor&action=handleLogout" class="btn1">
