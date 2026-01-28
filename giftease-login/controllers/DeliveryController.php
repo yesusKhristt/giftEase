@@ -1,16 +1,16 @@
 <?php
-class DeliveryController
-{
+class DeliveryController {
     private $delivery;
+    private $notification;
 
-    public function __construct($pdo)
-    {
+    public function __construct($pdo) {
         require_once __DIR__ . '/../models/DeliveryModel.php';
+        require_once __DIR__ . '/../models/NotificationModel.php';
+        $this->notification = new NotificationModel($pdo);
         $this->delivery = new DeliveryModel($pdo);
     }
 
-    public function dashboard()
-    {
+    public function dashboard() {
         if (!$this->delivery->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
@@ -22,44 +22,43 @@ class DeliveryController
         $this->Delivery($parts);
     }
 
-    public function allOrder($parts)
-    {
+    public function allOrder($parts) {
         $orders = $this->delivery->getAllOrders();
         require_once __DIR__ . '/../views/Dashboards/Delivery/allOrders.php';
     }
 
-    public function assignedOrder($parts)
-    {
+    public function assignedOrder($parts) {
         $myOrders = $this->delivery->getAssignedOrders($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Delivery/assignedOrders.php';
     }
 
-    public function acceptOrder($parts)
-    {
+    public function acceptOrder($parts) {
+        $order_id = $parts[2];
+        $this->delivery->acceptOrder($order_id, $_SESSION['user']['id']);
 
-        $this->delivery->acceptOrder($parts[2], $_SESSION['user']['id']);
+        $notificationTitle = "Order picked up for Delivery!";
+        $notificationMessege = "Your Order was picked up by ".$_SESSION['user']['first_name'].' '.$_SESSION['user']['last_name'];
+        $href = "?controller=client&action=dashboard/messeges/delivery/view/".$_SESSION['user']['id']."/direct";
+        $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
         header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
         exit;
     }
 
-    public function markComplete($parts)
-    {
+    public function markComplete($parts) {
 
         $this->delivery->markComplete($parts[2]);
         header("Location: index.php?controller=delivery&action=dashboard/proof");
         exit;
     }
 
-    public function cancelOrder($parts)
-    {
+    public function cancelOrder($parts) {
 
         $this->delivery->cancelOrder($parts[2]);
         header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
         exit;
     }
 
-    public function Delivery($parts)
-    {
+    public function Delivery($parts) {
         switch ($parts[1]) {
             case 'profile':
                 require_once __DIR__ . '/../views/Dashboards/Delivery/profile.php';
@@ -96,15 +95,12 @@ class DeliveryController
                 break;
         }
     }
-    public function handleLogout()
-    {
+    public function handleLogout() {
         $_SESSION['delivery'] = null;
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
-
     }
-    public function editProfile()
-    {
+    public function editProfile() {
         // Logic to handle profile editing
         $USER_ID = $_SESSION['user']['id'];
         $stmt1 = $this->delivery->getpdo()->prepare("SELECT * FROM users WHERE id = ?");
@@ -121,7 +117,7 @@ class DeliveryController
             $ADDRESS = $_POST['address'] ?? '';
 
 
-            $this->delivery->updateDelivery($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
+            $this->delivery->updateUser($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
             header("Location: index.php?controller=delivery&action=dashboard/account");
             exit;
 
@@ -129,6 +125,4 @@ class DeliveryController
         }
         require_once __DIR__ . '/../views/Dashboards/Delivery/edit.php';
     }
-
-
 }

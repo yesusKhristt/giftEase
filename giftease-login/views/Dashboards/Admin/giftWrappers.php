@@ -52,13 +52,13 @@
                                 <td><?= $row['created_at'] ?></td>
                                 <?php if ($row['verified']) { ?>
                                 <td>
-                                    <a class="btn2" href="?controller=admin&action=dashboard/vendor/unverify/<?= htmlspecialchars($row['id']) ?>">
+                                    <a class="btn2" href="?controller=admin&action=dashboard/giftWrappers/unverify/<?= htmlspecialchars($row['id']) ?>">
                                         Unverify
                                     </a>
                                 </td>
                             <?php } else { ?>
                                 <td>
-                                    <a class="btn1" href="?controller=admin&action=dashboard/vendor/verify/<?= htmlspecialchars($row['id']) ?>">
+                                    <a class="btn1" href="?controller=admin&action=dashboard/giftWrappers/verify/<?= htmlspecialchars($row['id']) ?>">
                                         Verify
                                     </a>
                                 </td>

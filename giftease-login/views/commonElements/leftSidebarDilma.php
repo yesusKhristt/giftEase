@@ -58,9 +58,9 @@
         class="settings-btn <?= isActive('cart', $activePage) ?>">
         <i class="fas fa-shopping-cart"></i>
       </a>
-      <a href="?controller=client&action=dashboard/settings"
+      <a href="?controller=client&action=dashboard/notifications"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
-        <i class="fas fa-cog"></i>
+        <i class="fas fa-bell"></i>
       </a>
       <a href="?controller=client&action=dashboard/account"
         class="settings-btn <?= isActive('account', $activePage) ?>">

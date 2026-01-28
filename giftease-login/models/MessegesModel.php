@@ -1,21 +1,17 @@
 <?php
-class MessegesModel
-{
+class MessegesModel {
     private $pdo;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTables(); // Create the table if not there
     }
 
-    public function getpdo()
-    {
+    public function getpdo() {
         return $this->pdo;
     }
 
-    public function createTables()
-    {
+    public function createTables() {
         $vra   = 1;
         $stmt1 = "CREATE TABLE IF NOT EXISTS messeges (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -43,14 +39,72 @@ class MessegesModel
         try {
             $this->pdo->exec($stmt1);
             $this->pdo->exec($stmt2);
-
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
     }
 
-    public function sendVendorMessege($staff_id, $client_id, $payload, $user)
-    {
+    public function sendGiftWrapperMessege($staff_id, $client_id, $payload, $user) {
+        // 1️⃣ Insert message
+        $stmt1 = $this->pdo->prepare(
+            "INSERT INTO messeges (client_id, giftWrapper_id, messege, sent) VALUES (?, ?, ?, ?)"
+        );
+
+        $stmt1->execute([
+            $client_id,
+            $staff_id,
+            $payload['message'],
+            $user
+        ]);
+
+        $messege_id = $this->pdo->lastInsertId();
+
+        // 2️⃣ Insert attachments (if any)
+        if (! empty($payload['attatchments'])) {
+            $stmt2 = $this->pdo->prepare(
+                "INSERT INTO attachments (message_id, file_loc)VALUES (?, ?)"
+            );
+
+            foreach ($payload['attatchments'] as $attatchment) {
+                $stmt2->execute([
+                    $messege_id,
+                    $attatchment,
+                ]);
+            }
+        }
+    }
+
+    public function sendDeliveryMessege($staff_id, $client_id, $payload, $user) {
+        // 1️⃣ Insert message
+        $stmt1 = $this->pdo->prepare(
+            "INSERT INTO messeges (client_id, delivery_id, messege, sent) VALUES (?, ?, ?, ?)"
+        );
+
+        $stmt1->execute([
+            $client_id,
+            $staff_id,
+            $payload['message'],
+            $user
+        ]);
+
+        $messege_id = $this->pdo->lastInsertId();
+
+        // 2️⃣ Insert attachments (if any)
+        if (! empty($payload['attatchments'])) {
+            $stmt2 = $this->pdo->prepare(
+                "INSERT INTO attachments (message_id, file_loc)VALUES (?, ?)"
+            );
+
+            foreach ($payload['attatchments'] as $attatchment) {
+                $stmt2->execute([
+                    $messege_id,
+                    $attatchment,
+                ]);
+            }
+        }
+    }
+
+    public function sendVendorMessege($staff_id, $client_id, $payload, $user) {
         // 1️⃣ Insert message
         $stmt1 = $this->pdo->prepare(
             "INSERT INTO messeges (client_id, vendor_id, messege, sent) VALUES (?, ?, ?, ?)"
@@ -80,16 +134,33 @@ class MessegesModel
         }
     }
 
-    public function getMessage($client_id){
+    public function getMessage($client_id) {
         $stmt = $this->pdo->prepare("SELECT v.shopName, d.first_name AS delivery, g.first_name AS giftWrapper, m.vendor_id,  m.delivery_id, m.giftWrapper_id, m.messege, m.created_at, a.file_loc, m.sent  FROM messeges m LEFT JOIN attachments a ON m.id = a.message_id LEFT JOIN vendors v ON v.id = m.vendor_id LEFT JOIN giftWrappers g ON g.id = m.giftWrapper_id LEFT JOIN delivery d ON d.id = m.delivery_id WHERE m.client_id = ? ORDER BY m.created_at ASC");
         $stmt->execute([$client_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getMessageVendor($staff_id){
+    public function getMessageVendor($staff_id) {
         $stmt = $this->pdo->prepare("SELECT c.first_name AS client, m.client_id, m.messege, m.created_at, a.file_loc, m.sent  FROM messeges m LEFT JOIN attachments a ON m.id = a.message_id LEFT JOIN clients c ON c.id = m.client_id WHERE m.vendor_id = ? ORDER BY m.created_at ASC");
         $stmt->execute([$staff_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getVendor($staff_id) {
+        $stmt = $this->pdo->prepare("SELECT shopName FROM vendors WHERE id = ?");
+        $stmt->execute([$staff_id]);
+        return $stmt->fetchColumn();
+    }
+
+    public function getGiftWrapper($staff_id) {
+        $stmt = $this->pdo->prepare("SELECT first_name FROM giftwrappers WHERE id = ?");
+        $stmt->execute([$staff_id]);
+        return $stmt->fetchColumn();
+    }
+
+    public function getDelivery($staff_id) {
+        $stmt = $this->pdo->prepare("SELECT first_name FROM delivery WHERE id = ?");
+        $stmt->execute([$staff_id]);
+        return $stmt->fetchColumn();
+    }
 }

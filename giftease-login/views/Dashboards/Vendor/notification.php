@@ -14,7 +14,7 @@
     <div class="container">
         <?php
         $activePage = 'allOrder';
-        include 'views\commonElements/leftSidebarSaneth.php';
+        include 'views\commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
             <div class="page-header">
@@ -39,8 +39,8 @@
                         <div>Gift Wrapping Fee : <?= htmlspecialchars($row['deliveryPrice']) ?></div>
                         <div>Delivery Date : <?= htmlspecialchars($row['deliveryDate']) ?></div>
                         <?php
-                        if ($row['delivery_id'] === $_SESSION['user']['id']) {
-                            echo "<div class='subtitle'>Assssigned</div>";
+                        if ($row['giftWrapper_id'] === $_SESSION['user']['id']) {
+                            echo "<div class='subtitle'>Assigned</div>";
                         } else {
                             echo "<div class='notification-actions'>
             <a class='btn1' href='?controller=delivery&action=dashboard/acceptOrder/{$row['id']}'>Accept</a></div>";

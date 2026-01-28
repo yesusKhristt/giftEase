@@ -106,5 +106,7 @@ class OrderModel
         $stmt3 = $this->pdo->prepare("UPDATE `orders` SET `productPrice`= $price WHERE `id` = $order_id");
         $stmt3->execute();
 
+        return $order_id;
+
     }
 }

@@ -49,15 +49,15 @@
                 <td><?php echo $delivery['vehiclePlate']?></td>
                 <td><?php echo $delivery['phone']?></td>
                 <td><?php echo $delivery['created_at']?></td>
-                <?php if ($row['verified']) {?>
+                <?php if ($delivery['verified']) {?>
                                 <td>
-                                    <a class="btn2" href="?controller=admin&action=dashboard/vendor/unverify/<?php echo htmlspecialchars($row['id'])?>">
+                                    <a class="btn2" href="?controller=admin&action=dashboard/delivery/unverify/<?php echo htmlspecialchars($delivery['id'])?>">
                                         Unverify
                                     </a>
                                 </td>
                             <?php } else {?>
                                 <td>
-                                    <a class="btn1" href="?controller=admin&action=dashboard/vendor/verify/<?php echo htmlspecialchars($row['id'])?>">
+                                    <a class="btn1" href="?controller=admin&action=dashboard/delivery/verify/<?php echo htmlspecialchars($delivery['id'])?>">
                                         Verify
                                     </a>
                                 </td>
