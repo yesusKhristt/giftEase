@@ -288,4 +288,32 @@ class ProductsModel
         }
     }
 
+    // 🔹 Get products with pagination
+public function fetchPaginated($limit, $offset)
+{
+    $stmt = $this->pdo->prepare("
+        SELECT * FROM products
+        WHERE status = 'active'
+        ORDER BY created_at DESC
+        LIMIT :limit OFFSET :offset
+    ");
+
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// 🔹 Count total active products
+public function countAllProducts()
+{
+    $stmt = $this->pdo->prepare("
+        SELECT COUNT(*) FROM products WHERE status = 'active'
+    ");
+    $stmt->execute();
+    return (int)$stmt->fetchColumn();
+}
+
+
 }

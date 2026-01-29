@@ -1713,3 +1713,107 @@ body {
     }
 }
 
+/* ===============================================
+   PAGINATION STYLES
+   =============================================== */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 40px 0;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+/* Page number buttons */
+.pagination .page-num {
+    min-width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #374151;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.pagination .page-num:hover {
+    border-color: #e91e63;
+    background-color: #fef2f2;
+}
+
+.pagination .page-num.active {
+    background-color: #e91e63;
+    border-color: #e91e63;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Arrow buttons */
+.pagination .page-arrow {
+    min-width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.pagination .page-arrow:hover {
+    border-color: #e91e63;
+    background-color: #fef2f2;
+}
+
+.pagination .page-arrow.disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+    border-color: #e5e7eb;
+}
+
+/* Dots separator */
+.pagination .page-dots {
+    padding: 0 8px;
+    color: #6b7280;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 5px;
+        padding: 15px 10px;
+    }
+    
+    .pagination .page-num,
+    .pagination .page-arrow {
+        min-width: 38px;
+        height: 38px;
+        font-size: 14px;
+    }
+    
+    .pagination .page-dots {
+        padding: 0 4px;
+        font-size: 14px;
+    }
+}
+

@@ -327,6 +327,6 @@ class VendorController
         $vendorStats = $stmt->fetch(PDO::FETCH_ASSOC);
         error_log("Vendor stats: " . var_export($vendorStats, true));
 
-        include BASE_PATH . '/views/Dashboards/vendor_ratings.php';
+        include BASE_PATH . '/views/Dashboards/Vendor/vendor_ratings.php';
     }
 }

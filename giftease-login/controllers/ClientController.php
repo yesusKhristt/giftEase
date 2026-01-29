@@ -7,7 +7,6 @@ class ClientController
     private $giftWrapper;
     private $messeges;
     private $orders;
-    private $ratings;
 
     public function __construct($pdo)
     {
@@ -17,14 +16,12 @@ class ClientController
         require_once __DIR__ . '/../models/GiftWrappingModel.php';
         require_once __DIR__ . '/../models/OrderModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
-        require_once __DIR__ . '/../models/VendorRatingModel.php';
         $this->client      = new ClientModel($pdo);
         $this->products    = new ProductsModel($pdo);
         $this->cart        = new CartModel($pdo);
         $this->giftWrapper = new GiftWrappingModel($pdo);
         $this->orders      = new OrderModel($pdo);
         $this->messeges    = new MessegesModel($pdo);
-        $this->ratings     = new VendorRatingModel($pdo);
     }
 
     public function dashboard()
@@ -40,43 +37,96 @@ class ClientController
         $this->Client($parts);
     }
 
+    // public function items($parts)
+    // {
+    //     $allProducts = $this->products->fetchAll();
+    //     $state       = $_GET['state'] ?? null;
+
+    //     if ($state === 'cart') {
+    //         $product_id = $parts[2];
+    //         $client_id  = $_SESSION['user']['id'];
+
+    //         // If it's already there, remove it. Otherwise, add it.
+
+    //         if ($this->cart->isInCart($client_id, $product_id)) {
+    //             $this->cart->removeFromCart($product_id, $client_id);
+    //             echo json_encode(['inCart' => false]);
+    //         } else {
+    //             $this->cart->addToCart($client_id, $product_id);
+    //             echo json_encode(['inCart' => true]);
+    //         }
+
+    //         exit;
+    //     } else if ($state === 'cartCheck') {
+    //         $product_id = $parts[2];
+    //         $client_id  = $_SESSION['user']['id'];
+
+    //         // If it's already there, remove it. Otherwise, add it.
+
+    //         if ($this->cart->isInCart($client_id, $product_id)) {
+    //             echo json_encode(['inCart' => true]);
+    //         } else {
+    //             echo json_encode(['inCart' => false]);
+    //         }
+
+    //         exit;
+    //     }
+
+    //     require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
+    // }
+
     public function items($parts)
-    {
-        $allProducts = $this->products->fetchAll();
-        $state       = $_GET['state'] ?? null;
+{
+    /* ================= PAGINATION LOGIC ================= */
 
-        if ($state === 'cart') {
-            $product_id = $parts[2];
-            $client_id  = $_SESSION['user']['id'];
+    $itemsPerPage = 2;
 
-            // If it's already there, remove it. Otherwise, add it.
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    if ($page < 1) $page = 1;
 
-            if ($this->cart->isInCart($client_id, $product_id)) {
-                $this->cart->removeFromCart($product_id, $client_id);
-                echo json_encode(['inCart' => false]);
-            } else {
-                $this->cart->addToCart($client_id, $product_id);
-                echo json_encode(['inCart' => true]);
-            }
+    $offset = ($page - 1) * $itemsPerPage;
 
-            exit;
-        } else if ($state === 'cartCheck') {
-            $product_id = $parts[2];
-            $client_id  = $_SESSION['user']['id'];
+    // Fetch paginated products
+    $allProducts = $this->products->fetchPaginated($itemsPerPage, $offset);
 
-            // If it's already there, remove it. Otherwise, add it.
+    // Count total products
+    $totalItems = $this->products->countAllProducts();
+    $totalPages = ceil($totalItems / $itemsPerPage);
 
-            if ($this->cart->isInCart($client_id, $product_id)) {
-                echo json_encode(['inCart' => true]);
-            } else {
-                echo json_encode(['inCart' => false]);
-            }
+    /* ================= CART AJAX LOGIC ================= */
 
-            exit;
+    $state = $_GET['state'] ?? NULL;
+
+    if ($state === 'cart') {
+        $product_id = $parts[2];
+        $client_id = $_SESSION['user']['id'];
+
+        if ($this->cart->isInCart($client_id, $product_id)) {
+            $this->cart->removeFromCart($product_id, $client_id);
+            echo json_encode(['inCart' => false]);
+        } else {
+            $this->cart->addToCart($client_id, $product_id);
+            echo json_encode(['inCart' => true]);
         }
-
-        require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
+        exit;
     }
+    else if ($state === 'cartCheck') {
+        $product_id = $parts[2];
+        $client_id = $_SESSION['user']['id'];
+
+        if ($this->cart->isInCart($client_id, $product_id)) {
+            echo json_encode(['inCart' => true]);
+        } else {
+            echo json_encode(['inCart' => false]);
+        }
+        exit;
+    }
+
+    /* ================= LOAD VIEW ================= */
+
+    require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
+}
+
 
     public function displayProduct($parts)
     {
@@ -277,7 +327,7 @@ class ClientController
                 require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
                 break;
             case 'history':
-                $this->history();
+                require_once __DIR__ . '/../views/Dashboards/Client/history.php';
                 break;
             case 'messeges':
                 $this->messeges($parts);
@@ -305,9 +355,6 @@ class ClientController
                 break;
             case 'updateProfilePicture':
                 $this->updateProfilePicture();
-                break;
-            case 'rate':
-                $this->rate();
                 break;
             default:
                 $this->items($parts);
@@ -363,61 +410,6 @@ class ClientController
         }
 
         require_once __DIR__ . '/../views/commonElements/addImage.php';
-    }
-
-    public function history()
-    {
-        if (!isset($_SESSION['user'])) {
-            header("Location: index.php?controller=auth&action=login");
-            exit;
-        }
-
-        $clientId = $_SESSION['user']['id'];
-        $orders = $this->orders->getOrdersByClient($clientId);
-        
-        // Check which orders have been rated
-        foreach ($orders as &$order) {
-            // Prefer resolved delivery status (from orderStatus) when available
-            if (isset($order['resolved_is_delivered'])) {
-                $order['is_delivered'] = (bool) $order['resolved_is_delivered'];
-            }
-            $order['has_rated'] = false;
-            if ($order['vendor_id']) {
-                $order['has_rated'] = $this->ratings->hasRated($order['vendor_id'], $clientId, $order['id']);
-            }
-        }
-
-        include BASE_PATH . '/views/Dashboards/Client/history.php';
-    }
-
-    public function rate()
-    {
-        if (!isset($_SESSION['user'])) {
-            header("Location: index.php?controller=auth&action=login");
-            exit;
-        }
-
-        $clientId = $_SESSION['user']['id'];
-        $orders = $this->orders->getOrdersByClient($clientId);
-
-        foreach ($orders as &$order) {
-            if (isset($order['resolved_is_delivered'])) {
-                $order['is_delivered'] = (bool) $order['resolved_is_delivered'];
-            }
-            $order['has_rated'] = false;
-            if ($order['vendor_id']) {
-                $order['has_rated'] = $this->ratings->hasRated($order['vendor_id'], $clientId, $order['id']);
-            }
-        }
-
-        // Reuse history view but highlight Rate tab
-        $activePage = 'rate';
-        include BASE_PATH . '/views/Dashboards/Client/history.php';
-    }
-
-    public function account()
-    {
-        require_once __DIR__ . '/../views/Dashboards/Client/account.php';
     }
 
 

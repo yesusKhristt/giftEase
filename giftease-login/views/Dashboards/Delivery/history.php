@@ -34,15 +34,18 @@ $customer = $_GET['customer'] ?? '';
     <input type="hidden" name="action" value="history">
 
     <div class="filter-tabs">
-        <div class="btn1">
-            <label>Date Range:</label>
+        <div class="filter-group">
+            <label>Date From</label>
             <input type="date" name="dateFrom" value="<?= htmlspecialchars($dateFrom) ?>">
-            <span>to</span>
+        </div>
+
+        <div class="filter-group">
+            <label>Date To</label>
             <input type="date" name="dateTo" value="<?= htmlspecialchars($dateTo) ?>">
         </div>
 
-        <div class="btn1">
-            <label>Status:</label>
+        <div class="filter-group">
+            <label>Status</label>
             <select name="status">
                 <option value="all" <?= $status === 'all' ? 'selected' : '' ?>>All Status</option>
                 <option value="delivered" <?= $status === 'delivered' ? 'selected' : '' ?>>Delivered</option>
@@ -51,13 +54,15 @@ $customer = $_GET['customer'] ?? '';
             </select>
         </div>
 
-        <div class="btn1">
-            <label>Customer:</label>
+        <div class="filter-group">
+            <label>Customer Name</label>
             <input type="text" name="customer" placeholder="Search customer..." value="<?= htmlspecialchars($customer) ?>">
         </div>
 
-        <button type="submit" class="btn1"><i class="fas fa-search"></i> Filter</button>
-        <a href="index.php?controller=delivery&action=history" class="btn1"><i class="fas fa-undo"></i> Reset</a>
+        <div class="filter-actions">
+            <button type="submit" class="btn1"><i class="fas fa-search"></i> Filter</button>
+            <a href="index.php?controller=delivery&action=history" class="btn1"><i class="fas fa-undo"></i> Reset</a>
+        </div>
     </div>
 </form>
 
