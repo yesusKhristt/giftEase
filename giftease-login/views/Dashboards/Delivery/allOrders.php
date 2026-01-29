@@ -46,13 +46,14 @@
             <a class='btn1' href='?controller=delivery&action=dashboard/acceptOrder/{$row['id']}'>Accept</a></div>";
                         }
                         ?>
-
                     </div>
-                <?php endforeach ?>
-                <div class="notification-time">1 minutes ago</div>
-                <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
-            </div>
+
+                </div>
+            <?php endforeach ?>
+            <div class="notification-time">1 minutes ago</div>
+            <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
         </div>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

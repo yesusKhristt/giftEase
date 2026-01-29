@@ -7,6 +7,7 @@ class ClientController {
     private $messeges;
     private $orders;
     private $notification;
+    private $ratings;
 
     public function __construct($pdo) {
         require_once __DIR__ . '/../models/ClientModel.php';
@@ -16,6 +17,7 @@ class ClientController {
         require_once __DIR__ . '/../models/OrderModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
         require_once __DIR__ . '/../models/NotificationModel.php';
+        require_once __DIR__ . '/../models/RatingModel.php';
         $this->client       = new ClientModel($pdo);
         $this->products     = new ProductsModel($pdo);
         $this->cart         = new CartModel($pdo);
@@ -23,6 +25,7 @@ class ClientController {
         $this->orders       = new OrderModel($pdo);
         $this->messeges     = new MessegesModel($pdo);
         $this->notification = new NotificationModel($pdo);
+        $this->ratings = new RatingModel($pdo);
     }
 
     public function dashboard() {
@@ -38,14 +41,29 @@ class ClientController {
     }
 
     public function items($parts) {
-        $allProducts = $this->products->fetchAll();
-        $state       = $_GET['state'] ?? null;
+        /* ================= PAGINATION LOGIC ================= */
+
+        $itemsPerPage = 2;
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $itemsPerPage;
+
+        // Fetch paginated products
+        $allProducts = $this->products->fetchPaginated($itemsPerPage, $offset);
+
+        // Count total products
+        $totalItems = $this->products->countAllProducts();
+        $totalPages = ceil($totalItems / $itemsPerPage);
+
+        /* ================= CART AJAX LOGIC ================= */
+
+        $state = $_GET['state'] ?? NULL;
 
         if ($state === 'cart') {
             $product_id = $parts[2];
-            $client_id  = $_SESSION['user']['id'];
-
-            // If it's already there, remove it. Otherwise, add it.
+            $client_id = $_SESSION['user']['id'];
 
             if ($this->cart->isInCart($client_id, $product_id)) {
                 $this->cart->removeFromCart($product_id, $client_id);
@@ -54,25 +72,24 @@ class ClientController {
                 $this->cart->addToCart($client_id, $product_id);
                 echo json_encode(['inCart' => true]);
             }
-
             exit;
         } else if ($state === 'cartCheck') {
             $product_id = $parts[2];
-            $client_id  = $_SESSION['user']['id'];
-
-            // If it's already there, remove it. Otherwise, add it.
+            $client_id = $_SESSION['user']['id'];
 
             if ($this->cart->isInCart($client_id, $product_id)) {
                 echo json_encode(['inCart' => true]);
             } else {
                 echo json_encode(['inCart' => false]);
             }
-
             exit;
         }
 
+        /* ================= LOAD VIEW ================= */
+
         require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
     }
+
 
     public function displayProduct($parts) {
         $productId      = $parts[2];
@@ -335,19 +352,17 @@ class ClientController {
         if ($parts[3] === 'view') {
             $direct = 0;
             $dirAccess = $parts[5] ?? '';
-            if($dirAccess === "direct"){
+            if ($dirAccess === "direct") {
                 $direct = 1;
-                if ($parts[2] == 'delivery'){
+                if ($parts[2] == 'delivery') {
                     $directType = 'delivery';
                     $directID = $parts[4];
                     $staffData = $this->messeges->getDelivery($directID);
-                }
-                else if ($parts[2] == 'giftWrapper'){
+                } else if ($parts[2] == 'giftWrapper') {
                     $directType = 'giftwrapper';
                     $directID = $parts[4];
                     $staffData = $this->messeges->getGiftWrapper($directID);
-                }
-                else if ($parts[2] == 'vendor'){
+                } else if ($parts[2] == 'vendor') {
                     $directType = 'vendor';
                     $directID = $parts[4];
                     $staffData = $this->messeges->getVendor($directID);
@@ -369,6 +384,44 @@ class ClientController {
         exit();
     }
 
+    public function history() {
+        $clientId = $_SESSION['user']['id'];
+        $orders = $this->orders->getOrdersByClient($clientId);
+
+        // Check which orders have been rated
+        foreach ($orders as &$order) {
+            // Prefer resolved delivery status (from orderStatus) when available
+            if (isset($order['resolved_is_delivered'])) {
+                $order['is_delivered'] = (bool) $order['resolved_is_delivered'];
+            }
+            $order['has_rated'] = false;
+            if ($order['vendor_id']) {
+                $order['has_rated'] = $this->ratings->hasRated($order['vendor_id'], $clientId, $order['id']);
+            }
+        }
+
+        include __DIR__ . '/../views/Dashboards/Client/history.php';
+    }
+
+    public function rate() {
+        $clientId = $_SESSION['user']['id'];
+        $orders = $this->orders->getOrdersByClient($clientId);
+
+        foreach ($orders as &$order) {
+            if (isset($order['resolved_is_delivered'])) {
+                $order['is_delivered'] = (bool) $order['resolved_is_delivered'];
+            }
+            $order['has_rated'] = false;
+            if ($order['vendor_id']) {
+                $order['has_rated'] = $this->ratings->hasRated($order['vendor_id'], $clientId, $order['id']);
+            }
+        }
+
+        // Reuse history view but highlight Rate tab
+        $activePage = 'rate';
+        include __DIR__ . '/views/Dashboards/Client/history.php';
+    }
+
     public function Client($parts) {
         switch ($parts[1]) {
             case 'cart':
@@ -381,7 +434,10 @@ class ClientController {
                 require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
                 break;
             case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Client/history.php';
+                $this->history();
+                break;
+            case 'rate':
+                $this->rate();
                 break;
             case 'messeges':
                 $this->messeges($parts);

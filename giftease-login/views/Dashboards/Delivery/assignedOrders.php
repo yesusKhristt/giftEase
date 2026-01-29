@@ -33,7 +33,7 @@
                     <div class="card">
                         <div class="title">DEL-<?= htmlspecialchars($row['id']) ?></div>
                         <div class="subtitle">Client:
-                            <?= htmlspecialchars($row['first_name']) ?>     <?= htmlspecialchars($row['last_name']) ?>
+                            <?= htmlspecialchars($row['first_name']) ?> <?= htmlspecialchars($row['last_name']) ?>
                         </div>
                         <div style="margin-bottom: 16px;">
                             <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
@@ -62,11 +62,12 @@
                             </div>
 
                         </div>
+                    </div>
 
-                    <?php endforeach ?>
-                </div>
+                <?php endforeach ?>
             </div>
         </div>
+    </div>
 </body>
 
 </html>

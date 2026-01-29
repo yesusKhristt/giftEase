@@ -28,6 +28,7 @@ class VendorModel
             phone VARCHAR(10),
             image_loc VARCHAR(500) DEFAULT NULL,
             rating FLOAT DEFAULT 0,
+            rating_count INT DEFAULT 0,
             verified BOOL DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";

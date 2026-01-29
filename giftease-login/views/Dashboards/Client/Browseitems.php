@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
+
 <body>
 
     <div class="container">
@@ -24,7 +25,7 @@
 
             </div>
 
-            <!-- Filter Tabs -->
+            
             <h4 class="subtitle" style="padding: 10px">Filter by:</h4>
             <div class="filter-tabs">
 
@@ -55,9 +56,9 @@
                 </select>
             </div>
 
-            <!-- Inventory Grid -->
+           
             <div class="inventory-grid">
-                <!-- Items will be populated by JavaScript -->
+                
                 <?php foreach ($allProducts as $row): ?>
                     <div class="inventory-item">
                         <a href="?controller=client&action=dashboard/viewitem/<?= $row['id'] ?>">
@@ -91,11 +92,74 @@
 
             </div>
 
+            
+        <?php if ($totalPages > 1): ?>
+            <div class="pagination">
+
+               
+                <?php if ($page > 1): ?>
+                    <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page - 1 ?>">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                <?php else: ?>
+                    <span class="page-arrow disabled">
+                        <i class="fas fa-chevron-left"></i>
+                    </span>
+                <?php endif; ?>
+
+               
+                <a class="page-num <?= $page == 1 ? 'active' : '' ?>" 
+                   href="?controller=client&action=dashboard/items&page=1">1</a>
+
+                <?php if ($totalPages > 1): ?>
+                    <?php 
+                    
+                    $range = 2; 
+                    $start = max(2, $page - $range);
+                    $end = min($totalPages - 1, $page + $range);
+                    
+                 
+                    if ($start > 2): ?>
+                        <span class="page-dots">...</span>
+                    <?php endif; ?>
+                    
+                    
+                    <?php for ($i = $start; $i <= $end; $i++): ?>
+                        <a class="page-num <?= $page == $i ? 'active' : '' ?>" 
+                           href="?controller=client&action=dashboard/items&page=<?= $i ?>"><?= $i ?></a>
+                    <?php endfor; ?>
+                    
+                    
+                    <?php if ($end < $totalPages - 1): ?>
+                        <span class="page-dots">...</span>
+                    <?php endif; ?>
+                    
+                    
+                    <a class="page-num <?= $page == $totalPages ? 'active' : '' ?>" 
+                       href="?controller=client&action=dashboard/items&page=<?= $totalPages ?>\"><?= $totalPages ?></a>
+                <?php endif; ?>
+
+                
+                <?php if ($page < $totalPages): ?>
+                    <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page + 1 ?>">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                <?php else: ?>
+                    <span class="page-arrow disabled">
+                        <i class="fas fa-chevron-right"></i>
+                    </span>
+                <?php endif; ?>
+
+            </div>
+        <?php endif; ?>
+
+
         </div>
     </div>
     <script>
+      
         document.addEventListener('DOMContentLoaded', () => {
-            // Reusable function for click or initial check
+           
             async function updateCartButton(link, event = null, triggeredByClick = false) {
                 const productId = link.dataset.id;
                 let url;
@@ -113,7 +177,7 @@
 
                     const result = await response.json();
 
-                    // Toggle text & styles based on cart status
+                    
                     if (result.inCart) {
                         link.textContent = 'Remove from Cart';
                         link.classList.remove('btn-outline');
@@ -140,6 +204,7 @@
             });
         });
     </script>
+    
 
 
 

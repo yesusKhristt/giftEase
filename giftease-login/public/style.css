@@ -1524,3 +1524,47 @@ body {
         opacity: 1;
     }
 }
+
+.topbar-container {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    /* sidebar width */
+    width: calc(100% - 280px);
+    height: 100px;
+    background: #ffffff;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.topbar-ui {
+    position: relative;
+    z-index: 20;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+}
+
+.gift-fall-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.gift-emoji {
+    position: absolute;
+    top: -50px;
+    /* Start above the screen */
+    animation: fall linear forwards;
+    pointer-events: none;
+    /* Prevent gifts from blocking clicks */
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}

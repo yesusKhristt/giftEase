@@ -23,7 +23,7 @@ class OrderModel
             wrapPackage_id INT,
             orderType VARCHAR(10),
             recipientName VARCHAR(50),
-            recipientPhone VARCHAR(9),
+            recipientPhone VARCHAR(10),
             deliveryAddress VARCHAR(500),
             locationType VARCHAR(20),
             deliveryDate DATE,
@@ -33,6 +33,7 @@ class OrderModel
             delivery_id INT DEFAULT NULL,
             productPrice INT DEFAULT 0 NOT NULL,
             deliveryPrice INT DEFAULT 0 NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );";
         $sql2 = "CREATE TABLE IF NOT EXISTS orderItems (
@@ -106,7 +107,48 @@ class OrderModel
         $stmt3 = $this->pdo->prepare("UPDATE `orders` SET `productPrice`= $price WHERE `id` = $order_id");
         $stmt3->execute();
 
-        return $order_id;
+    }
+public function getOrdersByClient($clientId)
+{
+    $stmt = $this->pdo->prepare("
+        SELECT 
+            o.*, 
+            GROUP_CONCAT(p.name SEPARATOR ', ') AS product_names,
+            MAX(CASE WHEN v.id IS NOT NULL THEN v.id END) AS vendor_id,
+            MAX(CASE WHEN v.shopName IS NOT NULL THEN v.shopName END) AS vendor_shop_name,
+            CASE WHEN COUNT(vr.id) > 0 THEN 1 ELSE 0 END AS has_rated
+        FROM orders o
+        LEFT JOIN orderItems oi ON o.id = oi.order_id
+        LEFT JOIN products p ON oi.item_id = p.id
+        LEFT JOIN vendors v ON p.vendor_id = v.id
+        LEFT JOIN vendor_ratings vr 
+            ON vr.order_id = o.id 
+            AND vr.customer_id = o.client_id
+            AND vr.vendor_id = v.id
+        WHERE o.client_id = ?
+        GROUP BY o.id
+        ORDER BY o.created_at DESC
+    ");
 
+    $stmt->execute([$clientId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+    public function getOrderDetails($orderId)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT o.*, 
+                   v.id as vendor_id,
+                   v.shopName as vendor_shop_name
+            FROM orders o
+            LEFT JOIN orderItems oi ON o.id = oi.order_id
+            LEFT JOIN products p ON oi.item_id = p.id
+            LEFT JOIN vendors v ON p.vendor_id = v.id
+            WHERE o.id = ?
+            LIMIT 1
+        ");
+        $stmt->execute([$orderId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
