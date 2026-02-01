@@ -1,4 +1,7 @@
 <header class="browse-header">
+    <div class="falling-gifts">
+    </div>
+
     <div class="topbar-container" style="display: flex; align-items: center; padding: 10px 20px;">
         <!-- Search Bar -->
         <div class="search-bar">
@@ -36,67 +39,105 @@
             </a>
         </nav>
 
-<script>
-(function(){
-    const bell = document.getElementById('notifBell');
-    const countEl = document.getElementById('notifCount');
-    const dropdown = document.getElementById('notifDropdown');
-    const listEl = document.getElementById('notifList');
-    const markAllBtn = document.getElementById('markAllReadBtn');
+        <script>
+            (function() {
+                const bell = document.getElementById('notifBell');
+                const countEl = document.getElementById('notifCount');
+                const dropdown = document.getElementById('notifDropdown');
+                const listEl = document.getElementById('notifList');
+                const markAllBtn = document.getElementById('markAllReadBtn');
 
-    async function fetchCount(){
-        try{
-            let res = await fetch('?controller=notification&action=count');
-            let data = await res.json();
-            const c = data.count || 0;
-            if(c>0){ countEl.style.display='inline-block'; countEl.textContent = c; } else { countEl.style.display='none'; }
-        }catch(e){ console.error('notif count error', e); }
-    }
+                async function fetchCount() {
+                    try {
+                        let res = await fetch('?controller=notification&action=count');
+                        let data = await res.json();
+                        const c = data.count || 0;
+                        if (c > 0) {
+                            countEl.style.display = 'inline-block';
+                            countEl.textContent = c;
+                        } else {
+                            countEl.style.display = 'none';
+                        }
+                    } catch (e) {
+                        console.error('notif count error', e);
+                    }
+                }
 
-    async function fetchList(){
-        try{
-            let res = await fetch('?controller=notification&action=list');
-            let data = await res.json();
-            listEl.innerHTML = '';
-            if(!data || data.length===0){ listEl.innerHTML = '<li style="padding:8px;color:#666">No notifications</li>'; return; }
-            data.forEach(n => {
-                const li = document.createElement('li');
-                li.style.padding='8px';
-                li.style.borderBottom='1px solid #eee';
-                li.innerHTML = `<div style="font-size:0.95rem">${n.message}</div><div style="font-size:0.8rem;color:#888">${n.created_at}</div>`;
-                li.onclick = async ()=>{
-                    // mark single as read on click
-                    await fetch('?controller=notification&action=markRead', {method:'POST', body: new URLSearchParams({id: n.id})});
-                    fetchCount();
-                    li.style.opacity=0.6;
-                };
-                listEl.appendChild(li);
-            });
-        }catch(e){ console.error('notif list error', e); }
-    }
+                async function fetchList() {
+                    try {
+                        let res = await fetch('?controller=notification&action=list');
+                        let data = await res.json();
+                        listEl.innerHTML = '';
+                        if (!data || data.length === 0) {
+                            listEl.innerHTML = '<li style="padding:8px;color:#666">No notifications</li>';
+                            return;
+                        }
+                        data.forEach(n => {
+                            const li = document.createElement('li');
+                            li.style.padding = '8px';
+                            li.style.borderBottom = '1px solid #eee';
+                            li.innerHTML = `<div style="font-size:0.95rem">${n.message}</div><div style="font-size:0.8rem;color:#888">${n.created_at}</div>`;
+                            li.onclick = async () => {
+                                // mark single as read on click
+                                await fetch('?controller=notification&action=markRead', {
+                                    method: 'POST',
+                                    body: new URLSearchParams({
+                                        id: n.id
+                                    })
+                                });
+                                fetchCount();
+                                li.style.opacity = 0.6;
+                            };
+                            listEl.appendChild(li);
+                        });
+                    } catch (e) {
+                        console.error('notif list error', e);
+                    }
+                }
 
-    bell.addEventListener('click', async (ev)=>{
-        ev.preventDefault();
-        if(dropdown.style.display==='none'){
-            await fetchList();
-            dropdown.style.display='block';
-        } else {
-            dropdown.style.display='none';
-        }
-    });
+                bell.addEventListener('click', async (ev) => {
+                    ev.preventDefault();
+                    if (dropdown.style.display === 'none') {
+                        await fetchList();
+                        dropdown.style.display = 'block';
+                    } else {
+                        dropdown.style.display = 'none';
+                    }
+                });
 
-    markAllBtn.addEventListener('click', async (ev)=>{
-        ev.preventDefault();
-        await fetch('?controller=notification&action=markAllRead', {method:'POST'});
-        await fetchCount();
-        // update list
-        await fetchList();
-    });
+                markAllBtn.addEventListener('click', async (ev) => {
+                    ev.preventDefault();
+                    await fetch('?controller=notification&action=markAllRead', {
+                        method: 'POST'
+                    });
+                    await fetchCount();
+                    // update list
+                    await fetchList();
+                });
 
-    // initial
-    fetchCount();
-    setInterval(fetchCount, 15000);
-})();
-</script>
+                // initial
+                fetchCount();
+                setInterval(fetchCount, 15000);
+            })();
+        </script>
+        <script>
+            (function() {
+                const container = document.querySelector('.falling-gifts');
+                console.log('container:', container);
+
+                const test = document.createElement('div');
+                test.style.position = 'absolute';
+                test.style.top = '20px';
+                test.style.left = '20px';
+                test.style.width = '50px';
+                test.style.height = '50px';
+                test.style.background = 'red';
+                test.style.zIndex = '1';
+
+                container.appendChild(test);
+            })();
+        </script>
+
+
     </div>
 </header>

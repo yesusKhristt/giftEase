@@ -56,6 +56,7 @@ textarea {
     width: 100%;
     /* instead of max-width */
     margin: 0;
+    z-index: 2;
 }
 
 
@@ -264,6 +265,50 @@ textarea {
     overflow-y: auto;
 }
 
+.browse-header {
+    position: relative;
+    overflow: hidden;
+    height: 100px;
+    /* MUST match topbar height */
+}
+
+.falling-gifts {
+    position: fixed;
+    /* Fixed to viewport */
+    top: 0;
+    /* Start at top of screen */
+    left: 280px;
+    width: 100%;
+    height: 100px;
+    /* Only 100px tall */
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 4;
+}
+
+@keyframes gift-fall {
+    to {
+        transform: translateY(100px) rotate(360deg);
+        /* fall exactly 100px */
+        opacity: 0;
+        /* fade out */
+    }
+}
+
+
+/* Individual gift */
+
+.gift-fall {
+    position: absolute;
+    top: -60px;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: fall linear infinite;
+    opacity: 0.8;
+}
+
 .topbar-container {
     position: fixed;
     top: 0;
@@ -275,7 +320,7 @@ textarea {
     background: #032e3f;
     display: flex;
     align-items: center;
-    z-index: 999;
+    z-index: 11;
     padding-left: 20px;
 }
 
@@ -812,6 +857,7 @@ textarea {
     flex: 1;
     max-width: 600px;
     margin: 0 auto;
+    z-index: 10;
     /* centers inside grid's middle column */
     transition: all 0.2s ease;
 }
@@ -1550,7 +1596,7 @@ body {
 .gift-fall-layer {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: 0;
     pointer-events: none;
 }
 
@@ -1566,5 +1612,12 @@ body {
 @keyframes fall {
     to {
         transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+@keyframes gift-fall {
+    to {
+        transform: translateY(100px) rotate(360deg);
+        opacity: 0;
     }
 }

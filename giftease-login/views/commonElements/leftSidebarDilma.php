@@ -9,8 +9,7 @@
       </div>
     </div>
     <?php
-    function isActive($pageName, $activePage)
-    {
+    function isActive($pageName, $activePage) {
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
@@ -41,10 +40,13 @@
       </a>
     </div>
   </div>
+
   <div class="topbar-container">
+    <div class="falling-gifts">
+    </div>
     <!-- Search Bar -->
     <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Search..." />
+      <input type="text" class="search-input" placeholder="Search...." />
     </div>
 
     <div class="gift">
@@ -69,3 +71,28 @@
     </nav>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("✓ main.js loaded");
+
+    const giftLayer = document.querySelector(".falling-gifts");
+    if (giftLayer) {
+      const gifts = ["🎁", "🎀", "🎉", "🍫", "💐"];
+
+      setInterval(() => {
+        const gift = document.createElement("span");
+        gift.className = "gift-emoji";
+        gift.innerText = gifts[Math.floor(Math.random() * gifts.length)];
+
+        gift.style.left = Math.random() * 100 + "%"; // random horizontal position
+        gift.style.fontSize = Math.random() * 12 + 18 + "px";
+        gift.style.animationDuration = Math.random() * 10 + 10 + "s"; // 1–2s
+
+        giftLayer.appendChild(gift);
+
+        // Remove when animation ends
+        gift.addEventListener("animationend", () => gift.remove());
+      }, 200);
+    }
+  });
+</script>
