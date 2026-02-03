@@ -286,12 +286,21 @@ textarea {
     z-index: 4;
 }
 
+.gift-emoji {
+    position: absolute;
+    top: -40px;
+    pointer-events: none;
+    animation: gift-fall linear forwards;
+}
+
 @keyframes gift-fall {
+    from {
+        transform: translateY(0) rotate(var(--start-rot));
+        opacity: 1;
+    }
     to {
-        transform: translateY(100px) rotate(360deg);
-        /* fall exactly 100px */
+        transform: translateY(100px) rotate(calc(var(--start-rot) + 180deg));
         opacity: 0;
-        /* fade out */
     }
 }
 
@@ -907,6 +916,7 @@ textarea {
     transition: all 0.2s ease;
     border: 1px solid #d03c2e;
     background: white;
+    z-index: 7;
     font-size: 14px;
 }
 
@@ -932,7 +942,7 @@ textarea {
 }
 
 .topbar-actions a.active {
-    background: #032e3f;
+    background: #d03c2e;
     color: #ffff;
 }
 
@@ -1598,15 +1608,6 @@ body {
     inset: 0;
     z-index: 0;
     pointer-events: none;
-}
-
-.gift-emoji {
-    position: absolute;
-    top: -50px;
-    /* Start above the screen */
-    animation: fall linear forwards;
-    pointer-events: none;
-    /* Prevent gifts from blocking clicks */
 }
 
 @keyframes fall {

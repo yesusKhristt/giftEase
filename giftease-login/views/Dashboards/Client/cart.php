@@ -45,7 +45,7 @@
             $subtotal = 0; // track total
             foreach ($cartItems as $row):
               $subtotal += $row['quantity'] * $row['price'];
-              ?>
+            ?>
               <tr>
                 <td>
                   <div class="product-cell">
@@ -87,8 +87,6 @@
         <!-- Order Summary -->
         <div class="cardColour">
           <h4>Order Summary</h4>
-          <p class="summary-line">Subtotal: <strong>Rs. <?= htmlspecialchars($subtotal) ?></strong></p>
-          <p class="summary-line">Shipping Fee: <strong>-not implemented-</strong></p>
           <p class="summary-line">Total: <strong>Rs. <?= htmlspecialchars($subtotal) ?></strong></p>
 
           <div style="margin:15px 0;">
@@ -96,7 +94,10 @@
             <button class="btn1">Apply</button>
           </div>
 
-          <a href="?controller=client&action=dashboard/wrap" class="btn2">Choose Wrapping</a>
+          <form method="POST" action="?controller=client&action=dashboard/cart/0/submit">
+            <input type="hidden" name="subtotal" value="<?= htmlspecialchars($subtotal) ?>">
+            <button type="submit" class="btn2">Choose Wrapping</button>
+          </form>
         </div>
       </div>
     </div>

@@ -116,111 +116,8 @@ class ClientController {
     //     require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
     // }
 
-    public function cart($parts) {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $state      = $parts[3] ?? '';
-            $product_id = $parts[2] ?? '';
-            $client_id  = $_SESSION['user']['id'];
-
-            if ($state == 'remove') {
-                $this->cart->removeFromCart($product_id, $client_id);
-                header("Location: index.php?controller=client&action=dashboard/cart");
-                exit;
-            }
-
-            if ($state == 'inc') {
-                $this->cart->increaseCartQuantity($client_id, $product_id);
-
-                header("Location: index.php?controller=client&action=dashboard/cart");
-                exit;
-            }
-            if ($state == 'dec') {
-                $this->cart->decreaseCartQuantity($client_id, $product_id);
-
-                header("Location: index.php?controller=client&action=dashboard/cart");
-                exit;
-            }
-        }
-        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
-        require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
-    }
-
     public function wrapping() {
         require_once __DIR__ . '/../views/Dashboards/Client/wrap.php';
-    }
-
-    public function custom($parts) {
-        $boxWrap        = $this->giftWrapper->getBoxWrap();
-        $boxRibbon      = $this->giftWrapper->getBoxRibbon();
-        $paperBag       = $this->giftWrapper->getPaperBag();
-        $paperBagRibbon = $this->giftWrapper->getPaperBagRibbon();
-        $chocolates     = $this->giftWrapper->getChocolates();
-        $softToys       = $this->giftWrapper->getSoftToys();
-        $cards          = $this->giftWrapper->getCards();
-
-        if (isset($_POST['array'])) {
-            // Decode the JSON string into an associative array
-            $data = json_decode($_POST['array'], true);
-
-            $box          = $data['box'];
-            $boxDeco      = $data['boxDeco'];
-            $paperBag     = $data['paper'];
-            $paperBagDeco = $data['paperDeco'];
-            $card         = $data['card'];
-            $chocolate    = $data['chocolate'];
-            $softToy      = $data['softToy'];
-            $total        = $data['totalPrice'];
-
-            $wrap_id = $this->giftWrapper->addCustomWrap($box, $boxDeco, $paperBag, $paperBagDeco, $softToy, $chocolate, $card, $total);
-
-            header("Location: index.php?controller=client&action=dashboard/checkout/$wrap_id/custom");
-            exit;
-        }
-
-        require_once __DIR__ . '/../views/Dashboards/Client/custom.php';
-    }
-
-    public function checkout($parts) {
-        $wrap_id = $parts[2];
-        $mode    = $parts[3];
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $orderType       = $_POST['orderType'] ?? null;
-            $recipientName   = $_POST['recipientName'] ?? null;
-            $recipientPhone  = $_POST['recipientPhone'] ?? null;
-            $deliveryAddress = $_POST['deliveryAddress'] ?? null;
-            $locationType    = $_POST['locationType'] ?? null;
-            $deliveryDate    = $_POST['deliveryDate'] ?? null;
-            $deliveryPrice   = $_POST['deliveryPrice'] ?? null;
-
-            $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
-            $order_id = $this->orders->confirmOrder([
-                'mode'            => $mode,
-                'orderType'       => $orderType,
-                'recipientName'   => $recipientName,
-                'recipientPhone'  => $recipientPhone,
-                'deliveryAddress' => $deliveryAddress,
-                'locationType'    => $locationType,
-                'deliveryDate'    => $deliveryDate,
-                'cartItems'       => $cartItems,
-                'deliveryPrice'   => $deliveryPrice,
-                'client_id'       => $_SESSION['user']['id'],
-            ], $wrap_id);
-
-            $notificationTitle = "Order Placed!";
-            $notificationMessege = "Your Order has been successfully Placed consisting of ";
-            $href = "?controller=client&action=dashboard/tracking/" . $order_id;
-            foreach ($cartItems as $row) {
-                $name = $row['name'];
-                $notificationMessege = $notificationMessege . $name . ' ';
-            }
-            $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
-            $this->cart->emptyCart($_SESSION['user']['id']);
-
-            header("Location: index.php?controller=client&action=dashboard/tracking  ");
-            exit;
-        }
-        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
-        require_once __DIR__ . '/../views/Dashboards/Client/checkout.php';
     }
 
     public function messeges($parts) {
@@ -422,6 +319,119 @@ class ClientController {
         include __DIR__ . '/views/Dashboards/Client/history.php';
     }
 
+    public function cart($parts) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $state      = $parts[3] ?? '';
+            $product_id = $parts[2] ?? '';
+            $client_id  = $_SESSION['user']['id'];
+
+            if ($state == 'remove') {
+                $this->cart->removeFromCart($product_id, $client_id);
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
+
+            if ($state == 'inc') {
+                $this->cart->increaseCartQuantity($client_id, $product_id);
+
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
+            if ($state == 'dec') {
+                $this->cart->decreaseCartQuantity($client_id, $product_id);
+
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
+            if ($state == 'submit') {
+                $$_SESSION['checkout'] = [
+                    'wrap' => [],
+                    'delivery' => [],
+                    'payment' => [],
+                    'cart' => []
+                ];
+
+                $_SESSION['checkout']['cart']['productPrice'] = $_POST['subtotal'] ?? null;
+
+                header("Location: index.php?controller=client&action=dashboard/custom");
+                exit;
+            }
+        }
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
+    }
+
+    public function custom($parts) {
+        $boxWrap        = $this->giftWrapper->getBoxWrap();
+        $boxRibbon      = $this->giftWrapper->getBoxRibbon();
+        $paperBag       = $this->giftWrapper->getPaperBag();
+        $paperBagRibbon = $this->giftWrapper->getPaperBagRibbon();
+        $chocolates     = $this->giftWrapper->getChocolates();
+        $softToys       = $this->giftWrapper->getSoftToys();
+        $cards          = $this->giftWrapper->getCards();
+
+
+        if (isset($_POST['array'])) {
+            // Decode the JSON string into an associative array
+            $data = json_decode($_POST['array'], true);
+
+            $_SESSION['checkout']['wrap'] = $data;
+
+            header("Location: index.php?controller=client&action=dashboard/checkout/custom");
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/custom.php';
+    }
+
+    public function checkout($parts) {
+        $mode    = $parts[2];
+        var_dump($_SESSION['checkout']['wrap']);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $_SESSION['checkout']['wrap']['mode'] = $mode;
+            $data['orderType'] = $_POST['orderType'] ?? null;
+            $data['recipientName'] = $_POST['recipientName'] ?? null;
+            $data['recipientPhone'] = $_POST['recipientPhone'] ?? null;
+            $data['deliveryAddress'] = $_POST['deliveryAddress'] ?? null;
+            $data['locationType'] = $_POST['locationType'] ?? null;
+            $data['deliveryDate'] = $_POST['deliveryDate'] ?? null;
+            $data['deliveryPrice'] = $_POST['deliveryPrice'] ?? null;
+
+            $_SESSION['checkout']['delivery'] = $data;
+
+            header("Location: index.php?controller=client&action=dashboard/payhere");
+            exit;
+        }
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/checkout.php';
+    }
+
+    public function payhere($parts) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+            $_SESSION['checkout']['cart'] = $cartItems;
+            $wrap_id = $this->giftWrapper->addCustomWrap($_SESSION['checkout']['wrap']);
+
+            $_SESSION['checkout']['wrap']['id'] = $wrap_id;
+
+
+            $order_id = $this->orders->confirmOrder($_SESSION['checkout'], $_SESSION['user']['id']);
+            $notificationTitle = "Order Placed!";
+            $notificationMessege = "Your Order has been successfully Placed consisting of ";
+            $href = "?controller=client&action=dashboard/tracking/" . $order_id;
+            foreach ($cartItems as $row) {
+                $name = $row['name'];
+                $notificationMessege = $notificationMessege . $name . ' ';
+            }
+            $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+            $this->cart->emptyCart($_SESSION['user']['id']);
+
+            header("Location: index.php?controller=client&action=dashboard/tracking  ");
+            exit;
+        }
+        require_once __DIR__ . '/../views/Dashboards/Client/payhere.php';
+    }
+
     public function Client($parts) {
         switch ($parts[1]) {
             case 'cart':
@@ -447,6 +457,9 @@ class ClientController {
                 break;
             case 'payment':
                 require_once __DIR__ . '/../views/Dashboards/Client/payment.php';
+                break;
+            case 'payhere':
+                $this->payhere($parts);
                 break;
             case 'account':
                 require_once __DIR__ . '/../views/Dashboards/Client/settings.php';

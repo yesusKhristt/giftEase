@@ -76,23 +76,34 @@
     console.log("✓ main.js loaded");
 
     const giftLayer = document.querySelector(".falling-gifts");
-    if (giftLayer) {
-      const gifts = ["🎁", "🎀", "🎉", "🍫", "💐"];
+    if (!giftLayer) return;
 
-      setInterval(() => {
-        const gift = document.createElement("span");
-        gift.className = "gift-emoji";
-        gift.innerText = gifts[Math.floor(Math.random() * gifts.length)];
+    const giftImages = [
+      "resources/1.png",
+      "resources/2.png",
+      "resources/3.png",
+      "resources/4.png",
+      "resources/5.png"
+    ];
 
-        gift.style.left = Math.random() * 100 + "%"; // random horizontal position
-        gift.style.fontSize = Math.random() * 12 + 18 + "px";
-        gift.style.animationDuration = Math.random() * 10 + 10 + "s"; // 1–2s
+    setInterval(() => {
+      const gift = document.createElement("img");
+      gift.className = "gift-emoji";
+      gift.src = giftImages[Math.floor(Math.random() * giftImages.length)];
+      gift.alt = "Gift";
 
-        giftLayer.appendChild(gift);
+      gift.style.left = Math.random() * 100 + "%";
+      gift.style.width = Math.random() * 35 + 25 + "px";
+      gift.style.height = "auto";
+      gift.style.animationDuration = Math.random() * 10 + "s";
 
-        // Remove when animation ends
-        gift.addEventListener("animationend", () => gift.remove());
-      }, 200);
-    }
+      // 🎯 RANDOM START ROTATION
+      const startRotation = Math.random() * 360;
+      gift.style.setProperty("--start-rot", `${startRotation}deg`);
+
+      giftLayer.appendChild(gift);
+
+      gift.addEventListener("animationend", () => gift.remove());
+    }, 500);
   });
 </script>

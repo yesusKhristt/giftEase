@@ -1,21 +1,17 @@
 <?php
-class OrderModel
-{
+class OrderModel {
     private $pdo;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTables(); // Create the table if not there
     }
 
-    public function getpdo()
-    {
+    public function getpdo() {
         return $this->pdo;
     }
 
-    public function createTables()
-    {
+    public function createTables() {
         $sql1 = "CREATE TABLE IF NOT EXISTS orders (
             id INT AUTO_INCREMENT PRIMARY KEY,
             client_id INT NOT NULL,
@@ -33,6 +29,7 @@ class OrderModel
             delivery_id INT DEFAULT NULL,
             productPrice INT DEFAULT 0 NOT NULL,
             deliveryPrice INT DEFAULT 0 NOT NULL,
+            wrapPrice INT DEFAULT 0 NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );";
@@ -43,58 +40,48 @@ class OrderModel
             PRIMARY KEY (order_id, item_id),
             FOREIGN KEY (item_id) REFERENCES products(id) ON DELETE CASCADE
         );";
-        $sql3 = "CREATE TABLE IF NOT EXISTS orderStatus (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            giftwrapper_id INT NOT NULL,
-            order_id INT,
-            is_wrapped BOOLEAN DEFAULT FALSE,
-            is_delivered BOOLEAN DEFAULT FALSE,
-            FOREIGN KEY (giftwrapper_id) REFERENCES giftwrappers(id) ON DELETE CASCADE,
-            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-        );";
         try {
             $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
-            $this->pdo->exec($sql3);
-
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
     }
 
-    public function confirmOrder($data, $wrap_id)
-    {
+    public function confirmOrder($data, $user_id) {
 
-        if ($data['mode'] === "custom") {
-            $stmt1 = $this->pdo->prepare("INSERT INTO orders (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
+        if ($data['wrap']['mode'] === "custom") {
+            $stmt1 = $this->pdo->prepare("INSERT INTO orders (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice, wrapPrice) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt1->execute([
-                $data['client_id'],
-                $wrap_id,
-                $data['orderType'],
-                $data['recipientName'],
-                $data['recipientPhone'],
-                $data['deliveryAddress'],
-                $data['locationType'],
-                $data['deliveryDate'],
-                $data['deliveryPrice']
+                $user_id,
+                $data['wrap']['id'],
+                $data['delivery']['orderType'],
+                $data['delivery']['recipientName'],
+                $data['delivery']['recipientPhone'],
+                $data['delivery']['deliveryAddress'],
+                $data['delivery']['locationType'],
+                $data['delivery']['deliveryDate'],
+                $data['delivery']['deliveryPrice'],
+                $data['wrap']['totalPrice']
             ]);
         } else if ($data['mode'] === "package") {
-            $stmt1 = $this->pdo->prepare("INSERT INTO orders (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice) VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt1 = $this->pdo->prepare("INSERT INTO orders (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice, wrapPrice) VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt1->execute([
-                $data['client_id'],
-                $wrap_id,
-                $data['orderType'],
-                $data['recipientName'],
-                $data['recipientPhone'],
-                $data['deliveryAddress'],
-                $data['locationType'],
-                $data['deliveryDate'],
-                $data['deliveryPrice']
+                $user_id,
+                $data['wrap']['id'],
+                $data['delivery']['orderType'],
+                $data['delivery']['recipientName'],
+                $data['delivery']['recipientPhone'],
+                $data['delivery']['deliveryAddress'],
+                $data['delivery']['locationType'],
+                $data['delivery']['deliveryDate'],
+                $data['delivery']['deliveryPrice'],
+                $data['wrap']['totalPrice']
             ]);
         }
         $order_id = $this->pdo->lastInsertId();
         $price = 0;
-        foreach ($data['cartItems'] as $items) {
+        foreach ($data['cart'] as $items) {
             $price += $items['price'] * $items['quantity'];
             $stmt2 = $this->pdo->prepare("INSERT INTO orderItems (order_id, item_id, quantity) VALUES (?, ?, ?)");
             $stmt2->execute([
@@ -107,10 +94,10 @@ class OrderModel
         $stmt3 = $this->pdo->prepare("UPDATE `orders` SET `productPrice`= $price WHERE `id` = $order_id");
         $stmt3->execute();
 
+        return $order_id;
     }
-public function getOrdersByClient($clientId)
-{
-    $stmt = $this->pdo->prepare("
+    public function getOrdersByClient($clientId) {
+        $stmt = $this->pdo->prepare("
         SELECT 
             o.*, 
             GROUP_CONCAT(p.name SEPARATOR ', ') AS product_names,
@@ -130,13 +117,12 @@ public function getOrdersByClient($clientId)
         ORDER BY o.created_at DESC
     ");
 
-    $stmt->execute([$clientId]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        $stmt->execute([$clientId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
-    public function getOrderDetails($orderId)
-    {
+    public function getOrderDetails($orderId) {
         $stmt = $this->pdo->prepare("
             SELECT o.*, 
                    v.id as vendor_id,
