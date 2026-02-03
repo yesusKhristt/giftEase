@@ -14,7 +14,7 @@
   <div class="container">
     <?php
     $activePage = 'settings';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarSaneth.php';
+    include 'views\commonElements/leftSidebarSaneth.php';
     ?>
     <div class="main-content">
       <div class="page-header">
@@ -26,15 +26,15 @@
         <h3>Profile Information</h3>
         <div class="form-group">
           <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" value="Alex Rodriguez" placeholder="Enter your full name" />
+          <input type="text" class="form-input" value="Saneth Tharushika" placeholder="Enter your full name" />
         </div>
         <div class="form-group">
           <label class="form-label">Phone Number</label>
-          <input type="tel" class="form-input" value="+1 (555) 123-4567" placeholder="Enter your phone number" />
+          <input type="tel" class="form-input" value="+94 761694206" placeholder="Enter your phone number" />
         </div>
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" value="alex.rodriguez@gifteasy.com" placeholder="Enter your email" />
+          <input type="email" class="form-input" value="sanethsiriwardhana@gmail.com" placeholder="Enter your email" />
         </div>
 
         <div class="settings-section">
@@ -127,162 +127,10 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 15px;">
+        <!-- <div style="display: flex; gap: 15px;">
           <button class="btn1" onclick="saveSettings()">Save Changes</button>
           <button class="btn1" onclick="resetSettings()">Reset</button>
-        </div>
-      </div>
-
-      <!-- </div> -->
-
-      <div id="orderDetailsModal" class="modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2>Order Details</h2>
-            <span class="close" onclick="closeModal('orderDetailsModal')">&times;</span>
-          </div>
-          <div class="modal-body">
-            <div class="order-detail-grid">
-              <div class="detail-section">
-                <h3>Order Information</h3>
-                <div class="detail-row">
-                  <span class="label">Order ID:</span>
-                  <span class="value" id="modalOrderId">DEL-001</span>
-                </div>
-                <div class="detail-row">
-                  <span class="label">Order Date:</span>
-                  <span class="value">January 15, 2024</span>
-                </div>
-                <div class="detail-row">
-                  <span class="label">Priority:</span>
-                  <span class="value" style="color: #e74c3c; font-weight: bold;">High Priority</span>
-                </div>
-                <div class="detail-row">
-                  <span class="label">Status:</span>
-                  <span class="value"><span class="order-status status-pending">Pending</span></span>
-                </div>
-              </div>
-
-              <div class="detail-section">
-                <h3>Product Details</h3>
-                <div class="product-item">
-                  <img src="/placeholder.svg?height=80&width=80" alt="Product" />
-                  <div class="product-info">
-                    <h4>Premium Rose Bouquet</h4>
-                    <p>Beautiful red roses with premium wrapping</p>
-                    <div class="product-specs">
-                      <span>Quantity: 1</span>
-                      <span>Weight: 2.5 kg</span>
-                      <span>Fragile: Yes</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="detail-section">
-                <h3>Customer Information</h3>
-                <div class="customer-info">
-                  <div class="customer-avatar">
-                    <i class="fas fa-user"></i>
-                  </div>
-                  <div class="customer-details">
-                    <h4>Sarah Johnson</h4>
-                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
-                    <p><i class="fas fa-envelope"></i> sarah.johnson@email.com</p>
-                    <p><i class="fas fa-star"></i> Customer Rating: 4.8/5</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="detail-section">
-                <h3>Delivery Address</h3>
-                <div class="address-info">
-                  <p><strong>123 Main Street</strong></p>
-                  <p>Apartment 4B</p>
-                  <p>Downtown, NY 10001</p>
-                  <p><strong>Delivery Instructions:</strong></p>
-                  <div class="delivery-notes">Please ring the doorbell twice. Leave at door if no answer. Call before
-                    delivery.</div>
-                </div>
-                <button class="btn btn-outline" onclick="openMaps()" style="margin-top: 15px;">
-                  <i class="fas fa-map-marker-alt"></i> Open in Maps
-                </button>
-              </div>
-
-              <div class="detail-section">
-                <h3>Payment & Earnings</h3>
-                <div class="payment-info">
-                  <div class="payment-row">
-                    <span>Product Total:</span>
-                    <span>$89.99</span>
-                  </div>
-                  <div class="payment-row">
-                    <span>Delivery Fee:</span>
-                    <span>$15.00</span>
-                  </div>
-                  <div class="payment-row">
-                    <span>Your Earnings:</span>
-                    <span>$15.00</span>
-                  </div>
-                  <div class="payment-row total">
-                    <span>Customer Total:</span>
-                    <span>$104.99</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="detail-section">
-                <h3>Delivery Timeline</h3>
-                <div class="timeline">
-                  <div class="timeline-item completed">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                      <h5>Order Placed</h5>
-                      <p>Jan 15, 2024 - 10:30 AM</p>
-                    </div>
-                  </div>
-                  <div class="timeline-item completed">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                      <h5>Order Confirmed</h5>
-                      <p>Jan 15, 2024 - 10:45 AM</p>
-                    </div>
-                  </div>
-                  <div class="timeline-item active">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                      <h5>Assigned to Delivery</h5>
-                      <p>Jan 15, 2024 - 2:15 PM</p>
-                    </div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                      <h5>Out for Delivery</h5>
-                      <p>Pending</p>
-                    </div>
-                  </div>
-                  <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                      <h5>Delivered</h5>
-                      <p>Pending</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" onclick="startDeliveryFromModal()">
-              <i class="fas fa-truck"></i> Start Delivery
-            </button>
-            <button class="btn btn-outline" onclick="contactCustomerFromModal()">
-              <i class="fas fa-phone"></i> Contact Customer
-            </button>
-            <button class="btn btn-ghost" onclick="closeModal('orderDetailsModal')">Close</button>
-          </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

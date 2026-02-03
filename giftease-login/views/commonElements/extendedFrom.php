@@ -13,8 +13,6 @@
     <div class="settings-section">
         <h3>Staff Information</h3>
         <form method="POST" action="" id="loginForm">
-            <label class="form-label">Phone Number</label>
-            <input type="text" name="phone" placeholder="Phone No" class="form-input" required>
             <?php
             $role = $_SESSION['user']['type'];
             switch ($role) {
@@ -29,12 +27,10 @@
                     <label class="form-label">Shop Name</label>
                     <input type="text" name="shopName" placeholder="Shop Name" class="form-input" required>
                     ';
-                    echo '
-                    <label class="form-label">Address</label>
-                    <input type="textarea" name="address" placeholder="Address" class="form-input" required>
-                    ';
-                    break;
                 case 'giftWrapper':
+                    echo'<label class="form-label">Years of Occupation</label>
+                    <input type="number" name="years" placeholder="0" class="form-input" required>
+                    ';
                     break;
                 case 'delivery':
                     echo '
@@ -48,9 +44,19 @@
                     <input type="text" name="vehiclePlate" placeholder="no-Plate" class="form-input" required>
                     ';
                     break;
+                case 'admin':
+                    echo'
+                    <label class="form-label">Designation</label>
+                    <input type="text" name="designation" class="form-input" required>
+                    ';
+                    break;
             }
             ?>
-            <button type="submit" class="btn2 form-input" >Submit</button>
+            <label>
+                <input type="checkbox" name="terms" style="width: 20px" required>
+                I've read and agree to the <a href="terms.html" target="_blank">Terms and Conditions</a>.
+            </label>
+            <button type="submit" class="btn2 form-input">Submit</button>
         </form>
     </div>
 </body>

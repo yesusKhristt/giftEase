@@ -1,9 +1,18 @@
 <?php
 class giftWrapperController
 {
+    private $giftwrapper;
+    private $notification;
+    public function __construct($pdo)
+    {
+        require_once __DIR__ . '/../models/GiftWrapperModel.php';
+        require_once __DIR__ . '/../models/NotificationModel.php';
+        $this->giftwrapper = new GiftWrapperModel($pdo); //bruh
+        $this->notification = new NotificationModel($pdo);
+    }
     public function dashboard()
     {
-        if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'giftWrapper') {
+        if (!$this->giftwrapper->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
         }
@@ -11,20 +20,75 @@ class giftWrapperController
         $path = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
-        $this->GiftWrapper($parts[1]);
+        $this->GiftWrapper($parts);
     }
-    
+
+    public function allOrder($parts)
+    {
+        $orders = $this->giftwrapper->getAllOrders();
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/allOrders.php';
+    }
+
+    public function assignedOrder($parts)
+    {
+        $myOrders = $this->giftwrapper->getAssignedOrders($_SESSION['user']['id']) ?? '';
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/assignedOrders.php';
+    }
+
+    public function acceptOrder($parts)
+    {
+        $order_id = $parts[2];
+        $this->giftwrapper->acceptOrder($order_id, $_SESSION['user']['id']);
+
+        $notificationTitle = "Order processing for Wrapping!";
+        $notificationMessege = "Your Order will be wrapped by ".$_SESSION['user']['first_name'].' '.$_SESSION['user']['last_name'];
+        $href = "?controller=client&action=dashboard/messeges/giftWrapper/view/".$_SESSION['user']['id']."/direct";
+        $name = $_SESSION['first_name'] . ' ' . $_SESSION['last_name'];
+        $notificationMessege = $notificationMessege . $name;
+        $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+        header("Location: index.php?controller=giftWrapper&action=dashboard/assignedOrder");
+        exit;
+    }
+
+    public function markComplete($parts)
+    {
+
+        $this->giftwrapper->markComplete($parts[2]);
+        header("Location: index.php?controller=giftWrapper&action=dashboard/assignedOrder");
+        exit;
+    }
+
+    public function cancelOrder($parts)
+    {
+
+        $this->giftwrapper->cancelOrder($parts[2]);
+        header("Location: index.php?controller=giftWrapper&action=dashboard/assignedOrder");
+        exit;
+    }
+
     public function GiftWrapper($level1)
     {
-        switch ($level1) {
+        switch ($level1[1]) {
             case 'analytics':
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/analitic.php';
                 break;
+            case 'allOrder':
+                $this->allOrder($level1);
+                break;
+            case 'assignedOrder':
+                $this->assignedOrder($level1);
+                break;
+            case 'markComplete':
+                $this->markComplete($level1);
+                break;
+            case 'acceptOrder':
+                $this->acceptOrder($level1);
+                break;
+            case 'cancelOrder':
+                $this->cancelOrder($level1);
+                break;
             case 'earnings':
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/earning.php';
-                break;
-            case 'order':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/order.php';
                 break;
             case 'portfolio':
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/portfolio.php';
@@ -42,5 +106,21 @@ class giftWrapperController
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/overview.php';
                 break;
         }
+    }
+
+    public function handleLogout()
+    {
+        $_SESSION['giftWrapper'] = null;
+        header("Location: index.php?controller=auth&action=handleLogout");
+        exit;
+
+    }
+
+    public function deactivateUser()
+    {
+        $USER_ID = $_SESSION['user']['id'];
+        $this->giftwrapper->deleteUser($USER_ID);
+        header("Location: index.php");
+        exit;
     }
 }
