@@ -16,7 +16,7 @@ class CategoryModel
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(20) NOT NULL
         );
-         ";
+        ";
 
         $sql2 = "
         CREATE TABLE IF NOT EXISTS subCategories (
@@ -25,7 +25,7 @@ class CategoryModel
             category INT NOT NULL,
             FOREIGN KEY (category) REFERENCES categories(id) ON DELETE CASCADE
         );
-         ";
+        ";
 
         try {
             $this->pdo->exec($sql1);

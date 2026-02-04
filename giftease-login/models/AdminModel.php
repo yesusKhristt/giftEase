@@ -1,5 +1,5 @@
 <?php
-class VendorModel
+class AdminModel
 {
     private $pdo;
 
@@ -16,7 +16,7 @@ class VendorModel
 
     public function createTableIfNotExists()
     {
-        $sql1 = "CREATE TABLE IF NOT EXISTS vendors (
+        $sql1 = "CREATE TABLE IF NOT EXISTS admins (
             id INT AUTO_INCREMENT PRIMARY KEY,
             first_name VARCHAR(100) NOT NULL,
             last_name VARCHAR(100) NOT NULL,
@@ -24,7 +24,7 @@ class VendorModel
             password VARCHAR(255) NOT NULL,
             status ENUM('active', 'inactive') DEFAULT 'active',
             address VARCHAR(255),
-            shopName VARCHAR(50),
+            designation VARCHAR(20),
             phone VARCHAR(10),
             image_loc VARCHAR(500) DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -39,32 +39,32 @@ class VendorModel
 
     public function authenticate($email, $password, $type)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE email = ?");
+        $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password']) && $type == 'vendor') {
+        if ($user && password_verify($password, $user['password']) && $type == 'admin') {
             return $user;
         }
         return null;
     }
 
-    public function getUserByEmail($email)
+        public function getUserByEmail($email)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE email = ?");
+        $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE email = ?");
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function addUser($data)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO vendors (first_name, last_name, email, password, shopName, phone, image_loc, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->pdo->prepare("INSERT INTO admins (first_name, last_name, email, password, designation, phone, image_loc, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         return $stmt->execute([
             $data['first_name'],
             $data['last_name'],
             $data['email'],
             $data['password'],
-            $data['shopName'],
+            $data['designation'],
             $data['phone'],
             $data['imageloc'],
             $data['address'],
@@ -73,11 +73,11 @@ class VendorModel
 
     public function updateUser($data)
     {
-        $stmt = $this->pdo->prepare("UPDATE vendors SET first_name = ?, last_name = ?, shopeName = ?, phone = ?, address = ? WHERE id = ?");
+        $stmt = $this->pdo->prepare("UPDATE admins SET first_name = ?, last_name = ?, designation = ?, phone = ?, address = ? WHERE id = ?");
         return $stmt->execute([
             $data['first_name'],
             $data['last_name'],
-            $data['shopName'],
+            $data['designation'],
             $data['phone'],
             $data['address'],
             $data['id']
@@ -86,8 +86,10 @@ class VendorModel
 
     public function deleteUser($id)
     {
-        $stmt = $this->pdo->prepare("UPDATE vendors SET status = 'inactive' WHERE id = ?");
+        $stmt = $this->pdo->prepare("UPDATE admins SET status = 'inactive' WHERE id = ?");
         $stmt->execute($id);
     }
+
+
 
 }
