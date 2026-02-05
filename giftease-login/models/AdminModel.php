@@ -156,4 +156,178 @@ class AdminModel
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
+
+    // ========== REPORT METHODS ==========
+
+    /**
+     * Get total number of orders
+     */
+    public function getTotalOrders()
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Get total number of products
+     */
+    public function getTotalProducts()
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM products");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Get total number of clients
+     */
+    public function getTotalClients()
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM clients WHERE status = 'active'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Get total number of vendors
+     */
+    public function getTotalVendors()
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM vendors WHERE status = 'active' AND verified = 1");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Get total revenue from orders
+     */
+    public function getTotalRevenue()
+    {
+        $stmt = $this->pdo->prepare("SELECT COALESCE(SUM(productPrice + deliveryPrice), 0) as total FROM orders");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Get monthly growth percentage (comparing current month vs previous month orders)
+     * Uses deliveryDate since orders table has no created_at column
+     */
+    public function getMonthlyGrowth()
+    {
+        // Current month orders
+        $stmt1 = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders WHERE MONTH(deliveryDate) = MONTH(CURRENT_DATE()) AND YEAR(deliveryDate) = YEAR(CURRENT_DATE())");
+        $stmt1->execute();
+        $currentMonth = $stmt1->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+        // Previous month orders
+        $stmt2 = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders WHERE MONTH(deliveryDate) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(deliveryDate) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)");
+        $stmt2->execute();
+        $previousMonth = $stmt2->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+        if ($previousMonth == 0) {
+            return $currentMonth > 0 ? 100.0 : 0.0;
+        }
+        return round((($currentMonth - $previousMonth) / $previousMonth) * 100, 1);
+    }
+
+    /**
+     * Get top category by number of products sold
+     */
+    public function getTopCategory()
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT c.name, COALESCE(SUM(oi.quantity), 0) as total_sold
+            FROM categories c
+            LEFT JOIN products p ON p.mainCategory = c.id
+            LEFT JOIN orderItems oi ON oi.item_id = p.id
+            GROUP BY c.id, c.name
+            ORDER BY total_sold DESC
+            LIMIT 1
+        ");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['name'] ?? 'N/A';
+    }
+
+    /**
+     * Get customer retention rate (returning customers / total customers * 100)
+     */
+    public function getCustomerRetention()
+    {
+        // Count customers with more than one order
+        $stmt1 = $this->pdo->prepare("SELECT COUNT(DISTINCT client_id) as returning_customers FROM orders GROUP BY client_id HAVING COUNT(*) > 1");
+        $stmt1->execute();
+        $returningCustomers = $stmt1->rowCount();
+
+        // Total customers who placed at least one order
+        $stmt2 = $this->pdo->prepare("SELECT COUNT(DISTINCT client_id) as total FROM orders");
+        $stmt2->execute();
+        $totalCustomers = $stmt2->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+        if ($totalCustomers == 0) {
+            return 0;
+        }
+        return round(($returningCustomers / $totalCustomers) * 100);
+    }
+
+    /**
+     * Get orders by month for chart (last 6 months)
+     * Uses deliveryDate since orders table has no created_at column
+     */
+    public function getOrdersByMonth()
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                DATE_FORMAT(deliveryDate, '%Y-%m') as month,
+                COUNT(*) as total_orders,
+                COALESCE(SUM(productPrice + deliveryPrice), 0) as revenue
+            FROM orders
+            WHERE deliveryDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)
+            GROUP BY DATE_FORMAT(deliveryDate, '%Y-%m')
+            ORDER BY month ASC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get top selling products
+     */
+    public function getTopSellingProducts($limit = 5)
+    {
+        $limit = (int) $limit;
+        $stmt = $this->pdo->prepare("
+            SELECT p.name, COALESCE(SUM(oi.quantity), 0) as total_sold
+            FROM products p
+            LEFT JOIN orderItems oi ON oi.item_id = p.id
+            GROUP BY p.id, p.name
+            ORDER BY total_sold DESC
+            LIMIT $limit
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get sales by category for pie chart
+     */
+    public function getSalesByCategory()
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT c.name, COALESCE(SUM(oi.quantity), 0) as total_sold
+            FROM categories c
+            LEFT JOIN products p ON p.mainCategory = c.id
+            LEFT JOIN orderItems oi ON oi.item_id = p.id
+            GROUP BY c.id, c.name
+            ORDER BY total_sold DESC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

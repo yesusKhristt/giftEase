@@ -355,10 +355,33 @@ class AdminController
             case 'editGiftWrappingItems':
                 $this->editGiftWrappingItems($parts);
                 break;
+            case 'reports':
+                $this->reports($parts);
+                break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
+                $this->reports($parts);
                 break;
         }
+    }
+
+    public function reports($parts)
+    {
+        // Fetch report data
+        $reportData = [
+            'totalOrders' => $this->admin->getTotalOrders(),
+            'totalProducts' => $this->admin->getTotalProducts(),
+            'totalClients' => $this->admin->getTotalClients(),
+            'totalVendors' => $this->admin->getTotalVendors(),
+            'totalRevenue' => $this->admin->getTotalRevenue(),
+            'monthlyGrowth' => $this->admin->getMonthlyGrowth(),
+            'topCategory' => $this->admin->getTopCategory(),
+            'customerRetention' => $this->admin->getCustomerRetention(),
+            'ordersByMonth' => $this->admin->getOrdersByMonth(),
+            'topSellingProducts' => $this->admin->getTopSellingProducts(5),
+            'salesByCategory' => $this->admin->getSalesByCategory()
+        ];
+        
+        require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
     }
 
         public function deactivateUser()
