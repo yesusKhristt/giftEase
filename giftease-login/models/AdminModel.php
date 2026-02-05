@@ -197,7 +197,7 @@ class AdminModel
      */
     public function getTotalVendors()
     {
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM vendors WHERE status = 'active' AND verified = 1");
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM vendors WHERE status = 'active'");
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'] ?? 0;

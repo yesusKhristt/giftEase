@@ -19,6 +19,17 @@
         <?php
         $activePage = 'analytics';
         include 'views\commonElements/leftSidebarJeshani.php';
+        
+        // Extract analytics data (passed from controller)
+        $totalOrders = $analyticsData['totalOrders'] ?? 0;
+        $completedOrders = $analyticsData['completedOrders'] ?? 0;
+        $pendingOrders = $analyticsData['pendingOrders'] ?? 0;
+        $monthlyGrowth = $analyticsData['monthlyGrowth'] ?? 0;
+        $customerRetention = $analyticsData['customerRetention'] ?? 0;
+        $efficiencyScore = $analyticsData['efficiencyScore'] ?? 0;
+        $ordersByMonth = $analyticsData['ordersByMonth'] ?? [];
+        $peakHours = $analyticsData['peakHours'] ?? 'N/A';
+        $averageRating = $analyticsData['averageRating'] ?? 0;
         ?>
 
         <div class="main-content">
@@ -49,12 +60,10 @@
                             <span class="stat-label">Total Orders</span>
                             <i class="fas fa-shopping-bag"></i>
                         </div>
-
-
-                        <div class="stat-value">47</div>
+                        <div class="stat-value"><?php echo number_format($totalOrders); ?></div>
                         <div class="stat-description">
-                            <i class="fas fa-arrow-up trend-up"></i>
-                            <span>+23% from last month</span>
+                            <i class="fas fa-arrow-<?php echo $monthlyGrowth >= 0 ? 'up trend-up' : 'down trend-down'; ?>"></i>
+                            <span><?php echo ($monthlyGrowth >= 0 ? '+' : '') . $monthlyGrowth; ?>% from last month</span>
                         </div>
                     </div>
 
@@ -67,10 +76,10 @@
                             <i class="fas fa-users"></i>
 
                         </div>
-                        <div class="stat-value">78%</div>
+                        <div class="stat-value"><?php echo $customerRetention; ?>%</div>
                         <div class="stat-description">
                             <i class="fas fa-arrow-up trend-up"></i>
-                            <span>Excellent retention rate</span>
+                            <span><?php echo $customerRetention >= 70 ? 'Excellent' : ($customerRetention >= 50 ? 'Good' : 'Needs improvement'); ?> retention rate</span>
                         </div>
                     </div>
                 </div>
@@ -85,7 +94,7 @@
                             <i class="fas fa-clock"></i>
 
                         </div>
-                        <div class="stat-value">2-6 PM</div>
+                        <div class="stat-value"><?php echo htmlspecialchars($peakHours); ?></div>
                         <div class="stat-description">
                             <i class="fas fa-info-circle"></i>
                             <span>Busiest time period</span>
@@ -101,18 +110,39 @@
                             <i class="fas fa-tachometer-alt"></i>
 
                         </div>
-                        <div class="stat-value">94%</div>
+                        <div class="stat-value"><?php echo $efficiencyScore; ?>%</div>
                         <div class="stat-description">
-                            <i class="fas fa-arrow-up trend-up"></i>
-                            <span>Above industry average</span>
+                            <i class="fas fa-arrow-<?php echo $efficiencyScore >= 80 ? 'up trend-up' : 'down trend-down'; ?>"></i>
+                            <span><?php echo $efficiencyScore >= 80 ? 'Above industry average' : 'Room for improvement'; ?></span>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- Order Status Summary -->
+            <div class="card">
+                <div class="summary-grid">
+                    <div class="card" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white;">
+                        <div class="stat-header">
+                            <span class="stat-label" style="color: white;">Completed Orders</span>
+                            <i class="fas fa-check-circle" style="color: white;"></i>
+                        </div>
+                        <div class="stat-value" style="color: white;"><?php echo number_format($completedOrders); ?></div>
+                    </div>
+                    <div class="card" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white;">
+                        <div class="stat-header">
+                            <span class="stat-label" style="color: white;">Pending Orders</span>
+                            <i class="fas fa-clock" style="color: white;"></i>
+                        </div>
+                        <div class="stat-value" style="color: white;"><?php echo number_format($pendingOrders); ?></div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="card">
                 <h3 style="margin-bottom: 24px; color: #333; font-size: 1.2rem;">
                     <i class="fas fa-chart-area" style="color: #e91e63; margin-right: 8px;"></i>
-                    Number of Wrapping charts.
+                    Wrapping Orders by Month
                 </h3>
                 <canvas id="riskChart"></canvas>
             </div>
@@ -197,18 +227,32 @@
                 <div class="summary-grid">
                     <div class="card">
                         <h4>Growth Opportunity</h4>
-                        <p>Your premium wrapping service has 23% higher demand. Consider expanding your premium material
-                            inventory.</p>
+                        <p><?php 
+                            if ($monthlyGrowth > 0) {
+                                echo "Great progress! You've grown by {$monthlyGrowth}% this month. Keep up the excellent work!";
+                            } else if ($monthlyGrowth == 0) {
+                                echo "Your orders are stable. Consider promoting your services to attract new customers.";
+                            } else {
+                                echo "Orders have decreased by " . abs($monthlyGrowth) . "%. Consider reaching out to past clients or offering promotions.";
+                            }
+                        ?></p>
                     </div>
                     <div class="card">
                         <h4>Peak Time Insight</h4>
-                        <p>Most orders come between 2-6 PM. Consider offering express service during these hours for
+                        <p>Most orders come during <?php echo htmlspecialchars($peakHours); ?>. Consider offering express service during these hours for
                             premium pricing.</p>
                     </div>
                     <div class="card">
                         <h4>Customer Loyalty</h4>
-                        <p>78% customer retention rate is excellent! Consider implementing a loyalty program to reward
-                            repeat customers.</p>
+                        <p><?php 
+                            if ($customerRetention >= 70) {
+                                echo "{$customerRetention}% customer retention rate is excellent! Consider implementing a loyalty program to reward repeat customers.";
+                            } else if ($customerRetention >= 50) {
+                                echo "{$customerRetention}% retention is good. Focus on quality to increase repeat business.";
+                            } else {
+                                echo "Focus on customer satisfaction to improve retention from {$customerRetention}%.";
+                            }
+                        ?></p>
                     </div>
                 </div>
 
@@ -220,30 +264,25 @@
 
 
     <script>
-
+        // Prepare data for charts from PHP
+        const ordersByMonth = <?php echo json_encode($ordersByMonth); ?>;
+        
         const riskCtx = document.getElementById('riskChart').getContext('2d');
 
         const riskData = {
-            labels: ['January', 'February', 'March', 'April', 'May'],
+            labels: ordersByMonth.length > 0 ? ordersByMonth.map(item => item.month_name || item.month) : ['No Data'],
             datasets: [
                 {
-                    label: '',
-                    data: [7, 11, 13, 2, 3],
-                    backgroundColor: '#e91e63',
+                    label: 'Completed',
+                    data: ordersByMonth.length > 0 ? ordersByMonth.map(item => parseInt(item.completed) || 0) : [0],
+                    backgroundColor: '#4CAF50',
                     borderRadius: 6,
                     barThickness: 28
                 },
                 {
-                    label: '',
-                    data: [5, 11, 16, 3, 4],
-                    backgroundColor: '#e91e63',
-                    borderRadius: 6,
-                    barThickness: 28
-                },
-                {
-                    label: '',
-                    data: [1, 12, 6, 7, 4],
-                    backgroundColor: '#e91e63',
+                    label: 'Pending',
+                    data: ordersByMonth.length > 0 ? ordersByMonth.map(item => parseInt(item.pending) || 0) : [0],
+                    backgroundColor: '#ff9800',
                     borderRadius: 6,
                     barThickness: 28
                 }
@@ -271,9 +310,8 @@
                     y: {
                         stacked: true,
                         beginAtZero: true,
-                        max: 50,
                         ticks: {
-                            stepSize: 10,
+                            stepSize: 5,
                             color: '#6b7280',
                             font: { size: 12 }
                         },
@@ -287,67 +325,6 @@
         };
 
         new Chart(riskCtx, riskConfig);
-
-
-        const vaccCtx = document.getElementById('vaccChart').getContext('2d');
-
-
-        const vaccData = {
-            labels: ['Completed', 'Pending', 'Upcoming'],
-            datasets: [{
-                data: [150, 80, 24],
-                backgroundColor: ['#0EA5A4', '#FBC88D', '#F08B77'],
-                hoverOffset: 8
-            }]
-        };
-
-
-        const centerTextPlugin = {
-            id: 'centerText',
-            beforeDraw(chart) {
-                if (chart.config.type !== 'doughnut') return;
-                const { ctx, chartArea } = chart;
-                const centerX = (chartArea.left + chartArea.right) / 2;
-                const centerY = (chartArea.top + chartArea.bottom) / 2;
-
-                ctx.save();
-
-                ctx.font = '700 30px Inter, Arial';
-                ctx.fillStyle = '#111827';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('254', centerX, centerY - 8);
-
-                ctx.font = '400 13px Inter, Arial';
-                ctx.fillStyle = '#6b7280';
-                ctx.fillText('Children', centerX, centerY + 20);
-                ctx.restore();
-            }
-        };
-
-        const vaccConfig = {
-            type: 'doughnut',
-            data: vaccData,
-            options: {
-                responsive: false,
-                maintainAspectRatio: false,
-                cutout: '64%',
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: { usePointStyle: true, pointStyle: 'circle', padding: 12 }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => `${ctx.label}: ${ctx.formattedValue}`
-                        }
-                    }
-                }
-            },
-            plugins: [centerTextPlugin]
-        };
-
-        new Chart(vaccCtx, vaccConfig);
     </script>
 </body>
 
