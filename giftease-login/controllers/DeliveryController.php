@@ -80,7 +80,20 @@ class DeliveryController {
                 break;
             case 'acceptOrder':
                 $this->acceptOrder($parts);
+            case 'allOrder':
+                $this->allOrder($parts);
                 break;
+            case 'assignedOrder':
+                $this->assignedOrder($parts);
+                break;
+            case 'markComplete':
+                $this->markComplete($parts);
+                break;
+            case 'acceptOrder':
+                $this->acceptOrder($parts);
+                break;
+            case 'cancelOrder':
+                $this->cancelOrder($parts);
             case 'cancelOrder':
                 $this->cancelOrder($parts);
                 break;

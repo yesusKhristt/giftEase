@@ -10,6 +10,12 @@ class giftWrapperController
         $this->giftwrapper = new GiftWrapperModel($pdo); //bruh
         $this->notification = new NotificationModel($pdo);
     }
+    private $giftwrapper;
+    public function __construct($pdo)
+    {
+        require_once __DIR__ . '/../models/GiftWrapperModel.php';
+        $this->giftwrapper = new GiftWrapperModel($pdo); //bruh
+    }
     public function dashboard()
     {
         if (!$this->giftwrapper->getUserByEmail($_SESSION['user']['email'])) {
@@ -66,11 +72,27 @@ class giftWrapperController
         exit;
     }
 
+
     public function GiftWrapper($level1)
     {
         switch ($level1[1]) {
             case 'analytics':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/analitic.php';
+                $this->analytics($level1);
+                break;
+            case 'allOrder':
+                $this->allOrder($level1);
+                break;
+            case 'assignedOrder':
+                $this->assignedOrder($level1);
+                break;
+            case 'markComplete':
+                $this->markComplete($level1);
+                break;
+            case 'acceptOrder':
+                $this->acceptOrder($level1);
+                break;
+            case 'cancelOrder':
+                $this->cancelOrder($level1);
                 break;
             case 'allOrder':
                 $this->allOrder($level1);
@@ -108,6 +130,26 @@ class giftWrapperController
         }
     }
 
+    public function analytics($parts)
+    {
+        $giftWrapperId = $_SESSION['user']['id'];
+        
+        // Fetch analytics data
+        $analyticsData = [
+            'totalOrders' => $this->giftwrapper->getTotalOrdersHandled($giftWrapperId),
+            'completedOrders' => $this->giftwrapper->getCompletedOrders($giftWrapperId),
+            'pendingOrders' => $this->giftwrapper->getPendingOrders($giftWrapperId),
+            'monthlyGrowth' => $this->giftwrapper->getMonthlyGrowth($giftWrapperId),
+            'customerRetention' => $this->giftwrapper->getCustomerRetention($giftWrapperId),
+            'efficiencyScore' => $this->giftwrapper->getEfficiencyScore($giftWrapperId),
+            'ordersByMonth' => $this->giftwrapper->getOrdersByMonth($giftWrapperId),
+            'peakHours' => $this->giftwrapper->getPeakHours($giftWrapperId),
+            'averageRating' => $this->giftwrapper->getAverageRating($giftWrapperId)
+        ];
+        
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/analitic.php';
+    }
+
     public function handleLogout()
     {
         $_SESSION['giftWrapper'] = null;
@@ -119,7 +161,7 @@ class giftWrapperController
     public function deactivateUser()
     {
         $USER_ID = $_SESSION['user']['id'];
-        $this->giftwrapper->deleteUser($USER_ID);
+        $this->user->deactivateUser($USER_ID);
         header("Location: index.php");
         exit;
     }

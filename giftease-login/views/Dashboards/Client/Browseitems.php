@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Partner Dashboard - GiftEase</title>
     <link rel="stylesheet" href="public/style.css" />
+    <title>Client Partner Dashboard - GiftEase</title>
+    <link rel="stylesheet" href="public/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -37,12 +39,22 @@
                 </select>
                 <select class="btn1" onchange="filterProducts('subcategory', this.value)">
                     <option value="">Subcategories</option>
+                    <option value="">Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="computers">Computers</option>
+                </select>
+                <select class="btn1" onchange="filterProducts('subcategory', this.value)">
+                    <option value="">Subcategories</option>
                     <option value="electronics">Electronics</option>
                     <option value="accessories">Accessories</option>
                     <option value="computers">Computers</option>
                 </select>
                 <select class="btn1" onchange="filterProducts('price', this.value)">
                     <option value="">All Prices</option>
+                    <option value="0-100">Rs 0 - 100</option>
+                    <option value="100-500">Rs 100 - 500</option>
+                    <option value="500+">500+</option>
                     <option value="0-100">Rs 0 - 100</option>
                     <option value="100-500">Rs 100 - 500</option>
                     <option value="500+">500+</option>
@@ -79,12 +91,30 @@
                                 </div>
                             </div>
                         </a>
+                            <div class="item-content">
+                                <div class="item-header">
+                                    <div>
+                                        <h3 class="item-name"><?= htmlspecialchars($row['name']) ?></h3>
+                                    </div>
+                                </div>
+                                <div class="item-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Price</span>
+                                        <span class="detail-value">Rs <?= htmlspecialchars($row['price']) ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
 
                         <div class="item-actions">
                             <a class="btn1 btn-outline btn-small add-to-cart" href="#" data-id="<?= $row['id'] ?>">
                                 Add to cart
                             </a>
+                            <a class="btn1 btn-outline btn-small add-to-cart" href="#" data-id="<?= $row['id'] ?>">
+                                Add to cart
+                            </a>
 
+                            <button class="btn1 btn-danger btn-small">Add to wishlist</button>
                             <button class="btn1 btn-danger btn-small">Add to wishlist</button>
                         </div>
                     </div>

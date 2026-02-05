@@ -26,6 +26,7 @@ class VendorController {
         }
         global $pdo;
         $path  = $_GET['action'];
+        $path  = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
         $this->Vendor($parts);
@@ -115,16 +116,25 @@ class VendorController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title       = $_POST['title'];
             $category    = $_POST['category'];
+            $title       = $_POST['title'];
+            $category    = $_POST['category'];
             $subcategory = $_POST['subcategory'];
+            $price       = $_POST['price'];
             $price       = $_POST['price'];
             $description = $_POST['description'];
             $deliverable = $_POST['hours24'];
+            $deliverable = $_POST['hours24'];
 
-            // Handle file upload if user selected a new image
+                                  // Handle file upload if user selected a new image
             $profilePicPath = []; // start with empty array
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
                 $uploadDir = "resources/uploads/vendor/products/";
+                if (! is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                $fileName   = time() . "_" . basename($_FILES['images']['name'][$key]);
                 if (! is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
@@ -141,6 +151,9 @@ class VendorController {
 
             switch ($parts[2]) {
                 case 'add':
+                    $productID = $this->product->addProduct($_SESSION['user']['id'], $title, $price, $description, $category, $subcategory, $profilePicPath, $deliverable);
+                    header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
+                    exit;
                     $productID = $this->product->addProduct($_SESSION['user']['id'], $title, $price, $description, $category, $subcategory, $profilePicPath, $deliverable);
                     header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
                     exit;
@@ -163,11 +176,33 @@ class VendorController {
                     }
                     require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
             }
+                    $this->product->editProduct(
+                        $parts[3], // product ID
+                        $title,
+                        $price,
+                        $description,
+                        $category,
+                        $subcategory,
+                        $profilePicPath,
+                        $deliverable
+                    );
+                    header("Location: index.php?controller=vendor&action=dashboard/item/view/" . urlencode($parts[3]));
+                    exit;
+                case 'edit2':
+                    if ($profilePicPath == null) {
+                        $profilePicPath = $this->product->fetchProductPic($parts[3]);
+                    }
+                    require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
+            }
         }
         if ($parts[2] == 'edit') {
             $productId      = $parts[3];
+            $productId      = $parts[3];
             $productDetails = $this->product->fetchProduct($productId);
         }
+        $categories    = $this->category->getCategory();
+        $subcategories = $this->category->getAllSubcategory();
+        require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
         $categories    = $this->category->getCategory();
         $subcategories = $this->category->getAllSubcategory();
         require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
@@ -273,17 +308,29 @@ class VendorController {
                 break;
             case 'messeges':
                 $this->messeges($parts);
+            case 'manageInventory':
+                $this->manageInventory($parts);
+                break;
+            case 'getCategory':
+                $this->ajaxCategory();
+                break;
+            case 'messeges':
+                $this->messeges($parts);
                 break;
             case 'analysis':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
                 break;
             case 'profile':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Profile.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Profile.php';
                 break;
             case 'history':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
                 break;
             case 'settings':
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Settings.php';
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Settings.php';
                 break;
             case 'item':
@@ -291,11 +338,14 @@ class VendorController {
                 break;
             case 'vieworder':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
                 break;
             case 'edititem':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
                 break;
             default:
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
                 break;
         }

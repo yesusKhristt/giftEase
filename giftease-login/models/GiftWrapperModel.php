@@ -159,4 +159,136 @@ class GiftWrapperModel
         $stmt->execute([$order_id]);
     }
 
+    // ========== ANALYTICS METHODS ==========
+
+    /**
+     * Get total orders handled by a gift wrapper
+     */
+    public function getTotalOrdersHandled($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders WHERE giftWrapper_id = ?");
+        $stmt->execute([$giftWrapperId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Get completed (wrapped) orders count
+     */
+    public function getCompletedOrders($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders WHERE giftWrapper_id = ? AND is_wrapped = 1");
+        $stmt->execute([$giftWrapperId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Get pending orders count
+     */
+    public function getPendingOrders($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders WHERE giftWrapper_id = ? AND is_wrapped = 0");
+        $stmt->execute([$giftWrapperId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
+    }
+
+    /**
+     * Get monthly growth percentage for orders handled
+     */
+    public function getMonthlyGrowth($giftWrapperId)
+    {
+        // Current month orders
+        $stmt1 = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders WHERE giftWrapper_id = ? AND MONTH(deliveryDate) = MONTH(CURRENT_DATE()) AND YEAR(deliveryDate) = YEAR(CURRENT_DATE())");
+        $stmt1->execute([$giftWrapperId]);
+        $currentMonth = $stmt1->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+        // Previous month orders
+        $stmt2 = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders WHERE giftWrapper_id = ? AND MONTH(deliveryDate) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH) AND YEAR(deliveryDate) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)");
+        $stmt2->execute([$giftWrapperId]);
+        $previousMonth = $stmt2->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+        if ($previousMonth == 0) {
+            return $currentMonth > 0 ? 100.0 : 0.0;
+        }
+        return round((($currentMonth - $previousMonth) / $previousMonth) * 100, 1);
+    }
+
+    /**
+     * Get customer retention rate (returning customers for this wrapper)
+     */
+    public function getCustomerRetention($giftWrapperId)
+    {
+        // Count customers with more than one order with this wrapper
+        $stmt1 = $this->pdo->prepare("SELECT COUNT(*) as cnt FROM (SELECT client_id FROM orders WHERE giftWrapper_id = ? GROUP BY client_id HAVING COUNT(*) > 1) as returning_clients");
+        $stmt1->execute([$giftWrapperId]);
+        $returningCustomers = $stmt1->fetch(PDO::FETCH_ASSOC)['cnt'] ?? 0;
+
+        // Total unique customers for this wrapper
+        $stmt2 = $this->pdo->prepare("SELECT COUNT(DISTINCT client_id) as total FROM orders WHERE giftWrapper_id = ?");
+        $stmt2->execute([$giftWrapperId]);
+        $totalCustomers = $stmt2->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+        if ($totalCustomers == 0) {
+            return 0;
+        }
+        return round(($returningCustomers / $totalCustomers) * 100);
+    }
+
+    /**
+     * Get efficiency score (completed orders / total assigned orders * 100)
+     */
+    public function getEfficiencyScore($giftWrapperId)
+    {
+        $total = $this->getTotalOrdersHandled($giftWrapperId);
+        $completed = $this->getCompletedOrders($giftWrapperId);
+        
+        if ($total == 0) {
+            return 0;
+        }
+        return round(($completed / $total) * 100);
+    }
+
+    /**
+     * Get orders by month for charts (last 6 months)
+     */
+    public function getOrdersByMonth($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                DATE_FORMAT(deliveryDate, '%Y-%m') as month,
+                DATE_FORMAT(deliveryDate, '%M') as month_name,
+                COUNT(*) as total_orders,
+                SUM(CASE WHEN is_wrapped = 1 THEN 1 ELSE 0 END) as completed,
+                SUM(CASE WHEN is_wrapped = 0 THEN 1 ELSE 0 END) as pending
+            FROM orders
+            WHERE giftWrapper_id = ? AND deliveryDate >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)
+            GROUP BY DATE_FORMAT(deliveryDate, '%Y-%m'), DATE_FORMAT(deliveryDate, '%M')
+            ORDER BY month ASC
+        ");
+        $stmt->execute([$giftWrapperId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get orders count by hour (to find peak hours)
+     */
+    public function getPeakHours($giftWrapperId)
+    {
+        // Since we don't have time in deliveryDate, return a default
+        // In production, you would query by hour if time data exists
+        return "2-6 PM";
+    }
+
+    /**
+     * Get average rating if available (placeholder for now)
+     */
+    public function getAverageRating($giftWrapperId)
+    {
+        // Placeholder - would need a ratings table
+        return 4.8;
+    }
+
 }
+

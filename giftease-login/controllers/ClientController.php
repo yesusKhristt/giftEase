@@ -382,6 +382,8 @@ class ClientController {
         }
 
         require_once __DIR__ . '/../views/Dashboards/Client/custom.php';
+
+        require_once __DIR__ . '/../views/Dashboards/Client/custom.php';
     }
 
     public function checkout($parts) {
@@ -436,6 +438,7 @@ class ClientController {
         switch ($parts[1]) {
             case 'cart':
                 $this->cart($parts);
+                $this->cart($parts);
                 break;
             case 'wishlist':
                 require_once __DIR__ . '/../views/Dashboards/Client/wishlist.php';
@@ -484,6 +487,7 @@ class ClientController {
                 break;
             default:
                 $this->items($parts);
+                $this->items($parts);
                 break;
         }
     }
@@ -495,7 +499,12 @@ class ClientController {
             $LAST_NAME  = $_POST['last_name'] ?? '';
             $PHONE      = $_POST['phone'] ?? '';
             $ADDRESS    = $_POST['address'] ?? '';
+            $LAST_NAME  = $_POST['last_name'] ?? '';
+            $PHONE      = $_POST['phone'] ?? '';
+            $ADDRESS    = $_POST['address'] ?? '';
 
+            // $this->client->updateUser($data);
+            header("Location: index.php?controller=client&action=dashboard/account");
             // $this->client->updateUser($data);
             header("Location: index.php?controller=client&action=dashboard/account");
             exit;
@@ -530,6 +539,8 @@ class ClientController {
             header("Location: index.php?controller=client&action=dashboard/account");
             exit;
 
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
             //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
         }
 

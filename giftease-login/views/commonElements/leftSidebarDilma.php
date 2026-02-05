@@ -56,11 +56,7 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?controller=client&action=dashboard/cart"
-        class="settings-btn <?= isActive('cart', $activePage) ?>">
-        <i class="fas fa-shopping-cart"></i>
-      </a>
-      <a href="?controller=client&action=dashboard/notifications"
+      <a href="?controller=client&action=dashboard/settings"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-bell"></i>
       </a>
