@@ -3,19 +3,15 @@ class giftWrapperController
 {
     private $giftwrapper;
     private $notification;
+    
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/GiftWrapperModel.php';
         require_once __DIR__ . '/../models/NotificationModel.php';
-        $this->giftwrapper = new GiftWrapperModel($pdo); //bruh
+        $this->giftwrapper = new GiftWrapperModel($pdo);
         $this->notification = new NotificationModel($pdo);
     }
-    private $giftwrapper;
-    public function __construct($pdo)
-    {
-        require_once __DIR__ . '/../models/GiftWrapperModel.php';
-        $this->giftwrapper = new GiftWrapperModel($pdo); //bruh
-    }
+    
     public function dashboard()
     {
         if (!$this->giftwrapper->getUserByEmail($_SESSION['user']['email'])) {
@@ -78,21 +74,6 @@ class giftWrapperController
         switch ($level1[1]) {
             case 'analytics':
                 $this->analytics($level1);
-                break;
-            case 'allOrder':
-                $this->allOrder($level1);
-                break;
-            case 'assignedOrder':
-                $this->assignedOrder($level1);
-                break;
-            case 'markComplete':
-                $this->markComplete($level1);
-                break;
-            case 'acceptOrder':
-                $this->acceptOrder($level1);
-                break;
-            case 'cancelOrder':
-                $this->cancelOrder($level1);
                 break;
             case 'allOrder':
                 $this->allOrder($level1);
