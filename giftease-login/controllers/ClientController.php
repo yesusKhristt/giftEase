@@ -37,96 +37,43 @@ class ClientController
         $this->Client($parts);
     }
 
-    // public function items($parts)
-    // {
-    //     $allProducts = $this->products->fetchAll();
-    //     $state       = $_GET['state'] ?? null;
-
-    //     if ($state === 'cart') {
-    //         $product_id = $parts[2];
-    //         $client_id  = $_SESSION['user']['id'];
-
-    //         // If it's already there, remove it. Otherwise, add it.
-
-    //         if ($this->cart->isInCart($client_id, $product_id)) {
-    //             $this->cart->removeFromCart($product_id, $client_id);
-    //             echo json_encode(['inCart' => false]);
-    //         } else {
-    //             $this->cart->addToCart($client_id, $product_id);
-    //             echo json_encode(['inCart' => true]);
-    //         }
-
-    //         exit;
-    //     } else if ($state === 'cartCheck') {
-    //         $product_id = $parts[2];
-    //         $client_id  = $_SESSION['user']['id'];
-
-    //         // If it's already there, remove it. Otherwise, add it.
-
-    //         if ($this->cart->isInCart($client_id, $product_id)) {
-    //             echo json_encode(['inCart' => true]);
-    //         } else {
-    //             echo json_encode(['inCart' => false]);
-    //         }
-
-    //         exit;
-    //     }
-
-    //     require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
-    // }
-
     public function items($parts)
-{
-    /* ================= PAGINATION LOGIC ================= */
+    {
+        $allProducts = $this->products->fetchAll();
+        $state       = $_GET['state'] ?? null;
 
-    $itemsPerPage = 2;
+        if ($state === 'cart') {
+            $product_id = $parts[2];
+            $client_id  = $_SESSION['user']['id'];
 
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-    if ($page < 1) $page = 1;
+            // If it's already there, remove it. Otherwise, add it.
 
-    $offset = ($page - 1) * $itemsPerPage;
+            if ($this->cart->isInCart($client_id, $product_id)) {
+                $this->cart->removeFromCart($product_id, $client_id);
+                echo json_encode(['inCart' => false]);
+            } else {
+                $this->cart->addToCart($client_id, $product_id);
+                echo json_encode(['inCart' => true]);
+            }
 
-    // Fetch paginated products
-    $allProducts = $this->products->fetchPaginated($itemsPerPage, $offset);
+            exit;
+        } else if ($state === 'cartCheck') {
+            $product_id = $parts[2];
+            $client_id  = $_SESSION['user']['id'];
 
-    // Count total products
-    $totalItems = $this->products->countAllProducts();
-    $totalPages = ceil($totalItems / $itemsPerPage);
+            // If it's already there, remove it. Otherwise, add it.
 
-    /* ================= CART AJAX LOGIC ================= */
+            if ($this->cart->isInCart($client_id, $product_id)) {
+                echo json_encode(['inCart' => true]);
+            } else {
+                echo json_encode(['inCart' => false]);
+            }
 
-    $state = $_GET['state'] ?? NULL;
-
-    if ($state === 'cart') {
-        $product_id = $parts[2];
-        $client_id = $_SESSION['user']['id'];
-
-        if ($this->cart->isInCart($client_id, $product_id)) {
-            $this->cart->removeFromCart($product_id, $client_id);
-            echo json_encode(['inCart' => false]);
-        } else {
-            $this->cart->addToCart($client_id, $product_id);
-            echo json_encode(['inCart' => true]);
+            exit;
         }
-        exit;
+
+        require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
     }
-    else if ($state === 'cartCheck') {
-        $product_id = $parts[2];
-        $client_id = $_SESSION['user']['id'];
-
-        if ($this->cart->isInCart($client_id, $product_id)) {
-            echo json_encode(['inCart' => true]);
-        } else {
-            echo json_encode(['inCart' => false]);
-        }
-        exit;
-    }
-
-    /* ================= LOAD VIEW ================= */
-
-    require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
-}
-
 
     public function displayProduct($parts)
     {
