@@ -5,6 +5,7 @@ class VendorController
     private $product;
     private $category;
     private $messeges;
+    private $order;
 
     public function __construct($pdo)
     {
@@ -12,10 +13,12 @@ class VendorController
         require_once __DIR__ . '/../models/ProductsModel.php';
         require_once __DIR__ . '/../models/CategoryModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
+        require_once __DIR__ . '/../models/OrderModel.php';
         $this->vendor   = new VendorModel($pdo);
         $this->product  = new ProductsModel($pdo);
         $this->category = new CategoryModel($pdo);
         $this->messeges = new MessegesModel($pdo);
+        $this->order    = new OrderModel($pdo);
     }
 
     public function dashboard()
@@ -243,6 +246,22 @@ class VendorController
         exit;
     }
 
+    public function showOrders()
+    {
+        $vendorId   = $_SESSION['user']['id'];
+        $orders     = $this->order->getOrdersForVendor($vendorId);
+        $orderStats = $this->order->getVendorOrderStats($vendorId);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
+    }
+
+    public function viewOrder($parts)
+    {
+        $orderId    = $parts[2] ?? null;
+        $vendorId   = $_SESSION['user']['id'];
+        $orderDetail = $this->order->getOrderDetailForVendor($orderId, $vendorId);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
+    }
+
     public function Vendor($parts)
     {
         switch ($parts[1]) {
@@ -257,6 +276,9 @@ class VendorController
                 break;
             case 'messeges':
                 $this->messeges($parts);
+                break;
+            case 'orders':
+                $this->showOrders();
                 break;
             case 'analysis':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
@@ -274,13 +296,13 @@ class VendorController
                 $this->handleitems($parts);
                 break;
             case 'vieworder':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
+                $this->viewOrder($parts);
                 break;
             case 'edititem':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
+                $this->showOrders();
                 break;
         }
     }

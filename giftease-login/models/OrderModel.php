@@ -61,6 +61,117 @@ class OrderModel
         }
     }
 
+    /**
+     * Get all orders that contain products from a specific vendor.
+     */
+    public function getOrdersForVendor($vendorId)
+    {
+        $sql = "
+            SELECT 
+                o.id AS order_id,
+                o.client_id,
+                CONCAT(c.first_name, ' ', c.last_name) AS client_name,
+                c.email AS client_email,
+                o.recipientName,
+                o.recipientPhone,
+                o.deliveryAddress,
+                o.locationType,
+                o.deliveryDate,
+                o.is_wrapped,
+                o.is_delivered,
+                o.productPrice,
+                o.deliveryPrice,
+                o.orderType,
+                SUM(oi.quantity * p.price) AS vendor_total
+            FROM orders o
+            JOIN orderItems oi ON oi.order_id = o.id
+            JOIN products p ON p.id = oi.item_id
+            JOIN clients c ON c.id = o.client_id
+            WHERE p.vendor_id = ?
+            GROUP BY o.id
+            ORDER BY o.deliveryDate ASC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$vendorId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get a single order's full details including only items belonging to the vendor.
+     */
+    public function getOrderDetailForVendor($orderId, $vendorId)
+    {
+        // Order header
+        $sql1 = "
+            SELECT 
+                o.*,
+                CONCAT(c.first_name, ' ', c.last_name) AS client_name,
+                c.email AS client_email,
+                c.phone AS client_phone
+            FROM orders o
+            JOIN clients c ON c.id = o.client_id
+            WHERE o.id = ?
+        ";
+        $stmt1 = $this->pdo->prepare($sql1);
+        $stmt1->execute([$orderId]);
+        $order = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+        if (!$order) return null;
+
+        // Items belonging to this vendor
+        $sql2 = "
+            SELECT 
+                p.id AS product_id,
+                p.name AS product_name,
+                p.price,
+                oi.quantity,
+                (oi.quantity * p.price) AS subtotal
+            FROM orderItems oi
+            JOIN products p ON p.id = oi.item_id
+            WHERE oi.order_id = ? AND p.vendor_id = ?
+        ";
+        $stmt2 = $this->pdo->prepare($sql2);
+        $stmt2->execute([$orderId, $vendorId]);
+        $items = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+        $order['items'] = $items;
+        $order['vendor_total'] = array_sum(array_column($items, 'subtotal'));
+
+        return $order;
+    }
+
+    /**
+     * Get summary stats for a vendor's orders.
+     * Uses a subquery to first deduplicate orders, so each order is counted once
+     * even if it contains multiple items from the same vendor.
+     */
+    public function getVendorOrderStats($vendorId)
+    {
+        $sql = "
+            SELECT 
+                COUNT(*) AS total_orders,
+                COALESCE(SUM(vendor_total), 0) AS total_revenue,
+                SUM(CASE WHEN deliveryDate < CURDATE() AND is_delivered = 0 THEN 1 ELSE 0 END) AS urgent_orders,
+                SUM(CASE WHEN is_delivered = 1 THEN 1 ELSE 0 END) AS delivered_orders,
+                SUM(CASE WHEN is_delivered = 0 THEN 1 ELSE 0 END) AS pending_orders
+            FROM (
+                SELECT 
+                    o.id,
+                    o.deliveryDate,
+                    o.is_delivered,
+                    SUM(oi.quantity * p.price) AS vendor_total
+                FROM orders o
+                JOIN orderItems oi ON oi.order_id = o.id
+                JOIN products p ON p.id = oi.item_id
+                WHERE p.vendor_id = ?
+                GROUP BY o.id, o.deliveryDate, o.is_delivered
+            ) AS vendor_orders
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$vendorId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function confirmOrder($data, $wrap_id)
     {
 

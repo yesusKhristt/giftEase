@@ -242,7 +242,8 @@ class AdminController
     }
     public function handleLogout()
     {
-        $_SESSION['admin'] = null;
+        unset($_SESSION['admin']);
+        unset($_SESSION['user']);
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
     }
