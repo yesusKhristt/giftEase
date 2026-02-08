@@ -192,7 +192,7 @@ class VendorController {
     }
 
     public function manageInventory($parts) {
-        $products = $this->product->fetchAllfromVendor($this->vendor->getVendorID($_SESSION['user']['id']));
+        $products = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
         $stock    = $parts[2] ?? 'NULL';
         if ($stock === 'Total') {
 

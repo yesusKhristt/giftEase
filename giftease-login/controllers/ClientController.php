@@ -429,7 +429,7 @@ class ClientController {
             header("Location: index.php?controller=client&action=dashboard/tracking  ");
             exit;
         }
-        require_once __DIR__ . '/../views/Dashboards/Client/payhere.php';
+        require_once __DIR__ . '/../views/Dashboards/Client/payhere/payhere.php';
     }
 
     public function Client($parts) {
