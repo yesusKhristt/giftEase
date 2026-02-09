@@ -14,7 +14,7 @@
   <div class="container">
     <?php
     $activePage = 'orders';
-    include 'views\commonElements/leftSidebar.php';
+    include 'views/commonElements/leftSidebar.php';
     ?>
     <div class="main-content">
 
@@ -30,72 +30,72 @@
               <th style="width: 80px;">Action</th>
               <th>Client</th>
               <th>Cost</th>
-              <th>Order Received</th>
-              <th>Order Due</th>
+              <th>Delivery Date</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody>
+            <?php if (!empty($orders)): ?>
+              <?php foreach ($orders as $order): ?>
+                <?php
+                  $isDelivered = $order['is_delivered'];
+                  $isUrgent = (!$isDelivered && strtotime($order['deliveryDate']) < time());
+                  if ($isDelivered) {
+                      $badgeClass = 'green';
+                      $badgeText = 'Delivered';
+                  } elseif ($isUrgent) {
+                      $badgeClass = 'red';
+                      $badgeText = 'Urgent';
+                  } else {
+                      $badgeClass = 'blue';
+                      $badgeText = 'On-Track';
+                  }
+                ?>
+                <tr>
+                  <td>
+                    <a class="view-btn" href="?controller=vendor&action=dashboard/vieworder/<?= htmlspecialchars($order['order_id']) ?>">
+                      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                        </path>
+                      </svg>
+                    </a>
+                  </td>
+                  <td><?= htmlspecialchars($order['client_name']) ?></td>
+                  <td>Rs. <?= number_format($order['vendor_total'], 2) ?></td>
+                  <td><?= htmlspecialchars($order['deliveryDate'] ?? 'N/A') ?></td>
+                  <td><span class="badge <?= $badgeClass ?>"><?= $badgeText ?></span></td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
               <tr>
-                <td>
-                  <a class="view-btn" href="?action=dashboard&type=vendor&level=vieworder">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                      </path>
-                    </svg>
-                  </a>
-                </td>
-                <td>Thenuka Ranasinghe</td>
-                <td>$25.00</td>
-                <td>2025-08-05</td>
-                <td>2025-08-10</td>
-                <td><span class="badge blue">On-Track</span></td>
+                <td colspan="5" style="text-align:center; padding:20px;">No orders yet.</td>
               </tr>
-              <tr>
-                <td>
-                  <a class="view-btn" href="?action=dashboard&type=vendor&level=vieworder">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                      </path>
-                    </svg>
-                  </a>
-                </td>
-                <td>Matt Patterson</td>
-                <td>$40.00</td>
-                <td>2025-08-04</td>
-                <td>2025-08-09</td>
-                <td><span class="badge red">Urgent</span></td>
+            <?php endif; ?>
           </tbody>
         </table>
       </div>
       <div class="summary-grid">
         <div class="card">
-
           <p class="subtitle">Total Orders</p><br>
-          <p class="title">2</p>
-
+          <p class="title"><?= (int)($orderStats['total_orders'] ?? 0) ?></p>
         </div>
 
         <div class="card">
           <p class="subtitle">Total Revenue</p><br>
-          <p class="title">$65.00</p>
+          <p class="title">Rs. <?= number_format($orderStats['total_revenue'] ?? 0, 2) ?></p>
         </div>
 
         <div class="card">
-
           <p class="subtitle">Urgent Orders</p><br>
-          <p class="title">1</p>
+          <p class="title"><?= (int)($orderStats['urgent_orders'] ?? 0) ?></p>
         </div>
       </div>
     </div>
   </div>
-  <script>
+  <!-- <script>
     // Add hover effect to stars
     document.querySelectorAll('.star').forEach(star => {
       star.addEventListener('mouseenter', function () {
@@ -131,7 +131,7 @@
         alert('View order details - This would open a modal or navigate to order details page');
       });
     });
-  </script>
+  </script> -->
 </body>
 
 </html>

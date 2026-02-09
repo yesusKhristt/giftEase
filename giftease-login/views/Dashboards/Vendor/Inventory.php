@@ -36,7 +36,7 @@
             <div class="inventory-grid">
                 <?php
                 foreach ($allProducts as $row) {
-                    ?>
+                ?>
                     <a class="inventory-item" data-status="<?= htmlspecialchars($row['status']) ?>" id="item"
                         href="?controller=vendor&action=dashboard/item/view/<?= $row['id'] ?>">
                         <img src="resources/uploads/vendor/products/<?= htmlspecialchars($row['displayImage'] ?? 'default.png') ?>"
@@ -59,10 +59,69 @@
                             </div>
                         </div>
                     </a>
-                    <?php
+                <?php
                 }
                 ?>
             </div>
+            <?php if ($totalPages > 1): ?>
+                <div class="pagination">
+
+
+                    <?php if ($page > 1): ?>
+                        <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page - 1 ?>">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="page-arrow disabled">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    <?php endif; ?>
+
+
+                    <a class="page-num <?= $page == 1 ? 'active' : '' ?>"
+                        href="?controller=client&action=dashboard/items&page=1">1</a>
+
+                    <?php if ($totalPages > 1): ?>
+                        <?php
+
+                        $range = 2;
+                        $start = max(2, $page - $range);
+                        $end = min($totalPages - 1, $page + $range);
+
+
+                        if ($start > 2): ?>
+                            <span class="page-dots">...</span>
+                        <?php endif; ?>
+
+
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <a class="page-num <?= $page == $i ? 'active' : '' ?>"
+                                href="?controller=client&action=dashboard/items&page=<?= $i ?>"><?= $i ?></a>
+                        <?php endfor; ?>
+
+
+                        <?php if ($end < $totalPages - 1): ?>
+                            <span class="page-dots">...</span>
+                        <?php endif; ?>
+
+
+                        <a class="page-num <?= $page == $totalPages ? 'active' : '' ?>"
+                            href="?controller=client&action=dashboard/items&page=<?= $totalPages ?>\"><?= $totalPages ?></a>
+                    <?php endif; ?>
+
+
+                    <?php if ($page < $totalPages): ?>
+                        <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page + 1 ?>">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="page-arrow disabled">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    <?php endif; ?>
+
+                </div>
+            <?php endif; ?>
 
 
         </div>
@@ -186,9 +245,9 @@
         // Render inventory items
         function renderInventory() {
             const grid = document.getElementById('inventoryGrid');
-            const filteredItems = currentFilter === 'all'
-                ? inventoryData
-                : inventoryData.filter(item => item.status === currentFilter);
+            const filteredItems = currentFilter === 'all' ?
+                inventoryData :
+                inventoryData.filter(item => item.status === currentFilter);
 
             if (filteredItems.length === 0) {
                 grid.innerHTML = `
@@ -323,7 +382,7 @@
 
         // Navigation
         document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function (e) {
+            item.addEventListener('click', function(e) {
                 if (this.getAttribute('href') === '#') {
                     e.preventDefault();
                 }

@@ -1,25 +1,28 @@
 <?php
-class VendorController {
+class VendorController
+{
     private $vendor;
     private $product;
     private $category;
     private $messeges;
-    private $ratings;
+    private $order;
 
-    public function __construct($pdo) {
+    public function __construct($pdo)
+    {
         require_once __DIR__ . '/../models/VendorModel.php';
         require_once __DIR__ . '/../models/ProductsModel.php';
         require_once __DIR__ . '/../models/CategoryModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
-        require_once __DIR__ . '/../models/RatingModel.php';
+        require_once __DIR__ . '/../models/OrderModel.php';
         $this->vendor   = new VendorModel($pdo);
         $this->product  = new ProductsModel($pdo);
         $this->category = new CategoryModel($pdo);
         $this->messeges = new MessegesModel($pdo);
-        $this->ratings  = new RatingModel($pdo);
+        $this->order    = new OrderModel($pdo);
     }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         if (! $this->vendor->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
@@ -31,7 +34,8 @@ class VendorController {
         $this->Vendor($parts);
     }
 
-    public function handleitems($parts) {
+    public function handleitems($parts)
+    {
         switch ($parts[2]) {
             case 'view':
                 $this->viewItem($parts);
@@ -45,23 +49,27 @@ class VendorController {
             case 'delete':
                 $this->deleteItem($parts);
                 break;
+
         }
     }
 
-    public function viewItem($parts) {
+    public function viewItem($parts)
+    {
         $productId      = $parts[3];
         $productDetails = $this->product->fetchProduct($productId);
         require_once __DIR__ . '/../views/Dashboards/Vendor/ViewItem.php';
     }
 
-    public function deleteItem($parts) {
+    public function deleteItem($parts)
+    {
         $productId = $parts[3];
         $this->product->deleteProduct($productId);
         header("Location: index.php?controller=vendor&action=dashboard/inventory");
         exit;
     }
 
-    public function messeges($parts) {
+    public function messeges($parts)
+    {
         $client_id = $parts[3] ?? '';
 
         if ($parts[2] === 'send') {
@@ -111,7 +119,8 @@ class VendorController {
         }
     }
 
-    public function handleItem($parts) {
+    public function handleItem($parts)
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title       = $_POST['title'];
             $category    = $_POST['category'];
@@ -120,7 +129,7 @@ class VendorController {
             $description = $_POST['description'];
             $deliverable = $_POST['hours24'];
 
-            // Handle file upload if user selected a new image
+                                  // Handle file upload if user selected a new image
             $profilePicPath = []; // start with empty array
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
@@ -173,26 +182,31 @@ class VendorController {
         require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
     }
 
-    public function ajaxCategory() {
+    public function ajaxCategory()
+    {
         $categoryId = intval($_POST['category_id'] ?? 0);
 
         $subcategories = $this->category->getSubcategory($categoryId);
 
         header('Content-Type: application/json');
         echo json_encode($subcategories);
+
     }
 
-    public function test($profilePicPath) {
+    public function test($profilePicPath)
+    {
         require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
     }
 
-    public function showInventory($parts) {
+    public function showInventory($parts)
+    {
         $allProducts = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Vendor/Inventory.php';
     }
 
-    public function manageInventory($parts) {
-        $products = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
+    public function manageInventory($parts)
+    {
+        $products = $this->product->fetchAllfromVendor($this->vendor->getVendorID($_SESSION['user']['id']));
         $stock    = $parts[2] ?? 'NULL';
         if ($stock === 'Total') {
 
@@ -225,42 +239,31 @@ class VendorController {
         require_once __DIR__ . '/../views/Dashboards/Vendor/manageInventory.php';
     }
 
-    public function handleLogout() {
+    public function handleLogout()
+    {
         $_SESSION['vendor'] = null;
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
     }
 
-    public function viewRatings() {
-        if (!isset($_SESSION['user'])) {
-            header("Location: index.php?controller=auth&action=login");
-            exit;
-        }
-
-        // The vendor ID is already in the session
-        $vendorId = $_SESSION['user']['id'];
-
-        if (!$vendorId) {
-            die("Vendor profile not found");
-        }
-
-        // DEBUG: Show vendor info
-        error_log("Vendor viewing ratings - ID: $vendorId, Email: " . $_SESSION['user']['email']);
-
-        // Get all ratings for this vendor
-        $ratings = $this->ratings->getVendorRatings($vendorId, 100);
-        error_log("Found " . count($ratings) . " ratings for vendor ID: $vendorId");
-
-        // Get vendor's average rating from database
-        $stmt = $this->pdo->prepare("SELECT id, shopName, avg_rating, rating_count FROM vendors WHERE id = ?");
-        $stmt->execute([$vendorId]);
-        $vendorStats = $stmt->fetch(PDO::FETCH_ASSOC);
-        error_log("Vendor stats: " . var_export($vendorStats, true));
-
-        require_once __DIR__ . '/views/Dashboards/Vendor/vendor_ratings.php';
+    public function showOrders()
+    {
+        $vendorId   = $_SESSION['user']['id'];
+        $orders     = $this->order->getOrdersForVendor($vendorId);
+        $orderStats = $this->order->getVendorOrderStats($vendorId);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
     }
 
-    public function Vendor($parts) {
+    public function viewOrder($parts)
+    {
+        $orderId    = $parts[2] ?? null;
+        $vendorId   = $_SESSION['user']['id'];
+        $orderDetail = $this->order->getOrderDetailForVendor($orderId, $vendorId);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
+    }
+
+    public function Vendor($parts)
+    {
         switch ($parts[1]) {
             case 'inventory':
                 $this->showInventory($parts);
@@ -273,6 +276,9 @@ class VendorController {
                 break;
             case 'messeges':
                 $this->messeges($parts);
+                break;
+            case 'orders':
+                $this->showOrders();
                 break;
             case 'analysis':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
@@ -290,17 +296,18 @@ class VendorController {
                 $this->handleitems($parts);
                 break;
             case 'vieworder':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
+                $this->viewOrder($parts);
                 break;
             case 'edititem':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
+                $this->showOrders();
                 break;
         }
     }
-    public function deactivateUser() {
+    public function deactivateUser()
+    {
         $USER_ID = $_SESSION['user']['id'];
         $this->user->deactivateUser($USER_ID);
         header("Location: index.php");
