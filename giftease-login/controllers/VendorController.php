@@ -200,13 +200,29 @@ class VendorController
 
     public function showInventory($parts)
     {
-        $allProducts = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
+                /* ================= PAGINATION LOGIC ================= */
+
+        $itemsPerPage = 2;
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $itemsPerPage;
+
+        // Fetch paginated products
+        $allProducts = $this->product->fetchPaginatedFromVendor($itemsPerPage, $offset, $_SESSION['user']['id']);
+
+        // Count total products
+        $totalItems = $this->product->countAllProducts();
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        
+        //$allProducts = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Vendor/Inventory.php';
     }
 
     public function manageInventory($parts)
     {
-        $products = $this->product->fetchAllfromVendor($this->vendor->getVendorID($_SESSION['user']['id']));
+        $products = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
         $stock    = $parts[2] ?? 'NULL';
         if ($stock === 'Total') {
 

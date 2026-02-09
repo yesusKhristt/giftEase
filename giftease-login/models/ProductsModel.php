@@ -1,17 +1,14 @@
 <?php
-class ProductsModel
-{
+class ProductsModel {
     private $pdo;
     private $user;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTableIfNotExists(); // Create the table if not there
     }
 
-    public function createTableIfNotExists()
-    {
+    public function createTableIfNotExists() {
         //INSERT INTO products (vendor_id, name, price, description,mainCategory, subCategory, created_at) VALUES (9, 'Apex Slaughterspine', 35, 'COOLEST FICTIONAL DINASAUR EVER', 1,13, CURRENT_TIMESTAMP);
         $sql2 = "
         CREATE TABLE IF NOT EXISTS products (
@@ -56,8 +53,7 @@ class ProductsModel
         }
     }
 
-    public function fetchAll()
-    {
+    public function fetchAll() {
         $stmt = $this->pdo->prepare("SELECT * FROM products");
         $stmt->execute();
 
@@ -65,8 +61,7 @@ class ProductsModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function fetchAllfromVendor($Vendor_id)
-    {
+    public function fetchAllfromVendor($Vendor_id) {
         $stmt = $this->pdo->prepare("SELECT * FROM products WHERE vendor_id = $Vendor_id");
         $stmt->execute();
 
@@ -74,8 +69,7 @@ class ProductsModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function fetchProduct($productId)
-    {
+    public function fetchProduct($productId) {
         $stmt1 = $this->pdo->prepare("SELECT * FROM products WHERE id = $productId");
         $stmt1->execute();
         $product1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
@@ -107,34 +101,27 @@ class ProductsModel
             'phone' => $product3[0]['phone'],
             'vendorRating' => (int)$product3[0]['Rating']
         ];
-
     }
 
-    public function fetchProductPic($productId)
-    {
+    public function fetchProductPic($productId) {
         $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
         $stmt2->execute();
         return $stmt2->fetchAll(PDO::FETCH_ASSOC);
-
     }
 
-    public function fetchProductPicCol($productId)
-    {
+    public function fetchProductPicCol($productId) {
         $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
         $stmt2->execute();
         return $stmt2->fetch(PDO::FETCH_ASSOC);
-
     }
 
 
-    public function deleteProduct($productId)
-    {
+    public function deleteProduct($productId) {
         $stmt1 = $this->pdo->prepare("DELETE FROM products WHERE id = $productId");
         $stmt1->execute();
     }
 
-    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath, $deliverable)
-    {
+    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath, $deliverable) {
         $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, status, mainCategory, subCategory, totalStock, reservedStock, sold, impressions, clicks, raiting, displayImage, deliverable, created_at) VALUES (?, ?, ?, ?, 'active',? ,  ? , 0 ,0, 0, 0, 0, 0, ? , ?, CURRENT_TIMESTAMP)");
         $stmt1->execute([
             $vendor_id,
@@ -146,8 +133,7 @@ class ProductsModel
             $profilePath[0],
             ($deliverable === "1")
         ]);
-        $productID = $this->pdo->lastInsertId();
-        ;
+        $productID = $this->pdo->lastInsertId();;
         $sort = 1;
         foreach ($profilePath as $image) {
             $stmt2 = $this->pdo->prepare("INSERT INTO productImages (product_id, sortOrder, image_loc) VALUES (?, ? ,?)");
@@ -161,8 +147,7 @@ class ProductsModel
         return $productID;
     }
 
-    public function addStock($product_id, $stockQuantity)
-    {
+    public function addStock($product_id, $stockQuantity) {
         $stmt1 = $this->pdo->prepare("SELECT totalStock from products WHERE id = ?");
         $stmt1->execute([
             $product_id
@@ -176,8 +161,7 @@ class ProductsModel
         ]);
     }
 
-    public function substractStock($product_id, $stockQuantity)
-    {
+    public function substractStock($product_id, $stockQuantity) {
         $stmt1 = $this->pdo->prepare("SELECT totalStock from products WHERE id = ?");
         $stmt1->execute([
             $product_id
@@ -190,15 +174,13 @@ class ProductsModel
                 $product_id
             ]);
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    
-    public function addReserved($product_id, $stockQuantity)
-    {
+
+    public function addReserved($product_id, $stockQuantity) {
         $stmt1 = $this->pdo->prepare("SELECT reservedStock from products WHERE id = ?");
         $stmt1->execute([
             $product_id
@@ -212,8 +194,7 @@ class ProductsModel
         ]);
     }
 
-    public function substractReserved($product_id, $stockQuantity)
-    {
+    public function substractReserved($product_id, $stockQuantity) {
         $stmt1 = $this->pdo->prepare("SELECT reservedStock from products WHERE id = ?");
         $stmt1->execute([
             $product_id
@@ -226,14 +207,12 @@ class ProductsModel
                 $product_id
             ]);
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath, $deliverable)
-    {
+    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath, $deliverable) {
         // fallback to DB images if $profilePath is empty
         if (empty($profilePath)) {
             $profilePath = $this->fetchProductPic($product_id);
@@ -289,31 +268,49 @@ class ProductsModel
     }
 
     // 🔹 Get products with pagination
-public function fetchPaginated($limit, $offset)
-{
-    $stmt = $this->pdo->prepare("
+    public function fetchPaginated($limit, $offset) {
+        $stmt = $this->pdo->prepare("
         SELECT * FROM products
         WHERE status = 'active'
         ORDER BY created_at DESC
         LIMIT :limit OFFSET :offset
     ");
 
-    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-    $stmt->execute();
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-// 🔹 Count total active products
-public function countAllProducts()
-{
-    $stmt = $this->pdo->prepare("
+
+    public function fetchPaginatedFromVendor($limit, $offset, $vendor_id) {
+        $stmt = $this->pdo->prepare("
+    SELECT *
+    FROM products
+    WHERE status = 'active'
+      AND vendor_id = :vendor_id
+    ORDER BY created_at DESC
+    LIMIT :limit OFFSET :offset
+");
+
+
+        $stmt->bindValue(':vendor_id', (int)$vendor_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 🔹 Count total active products
+    public function countAllProducts() {
+        $stmt = $this->pdo->prepare("
         SELECT COUNT(*) FROM products WHERE status = 'active'
     ");
-    $stmt->execute();
-    return (int)$stmt->fetchColumn();
-}
-
-
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
 }

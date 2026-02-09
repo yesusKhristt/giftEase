@@ -68,7 +68,7 @@
 
 
                     <?php if ($page > 1): ?>
-                        <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page - 1 ?>">
+                        <a class="page-arrow" href="?controller=vendor&action=dashboard/inventory&page=<?= $page - 1 ?>">
                             <i class="fas fa-chevron-left"></i>
                         </a>
                     <?php else: ?>
@@ -79,7 +79,7 @@
 
 
                     <a class="page-num <?= $page == 1 ? 'active' : '' ?>"
-                        href="?controller=client&action=dashboard/items&page=1">1</a>
+                        href="?controller=vendor&action=dashboard/inventory&page=1">1</a>
 
                     <?php if ($totalPages > 1): ?>
                         <?php
@@ -96,7 +96,7 @@
 
                         <?php for ($i = $start; $i <= $end; $i++): ?>
                             <a class="page-num <?= $page == $i ? 'active' : '' ?>"
-                                href="?controller=client&action=dashboard/items&page=<?= $i ?>"><?= $i ?></a>
+                                href="?controller=vendor&action=dashboard/inventory&page=<?= $i ?>"><?= $i ?></a>
                         <?php endfor; ?>
 
 
@@ -106,12 +106,12 @@
 
 
                         <a class="page-num <?= $page == $totalPages ? 'active' : '' ?>"
-                            href="?controller=client&action=dashboard/items&page=<?= $totalPages ?>\"><?= $totalPages ?></a>
+                            href="?controller=vendor&action=dashboard/inventory&page=<?= $totalPages ?>\"><?= $totalPages ?></a>
                     <?php endif; ?>
 
 
                     <?php if ($page < $totalPages): ?>
-                        <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page + 1 ?>">
+                        <a class="page-arrow" href="?controller=vendor&action=dashboard/inventory&page=<?= $page + 1 ?>">
                             <i class="fas fa-chevron-right"></i>
                         </a>
                     <?php else: ?>
