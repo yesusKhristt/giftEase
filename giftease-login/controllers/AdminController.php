@@ -242,8 +242,7 @@ class AdminController
     }
     public function handleLogout()
     {
-        unset($_SESSION['admin']);
-        unset($_SESSION['user']);
+        $_SESSION['admin'] = null;
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
     }
@@ -255,63 +254,383 @@ class AdminController
     }
     public function vendors($parts){
         $allVendors = $this->admin->getAllUnverifiedVendors();
-        if($parts[2] == 'verify'){
-            $this->vendor->verifyUser($parts[3]);
+        if(isset($parts[2]) && $parts[2] == 'verify'){
+            $vendorId = $parts[3];
+            $this->vendor->verifyUser($vendorId);
             header("Location: index.php?controller=admin&action=dashboard/vendor");
             exit;
         }
-        else if($parts[2] == 'unverify'){
+        else if(isset($parts[2]) && $parts[2] == 'unverify'){
             $this->vendor->unverifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/vendor");
             exit;
         }
+        
+        // Pagination and Search
+        $search = $_GET['search'] ?? '';
+        $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $itemsPerPage = 4;
+        
+        // Filter by search query
+        if (!empty($search)) {
+            $allVendors = array_filter($allVendors, function($item) use ($search) {
+                return stripos($item['first_name'], $search) !== false ||
+                       stripos($item['last_name'], $search) !== false ||
+                       stripos($item['email'], $search) !== false ||
+                       stripos($item['shopName'], $search) !== false;
+            });
+        }
+        
+        // Calculate pagination
+        $totalItems = count($allVendors);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $currentPage = min($currentPage, $totalPages);
+        $offset = ($currentPage - 1) * $itemsPerPage;
+        
+        // Get items for current page
+        $paginatedVendors = array_slice($allVendors, $offset, $itemsPerPage);
+        
         require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
     }
+
+    
     public function giftwrappers($parts){
         $allGiftWrappers = $this->admin->getAllUnverifiedGiftwrapper();
-        if($parts[2] == 'verify'){
+        if(isset($parts[2]) && $parts[2] == 'verify'){
             $this->giftWrapper->verifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/giftWrappers");
             exit;
         }
-        else if($parts[2] == 'unverify'){
+        else if(isset($parts[2]) && $parts[2] == 'unverify'){
             $this->giftWrapper->unverifyUser($parts[3]);
-            header("Location: index.php?controller=admin&action=dashboard/vendor");
+            header("Location: index.php?controller=admin&action=dashboard/giftWrappers");
             exit;
         }
+        
+        // Pagination and Search
+        $search = $_GET['search'] ?? '';
+        $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $itemsPerPage = 4;
+        
+        // Filter by search query
+        if (!empty($search)) {
+            $allGiftWrappers = array_filter($allGiftWrappers, function($item) use ($search) {
+                return stripos($item['first_name'], $search) !== false ||
+                       stripos($item['last_name'], $search) !== false ||
+                       stripos($item['email'], $search) !== false;
+            });
+        }
+        
+        // Calculate pagination
+        $totalItems = count($allGiftWrappers);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $currentPage = min($currentPage, $totalPages);
+        $offset = ($currentPage - 1) * $itemsPerPage;
+        
+        // Get items for current page
+        $paginatedGiftWrappers = array_slice($allGiftWrappers, $offset, $itemsPerPage);
+        
         require_once __DIR__ . '/../views/Dashboards/Admin/giftWrappers.php';
     }
     public function delivery($parts){
         $allDelivery = $this->admin->getAllUnverifiedDelivery();
-        if($parts[2] == 'verify'){
+        if(isset($parts[2]) && $parts[2] == 'verify'){
             $this->delivery->verifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/delivery");
             exit;
         }
-        else if($parts[2] == 'unverify'){
+        else if(isset($parts[2]) && $parts[2] == 'unverify'){
             $this->delivery->unverifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/delivery");
             exit;
         }
+        
+        // Pagination and Search
+        $search = $_GET['search'] ?? '';
+        $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $itemsPerPage = 4;
+        
+        // Filter by search query
+        if (!empty($search)) {
+            $allDelivery = array_filter($allDelivery, function($item) use ($search) {
+                return stripos($item['first_name'], $search) !== false ||
+                       stripos($item['last_name'], $search) !== false ||
+                       stripos($item['email'], $search) !== false ||
+                       stripos($item['vehiclePlate'], $search) !== false;
+            });
+        }
+        
+        // Calculate pagination
+        $totalItems = count($allDelivery);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $currentPage = min($currentPage, $totalPages);
+        $offset = ($currentPage - 1) * $itemsPerPage;
+        
+        // Get items for current page
+        $paginatedDelivery = array_slice($allDelivery, $offset, $itemsPerPage);
+        
         require_once __DIR__ . '/../views/Dashboards/Admin/delivery.php';
     }
     public function deliveryman($parts){
         $allDeliveryman = $this->admin->getAllUnverifiedDeliveryman();
-        if($parts[2] == 'verify'){
+        if(isset($parts[2]) && $parts[2] == 'verify'){
             $this->deliveryman->verifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/deliveryman");
             exit;
         }
-        else if($parts[2] == 'unverify'){
+        else if(isset($parts[2]) && $parts[2] == 'unverify'){
             $this->deliveryman->unverifyUser($parts[3]);
             header("Location: index.php?controller=admin&action=dashboard/deliveryman");
             exit;
         }
+        
+        // Pagination and Search
+        $search = $_GET['search'] ?? '';
+        $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $itemsPerPage = 4;
+        
+        // Filter by search query
+        if (!empty($search)) {
+            $allDeliveryman = array_filter($allDeliveryman, function($item) use ($search) {
+                return stripos($item['first_name'], $search) !== false ||
+                       stripos($item['last_name'], $search) !== false ||
+                       stripos($item['email'], $search) !== false ||
+                       stripos($item['vehiclePlate'], $search) !== false;
+            });
+        }
+        
+        // Calculate pagination
+        $totalItems = count($allDeliveryman);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $currentPage = min($currentPage, $totalPages);
+        $offset = ($currentPage - 1) * $itemsPerPage;
+        
+        // Get items for current page
+        $paginatedDeliveryman = array_slice($allDeliveryman, $offset, $itemsPerPage);
+        
         require_once __DIR__ . '/../views/Dashboards/Admin/deliveryMan.php';
     }
     public function clients($parts){
         $allClients = $this->admin->getAllClients();
         require_once __DIR__ . '/../views/Dashboards/Admin/customer.php';
+    }
+
+    public function orderDetail($parts)
+    {
+        $orderId = $parts[2] ?? null;
+        if (!$orderId) {
+            header("Location: index.php?controller=admin&action=dashboard/avenue");
+            exit;
+        }
+
+        $order = $this->admin->getOrderDetail($orderId);
+        $items = $this->admin->getOrderItems($orderId);
+        require_once __DIR__ . '/../views/Dashboards/Admin/orderDetail.php';
+    }
+
+    public function avenue($parts)
+    {
+        $section = $parts[2] ?? '';
+        $id = $parts[3] ?? null;
+
+        if ($section === '') {
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenue.php';
+            return;
+        }
+
+        if ($section === 'vendor' && $id) {
+            $detail = $this->admin->getVendorById($id);
+            $ratingStats = $this->admin->getVendorRatingStats($id);
+            if (is_array($detail)) {
+                $detail['rating'] = $ratingStats['rating'] ?? 0;
+                $detail['rating_count'] = $ratingStats['total'] ?? 0;
+            }
+            $stats = [
+                'earnings' => $this->admin->getVendorEarnings($id),
+                'monthlyEarnings' => $this->admin->getVendorMonthlyEarnings($id),
+                'totalSold' => $this->admin->getVendorTotalSold($id),
+                'productCount' => $this->admin->getVendorProductCount($id)
+            ];
+            $items = $this->admin->getVendorSoldItems($id);
+            $pageTitle = 'Vendor Details';
+            $type = 'vendor';
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenueDetail.php';
+            return;
+        }
+        if ($section === 'vendorProducts' && $id) {
+            $vendor = $this->admin->getVendorById($id);
+            $products = $this->admin->getVendorProducts($id);
+            require_once __DIR__ . '/../views/Dashboards/Admin/vendorProducts.php';
+            return;
+        }
+        if ($section === 'vendorSoldItems' && $id) {
+            $vendor = $this->admin->getVendorById($id);
+            $items = $this->admin->getVendorSoldItemsList($id);
+            require_once __DIR__ . '/../views/Dashboards/Admin/vendorSoldItems.php';
+            return;
+        }
+        if ($section === 'delivery' && $id) {
+            $detail = $this->admin->getDeliveryById($id);
+            $stats = [
+                'earnings' => $this->admin->getDeliveryEarnings($id),
+                'monthlyEarnings' => $this->admin->getDeliveryMonthlyEarnings($id),
+                'completed' => $this->admin->getDeliveryCompletedCount($id)
+            ];
+            $orders = $this->admin->getDeliveryOrders($id);
+            $pageTitle = 'Delivery Details';
+            $type = 'delivery';
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenueDetail.php';
+            return;
+        }
+        if ($section === 'deliveryCompleted' && $id) {
+            $delivery = $this->admin->getDeliveryById($id);
+            $orders = $this->admin->getDeliveryCompletedOrders($id);
+            require_once __DIR__ . '/../views/Dashboards/Admin/deliveryCompleted.php';
+            return;
+        }
+        if ($section === 'deliveryman' && $id) {
+            $detail = $this->admin->getDeliverymanById($id);
+            $stats = [
+                'earnings' => 0,
+                'monthlyEarnings' => 0,
+                'completed' => 0
+            ];
+            $pageTitle = 'Deliveryman Details';
+            $type = 'deliveryman';
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenueDetail.php';
+            return;
+        }
+        if ($section === 'deliverymanCompleted' && $id) {
+            $deliveryman = $this->admin->getDeliverymanById($id);
+            $orders = $this->admin->getDeliverymanCompletedOrders($id);
+            require_once __DIR__ . '/../views/Dashboards/Admin/deliverymanCompleted.php';
+            return;
+        }
+        if ($section === 'giftWrapper' && $id) {
+            $detail = $this->admin->getGiftWrapperById($id);
+            $stats = [
+                'earnings' => $this->admin->getGiftWrapperEarnings($id),
+                'monthlyEarnings' => $this->admin->getGiftWrapperMonthlyEarnings($id),
+                'completed' => $this->admin->getGiftWrapperCompletedCount($id)
+            ];
+            $orders = $this->admin->getGiftWrapperOrders($id);
+            $pageTitle = 'Gift Wrapper Details';
+            $type = 'giftWrapper';
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenueDetail.php';
+            return;
+        }
+        if ($section === 'giftWrapperCompleted' && $id) {
+            $giftWrapper = $this->admin->getGiftWrapperById($id);
+            $orders = $this->admin->getGiftWrapperCompletedOrders($id);
+            require_once __DIR__ . '/../views/Dashboards/Admin/giftWrapperCompleted.php';
+            return;
+        }
+
+        if ($section === 'vendors') {
+            $items = $this->admin->getAllVendors();
+            $pageTitle = 'Vendors';
+            $type = 'vendor';
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenueList.php';
+            return;
+        }
+        if ($section === 'delivery') {
+            $items = $this->admin->getAllDelivery();
+            $pageTitle = 'Delivery Partners';
+            $type = 'delivery';
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenueList.php';
+            return;
+        }
+        if ($section === 'deliveryman') {
+            $items = $this->admin->getAllDeliveryman();
+            $pageTitle = 'Deliverymen';
+            $type = 'deliveryman';
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenueList.php';
+            return;
+        }
+        if ($section === 'giftWrappers') {
+            $items = $this->admin->getAllGiftWrappers();
+            $pageTitle = 'Gift Wrappers';
+            $type = 'giftWrapper';
+            require_once __DIR__ . '/../views/Dashboards/Admin/avenueList.php';
+            return;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Admin/avenue.php';
+    }
+
+    public function salarySummary()
+    {
+        $rows = [];
+
+        $vendors = $this->admin->getAllVendors();
+        foreach ($vendors as $vendor) {
+            $monthly = $this->admin->getVendorMonthlyEarnings($vendor['id']);
+            if ($monthly > 0) {
+                $rows[] = [
+                    'role' => 'Vendor',
+                    'id' => $vendor['id'],
+                    'name' => trim(($vendor['first_name'] ?? '') . ' ' . ($vendor['last_name'] ?? '')),
+                    'email' => $vendor['email'] ?? 'N/A',
+                    'phone' => $vendor['phone'] ?? 'N/A',
+                    'monthly' => $monthly,
+                    'link' => "?controller=admin&action=dashboard/avenue/vendor/" . $vendor['id']
+                ];
+            }
+        }
+
+        $deliveries = $this->admin->getAllDelivery();
+        foreach ($deliveries as $delivery) {
+            $monthly = $this->admin->getDeliveryMonthlyEarnings($delivery['id']);
+            if ($monthly > 0) {
+                $rows[] = [
+                    'role' => 'Delivery',
+                    'id' => $delivery['id'],
+                    'name' => trim(($delivery['first_name'] ?? '') . ' ' . ($delivery['last_name'] ?? '')),
+                    'email' => $delivery['email'] ?? 'N/A',
+                    'phone' => $delivery['phone'] ?? 'N/A',
+                    'monthly' => $monthly,
+                    'link' => "?controller=admin&action=dashboard/avenue/delivery/" . $delivery['id']
+                ];
+            }
+        }
+
+        $deliverymen = $this->admin->getAllDeliveryman();
+        foreach ($deliverymen as $deliveryman) {
+            $monthly = 0;
+            if ($monthly > 0) {
+                $rows[] = [
+                    'role' => 'Deliveryman',
+                    'id' => $deliveryman['id'],
+                    'name' => trim(($deliveryman['first_name'] ?? '') . ' ' . ($deliveryman['last_name'] ?? '')),
+                    'email' => $deliveryman['email'] ?? 'N/A',
+                    'phone' => $deliveryman['phone'] ?? 'N/A',
+                    'monthly' => $monthly,
+                    'link' => "?controller=admin&action=dashboard/avenue/deliveryman/" . $deliveryman['id']
+                ];
+            }
+        }
+
+        $giftWrappers = $this->admin->getAllGiftWrappers();
+        foreach ($giftWrappers as $giftWrapper) {
+            $monthly = $this->admin->getGiftWrapperMonthlyEarnings($giftWrapper['id']);
+            if ($monthly > 0) {
+                $rows[] = [
+                    'role' => 'Gift Wrapper',
+                    'id' => $giftWrapper['id'],
+                    'name' => trim(($giftWrapper['first_name'] ?? '') . ' ' . ($giftWrapper['last_name'] ?? '')),
+                    'email' => $giftWrapper['email'] ?? 'N/A',
+                    'phone' => $giftWrapper['phone'] ?? 'N/A',
+                    'monthly' => $monthly,
+                    'link' => "?controller=admin&action=dashboard/avenue/giftWrapper/" . $giftWrapper['id']
+                ];
+            }
+        }
+
+        usort($rows, function ($a, $b) {
+            return $b['monthly'] <=> $a['monthly'];
+        });
+
+        require_once __DIR__ . '/../views/Dashboards/Admin/salary.php';
     }
 
     public function Admin($parts)
@@ -327,7 +646,7 @@ class AdminController
                 $this->deliveryman($parts);
                 break;
             case 'items':
-                require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
+                $this->items($parts);
                 break;
             case 'settings':
                 require_once __DIR__ . '/../views/Dashboards/Admin/settings new.php';
@@ -340,6 +659,15 @@ class AdminController
                 break;
             case 'admins':
                 $this->admins($parts);
+                break;
+            case 'order':
+                $this->orderDetail($parts);
+                break;
+            case 'avenue':
+                $this->avenue($parts);
+                break;
+            case 'salary':
+                $this->salarySummary();
                 break;
             case 'profile':
                 require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
@@ -360,9 +688,50 @@ class AdminController
                 $this->reports($parts);
                 break;
             default:
-                $this->reports($parts);
+                require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
                 break;
         }
+    }
+
+    public function items($parts){
+        require_once __DIR__ . '/../models/ProductsModel.php';
+        $productsModel = new ProductsModel($this->delivery->getpdo());
+        
+        // Get all products with vendor details
+        $allProducts = $productsModel->fetchAllWithVendor();
+        
+        // Pagination and Search
+        $search = $_GET['search'] ?? '';
+        $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $itemsPerPage = 4;
+        
+        // Filter by search query
+        if (!empty($search)) {
+            $allProducts = array_filter($allProducts, function($item) use ($search) {
+                return stripos($item['name'], $search) !== false ||
+                       stripos($item['description'], $search) !== false ||
+                       stripos($item['shopName'], $search) !== false;
+            });
+        }
+        
+        // Calculate pagination
+        $totalItems = count($allProducts);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $currentPage = min($currentPage, $totalPages);
+        $offset = ($currentPage - 1) * $itemsPerPage;
+        
+        // Get items for current page
+        $paginatedProducts = array_slice($allProducts, $offset, $itemsPerPage);
+        
+        require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
+    }
+
+    public function deactivateUser()
+    {
+        $USER_ID = $_SESSION['user']['id'];
+        $this->user->deactivateUser($USER_ID);
+        header("Location: index.php");
+        exit;
     }
 
     public function reports($parts)
@@ -383,13 +752,5 @@ class AdminController
         ];
         
         require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
-    }
-
-        public function deactivateUser()
-    {
-        $USER_ID = $_SESSION['user']['id'];
-        $this->user->deactivateUser($USER_ID);
-        header("Location: index.php");
-        exit;
     }
 }

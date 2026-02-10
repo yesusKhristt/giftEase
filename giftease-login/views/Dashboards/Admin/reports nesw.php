@@ -321,16 +321,16 @@
                     {
                         label: 'Orders',
                         data: ordersByMonth.map(item => item.total_orders),
-                        backgroundColor: '#94c997',
-                        borderColor: '#d03c2e',
+                        backgroundColor: '#ff8a8a',
+                        borderColor: '#000000',
                         borderWidth: 1
                     },
                     {
                         label: 'Revenue (Rs.)',
                         data: ordersByMonth.map(item => item.revenue),
                         type: 'line',
-                        borderColor: '#d03c2e',
-                        backgroundColor: '#ab94c9',
+                        borderColor: '#000000',
+                        backgroundColor: '#a7b6ff',
                         fill: true,
                         tension: 0.4,
                         yAxisID: 'y1'

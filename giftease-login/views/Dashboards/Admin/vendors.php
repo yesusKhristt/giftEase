@@ -21,53 +21,157 @@
                     <p class="subtitle">vendor list</p>
                 </div>
 
+                <!-- Search Bar -->
+                <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center;">
+                    <form id="searchForm" method="GET" style="display: flex; gap: 10px; flex: 1;">
+                        <input type="hidden" name="controller" value="admin">
+                        <input type="hidden" name="action" value="dashboard/vendor">
+                        <input type="text" id="searchInput" name="search" placeholder="Search by name, email or shop..." value="<?php echo htmlspecialchars($search); ?>" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <button type="submit" style="padding: 10px 20px; background-color: #e91e63; color: white; border: none; border-radius: 5px; cursor: pointer; display: none;"><i class="fas fa-search"></i> Search</button>
+                        <?php if (!empty($search)): ?>
+                            <a href="?controller=admin&action=dashboard/vendor" style="padding: 10px 15px; background-color: #999; color: white; border: none; border-radius: 5px; text-decoration: none; cursor: pointer;"><i class="fas fa-times"></i> Clear</a>
+                        <?php endif; ?>
+                    </form>
+                </div>
 
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Address</th>
-                            <th>Shop Name</th>
-                            <th>Phone</th>
-                            <th>Rating</th>
-                            <th>Created At</th>
-                            <th>Verified</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($allVendors as $row): ?>
-                            <tr>
-                                <td><?= $row['id'] ?></td>
-                                <td><?= $row['first_name'] ?></td>
-                                <td><?= $row['last_name'] ?></td>
-                                <td><?= $row['email'] ?></td>
-                                <td><?= $row['status'] ?></td>
-                                <td><?= $row['address'] ?></td>
-                                <td><?= $row['shopName'] ?></td>
-                                <td><?= $row['phone'] ?></td>
-                                <td><?= number_format($row['rating'], 1) ?></td>
-                                <td><?= $row['created_at'] ?></td>
-                                <?php if ($row['verified']) { ?>
-                                <td>
-                                    <a class="btn2" href="?controller=admin&action=dashboard/vendor/unverify/<?= htmlspecialchars($row['id']) ?>">
-                                        Unverify
+                <!-- Results Count -->
+                <div style="margin-bottom: 15px; color: #666; font-size: 14px;">
+                    Showing <?php echo count($paginatedVendors); ?> of <?php echo $totalItems; ?> vendors
+                </div>
+
+                <script>
+                    document.getElementById('searchInput').addEventListener('input', function(e) {
+                        clearTimeout(window.searchTimeout);
+                        window.searchTimeout = setTimeout(function() {
+                            document.getElementById('searchForm').submit();
+                        }, 300);
+                    });
+                </script>
+
+                <div class="staff-cards-container">
+                    <?php foreach ($paginatedVendors as $vendor): ?>
+                        <div class="staff-card <?= $vendor['verified'] ? 'verified' : 'pending' ?>">
+                            <div class="staff-header">
+                                <div class="staff-info">
+                                    <h3><?= htmlspecialchars($vendor['first_name'] . ' ' . $vendor['last_name']) ?></h3>
+                                    <p class="shop-name"><i class="fas fa-store"></i> <?= htmlspecialchars($vendor['shopName']) ?></p>
+                                    <p class="staff-email"><i class="fas fa-envelope"></i> <?= htmlspecialchars($vendor['email']) ?></p>
+                                    <p class="staff-phone"><i class="fas fa-phone"></i> <?= htmlspecialchars($vendor['phone']) ?></p>
+                                </div>
+                                <div class="staff-status">
+                                    <span class="status-badge <?= $vendor['verified'] ? 'status-verified' : 'status-pending' ?>">
+                                        <?= $vendor['verified'] ? '✓ Verified' : '⏳ Pending' ?>
+                                    </span>
+                                    <div class="staff-rating">
+                                        <i class="fas fa-star"></i> <?= number_format($vendor['rating'], 1) ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="staff-details">
+                                <p><strong>Address:</strong> <?= htmlspecialchars($vendor['address']) ?></p>
+                                <p><strong>Joined:</strong> <?= date('M d, Y', strtotime($vendor['created_at'])) ?></p>
+                            </div>
+
+                            <div class="documents-section">
+                                <h4><i class="fas fa-file-alt"></i> Business Documentation</h4>
+                                <div class="documents-grid">
+                                    <div class="doc-item">
+                                        <span class="doc-label">Identity Proof</span>
+                                        <?php if (!empty($vendor['identity_doc'])): ?>
+                                            <a href="<?= htmlspecialchars($vendor['identity_doc']) ?>" target="_blank" class="doc-link">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="doc-missing">Not uploaded</span>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="doc-item">
+                                        <span class="doc-label">Business Certificate</span>
+                                        <?php if (!empty($vendor['business_cert'])): ?>
+                                            <a href="<?= htmlspecialchars($vendor['business_cert']) ?>" target="_blank" class="doc-link">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="doc-missing">Not uploaded</span>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="doc-item">
+                                        <span class="doc-label">TIN Document</span>
+                                        <?php if (!empty($vendor['tin_doc'])): ?>
+                                            <a href="<?= htmlspecialchars($vendor['tin_doc']) ?>" target="_blank" class="doc-link">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="doc-missing">Not uploaded</span>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="doc-item">
+                                        <span class="doc-label">Address Proof</span>
+                                        <?php if (!empty($vendor['address_proof'])): ?>
+                                            <a href="<?= htmlspecialchars($vendor['address_proof']) ?>" target="_blank" class="doc-link">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="doc-missing">Not uploaded</span>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="doc-item">
+                                        <span class="doc-label">Bank Details</span>
+                                        <?php if (!empty($vendor['bank_details'])): ?>
+                                            <a href="<?= htmlspecialchars($vendor['bank_details']) ?>" target="_blank" class="doc-link">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="doc-missing">Not uploaded</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="staff-actions">
+                                <?php if ($vendor['verified']): ?>
+                                    <a class="btn-unverify" href="?controller=admin&action=dashboard/vendor/unverify/<?= htmlspecialchars($vendor['id']) ?>">
+                                        <i class="fas fa-times-circle"></i> Unverify
                                     </a>
-                                </td>
-                            <?php } else { ?>
-                                <td>
-                                    <a class="btn1" href="?controller=admin&action=dashboard/vendor/verify/<?= htmlspecialchars($row['id']) ?>">
-                                        Verify
+                                <?php else: ?>
+                                    <a class="btn-verify" href="?controller=admin&action=dashboard/vendor/verify/<?= htmlspecialchars($vendor['id']) ?>">
+                                        <i class="fas fa-check-circle"></i> Verify Vendor
                                     </a>
-                                </td>
-                            <?php } ?>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+               <!-- Pagination Controls -->
+                <?php if ($totalPages > 1): ?>
+                <div style="margin-top: 30px; display: flex; justify-content: center; gap: 10px; align-items: center; flex-wrap: wrap;">
+ 
+                    <?php 
+                    $startPage = max(1, $currentPage - 2);
+                    $endPage = min($totalPages, $currentPage + 2);
+                    
+                    if ($startPage > 1) echo '<span style="padding: 8px 5px;">...</span>';
+                    
+                    for ($i = $startPage; $i <= $endPage; $i++) {
+                        $isActive = $i === $currentPage;
+                        $bgColor = $isActive ? '#e91e63' : '#f0f0f0';
+                        $color = $isActive ? 'white' : 'black';
+                        $border = $isActive ? '1px solid #e91e63' : '1px solid #ddd';
+                        echo '<a href="?controller=admin&action=dashboard/vendor&page=' . $i . ((!empty($search) ? '&search=' . urlencode($search) : '')) . '" style="padding: 8px 12px; background-color: ' . $bgColor . '; color: ' . $color . '; border: ' . $border . '; border-radius: 4px; text-decoration: none; cursor: pointer;">' . $i . '</a>';
+                    }
+                    ?>  
+                </div>
+                <div style="text-align: center; margin-top: 15px; color: #666;">
+                    Page <?php echo $currentPage; ?> of <?php echo $totalPages; ?>
+                </div>
+                <?php endif; ?>
+                </div>
         </div>
         </section>
     </div>

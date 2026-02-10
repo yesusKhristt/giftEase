@@ -21,8 +21,8 @@
 
 
             <div class="page-header">
-                <h1 class="title">Settings</h1>
-                <p class="subtitle">Manage your account preferences and delivery settings.</p>
+                <h1 class="title">Profile</h1>
+                <p class="subtitle">Manage your account preferences and settings.</p>
             </div>
 
             <div class="settings-section">
@@ -82,10 +82,11 @@
             </div>
 
             <div style="display: flex; gap: 15px;">
-                <button class="btn1" onclick="saveSettings()">Save Changes</button>
-                <button class="btn1" onclick="resetSettings()">Reset</button>
+                <a class="btn1" href="?controller=client&action=dashboard/editProfile">Edit Profile</a>
             </div>
         </div>
+
+        
 
         <!-- </div> -->
 

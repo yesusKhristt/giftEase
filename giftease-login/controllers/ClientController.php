@@ -43,7 +43,7 @@ class ClientController {
     public function items($parts) {
         /* ================= PAGINATION LOGIC ================= */
 
-        $itemsPerPage = 2;
+        $itemsPerPage = 4;
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         if ($page < 1) $page = 1;
@@ -432,6 +432,10 @@ class ClientController {
         require_once __DIR__ . '/../views/Dashboards/Client/payhere/payhere.php';
     }
 
+    public function account($parts) {
+        require_once __DIR__ . '/../views/Dashboards/Client/settings.php';
+    }
+
     public function Client($parts) {
         switch ($parts[1]) {
             case 'cart':
@@ -462,7 +466,7 @@ class ClientController {
                 $this->payhere($parts);
                 break;
             case 'account':
-                require_once __DIR__ . '/../views/Dashboards/Client/settings.php';
+                $this->account($parts);
                 break;
             case 'notifications':
                 $this->notifications();
@@ -482,21 +486,28 @@ class ClientController {
             case 'notificationViewed':
                 $this->notificationViewed($parts);
                 break;
+            case 'editProfile':
+                $this->editProfile($parts);
+                break;
             default:
                 $this->items($parts);
                 break;
         }
     }
 
-    public function handleLogout() {
+    public function editProfile($parts) {
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $FIRST_NAME = $_POST['first_name'] ?? '';
-            $LAST_NAME  = $_POST['last_name'] ?? '';
-            $PHONE      = $_POST['phone'] ?? '';
-            $ADDRESS    = $_POST['address'] ?? '';
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name'  => $_POST['last_name'] ?? '',
+                'phone'      => $_POST['phone'] ?? '',
+                'id' => $_SESSION['user']['id']
+            ];
 
-            // $this->client->updateUser($data);
+            $this->client->updateUser($data);
+            $_SESSION['user'] = $this->client->getUserByID($_SESSION['user']['id']);
             header("Location: index.php?controller=client&action=dashboard/account");
             exit;
 

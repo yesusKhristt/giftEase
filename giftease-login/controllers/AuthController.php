@@ -135,6 +135,26 @@ class AuthController
                     if ($this->vendor->getUserByEmail($email)) {
                         $error = 'User already exists.';
                     } else {
+                        // Handle file uploads for vendor documents
+                        $uploadDir = __DIR__ . '/../resources/uploads/vendor/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+                        
+                        $docs = [];
+                        $docFields = ['identity_doc', 'business_cert', 'tin_doc', 'address_proof', 'bank_details'];
+                        
+                        foreach ($docFields as $field) {
+                            if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+                                $file = $_FILES[$field];
+                                $filename = uniqid() . '_' . basename($file['name']);
+                                $uploadPath = $uploadDir . $filename;
+                                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                                    $docs[$field] = 'resources/uploads/vendor/' . $filename;
+                                }
+                            }
+                        }
+                        
                         $this->vendor->addUser([
                             'first_name' => $firstname,
                             'last_name' => $lastname,
@@ -143,7 +163,12 @@ class AuthController
                             'imageloc' => NULL,
                             'address' => $address,
                             'phone' => $phone,
-                            'shopName' => $shopName
+                            'shopName' => $shopName,
+                            'identity_doc' => $docs['identity_doc'] ?? null,
+                            'business_cert' => $docs['business_cert'] ?? null,
+                            'tin_doc' => $docs['tin_doc'] ?? null,
+                            'address_proof' => $docs['address_proof'] ?? null,
+                            'bank_details' => $docs['bank_details'] ?? null
                         ]);
                     }
                     break;
@@ -153,6 +178,26 @@ class AuthController
                     if ($this->giftWrapper->getUserByEmail($email)) {
                         $error = 'User already exists.';
                     } else {
+                        // Handle file uploads for gift wrapper documents
+                        $uploadDir = __DIR__ . '/../resources/uploads/giftWrapper/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+                        
+                        $docs = [];
+                        $docFields = ['wrapper_identity', 'wrapper_address', 'portfolio'];
+                        
+                        foreach ($docFields as $field) {
+                            if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+                                $file = $_FILES[$field];
+                                $filename = uniqid() . '_' . basename($file['name']);
+                                $uploadPath = $uploadDir . $filename;
+                                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                                    $docs[$field] = 'resources/uploads/giftWrapper/' . $filename;
+                                }
+                            }
+                        }
+                        
                         $this->giftWrapper->addUser([
                             'first_name' => $firstname,
                             'last_name' => $lastname,
@@ -161,7 +206,10 @@ class AuthController
                             'imageloc' => NULL,
                             'address' => $address,
                             'phone' => $phone,
-                            'years_of_experience' => $years
+                            'years_of_experience' => $years,
+                            'identity_doc' => $docs['wrapper_identity'] ?? null,
+                            'address_proof' => $docs['wrapper_address'] ?? null,
+                            'portfolio' => $docs['portfolio'] ?? null
                         ]);
                     }
                     break;
@@ -171,6 +219,26 @@ class AuthController
                     if ($this->delivery->getUserByEmail($email)) {
                         $error = 'User already exists.';
                     } else {
+                        // Handle file uploads for delivery documents
+                        $uploadDir = __DIR__ . '/../resources/uploads/delivery/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+                        
+                        $docs = [];
+                        $docFields = ['delivery_identity', 'driving_license', 'vehicle_registration', 'vehicle_insurance'];
+                        
+                        foreach ($docFields as $field) {
+                            if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+                                $file = $_FILES[$field];
+                                $filename = uniqid() . '_' . basename($file['name']);
+                                $uploadPath = $uploadDir . $filename;
+                                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                                    $docs[$field] = 'resources/uploads/delivery/' . $filename;
+                                }
+                            }
+                        }
+                        
                         $this->delivery->addUser([
                             'first_name' => $firstname,
                             'last_name' => $lastname,
@@ -179,7 +247,12 @@ class AuthController
                             'imageloc' => NULL,
                             'address' => $address,
                             'phone' => $phone,
-                            'vehiclePlate' => $vehiclePlate
+                            'vehiclePlate' => $vehiclePlate,
+                                'vehicleType' => $_POST['vehicleType'] ?? '',
+                            'identity_doc' => $docs['delivery_identity'] ?? null,
+                            'driving_license' => $docs['driving_license'] ?? null,
+                            'vehicle_registration' => $docs['vehicle_registration'] ?? null,
+                            'vehicle_insurance' => $docs['vehicle_insurance'] ?? null
                         ]);
                     }
                     break;
@@ -188,6 +261,26 @@ class AuthController
                     if ($this->deliveryman->getUserByEmail($email)) {
                         $error = 'User already exists.';
                     } else {
+                        // Handle file uploads for deliveryman documents
+                        $uploadDir = __DIR__ . '/../resources/uploads/delivery/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+                        
+                        $docs = [];
+                        $docFields = ['delivery_identity', 'driving_license', 'vehicle_registration', 'vehicle_insurance'];
+                        
+                        foreach ($docFields as $field) {
+                            if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+                                $file = $_FILES[$field];
+                                $filename = uniqid() . '_' . basename($file['name']);
+                                $uploadPath = $uploadDir . $filename;
+                                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                                    $docs[$field] = 'resources/uploads/delivery/' . $filename;
+                                }
+                            }
+                        }
+                        
                         $this->deliveryman->addUser([
                             'first_name' => $firstname,
                             'last_name' => $lastname,
@@ -196,7 +289,12 @@ class AuthController
                             'imageloc' => NULL,
                             'address' => $address,
                             'phone' => $phone,
-                            'vehiclePlate' => $vehiclePlate
+                            'vehiclePlate' => $vehiclePlate,
+                                'vehicleType' => $_POST['vehicleType'] ?? '',
+                            'identity_doc' => $docs['delivery_identity'] ?? null,
+                            'driving_license' => $docs['driving_license'] ?? null,
+                            'vehicle_registration' => $docs['vehicle_registration'] ?? null,
+                            'vehicle_insurance' => $docs['vehicle_insurance'] ?? null
                         ]);
                     }
                     break;
@@ -225,20 +323,5 @@ class AuthController
         }
         require_once __DIR__ . '/../views/Signup/signup.php';
 
-    }
-
-    public function handleLogout()
-    {
-        $_SESSION = [];
-
-        if (ini_get('session.use_cookies')) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-        }
-
-        session_destroy();
-
-        header('Location: index.php?controller=auth&action=landing');
-        exit;
     }
 }

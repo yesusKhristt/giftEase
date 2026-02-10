@@ -96,7 +96,7 @@
             <a href="#" class="profile-link"><span aria-hidden="true">⚙️</span> Account Settings</a>
             <a href="#" class="profile-link"><span aria-hidden="true">❓</span> Help & Support</a>
             <div class="divider"></div>
-            <a href="?controller=admin&action=handleLogout" class="profile-link danger"><span aria-hidden="true">↩️</span> Logout</a>
+            <a href="#" class="profile-link danger"><span aria-hidden="true">↩️</span> Logout</a>
           </nav>
         </div>
       </header>
