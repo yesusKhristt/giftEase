@@ -19,7 +19,7 @@
     <div class="container">
         <?php
         $activePage = 'service';
-        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
+        include 'C:\laragon\www\giftEase\giftease-login\views\commonElements/leftSidebarJeshani.php';
         ?>
         <!-- <div id="home" class="tab-content active"> -->
         <!-- Home page -->

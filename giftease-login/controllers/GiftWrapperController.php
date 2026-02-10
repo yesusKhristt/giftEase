@@ -2,10 +2,13 @@
 class giftWrapperController
 {
     private $giftwrapper;
+    private $notification;
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/GiftWrapperModel.php';
+        require_once __DIR__ . '/../models/NotificationModel.php';
         $this->giftwrapper = new GiftWrapperModel($pdo); //bruh
+        $this->notification = new NotificationModel($pdo);
     }
     public function dashboard()
     {
@@ -34,8 +37,15 @@ class giftWrapperController
 
     public function acceptOrder($parts)
     {
+        $order_id = $parts[2];
+        $this->giftwrapper->acceptOrder($order_id, $_SESSION['user']['id']);
 
-        $this->giftwrapper->acceptOrder($parts[2], $_SESSION['user']['id']);
+        $notificationTitle = "Order processing for Wrapping!";
+        $notificationMessege = "Your Order will be wrapped by ".$_SESSION['user']['first_name'].' '.$_SESSION['user']['last_name'];
+        $href = "?controller=client&action=dashboard/messeges/giftWrapper/view/".$_SESSION['user']['id']."/direct";
+        $name = $_SESSION['first_name'] . ' ' . $_SESSION['last_name'];
+        $notificationMessege = $notificationMessege . $name;
+        $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
         header("Location: index.php?controller=giftWrapper&action=dashboard/assignedOrder");
         exit;
     }
@@ -60,7 +70,7 @@ class giftWrapperController
     {
         switch ($level1[1]) {
             case 'analytics':
-                $this->analytics($level1);
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/analitic.php';
                 break;
             case 'allOrder':
                 $this->allOrder($level1);
@@ -98,26 +108,6 @@ class giftWrapperController
         }
     }
 
-    public function analytics($parts)
-    {
-        $giftWrapperId = $_SESSION['user']['id'];
-        
-        // Fetch analytics data
-        $analyticsData = [
-            'totalOrders' => $this->giftwrapper->getTotalOrdersHandled($giftWrapperId),
-            'completedOrders' => $this->giftwrapper->getCompletedOrders($giftWrapperId),
-            'pendingOrders' => $this->giftwrapper->getPendingOrders($giftWrapperId),
-            'monthlyGrowth' => $this->giftwrapper->getMonthlyGrowth($giftWrapperId),
-            'customerRetention' => $this->giftwrapper->getCustomerRetention($giftWrapperId),
-            'efficiencyScore' => $this->giftwrapper->getEfficiencyScore($giftWrapperId),
-            'ordersByMonth' => $this->giftwrapper->getOrdersByMonth($giftWrapperId),
-            'peakHours' => $this->giftwrapper->getPeakHours($giftWrapperId),
-            'averageRating' => $this->giftwrapper->getAverageRating($giftWrapperId)
-        ];
-        
-        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/analitic.php';
-    }
-
     public function handleLogout()
     {
         $_SESSION['giftWrapper'] = null;
@@ -129,7 +119,7 @@ class giftWrapperController
     public function deactivateUser()
     {
         $USER_ID = $_SESSION['user']['id'];
-        $this->user->deactivateUser($USER_ID);
+        $this->giftwrapper->deleteUser($USER_ID);
         header("Location: index.php");
         exit;
     }

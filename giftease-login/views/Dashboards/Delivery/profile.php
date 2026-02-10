@@ -23,32 +23,32 @@
         <div class="profile-section">
           <i class="profile-picture"></i>
           <div class="">
-            <h4>Saneth Tharushika</h4>
-            <p>Senior Delivery Partner • Member since Jan 2023</p>
-            <p><i class="fas fa-star"></i> 4.9 Rating • <i class="fas fa-motorcycle"></i> Motorcycle</p>
+            <h4><?php echo htmlspecialchars(($deliveryProfile['first_name'] ?? '') . ' ' . ($deliveryProfile['last_name'] ?? '')); ?></h4>
+            <p>Delivery Partner • Member since <?php echo htmlspecialchars(!empty($deliveryProfile['created_at']) ? date('M Y', strtotime($deliveryProfile['created_at'])) : 'N/A'); ?></p>
+            <p><i class="fas fa-star"></i> <?php echo htmlspecialchars($profileStats['avg_rating'] ?? 'N/A'); ?> Rating • <i class="fas fa-motorcycle"></i> <?php echo htmlspecialchars($deliveryProfile['vehicleType'] ?? 'N/A'); ?></p>
 
           </div>
         </div>
 
         <div class="summary-grid">
           <div class="card">
-            <div class="title">1,247</div>
+            <div class="title"><?php echo htmlspecialchars($profileStats['delivered_total'] ?? 0); ?></div>
             <div class="subtitle">Total Deliveries</div>
           </div>
           <div class="card">
-            <div class="title">$18,650</div>
+            <div class="title">Rs. <?php echo htmlspecialchars(number_format($profileStats['total_earnings'] ?? 0, 2)); ?></div>
             <div class="subtitle">Total Earnings</div>
           </div>
           <div class="card">
-            <div class="title">98.5%</div>
+            <div class="title"><?php echo htmlspecialchars($profileStats['success_rate'] ?? 0); ?>%</div>
             <div class="subtitle">Success Rate</div>
           </div>
           <div class="card">
-            <div class="title">4.9</div>
+            <div class="title"><?php echo htmlspecialchars($profileStats['avg_rating'] ?? 'N/A'); ?></div>
             <div class="subtitle">Avg Rating</div>
           </div>
           <div class="card">
-            <div class="title">2,340km</div>
+            <div class="title"><?php echo htmlspecialchars($profileStats['distance'] ?? 'N/A'); ?></div>
             <div class="subtitle">Distance Traveled</div>
           </div>
         </div>
@@ -59,19 +59,19 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           <div class="form-group">
             <label class="subtitle">Full Name</label>
-            <input type="text" class="form-input" value="Saneth Tharushika" readonly />
+            <input type="text" class="form-input" value="<?php echo htmlspecialchars(($deliveryProfile['first_name'] ?? '') . ' ' . ($deliveryProfile['last_name'] ?? '')); ?>" readonly />
           </div>
           <div class="form-group">
             <label class="subtitle">Email</label>
-            <input type="email" class="form-input" value="sanethsiriwardhana@gmail.com" readonly />
+            <input type="email" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['email'] ?? ''); ?>" readonly />
           </div>
           <div class="form-group">
             <label class="subtitle">Phone</label>
-            <input type="tel" class="form-input" value="+94 761694206" />
+            <input type="tel" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['phone'] ?? ''); ?>" readonly />
           </div>
           <div class="form-group">
-            <label class="subtitle">Emergency Contact</label>
-            <input type="tel" class="form-input" value="+94 761694206" />
+            <label class="subtitle">Address</label>
+            <input type="text" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['address'] ?? ''); ?>" readonly />
           </div>
         </div>
       </div>
@@ -81,53 +81,36 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
           <div class="form-group">
             <label class="subtitle">Vehicle Type</label>
-            <select class="form-select">
-              <option selected>Motorcycle</option>
-              <option>Car</option>
-              <option>Van</option>
-              <option>Bicycle</option>
-            </select>
+            <input type="text" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['vehicleType'] ?? 'N/A'); ?>" readonly />
           </div>
           <div class="form-group">
             <label class="subtitle">License Plate</label>
-            <input type="text" class="form-input" value="MM-7270" />
+            <input type="text" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['vehiclePlate'] ?? ''); ?>" readonly />
           </div>
           <div class="form-group">
-            <label class="subtitle">Insurance Number</label>
-            <input type="text" class="form-input" value="INS-789456" />
+            <label class="subtitle">Insurance</label>
+            <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
+              <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('insuranceDoc')">View Insurance</button>
+              <div id="insuranceDoc" style="display: none; margin-top: 10px;">
+                <img src="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" alt="Vehicle Insurance" style="max-width: 100%; height: auto; border-radius: 8px;" />
+              </div>
+            <?php else: ?>
+              <input type="text" class="form-input" value="N/A" readonly />
+            <?php endif; ?>
           </div>
           <div class="form-group">
-            <label class="subtitle">License Expiry</label>
-            <input type="date" class="form-input" value="2025-12-31" />
+            <label class="subtitle">License</label>
+            <?php if (!empty($deliveryProfile['driving_license'])): ?>
+              <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('licenseDoc')">View License</button>
+              <div id="licenseDoc" style="display: none; margin-top: 10px;">
+                <img src="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" alt="Driving License" style="max-width: 100%; height: auto; border-radius: 8px;" />
+              </div>
+            <?php else: ?>
+              <input type="text" class="form-input" value="N/A" readonly />
+            <?php endif; ?>
           </div>
         </div>
       </div>
-
-      <div class="card">
-        <h4>Performance Metrics</h4>
-        <div class="summary-grid">
-          <div class="cardColour">
-            <div class="title">28</div>
-            <div class="subtitle">This Month</div>
-            <div>+15% vs last month</div>
-          </div>
-          <div class="cardColour">
-            <div class="title">$420</div>
-            <div class="subtitle">Monthly Earnings</div>
-            <div>+8% vs last month</div>
-          </div>
-          <div class="cardColour">
-            <div class="title">22min</div>
-            <div class="subtitle">Avg Delivery Time</div>
-            <div>-3min vs last month</div>
-          </div>
-          <div class="cardColour">
-            <div class="title">156</div>
-            <div class="subtitle">Customer Reviews</div>
-            <div>+12 this month</div>
-          </div>
-        </div>
-      </div> 
 
        <div style="display: flex; gap: 15px;">
                 <a href="?controller=delivery&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update
@@ -138,6 +121,13 @@
     </div>
   </div>
   <script src="main.js"></script>
+  <script>
+    function toggleDoc(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
 </body>
 
 </html>

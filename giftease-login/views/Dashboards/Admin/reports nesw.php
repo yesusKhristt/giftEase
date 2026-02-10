@@ -24,7 +24,7 @@
             padding: 8px 12px;
             border: none;
             border-radius: 15px;
-            background: #ffe4ec;
+            background: #fedbd2;
             width: 200px;
         }
 
@@ -36,7 +36,7 @@
         }
 
         .summary-card {
-            background: linear-gradient(135deg, #ff6b9d 0%, #ff4f8b 100%);
+            background: linear-gradient(135deg, #d03c2e 0%, #d03c2e 100%);
             border-radius: 15px;
             padding: 20px;
             color: white;
@@ -75,7 +75,7 @@
         }
 
         .card h3 {
-            color: #ff4f8b;
+            color: #d03c2e;
             margin-bottom: 10px;
         }
 
@@ -90,7 +90,7 @@
         }
 
         .card p.negative {
-            color: #dc3545;
+            color: #d03c2e;
         }
 
         .charts {
@@ -111,7 +111,7 @@
 
         .chart-container h3 {
             text-align: center;
-            color: #ff4f8b;
+            color: #d03c2e;
             margin-bottom: 15px;
         }
 
@@ -142,7 +142,7 @@
         }
 
         .top-products h3 {
-            color: #ff4f8b;
+            color: #d03c2e;
             margin-bottom: 15px;
         }
 
@@ -154,11 +154,11 @@
         .top-products th, .top-products td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ffe4ec;
+            border-bottom: 1px solid #fedbd2;
         }
 
         .top-products th {
-            color: #ff4f8b;
+            color: #d03c2e;
             font-weight: 600;
         }
 
@@ -321,16 +321,16 @@
                     {
                         label: 'Orders',
                         data: ordersByMonth.map(item => item.total_orders),
-                        backgroundColor: 'rgba(255, 79, 139, 0.7)',
-                        borderColor: '#ff4f8b',
+                        backgroundColor: '#ff8a8a',
+                        borderColor: '#000000',
                         borderWidth: 1
                     },
                     {
                         label: 'Revenue (Rs.)',
                         data: ordersByMonth.map(item => item.revenue),
                         type: 'line',
-                        borderColor: '#ff6b9d',
-                        backgroundColor: 'rgba(255, 107, 157, 0.2)',
+                        borderColor: '#000000',
+                        backgroundColor: '#a7b6ff',
                         fill: true,
                         tension: 0.4,
                         yAxisID: 'y1'
@@ -357,8 +357,8 @@
         // Category Sales Pie Chart
         const categoryCtx = document.getElementById('categoryChart').getContext('2d');
         const categoryColors = [
-            '#ff4f8b', '#ff6b9d', '#ff8fb1', '#ffb3c6', '#ffd6e0',
-            '#e91e63', '#f06292', '#f48fb1', '#f8bbd9', '#fce4ec'
+            '#d03c2e', '#d08d2e', '#74d02e', '#2ed087', '#2eb2d0',
+            '#362ed0', '#d02eba', '#d02e8d', '#d02e2e', '#848484'
         ];
         new Chart(categoryCtx, {
             type: 'doughnut',

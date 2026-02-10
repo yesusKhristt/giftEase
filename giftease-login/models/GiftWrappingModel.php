@@ -392,21 +392,21 @@ class GiftWrappingModel
     }
 
     // Add a new customWrap
-    public function addCustomWrap($box, $boxDeco, $bag, $bagDeco, $softToy, $chocolate, $card, $price)
+    public function addCustomWrap($data)
     {
         $stmt = $this->pdo->prepare(
             "INSERT INTO customWrap (box, boxDeco, bag, bagDeco, softToy, chocolate, card, price)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         );
         $stmt->execute([
-            $box,
-            $boxDeco,
-            $bag,
-            $bagDeco,
-            $softToy,
-            $chocolate,
-            $card,
-            $price
+            $data['box'],
+            $data['boxDeco'],
+            $data['paper'],
+            $data['paperDeco'],
+            $data['softToy'],
+            $data['chocolate'],
+            $data['card'],
+            $data['totalPrice']
         ]);
         return $this->pdo->lastInsertId();
     }

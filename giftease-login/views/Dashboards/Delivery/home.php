@@ -34,51 +34,28 @@
         <h3>Today's Overview</h3>
         <div class="summary-grid">
           <div class="cardColour">
-            <div class="title">3</div>
-            <div class="subtitle">Orders Assigned</div>
+            <div class="title" id="weeklyEarnings">Rs. <?php echo htmlspecialchars(number_format($dashboardStats['weekly_earnings'] ?? 0, 2)); ?></div>
+            <div class="subtitle">This Week's Earnings</div>
           </div>
           <div class="cardColour">
-            <div class="title">1</div>
-            <div class="subtitle">Delivered Today</div>
+            <div class="title"><?php echo htmlspecialchars($dashboardStats['assigned_total'] ?? 0); ?></div>
+            <div class="subtitle">Total Orders Assigned</div>
           </div>
           <div class="cardColour">
-            <div class="title">2</div>
+            <div class="title"><?php echo htmlspecialchars($dashboardStats['delivered_total'] ?? 0); ?></div>
+            <div class="subtitle">Total Delivered</div>
+          </div>
+          <div class="cardColour">
+            <div class="title"><?php echo htmlspecialchars($dashboardStats['pending_total'] ?? 0); ?></div>
             <div class="subtitle">Pending Deliveries</div>
           </div>
-          <div class="cardColour">
-            <div class="title">95%</div>
-            <div class="subtitle">Success Rate</div>
-          </div>
         </div>
       </div>
 
-
-      <div class="summary-grid">
-        <div class="card" onclick="showEarningsBreakdown()">
-          <div class="title" id="todaysDeliveries">8</div>
-          <div class="subtitle">Today's Deliveries</div>
-          <div class="stat-trend">+2 from yesterday</div>
-        </div>
-        <div class="card" onclick="showEarningsBreakdown()">
-          <div class="title" id="todaysEarnings">$127</div>
-          <div class="subtitle">Today's Earnings</div>
-          <div class="stat-trend">+$23 from yesterday</div>
-        </div>
-        <div class="card" onclick="showRatingDetails()">
-          <div class="title" id="currentRating">4.9</div>
-          <div class="subtitle">Rating</div>
-          <div class="stat-trend">⭐⭐⭐⭐⭐</div>
-        </div>
-        <div class="card" onclick="showDistanceDetails()">
-          <div class="title" id="distanceCovered">45km</div>
-          <div class="subtitle">Distance Covered</div>
-          <div class="stat-trend">3 routes completed</div>
-        </div>
-      </div>
     </div>
   </div>
-  <!-- <div id="profile" class="tab-content"> -->
-  <script src="main.js"></script>
+  
+  
 </body>
 
 </html>

@@ -42,7 +42,7 @@
                             </td>
                             <td colspan="2">
                                 <input type="text" id="first_name" name="first_name" placeholder="First Name"
-                                    value="<?php echo htmlspecialchars($user2['first_name']); ?>">
+                                    value="<?php echo htmlspecialchars($_SESSION['user']['first_name']); ?>">
                             </td>
 
 
@@ -53,21 +53,14 @@
                             </td>
                             <td colspan="2">
                                 <input type="text" id="last_name" name="last_name" placeholder="Last Name"
-                                    value="<?php echo htmlspecialchars($user2['last_name']); ?>">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="subtitle">Email</td>
-                            <td colspan="2">
-                                <input type="email" id="email" name="email" placeholder="Email"
-                                    value="<?php echo htmlspecialchars($user1['email']); ?>" readonly>
+                                    value="<?php echo htmlspecialchars($_SESSION['user']['last_name']); ?>">
                             </td>
                         </tr>
                         <tr>
                             <td class="subtitle">Mobile Phone number</td>
                             <td colspan="2">
                                 <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number"
-                                    value="<?php echo htmlspecialchars($user2['phone']); ?>">
+                                    value="<?php echo htmlspecialchars($_SESSION['user']['phone']); ?>">
                             </td>
                         </tr>
 

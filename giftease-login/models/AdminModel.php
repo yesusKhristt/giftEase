@@ -106,7 +106,7 @@ class AdminModel
     }
     public function getAllUnverifiedVendors()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM vendors");
+        $stmt = $this->pdo->prepare("SELECT * FROM vendors v JOIN vendorVerify VV ON v.id = VV.vendor_id ORDER BY created_at DESC");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
@@ -126,7 +126,7 @@ class AdminModel
     }
     public function getAllUnverifiedDelivery()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM delivery");
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery d JOIN deliveryVerify DD ON d.id = DD.delivery_id ORDER BY created_at DESC");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
@@ -139,7 +139,7 @@ class AdminModel
     }
     public function getAllUnverifiedDeliveryman()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM deliveryman");
+        $stmt = $this->pdo->prepare("SELECT * FROM deliveryman d JOIN deliverymanVerify DD ON d.id = DD.deliveryman_id ORDER BY created_at DESC");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
@@ -152,16 +152,371 @@ class AdminModel
     }
     public function getAllUnverifiedGiftwrapper()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers");
+        $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers g JOIN giftWrappersVerify GG ON g.id = GG.giftWrapper_id  ORDER BY created_at DESC");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
 
-    // ========== REPORT METHODS ==========
+    public function getAllVendors()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM vendors ORDER BY created_at DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-    /**
-     * Get total number of orders
-     */
+    public function getAllDelivery()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery ORDER BY created_at DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllDeliveryman()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM deliveryman ORDER BY created_at DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllGiftWrappers()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers ORDER BY created_at DESC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getVendorById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getVendorEarnings($vendorId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COALESCE(SUM(oi.quantity * p.price), 0)
+             FROM orderItems oi
+             JOIN products p ON oi.item_id = p.id
+             JOIN orders o ON oi.order_id = o.id
+             WHERE p.vendor_id = ?
+               AND o.is_delivered = 1"
+        );
+        $stmt->execute([$vendorId]);
+        return (float) $stmt->fetchColumn();
+    }
+
+    public function getVendorMonthlyEarnings($vendorId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COALESCE(SUM(oi.quantity * p.price), 0)
+             FROM orderItems oi
+             JOIN products p ON oi.item_id = p.id
+             JOIN orders o ON oi.order_id = o.id
+             WHERE p.vendor_id = ?
+               AND o.is_delivered = 1
+               AND YEAR(o.deliveryDate) = YEAR(CURDATE())
+               AND MONTH(o.deliveryDate) = MONTH(CURDATE())"
+        );
+        $stmt->execute([$vendorId]);
+        return (float) $stmt->fetchColumn();
+    }
+
+    public function getVendorTotalSold($vendorId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COALESCE(SUM(oi.quantity), 0)
+             FROM orderItems oi
+             JOIN products p ON oi.item_id = p.id
+             JOIN orders o ON oi.order_id = o.id
+             WHERE p.vendor_id = ?
+               AND o.is_delivered = 1"
+        );
+        $stmt->execute([$vendorId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getVendorProductCount($vendorId)
+    {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM products WHERE vendor_id = ?");
+        $stmt->execute([$vendorId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getVendorRatingStats($vendorId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COALESCE(AVG(rating), 0) AS rating, COUNT(*) AS total
+             FROM vendor_ratings
+             WHERE vendor_id = ?"
+        );
+        $stmt->execute([$vendorId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: ['rating' => 0, 'total' => 0];
+    }
+
+    public function getVendorProducts($vendorId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT id, name, price, displayImage, status
+             FROM products
+             WHERE vendor_id = ?
+             ORDER BY id DESC"
+        );
+        $stmt->execute([$vendorId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDeliveryById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getDeliveryEarnings($deliveryId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COALESCE(SUM(o.deliveryPrice), 0)
+             FROM orders o
+             WHERE o.delivery_id = ?
+               AND o.is_delivered = 1"
+        );
+        $stmt->execute([$deliveryId]);
+        return (float) $stmt->fetchColumn();
+    }
+
+    public function getDeliveryMonthlyEarnings($deliveryId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COALESCE(SUM(o.deliveryPrice), 0)
+             FROM orders o
+             WHERE o.delivery_id = ?
+               AND o.is_delivered = 1
+               AND YEAR(o.deliveryDate) = YEAR(CURDATE())
+               AND MONTH(o.deliveryDate) = MONTH(CURDATE())"
+        );
+        $stmt->execute([$deliveryId]);
+        return (float) $stmt->fetchColumn();
+    }
+
+    public function getDeliveryCompletedCount($deliveryId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*)
+             FROM orders o
+             WHERE o.delivery_id = ?
+               AND o.is_delivered = 1"
+        );
+        $stmt->execute([$deliveryId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getDeliverymanById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM deliveryman WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getGiftWrapperById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getGiftWrapperEarnings($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COALESCE(SUM(COALESCE(cw.price, gp.price)), 0)
+             FROM orders o
+             LEFT JOIN customwrap cw ON o.customWrap_id = cw.id
+             LEFT JOIN giftwrappackage gp ON o.wrapPackage_id = gp.id
+             WHERE o.giftWrapper_id = ?
+               AND o.is_wrapped = 1"
+        );
+        $stmt->execute([$giftWrapperId]);
+        return (float) $stmt->fetchColumn();
+    }
+
+    public function getGiftWrapperMonthlyEarnings($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COALESCE(SUM(COALESCE(cw.price, gp.price)), 0)
+             FROM orders o
+             LEFT JOIN customwrap cw ON o.customWrap_id = cw.id
+             LEFT JOIN giftwrappackage gp ON o.wrapPackage_id = gp.id
+             WHERE o.giftWrapper_id = ?
+               AND o.is_wrapped = 1
+               AND YEAR(o.deliveryDate) = YEAR(CURDATE())
+               AND MONTH(o.deliveryDate) = MONTH(CURDATE())"
+        );
+        $stmt->execute([$giftWrapperId]);
+        return (float) $stmt->fetchColumn();
+    }
+
+    public function getGiftWrapperCompletedCount($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*)
+             FROM orders o
+             WHERE o.giftWrapper_id = ?
+               AND o.is_wrapped = 1"
+        );
+        $stmt->execute([$giftWrapperId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getVendorSoldItems($vendorId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.id AS order_id,
+                    o.deliveryDate,
+                    c.first_name,
+                    c.last_name,
+                    p.name AS product_name,
+                    oi.quantity,
+                    p.price
+             FROM orderItems oi
+             JOIN products p ON oi.item_id = p.id
+             JOIN orders o ON oi.order_id = o.id
+             LEFT JOIN clients c ON o.client_id = c.id
+             WHERE p.vendor_id = ?
+             ORDER BY o.deliveryDate DESC, o.id DESC"
+        );
+        $stmt->execute([$vendorId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getVendorSoldItemsList($vendorId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.id AS order_id,
+                    o.deliveryDate,
+                    c.first_name,
+                    c.last_name,
+                    p.name AS product_name,
+                    oi.quantity,
+                    p.price
+             FROM orderItems oi
+             JOIN products p ON oi.item_id = p.id
+             JOIN orders o ON oi.order_id = o.id
+             LEFT JOIN clients c ON o.client_id = c.id
+             WHERE p.vendor_id = ?
+               AND o.is_delivered = 1
+             ORDER BY o.deliveryDate DESC, o.id DESC"
+        );
+        $stmt->execute([$vendorId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDeliveryOrders($deliveryId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.id AS order_id,
+                    o.deliveryDate,
+                    o.is_delivered,
+                    o.deliveryPrice,
+                    c.first_name,
+                    c.last_name
+             FROM orders o
+             LEFT JOIN clients c ON o.client_id = c.id
+             WHERE o.delivery_id = ?
+             ORDER BY o.deliveryDate DESC, o.id DESC"
+        );
+        $stmt->execute([$deliveryId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDeliveryCompletedOrders($deliveryId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.id AS order_id,
+                    o.deliveryDate,
+                    o.deliveryPrice,
+                    c.first_name,
+                    c.last_name
+             FROM orders o
+             LEFT JOIN clients c ON o.client_id = c.id
+             WHERE o.delivery_id = ?
+               AND o.is_delivered = 1
+             ORDER BY o.deliveryDate DESC, o.id DESC"
+        );
+        $stmt->execute([$deliveryId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDeliverymanCompletedOrders($deliverymanId)
+    {
+        return [];
+    }
+
+    public function getGiftWrapperOrders($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.id AS order_id,
+                    o.deliveryDate,
+                    o.is_wrapped,
+                    COALESCE(cw.price, gp.price, 0) AS amount,
+                    c.first_name,
+                    c.last_name
+             FROM orders o
+             LEFT JOIN customwrap cw ON o.customWrap_id = cw.id
+             LEFT JOIN giftwrappackage gp ON o.wrapPackage_id = gp.id
+             LEFT JOIN clients c ON o.client_id = c.id
+             WHERE o.giftWrapper_id = ?
+             ORDER BY o.deliveryDate DESC, o.id DESC"
+        );
+        $stmt->execute([$giftWrapperId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getGiftWrapperCompletedOrders($giftWrapperId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.id AS order_id,
+                    o.deliveryDate,
+                    COALESCE(cw.price, gp.price, 0) AS amount,
+                    c.first_name,
+                    c.last_name
+             FROM orders o
+             LEFT JOIN customwrap cw ON o.customWrap_id = cw.id
+             LEFT JOIN giftwrappackage gp ON o.wrapPackage_id = gp.id
+             LEFT JOIN clients c ON o.client_id = c.id
+             WHERE o.giftWrapper_id = ?
+               AND o.is_wrapped = 1
+             ORDER BY o.deliveryDate DESC, o.id DESC"
+        );
+        $stmt->execute([$giftWrapperId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderDetail($orderId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.*, c.first_name, c.last_name
+             FROM orders o
+             LEFT JOIN clients c ON o.client_id = c.id
+             WHERE o.id = ?
+             LIMIT 1"
+        );
+        $stmt->execute([$orderId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderItems($orderId)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT oi.quantity, p.name, p.price, v.shopName
+             FROM orderItems oi
+             JOIN products p ON oi.item_id = p.id
+             LEFT JOIN vendors v ON p.vendor_id = v.id
+             WHERE oi.order_id = ?"
+        );
+        $stmt->execute([$orderId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getTotalOrders()
     {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders");

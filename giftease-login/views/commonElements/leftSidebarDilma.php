@@ -9,8 +9,7 @@
       </div>
     </div>
     <?php
-    function isActive($pageName, $activePage)
-    {
+    function isActive($pageName, $activePage) {
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
@@ -41,10 +40,13 @@
       </a>
     </div>
   </div>
+
   <div class="topbar-container">
+    <div class="falling-gifts">
+    </div>
     <!-- Search Bar -->
     <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Search..." />
+      <input type="text" class="search-input" placeholder="Search...." />
     </div>
 
     <div class="gift">
@@ -58,9 +60,9 @@
         class="settings-btn <?= isActive('cart', $activePage) ?>">
         <i class="fas fa-shopping-cart"></i>
       </a>
-      <a href="?controller=client&action=dashboard/settings"
+      <a href="?controller=client&action=dashboard/notifications"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
-        <i class="fas fa-cog"></i>
+        <i class="fas fa-bell"></i>
       </a>
       <a href="?controller=client&action=dashboard/account"
         class="settings-btn <?= isActive('account', $activePage) ?>">
@@ -69,3 +71,39 @@
     </nav>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("✓ main.js loaded");
+
+    const giftLayer = document.querySelector(".falling-gifts");
+    if (!giftLayer) return;
+
+    const giftImages = [
+      "resources/1.png",
+      "resources/2.png",
+      "resources/3.png",
+      "resources/4.png",
+      "resources/5.png"
+    ];
+
+    setInterval(() => {
+      const gift = document.createElement("img");
+      gift.className = "gift-emoji";
+      gift.src = giftImages[Math.floor(Math.random() * giftImages.length)];
+      gift.alt = "Gift";
+
+      gift.style.left = Math.random() * 100 + "%";
+      gift.style.width = Math.random() * 35 + 25 + "px";
+      gift.style.height = "auto";
+      gift.style.animationDuration = Math.random() * 10 + "s";
+
+      // 🎯 RANDOM START ROTATION
+      const startRotation = Math.random() * 360;
+      gift.style.setProperty("--start-rot", `${startRotation}deg`);
+
+      giftLayer.appendChild(gift);
+
+      gift.addEventListener("animationend", () => gift.remove());
+    }, 500);
+  });
+</script>

@@ -26,40 +26,63 @@
         <h3>Profile Information</h3>
         <div class="form-group">
           <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" value="Saneth Tharushika" placeholder="Enter your full name" />
+          <input type="text" class="form-input" value="<?php echo htmlspecialchars(($deliveryProfile['first_name'] ?? '') . ' ' . ($deliveryProfile['last_name'] ?? '')); ?>" placeholder="Enter your full name" readonly />
         </div>
         <div class="form-group">
           <label class="form-label">Phone Number</label>
-          <input type="tel" class="form-input" value="+94 761694206" placeholder="Enter your phone number" />
+          <input type="tel" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['phone'] ?? ''); ?>" placeholder="Enter your phone number" readonly />
         </div>
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" value="sanethsiriwardhana@gmail.com" placeholder="Enter your email" />
+          <input type="email" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['email'] ?? ''); ?>" placeholder="Enter your email" readonly />
         </div>
 
         <div class="settings-section">
-          <h3>Vehicle Information</h3>
+          <h3>Submitted Documentation</h3>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div class="form-group">
-              <label class="form-label">Vehicle Type</label>
-              <select class="form-select">
-                <option selected>Motorcycle</option>
-                <option>Car</option>
-                <option>Van</option>
-                <option>Bicycle</option>
-              </select>
+              <label class="subtitle">Identity Document</label>
+              <?php if (!empty($deliveryProfile['identity_doc'])): ?>
+                <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('identityDoc')">View Identity</button>
+                <div id="identityDoc" style="display: none; margin-top: 10px;">
+                  <img src="<?php echo htmlspecialchars($deliveryProfile['identity_doc']); ?>" alt="Identity Document" style="max-width: 100%; height: auto; border-radius: 8px;" />
+                </div>
+              <?php else: ?>
+                <input type="text" class="form-input" value="Not uploaded" readonly />
+              <?php endif; ?>
             </div>
             <div class="form-group">
-              <label class="form-label">License Plate</label>
-              <input type="text" class="form-input" value="MM-7270" />
+              <label class="subtitle">Driving License</label>
+              <?php if (!empty($deliveryProfile['driving_license'])): ?>
+                <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('licenseDoc')">View License</button>
+                <div id="licenseDoc" style="display: none; margin-top: 10px;">
+                  <img src="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" alt="Driving License" style="max-width: 100%; height: auto; border-radius: 8px;" />
+                </div>
+              <?php else: ?>
+                <input type="text" class="form-input" value="Not uploaded" readonly />
+              <?php endif; ?>
             </div>
             <div class="form-group">
-              <label class="form-label">Insurance Number</label>
-              <input type="text" class="form-input" value="INS-789456" />
+              <label class="subtitle">Vehicle Registration</label>
+              <?php if (!empty($deliveryProfile['vehicle_registration'])): ?>
+                <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('registrationDoc')">View Registration</button>
+                <div id="registrationDoc" style="display: none; margin-top: 10px;">
+                  <img src="<?php echo htmlspecialchars($deliveryProfile['vehicle_registration']); ?>" alt="Vehicle Registration" style="max-width: 100%; height: auto; border-radius: 8px;" />
+                </div>
+              <?php else: ?>
+                <input type="text" class="form-input" value="Not uploaded" readonly />
+              <?php endif; ?>
             </div>
             <div class="form-group">
-              <label class="form-label">License Expiry</label>
-              <input type="date" class="form-input" value="2025-12-31" />
+              <label class="subtitle">Vehicle Insurance</label>
+              <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
+                <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('insuranceDoc')">View Insurance</button>
+                <div id="insuranceDoc" style="display: none; margin-top: 10px;">
+                  <img src="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" alt="Vehicle Insurance" style="max-width: 100%; height: auto; border-radius: 8px;" />
+                </div>
+              <?php else: ?>
+                <input type="text" class="form-input" value="Not uploaded" readonly />
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -88,54 +111,38 @@
         <div class="settings-section">
           <h3>Notification Preferences</h3>
           <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <span>New order notifications</span>
+            <span>Order updates</span>
             <div class="toggle-switch active" onclick="toggleNotification(this)">
               <div class="toggle-slider"></div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <span>Route update alerts</span>
+            <span>Delivery reminders</span>
             <div class="toggle-switch active" onclick="toggleNotification(this)">
               <div class="toggle-slider"></div>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <span>Customer rating notifications</span>
+            <span>System announcements</span>
             <div class="toggle-switch" onclick="toggleNotification(this)">
               <div class="toggle-slider"></div>
             </div>
           </div>
         </div>
 
-        <div class="settings-section">
-          <h3>Payment Information</h3>
-          <div class="form-group">
-            <label class="form-label">Bank Account Number</label>
-            <input type="text" class="form-input" value="****-****-****-1234" placeholder="Enter account number" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Routing Number</label>
-            <input type="text" class="form-input" value="021000021" placeholder="Enter routing number" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Payment Schedule</label>
-            <select class="form-select">
-              <option>Weekly</option>
-              <option>Bi-weekly</option>
-              <option>Monthly</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- <div style="display: flex; gap: 15px;">
-          <button class="btn1" onclick="saveSettings()">Save Changes</button>
-          <button class="btn1" onclick="resetSettings()">Reset</button>
-        </div> -->
+        
       </div>
     </div>
   </div>
 
   <script src="main.js"></script>
+  <script>
+    function toggleDoc(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
 </body>
 
 </html>

@@ -21,10 +21,10 @@
                 <h1 class="title">All Orders</h1>
                 <p class="subtitle">Orders currently placed by clients.</p>
             </div>
-            <div class="filter-tabs">
+            <!-- <div class="filter-tabs">
                 <button class="btn2" onclick="markAllRead()">Mark All Read</button>
                 <button class="btn1" onclick="clearNotifications()">Clear All</button>
-            </div>
+            </div> -->
             <?php foreach ($orders as $row): ?>
                 <div class="notification-item unread" data-notification-id="1">
                     <div class="notification-icon notification-info">
@@ -39,20 +39,21 @@
                         <div>Gift Wrapping Fee : <?= htmlspecialchars($row['deliveryPrice']) ?></div>
                         <div>Delivery Date : <?= htmlspecialchars($row['deliveryDate']) ?></div>
                         <?php
-                        if ($row['giftWrapper_id'] === $_SESSION['user']['id']) {
-                            echo "<div class='subtitle'>Assigned</div>";
+                        if ($row['delivery_id'] === $_SESSION['user']['id']) {
+                            echo "<div class='subtitle'>Assssigned</div>";
                         } else {
                             echo "<div class='notification-actions'>
             <a class='btn1' href='?controller=delivery&action=dashboard/acceptOrder/{$row['id']}'>Accept</a></div>";
                         }
                         ?>
-
                     </div>
-                <?php endforeach ?>
-                <div class="notification-time">1 minutes ago</div>
-                <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
-            </div>
+
+                </div>
+            <?php endforeach ?>
+            <div class="notification-time">1 minutes ago</div>
+            <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
         </div>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

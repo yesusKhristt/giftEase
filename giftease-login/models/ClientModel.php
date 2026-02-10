@@ -1,23 +1,19 @@
 <?php
 // ClientModel.php***
 
-class ClientModel
-{
+class ClientModel {
     private $pdo;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTables(); // Create the table if not there
     }
 
-    public function getpdo()
-    {
+    public function getpdo() {
         return $this->pdo;
     }
 
-    public function createTables()
-    {
+    public function createTables() {
         $sql1 = "CREATE TABLE IF NOT EXISTS clients (
             id INT AUTO_INCREMENT PRIMARY KEY,
             first_name VARCHAR(100) NOT NULL,
@@ -40,35 +36,39 @@ class ClientModel
         try {
             $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
-
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
     }
 
-    public function authenticate($email, $password, $type, &$error)
-    {
+    public function authenticate($email, $password, $type, &$error) {
         $stmt = $this->pdo->prepare("SELECT * FROM clients WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password']) && $type == "client") {
-            
+
             return $user;
         }
         $error = "Invalid Username or Password";
         return null;
     }
 
-        public function getUserByEmail($email)
-    {
+    public function getUserByID($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM clients WHERE id = ?");
+        $stmt->execute([$id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user;
+    }
+
+    public function getUserByEmail($email) {
         $stmt = $this->pdo->prepare("SELECT * FROM clients WHERE email = ?");
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-        public function addAddress($adress, $id)
-    {
+    public function addAddress($adress, $id) {
         $stmt = $this->pdo->prepare("INSERT INTO clientAddress (client_id, address) VALUES (?, ?)");
         return $stmt->execute([
             $id,
@@ -76,14 +76,13 @@ class ClientModel
         ]);
     }
 
-    public function getAddress($id){
+    public function getAddress($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM clientAddress WHERE client_id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function addUser($data)
-    {
+    public function addUser($data) {
         $stmt = $this->pdo->prepare("INSERT INTO clients (first_name, last_name, email, password, phone, image_loc) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['first_name'],
@@ -97,9 +96,8 @@ class ClientModel
         $this->addAddress($data['address'], $last_id);
     }
 
-    public function updateUser($data)
-    {
-        $stmt = $this->pdo->prepare("UPDATE clients SET first_name = ?, last_name = ?, phone = ?, address WHERE id = ?");
+    public function updateUser($data) {
+        $stmt = $this->pdo->prepare("UPDATE clients SET first_name = ?, last_name = ?, phone = ? WHERE id = ?");
         return $stmt->execute([
             $data['first_name'],
             $data['last_name'],
@@ -108,24 +106,17 @@ class ClientModel
         ]);
     }
 
-    public function deleteUser($user_id)
-    {
+    public function deleteUser($user_id) {
         $stmt = $this->pdo->prepare("UPDATE clients SET status = 'inactive' WHERE id = ?");
         $stmt->execute([$user_id]);
     }
 
 
-    public function updateProfilePicture($client_id, $profilePicPath)
-    {
+    public function updateProfilePicture($client_id, $profilePicPath) {
         $stmt = $this->pdo->prepare("UPDATE clients SET image_loc = ? WHERE id = ?");
         return $stmt->execute([
             $profilePicPath,
             $client_id
         ]);
     }
-
-
 }
-
-
-?>
