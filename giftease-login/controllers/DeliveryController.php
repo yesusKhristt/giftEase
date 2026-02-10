@@ -61,10 +61,13 @@ class DeliveryController {
     public function Delivery($parts) {
         switch ($parts[1]) {
             case 'profile':
+                $deliveryId = $_SESSION['user']['id'];
+                $deliveryProfile = $this->delivery->getDeliveryById($deliveryId);
+                $profileStats = $this->delivery->getProfileStats($deliveryId);
                 require_once __DIR__ . '/../views/Dashboards/Delivery/profile.php';
                 break;
             case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
+                $this->history();
                 break;
             case 'map':
                 require_once __DIR__ . '/../views/Dashboards/Delivery/map.php';
@@ -88,9 +91,13 @@ class DeliveryController {
                 require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';
                 break;
             case 'settings':
+                $deliveryId = $_SESSION['user']['id'];
+                $deliveryProfile = $this->delivery->getDeliveryById($deliveryId);
                 require_once __DIR__ . '/../views/Dashboards/Delivery/Settings.php';
                 break;
             default:
+                $deliveryId = $_SESSION['user']['id'];
+                $dashboardStats = $this->delivery->getDashboardStats($deliveryId);
                 require_once __DIR__ . '/../views/Dashboards/Delivery/home.php';
                 break;
         }
@@ -121,8 +128,43 @@ class DeliveryController {
             header("Location: index.php?controller=delivery&action=dashboard/account");
             exit;
 
-            // Redirect or show a success message
+                
         }
         require_once __DIR__ . '/../views/Dashboards/Delivery/edit.php';
     }
+public function history() {
+    $filters = [
+        'dateFrom' => $_GET['dateFrom'] ?? '',
+        'dateTo'   => $_GET['dateTo'] ?? '',
+        'status'   => $_GET['status'] ?? 'all',
+        'customer' => $_GET['customer'] ?? ''
+    ];
+
+    // Get delivery history from database
+    $delivery_id = $_SESSION['user']['id'];
+    $allHistory = $this->delivery->getDeliveryHistory($delivery_id, $filters);
+
+    // Process the data for display
+    $history = array_map(function($row) {
+        return [
+            'id' => 'ORD-' . str_pad($row['id'], 3, '0', STR_PAD_LEFT),
+            'customer_name' => $row['first_name'] . ' ' . $row['last_name'],
+            'product_name' => $row['product_names'] ?? 'N/A',
+            'delivery_date' => $row['deliveryDate'],
+            'status' => $row['is_delivered'] ? 'delivered' : 'pending',
+            'earnings' => 'Rs.' . number_format($row['deliveryPrice'], 2),
+            'rating' => 'N/A',
+            'distance' => 'N/A'
+        ];
+    }, $allHistory);
+
+    // Apply status filter if needed
+    if ($filters['status'] !== 'all') {
+        $history = array_filter($history, function($item) use ($filters) {
+            return $item['status'] === $filters['status'];
+        });
+    }
+
+    require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
+}
 }

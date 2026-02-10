@@ -27,8 +27,8 @@
                 <h1 class="title">Assigned Orders</h2>
                     <p class="subtitle">Monitor your orders</p>
             </div>
-            <div class="card">
-                <div class="title">All Orders</div>
+           
+
                 <?php foreach ($myOrders as $row): ?>
                     <div class="card">
                         <div class="title">DEL-<?= htmlspecialchars($row['id']) ?></div>
@@ -65,7 +65,7 @@
                     </div>
 
                 <?php endforeach ?>
-            </div>
+            
         </div>
     </div>
 </body>

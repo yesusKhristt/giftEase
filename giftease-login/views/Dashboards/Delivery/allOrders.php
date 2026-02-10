@@ -21,10 +21,10 @@
                 <h1 class="title">All Orders</h1>
                 <p class="subtitle">Orders currently placed by clients.</p>
             </div>
-            <div class="filter-tabs">
+            <!-- <div class="filter-tabs">
                 <button class="btn2" onclick="markAllRead()">Mark All Read</button>
                 <button class="btn1" onclick="clearNotifications()">Clear All</button>
-            </div>
+            </div> -->
             <?php foreach ($orders as $row): ?>
                 <div class="notification-item unread" data-notification-id="1">
                     <div class="notification-icon notification-info">

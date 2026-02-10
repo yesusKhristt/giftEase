@@ -157,4 +157,142 @@ class DeliveryModel {
 
         return $stmt->fetchAll();
     }
+
+    public function getDeliveryHistory($delivery_id, $filters = []) {
+        $sql = "SELECT 
+            o.id,
+            o.deliveryDate,
+            o.is_delivered,
+            o.deliveryPrice,
+            c.first_name,
+            c.last_name,
+            GROUP_CONCAT(p.name SEPARATOR ', ') as product_names
+        FROM orders o
+        JOIN clients c ON o.client_id = c.id
+        LEFT JOIN orderItems oi ON o.id = oi.order_id
+        LEFT JOIN products p ON oi.item_id = p.id
+        WHERE o.delivery_id = ?";
+
+        $params = [$delivery_id];
+
+        // Add date filters
+        if (!empty($filters['dateFrom'])) {
+            $sql .= " AND o.deliveryDate >= ?";
+            $params[] = $filters['dateFrom'];
+        }
+
+        if (!empty($filters['dateTo'])) {
+            $sql .= " AND o.deliveryDate <= ?";
+            $params[] = $filters['dateTo'];
+        }
+
+        // Add customer name filter
+        if (!empty($filters['customer'])) {
+            $sql .= " AND (c.first_name LIKE ? OR c.last_name LIKE ?)";
+            $searchTerm = '%' . $filters['customer'] . '%';
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+        }
+
+        $sql .= " GROUP BY o.id, o.deliveryDate, o.is_delivered, o.deliveryPrice, c.first_name, c.last_name";
+        $sql .= " ORDER BY o.is_delivered DESC, COALESCE(o.delivered_at, o.deliveryDate) DESC, o.id DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDashboardStats($deliveryId) {
+        $sql = "SELECT
+                    COUNT(*) AS assigned_total,
+                    SUM(CASE WHEN is_delivered = 0 THEN 1 ELSE 0 END) AS pending_total,
+                    SUM(CASE WHEN is_delivered = 1 THEN 1 ELSE 0 END) AS delivered_total,
+                    SUM(CASE WHEN (
+                        DATE(deliveryDate) = CURDATE()
+                        OR deliveryDate = CURDATE()
+                        OR STR_TO_DATE(deliveryDate, '%Y-%m-%d') = CURDATE()
+                        OR STR_TO_DATE(deliveryDate, '%Y-%m-%d %H:%i:%s') = CURDATE()
+                        OR STR_TO_DATE(deliveryDate, '%Y-%m-%dT%H:%i') = CURDATE()
+                        OR STR_TO_DATE(deliveryDate, '%m/%d/%Y') = CURDATE()
+                        OR STR_TO_DATE(deliveryDate, '%d/%m/%Y') = CURDATE()
+                    ) THEN 1 ELSE 0 END) AS deliveries_today,
+                    SUM(CASE WHEN is_delivered = 1 AND
+                        COALESCE(
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%d'),
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%d %H:%i:%s'),
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%dT%H:%i'),
+                            STR_TO_DATE(deliveryDate, '%m/%d/%Y'),
+                            STR_TO_DATE(deliveryDate, '%d/%m/%Y'),
+                            DATE(deliveryDate)
+                        ) BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE()
+                        THEN deliveryPrice ELSE 0 END) AS weekly_earnings
+                FROM orders
+                WHERE delivery_id = ? AND is_wrapped = 1";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$deliveryId]);
+        $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return [
+            'assigned_total' => (int)($stats['assigned_total'] ?? 0),
+            'pending_total' => (int)($stats['pending_total'] ?? 0),
+            'delivered_total' => (int)($stats['delivered_total'] ?? 0),
+            'deliveries_today' => (int)($stats['deliveries_today'] ?? 0),
+            'weekly_earnings' => (float)($stats['weekly_earnings'] ?? 0),
+        ];
+    }
+
+    public function getProfileStats($deliveryId)
+    {
+        $sql = "SELECT
+                    COUNT(*) AS assigned_total,
+                    SUM(CASE WHEN is_delivered = 1 THEN 1 ELSE 0 END) AS delivered_total,
+                    SUM(CASE WHEN is_delivered = 1 THEN deliveryPrice ELSE 0 END) AS total_earnings
+                FROM orders
+                WHERE delivery_id = ? AND is_wrapped = 1";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$deliveryId]);
+        $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $assigned = (int)($stats['assigned_total'] ?? 0);
+        $delivered = (int)($stats['delivered_total'] ?? 0);
+        $successRate = $assigned > 0 ? round(($delivered / $assigned) * 100, 1) : 0;
+
+        return [
+            'assigned_total' => $assigned,
+            'delivered_total' => $delivered,
+            'total_earnings' => (float)($stats['total_earnings'] ?? 0),
+            'success_rate' => $successRate,
+            'avg_rating' => null,
+            'distance' => null,
+        ];
+    }
+
+    private function addColumnIfNotExists($table, $column, $definition)
+    {
+        try {
+            $stmt = $this->pdo->query("SHOW COLUMNS FROM `$table` LIKE '$column'");
+            if ($stmt->rowCount() == 0) {
+                $this->pdo->exec("ALTER TABLE `$table` ADD COLUMN `$column` $definition");
+            }
+        } catch (PDOException $e) {
+            // Ignore if table not ready
+        }
+    }
+
+    private function ensureOrdersDeliveredAtColumn()
+    {
+        try {
+            $this->pdo->exec("ALTER TABLE orders ADD COLUMN delivered_at TIMESTAMP NULL DEFAULT NULL");
+        } catch (PDOException $e) {
+            // Ignore if the column already exists or table not available yet
+        }
+
+        try {
+            $this->pdo->exec("UPDATE orders SET delivered_at = deliveryDate WHERE is_delivered = 1 AND delivered_at IS NULL");
+        } catch (PDOException $e) {
+            // Ignore backfill errors
+        }
+    }
 }

@@ -1,21 +1,17 @@
 <?php
-class OrderModel
-{
+class OrderModel {
     private $pdo;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTables(); // Create the table if not there
     }
 
-    public function getpdo()
-    {
+    public function getpdo() {
         return $this->pdo;
     }
 
-    public function createTables()
-    {
+    public function createTables() {
         $sql1 = "CREATE TABLE IF NOT EXISTS orders (
             id INT AUTO_INCREMENT PRIMARY KEY,
             client_id INT NOT NULL,
@@ -33,6 +29,7 @@ class OrderModel
             delivery_id INT DEFAULT NULL,
             productPrice INT DEFAULT 0 NOT NULL,
             deliveryPrice INT DEFAULT 0 NOT NULL,
+            delivered_at TIMESTAMP DEFAULT NULL,
             FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );";
         $sql2 = "CREATE TABLE IF NOT EXISTS orderItems (
@@ -55,7 +52,6 @@ class OrderModel
             $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
             $this->pdo->exec($sql3);
-
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
@@ -64,8 +60,7 @@ class OrderModel
     /**
      * Get all orders that contain products from a specific vendor.
      */
-    public function getOrdersForVendor($vendorId)
-    {
+    public function getOrdersForVendor($vendorId) {
         $sql = "
             SELECT 
                 o.id AS order_id,
@@ -99,8 +94,7 @@ class OrderModel
     /**
      * Get a single order's full details including only items belonging to the vendor.
      */
-    public function getOrderDetailForVendor($orderId, $vendorId)
-    {
+    public function getOrderDetailForVendor($orderId, $vendorId) {
         // Order header
         $sql1 = "
             SELECT 
@@ -145,8 +139,7 @@ class OrderModel
      * Uses a subquery to first deduplicate orders, so each order is counted once
      * even if it contains multiple items from the same vendor.
      */
-    public function getVendorOrderStats($vendorId)
-    {
+    public function getVendorOrderStats($vendorId) {
         $sql = "
             SELECT 
                 COUNT(*) AS total_orders,
@@ -172,8 +165,7 @@ class OrderModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function confirmOrder($data, $wrap_id)
-    {
+    public function confirmOrder($data, $wrap_id) {
 
         if ($data['mode'] === "custom") {
             $stmt1 = $this->pdo->prepare("INSERT INTO orders (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
@@ -216,6 +208,5 @@ class OrderModel
 
         $stmt3 = $this->pdo->prepare("UPDATE `orders` SET `productPrice`= $price WHERE `id` = $order_id");
         $stmt3->execute();
-
     }
 }
