@@ -240,6 +240,83 @@ class AdminController
         }
         require_once __DIR__ . '/../views/Dashboards/Admin/addGiftWrappingItems.php';
     }
+    public function addGiftWrappingPackages($parts)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title       = $_POST['title'];
+            $description = $_POST['description'];
+            $price       = $_POST['price'];
+
+            // Handle multiple image uploads
+            $imagePaths = [];
+
+            if (!empty($_FILES['images']['tmp_name'][0])) {
+                foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+                    $uploadDir = "resources/uploads/admin/giftWrappingPackages/";
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    $fileName   = time() . "_" . $key . "_" . basename($_FILES['images']['name'][$key]);
+                    $targetFile = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($tmpName, $targetFile)) {
+                        $imagePaths[] = $fileName;
+                    }
+                }
+            }
+
+            $this->giftWrapping->addGiftWrappingPackage($title, $description, $price, $imagePaths);
+            header("Location: index.php?controller=admin&action=dashboard/addGiftWrappingPackages");
+            exit;
+        }
+        require_once __DIR__ . '/../views/Dashboards/Admin/addGiftWrappingPackages.php';
+    }
+
+    public function editGiftWrappingPackages($parts)
+    {
+        $action = $parts[2] ?? '';
+
+        if ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id          = $parts[3] ?? null;
+            $title       = $_POST['title'];
+            $description = $_POST['description'];
+            $price       = $_POST['price'];
+
+            $imagePaths = null;
+            if (!empty($_FILES['images']['tmp_name'][0])) {
+                $imagePaths = [];
+                foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+                    $uploadDir = "resources/uploads/admin/giftWrappingPackages/";
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    $fileName   = time() . "_" . $key . "_" . basename($_FILES['images']['name'][$key]);
+                    $targetFile = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($tmpName, $targetFile)) {
+                        $imagePaths[] = $fileName;
+                    }
+                }
+            }
+
+            $this->giftWrapping->updateGiftWrappingPackage($id, $title, $description, $price, $imagePaths);
+            header("Location: index.php?controller=admin&action=dashboard/editGiftWrappingPackages");
+            exit;
+        }
+
+        if ($action === 'delete') {
+            $id = $parts[3] ?? null;
+            $this->giftWrapping->deleteGiftWrappingPackage($id);
+            header("Location: index.php?controller=admin&action=dashboard/editGiftWrappingPackages");
+            exit;
+        }
+
+        $packages = $this->giftWrapping->getGiftWrappingPackages();
+        require_once __DIR__ . '/../views/Dashboards/Admin/editGiftWrappingPackages.php';
+    }
+
     public function handleLogout()
     {
         $_SESSION['admin'] = null;
@@ -683,6 +760,12 @@ class AdminController
                 break;
             case 'editGiftWrappingItems':
                 $this->editGiftWrappingItems($parts);
+                break;
+            case 'addGiftWrappingPackages':
+                $this->addGiftWrappingPackages($parts);
+                break;
+            case 'editGiftWrappingPackages':
+                $this->editGiftWrappingPackages($parts);
                 break;
             case 'reports':
                 $this->reports($parts);
