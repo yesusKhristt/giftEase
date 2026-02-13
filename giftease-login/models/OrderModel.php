@@ -165,6 +165,31 @@ class OrderModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Get all orders placed by a specific client.
+     */
+    public function getOrdersByClient($clientId) {
+        $sql = "
+            SELECT 
+                o.*,
+                os.is_delivered AS resolved_is_delivered,
+                (
+                    SELECT p.vendor_id
+                    FROM orderItems oi
+                    JOIN products p ON p.id = oi.item_id
+                    WHERE oi.order_id = o.id
+                    LIMIT 1
+                ) AS vendor_id
+            FROM orders o
+            LEFT JOIN orderStatus os ON os.order_id = o.id
+            WHERE o.client_id = ?
+            ORDER BY o.id DESC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$clientId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function confirmOrder($data, $wrap_id) {
 
         if ($data['mode'] === "custom") {
