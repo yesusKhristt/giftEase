@@ -761,6 +761,13 @@ class AdminController
             case 'editGiftWrappingPackages':
                 $this->editGiftWrappingPackages($parts);
                 break;
+            case 'addGiftWrappingItems':
+                $this->addGiftWrappingItems($parts);
+                break;
+            case 'editGiftWrappingItems':
+                $this->editGiftWrappingItems($parts);
+                break;
+
             case 'reports':
                 $this->reports($parts);
                 break;
