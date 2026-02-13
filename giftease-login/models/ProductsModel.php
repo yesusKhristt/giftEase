@@ -305,6 +305,53 @@ class ProductsModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $status = 'all', $categoryId = 0) {
+        $sql = "SELECT * FROM products WHERE vendor_id = :vendor_id";
+        if ($status !== 'all') {
+            $sql .= " AND status = :status";
+        }
+        if ((int) $categoryId > 0) {
+            $sql .= " AND mainCategory = :category_id";
+        }
+        $sql .= " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':vendor_id', (int) $vendor_id, PDO::PARAM_INT);
+        if ($status !== 'all') {
+            $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+        }
+        if ((int) $categoryId > 0) {
+            $stmt->bindValue(':category_id', (int) $categoryId, PDO::PARAM_INT);
+        }
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countFromVendorFiltered($vendor_id, $status = 'all', $categoryId = 0) {
+        $sql = "SELECT COUNT(*) FROM products WHERE vendor_id = :vendor_id";
+        if ($status !== 'all') {
+            $sql .= " AND status = :status";
+        }
+        if ((int) $categoryId > 0) {
+            $sql .= " AND mainCategory = :category_id";
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':vendor_id', (int) $vendor_id, PDO::PARAM_INT);
+        if ($status !== 'all') {
+            $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+        }
+        if ((int) $categoryId > 0) {
+            $stmt->bindValue(':category_id', (int) $categoryId, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
     // 🔹 Count total active products
     public function countAllProducts() {
         $stmt = $this->pdo->prepare("

@@ -204,17 +204,32 @@ class VendorController
 
         $itemsPerPage = 2;
 
+        $statusFilter = $_GET['status'] ?? 'all';
+        $categoryFilter = isset($_GET['category']) ? (int) $_GET['category'] : 0;
+
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         if ($page < 1) $page = 1;
 
         $offset = ($page - 1) * $itemsPerPage;
 
         // Fetch paginated products
-        $allProducts = $this->product->fetchPaginatedFromVendor($itemsPerPage, $offset, $_SESSION['user']['id']);
+        $allProducts = $this->product->fetchPaginatedFromVendorFiltered(
+            $_SESSION['user']['id'],
+            $itemsPerPage,
+            $offset,
+            $statusFilter,
+            $categoryFilter
+        );
 
         // Count total products
-        $totalItems = $this->product->countAllProducts();
+        $totalItems = $this->product->countFromVendorFiltered(
+            $_SESSION['user']['id'],
+            $statusFilter,
+            $categoryFilter
+        );
         $totalPages = ceil($totalItems / $itemsPerPage);
+
+        $categories = $this->category->getCategory();
         
         //$allProducts = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Vendor/Inventory.php';
