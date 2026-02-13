@@ -31,18 +31,12 @@
         class="nav-item <?= isActive('service', $activePage) ?>">
         Service
       </a>
-      <a href="?controller=giftWrapper&action=dashboard/portfolio"
-        class="nav-item <?= isActive('portfolio', $activePage) ?>">
-        Portfolio
+      
+      <a href="?controller=giftWrapper&action=dashboard/history"
+        class="nav-item <?= isActive('history', $activePage) ?>">
+        History
       </a>
-      <a href="?controller=giftWrapper&action=dashboard/earnings"
-        class="nav-item <?= isActive('earnings', $activePage) ?>">
-        Earning
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/analytics"
-        class="nav-item <?= isActive('analytics', $activePage) ?>">
-        Analytics
-      </a>
+      
 
     </nav>
     <div class="button-section">
@@ -53,26 +47,30 @@
     </div>
   </div>
   <div class="topbar-container">
-    <!-- Search Bar -->
-    <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Search..." />
-    </div>
+    <div class="gift-fall-layer"></div>
+    <div class="topbar-ui">
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search..." />
+      </div>
 
-    <div class="gift">
-      gift<span class="Ease">Ease
-      </span>
-    </div>
+      <div class="gift">
+        gift<span class="Ease">Ease
+        </span>
+      </div>
 
-    <!-- Right Side Links/Buttons -->
-    <nav class="topbar-actions">
-      <a href="?controller=giftWrapper&action=dashboard/settings"
-        class="settings-btn <?= isActive('settings', $activePage) ?>">
-        <i class="fas fa-cog"></i>
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/profile"
-        class="settings-btn <?= isActive('profile', $activePage) ?>">
-        <i class="fas fa-user"></i>
-      </a>
-    </nav>
+      <!-- Right Side Links/Buttons -->
+      <nav class="topbar-actions">
+        <a href="?controller=giftWrapper&action=dashboard/settings"
+          class="settings-btn <?= isActive('settings', $activePage) ?>">
+          <i class="fas fa-cog"></i>
+        </a>
+        <a href="?controller=giftWrapper&action=dashboard/profile"
+          class="settings-btn <?= isActive('profile', $activePage) ?>">
+          <i class="fas fa-user"></i>
+        </a>
+      </nav>
+    </div>
   </div>
+  <script src="public/main.js"></script>
 </div>

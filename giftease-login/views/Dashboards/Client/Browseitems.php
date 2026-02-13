@@ -25,7 +25,7 @@
 
             </div>
 
-            
+
             <h4 class="subtitle" style="padding: 10px">Filter by:</h4>
             <div class="filter-tabs">
 
@@ -56,9 +56,9 @@
                 </select>
             </div>
 
-           
+
             <div class="inventory-grid">
-                
+
                 <?php foreach ($allProducts as $row): ?>
                     <div class="inventory-item">
                         <a href="?controller=client&action=dashboard/viewitem/<?= $row['id'] ?>">
@@ -85,81 +85,83 @@
                                 Add to cart
                             </a>
 
-                            <button class="btn1 btn-danger btn-small">Add to wishlist</button>
+                            <a class="btn1 btn-outline btn-small add-to-wishlist" href="#" data-id="<?= $row['id'] ?>">
+                                Add to wishlist
+
+                            </a>
                         </div>
                     </div>
                 <?php endforeach; ?>
 
             </div>
 
-            
-        <?php if ($totalPages > 1): ?>
-            <div class="pagination">
 
-               
-                <?php if ($page > 1): ?>
-                    <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page - 1 ?>">
-                        <i class="fas fa-chevron-left"></i>
-                    </a>
-                <?php else: ?>
-                    <span class="page-arrow disabled">
-                        <i class="fas fa-chevron-left"></i>
-                    </span>
-                <?php endif; ?>
+            <?php if ($totalPages > 1): ?>
+                <div class="pagination">
 
-               
-                <a class="page-num <?= $page == 1 ? 'active' : '' ?>" 
-                   href="?controller=client&action=dashboard/items&page=1">1</a>
 
-                <?php if ($totalPages > 1): ?>
-                    <?php 
-                    
-                    $range = 2; 
-                    $start = max(2, $page - $range);
-                    $end = min($totalPages - 1, $page + $range);
-                    
-                 
-                    if ($start > 2): ?>
-                        <span class="page-dots">...</span>
+                    <?php if ($page > 1): ?>
+                        <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page - 1 ?>">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="page-arrow disabled">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
                     <?php endif; ?>
-                    
-                    
-                    <?php for ($i = $start; $i <= $end; $i++): ?>
-                        <a class="page-num <?= $page == $i ? 'active' : '' ?>" 
-                           href="?controller=client&action=dashboard/items&page=<?= $i ?>"><?= $i ?></a>
-                    <?php endfor; ?>
-                    
-                    
-                    <?php if ($end < $totalPages - 1): ?>
-                        <span class="page-dots">...</span>
+
+
+                    <a class="page-num <?= $page == 1 ? 'active' : '' ?>"
+                        href="?controller=client&action=dashboard/items&page=1">1</a>
+
+                    <?php if ($totalPages > 1): ?>
+                        <?php
+
+                        $range = 2;
+                        $start = max(2, $page - $range);
+                        $end = min($totalPages - 1, $page + $range);
+
+
+                        if ($start > 2): ?>
+                            <span class="page-dots">...</span>
+                        <?php endif; ?>
+
+
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <a class="page-num <?= $page == $i ? 'active' : '' ?>"
+                                href="?controller=client&action=dashboard/items&page=<?= $i ?>"><?= $i ?></a>
+                        <?php endfor; ?>
+
+
+                        <?php if ($end < $totalPages - 1): ?>
+                            <span class="page-dots">...</span>
+                        <?php endif; ?>
+
+
+                        <a class="page-num <?= $page == $totalPages ? 'active' : '' ?>"
+                            href="?controller=client&action=dashboard/items&page=<?= $totalPages ?>\"><?= $totalPages ?></a>
                     <?php endif; ?>
-                    
-                    
-                    <a class="page-num <?= $page == $totalPages ? 'active' : '' ?>" 
-                       href="?controller=client&action=dashboard/items&page=<?= $totalPages ?>\"><?= $totalPages ?></a>
-                <?php endif; ?>
 
-                
-                <?php if ($page < $totalPages): ?>
-                    <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page + 1 ?>">
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                <?php else: ?>
-                    <span class="page-arrow disabled">
-                        <i class="fas fa-chevron-right"></i>
-                    </span>
-                <?php endif; ?>
 
-            </div>
-        <?php endif; ?>
+                    <?php if ($page < $totalPages): ?>
+                        <a class="page-arrow" href="?controller=client&action=dashboard/items&page=<?= $page + 1 ?>">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="page-arrow disabled">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    <?php endif; ?>
+
+                </div>
+            <?php endif; ?>
 
 
         </div>
     </div>
     <script>
-      
         document.addEventListener('DOMContentLoaded', () => {
-           
+
             async function updateCartButton(link, event = null, triggeredByClick = false) {
                 const productId = link.dataset.id;
                 let url;
@@ -172,12 +174,14 @@
                 }
 
                 try {
-                    const response = await fetch(url, { method: 'GET' });
+                    const response = await fetch(url, {
+                        method: 'GET'
+                    });
                     if (!response.ok) throw new Error('Network error');
 
                     const result = await response.json();
 
-                    
+
                     if (result.inCart) {
                         link.textContent = 'Remove from Cart';
                         link.classList.remove('btn-outline');
@@ -194,6 +198,42 @@
                 }
             }
 
+            async function updateWishlistButton(link, event = null, triggeredByClick = false) {
+                const productId = link.dataset.id;
+                let url;
+
+                if (triggeredByClick) {
+                    event.preventDefault();
+                    url = `?controller=client&action=dashboard/items/${productId}&state=wishlist`;
+                } else {
+                    url = `?controller=client&action=dashboard/items/${productId}&state=wishlistCheck`;
+                }
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET'
+                    });
+                    if (!response.ok) throw new Error('Network error');
+
+                    const result = await response.json();
+
+
+                    if (result.inWishlist) {
+                        link.textContent = 'Remove from Wishlist';
+                        link.classList.remove('btn-outline');
+                        link.classList.add('btn-danger');
+                    } else {
+                        link.textContent = 'Add to Wishlist';
+                        link.classList.remove('btn-danger');
+                        link.classList.add('btn-outline');
+                    }
+
+                } catch (err) {
+                    console.error('Add/remove wishlist failed:', err);
+                    if (triggeredByClick) alert('Could not update wishlist. Try again.');
+                }
+            }
+
             // Loop through all cart buttons
             document.querySelectorAll('.add-to-cart').forEach(link => {
                 // ✅ Check current state on page load
@@ -202,9 +242,16 @@
                 // ✅ Toggle when clicked
                 link.addEventListener('click', (event) => updateCartButton(link, event, true));
             });
+            document.querySelectorAll('.add-to-wishlist').forEach(link => {
+                // ✅ Check current state on page load
+                updateWishlistButton(link);
+
+                // ✅ Toggle when clicked
+                link.addEventListener('click', (event) => updateWishlistButton(link, event, true));
+            });
         });
     </script>
-    
+
 
 
 

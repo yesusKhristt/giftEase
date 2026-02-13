@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delivery Partner Dashboard - GiftEase</title>
+  <title>Order History - GiftEase Vendor</title>
   <link rel="stylesheet" href="public/style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -14,195 +14,186 @@
   <div class="container">
     <?php
     $activePage = 'history';
-    include 'views\commonElements/leftSidebar.php';
+    include 'views/commonElements/leftSidebar.php';
     ?>
 
     <div class="main-content">
       <div class="page-header">
-        <h1 class="title">Delivery History</h1>
-        <p class="subtitle">View your complete delivery history</p>
+        <h1 class="title">Order History</h1>
+        <p class="subtitle">View your complete sales history</p>
       </div>
-      <div class="filter-tabs">
-        <div class="btn1">
-          <label>Date Range:</label>
-          <div class="date-range-picker">
-            <input type="date" id="dateFrom" class="form-input" />
-            <span>to</span>
-            <input type="date" id="dateTo" class="form-input" />
-          </div>
-        </div>
-        <div class="btn1">
-          <label>Status:</label>
-          <select id="statusFilter" class="form-select">
-            <option value="all">All Status</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="returned">Returned</option>
-          </select>
-        </div>
-        <div class="btn1">
-          <label>Customer:</label>
-          <input type="text" id="customerSearch" class="form-input" placeholder="Search customer..." />
-        </div>
 
-        <button class="btn1" onclick="exportHistory()">
+      <?php
+      $statusFilter = $_GET['status'] ?? 'all';
+      
+      $buildHistoryUrl = function ($page = 1, $status = 'all') {
+          $params = [
+              'controller' => 'vendor',
+              'action' => 'dashboard/history',
+              'page' => $page,
+          ];
+          if ($status && $status !== 'all') {
+              $params['status'] = $status;
+          }
+          return '?' . http_build_query($params);
+      };
+      ?>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <a class="btn1 filter-tab <?= $statusFilter === 'all' ? 'active' : '' ?>"
+          href="<?= $buildHistoryUrl(1, 'all') ?>">All Orders</a>
+        <a class="btn1 filter-tab <?= $statusFilter === 'delivered' ? 'active' : '' ?>"
+          href="<?= $buildHistoryUrl(1, 'delivered') ?>">Delivered</a>
+        <a class="btn1 filter-tab <?= $statusFilter === 'pending' ? 'active' : '' ?>"
+          href="<?= $buildHistoryUrl(1, 'pending') ?>">Pending</a>
+
+        <button class="btn1" onclick="exportHistory()" style="margin-left: auto;">
           <i class="fas fa-download"></i> Export
         </button>
-        <button class="btn2" onclick="resetFilters()">
-          <i class="fas fa-undo"></i> Reset
-        </button>
-
       </div>
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Customer</th>
-            <th>Product</th>
-            <th>Delivery Date</th>
-            <th>Status</th>
-            <th>Earnings</th>
-            <th>Rating</th>
-            <th>Distance</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="historyTableBody">
-          <tr>
-            <td>DEL-098</td>
-            <td>
-              <div class="customer-cell">
-                <div class="customer-avatar-small">ST</div>
-                <div>
-                  <div class="customer-name">Saneth Tharushika</div>
-                  <div class="customer-phone">+94 761694206</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="product-cell">
-                <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" />
-                <div>
-                  <div class="product-name">Flower Bouquet</div>
-                  <div class="product-category">Flowers</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="date-cell">
-                <div class="delivery-date">Jan 15, 2024</div>
-                <div class="delivery-time">2:30 PM</div>
-              </div>
-            </td>
-            <td><span class="order-status status-delivered">SOLD</span></td>
-            <td class="earnings-cell">$15.00</td>
-            <td>
-              <div class="rating-cell">
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-                <div class="rating-score">5.0</div>
-              </div>
-            </td>
-            <td>5.2 km</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-098')" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="downloadReceipt('DEL-098')" title="Download Receipt">
-                  <i class="fas fa-download"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="repeatOrder('DEL-098')" title="Repeat Order">
-                  <i class="fas fa-redo"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>DEL-097</td>
-            <td>
-              <div class="customer-cell">
-                <div class="customer-avatar-small">TR</div>
-                <div>
-                  <div class="customer-name">Thenuka Ransinghne</div>
-                  <div class="customer-phone">+94 778845679</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="product-cell">
-                <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" />
-                <div>
-                  <div class="product-name">Gift Basket</div>
-                  <div class="product-category">Gifts</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="date-cell">
-                <div class="delivery-date">Jan 14, 2024</div>
-                <div class="delivery-time">4:15 PM</div>
-              </div>
-            </td>
-            <td><span class="order-status status-delivered">SOLD</span></td>
-            <td class="earnings-cell">$18.00</td>
-            <td>
-              <div class="rating-cell">
-                <div class="stars">⭐⭐⭐⭐⭐</div>
-                <div class="rating-score">5.0</div>
-              </div>
-            </td>
-            <td>7.8 km</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-097')" title="View Details">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="downloadReceipt('DEL-097')" title="Download Receipt">
-                  <i class="fas fa-download"></i>
-                </button>
-                <button class="btn btn-ghost btn-small" onclick="repeatOrder('DEL-097')" title="Repeat Order">
-                  <i class="fas fa-redo"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>DEL-096</td>
-            <td>
-              <div class="customer-cell">
-                <div class="customer-avatar-small">MR</div>
-                <div>
-                  <div class="customer-name">Mahinda Rajapaksha</div>
-                  <div class="customer-phone">+94 771234567</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="product-cell">
-                <img src="/placeholder.svg?height=40&width=40" alt="Product" class="product-thumbnail" />
-                <div>
-                  <div class="product-name">Chocolate Box</div>
-                  <div class="product-category">Sweets</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="date-cell">
-                <div class="delivery-date">Jan 13, 2024</div>
-                <div class="delivery-time">1:45 PM</div>
-              </div>
-            </td>
-            <td><span class="order-status status-delivered">SOLD</span></td>
-            <td class="earnings-cell">$12.00</td>
-            <td>
-              <div class="rating-cell">
-                <div class="stars">⭐⭐⭐⭐</div>
-                <div class="rating-score">4.0</div>
-              </div>
-            </td>
-            <td>3.5 km</td>
-            <td>
+      <!-- Orders Table -->
+      <?php if (empty($paginatedOrders)): ?>
+        <div style="text-align: center; padding: 40px; color: #999;">
+          <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+          <h3>No orders found</h3>
+          <p>You don't have any orders yet.</p>
+        </div>
+      <?php else: ?>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Delivery Date</th>
+              <th>Status</th>
+              <th>Amount</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <?php foreach ($paginatedOrders as $order): ?>
+              <tr>
+                <td><strong>#<?= htmlspecialchars($order['order_id']) ?></strong></td>
+                <td>
+                  <div class="customer-cell">
+                    <div class="customer-avatar-small">
+                      <?= strtoupper(substr($order['client_name'], 0, 2)) ?>
+                    </div>
+                    <div>
+                      <div class="customer-name"><?= htmlspecialchars($order['client_name']) ?></div>
+                      <div class="customer-phone"><?= htmlspecialchars($order['client_email']) ?></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge">
+                    <i class="fas fa-box"></i> Items
+                  </span>
+                </td>
+                <td>
+                  <div class="date-cell">
+                    <div class="delivery-date">
+                      <?= htmlspecialchars(date('M d, Y', strtotime($order['deliveryDate']))) ?>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <?php if ($order['is_delivered']): ?>
+                    <span class="order-status status-delivered">DELIVERED</span>
+                  <?php else: ?>
+                    <span class="order-status status-pending">PENDING</span>
+                  <?php endif; ?>
+                </td>
+                <td class="earnings-cell">
+                  <strong>Rs.<?= htmlspecialchars(number_format($order['vendor_total'], 2)) ?></strong>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <a href="?controller=vendor&action=dashboard/vieworder/<?= htmlspecialchars($order['order_id']) ?>"
+                      class="btn btn-ghost btn-small" title="View Details">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button class="btn btn-ghost btn-small" onclick="downloadReceipt('<?= htmlspecialchars($order['order_id']) ?>')"
+                      title="Download Receipt">
+                      <i class="fas fa-download"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <?php if ($totalPages > 1): ?>
+          <div class="pagination">
+            <?php if ($page > 1): ?>
+              <a class="page-arrow" href="<?= $buildHistoryUrl($page - 1, $statusFilter) ?>">
+                <i class="fas fa-chevron-left"></i>
+              </a>
+            <?php else: ?>
+              <span class="page-arrow disabled">
+                <i class="fas fa-chevron-left"></i>
+              </span>
+            <?php endif; ?>
+
+            <a class="page-num <?= $page == 1 ? 'active' : '' ?>"
+              href="<?= $buildHistoryUrl(1, $statusFilter) ?>">1</a>
+
+            <?php if ($totalPages > 1): ?>
+              <?php
+              $range = 2;
+              $start = max(2, $page - $range);
+              $end = min($totalPages - 1, $page + $range);
+
+              if ($start > 2): ?>
+                <span class="page-dots">...</span>
+              <?php endif; ?>
+
+              <?php for ($i = $start; $i <= $end; $i++): ?>
+                <a class="page-num <?= $page == $i ? 'active' : '' ?>"
+                  href="<?= $buildHistoryUrl($i, $statusFilter) ?>"><?= $i ?></a>
+              <?php endfor; ?>
+
+              <?php if ($end < $totalPages - 1): ?>
+                <span class="page-dots">...</span>
+              <?php endif; ?>
+
+              <a class="page-num <?= $page == $totalPages ? 'active' : '' ?>"
+                href="<?= $buildHistoryUrl($totalPages, $statusFilter) ?>"><?= $totalPages ?></a>
+            <?php endif; ?>
+
+            <?php if ($page < $totalPages): ?>
+              <a class="page-arrow" href="<?= $buildHistoryUrl($page + 1, $statusFilter) ?>">
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            <?php else: ?>
+              <span class="page-arrow disabled">
+                <i class="fas fa-chevron-right"></i>
+              </span>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
+      <?php endif; ?>
+
+    </div>
+  </div>
+
+  <script>
+    function exportHistory() {
+      alert('Exporting order history...');
+    }
+
+    function downloadReceipt(orderId) {
+      alert(Downloading receipt for order ${orderId});
+    }
+  </script>
+</body>
+
+</html>
               <div class="action-buttons">
                 <button class="btn btn-ghost btn-small" onclick="viewHistoryDetails('DEL-096')" title="View Details">
                   <i class="fas fa-eye"></i>

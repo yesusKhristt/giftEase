@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <form method="POST" action="?controller=client&action=updateProfilePicture" id="uploadForm"
+    <form method="POST" action="?controller=client&action=dashboard/updateProfilePicture" id="uploadForm"
         enctype="multipart/form-data">
         <table class="table">
             <tr>

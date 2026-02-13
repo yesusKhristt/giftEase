@@ -61,7 +61,7 @@
                     </td>
                 </tr>
             </table>
-            <button id="payhere-payment">Pay Now</button>
+            <button class="btn1"id="payhere-payment">Pay Now</button>
         </div>
     </div>
 
@@ -82,7 +82,7 @@
         };
 
         document.getElementById("payhere-payment").onclick = function() {
-
+            let ngrokURL = "https://localhost"
             fetch("/giftEase/giftease-login/views/Dashboards/Client/payhere/get-hash.php", {
                     method: "POST",
                     headers: {
@@ -95,15 +95,16 @@
                     })
                 })
                 .then(res => res.json())
+
                 .then(data => {
 
                     var payment = {
                         sandbox: true,
                         merchant_id: "1233868",
 
-                        return_url: "https://localhost/giftease-login/views/Dashboards/Client/payhere/success.php",
-                        cancel_url: "https://localhost/giftEase/giftease-login/views/Dashboards/Client/payhere/payhere.php",
-                        notify_url: "https://localhost/giftEase/giftease-login/views/Dashboards/Client/payhere/notify.php",
+                        return_url: ngrokURL + "/giftEase/giftease-login/views/Dashboards/Client/payhere/success.php",
+                        cancel_url: ngrokURL + "/giftEase/giftease-login/views/Dashboards/Client/payhere/payhere.php",
+                        notify_url: ngrokURL + "/giftEase/giftease-login/views/Dashboards/Client/payhere/notify.php",
 
                         order_id: data.order_id,
                         items: "GiftEase Order",

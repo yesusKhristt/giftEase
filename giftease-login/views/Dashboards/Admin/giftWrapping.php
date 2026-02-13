@@ -51,20 +51,23 @@
 
                 <div class="services-grid">
 
-                    <div class="card">
-                        <div class="service-icon">
-                            <i class="fas fa-gift"></i>
+                    <a href="?controller=admin&action=dashboard/addGiftWrappingPackages">
+                        <div class="card">
+                            <div class="service-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <h3 class="service-title">Add gift wrapping packages</h3>
                         </div>
-                        <h3 class="service-title">Add gift wrapping packages</h3>
-                    </div>
+                    </a>
 
-
-                    <div class="card">
-                        <div class="service-icon">
-                            <i class="fas fa-ribbon"></i>
+                    <a href="?controller=admin&action=dashboard/editGiftWrappingPackages">
+                        <div class="card">
+                            <div class="service-icon">
+                                <i class="fas fa-ribbon"></i>
+                            </div>
+                            <h3 class="service-title">Edit gift wrapping packages</h3>
                         </div>
-                        <h3 class="service-title">Edit gift wrapping packages</h3>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>

@@ -26,17 +26,6 @@
                 <form method="post">
                     <table class="table">
                         <tr>
-                            <td class="subtitle">Profile Picture</td>
-                            <td colspan="2">
-                                <div style="display: flex; align-items: center; gap: 20px;">
-                                    <img id="profilePreview" src="" alt="Profile Preview"
-                                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 1px solid #ccc; display: none;" />
-                                    <input type="file" id="profilePicInput" name="profile_picture" accept="image/*"
-                                        onchange="previewProfilePic(event)" />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
                             <td style="width:15%" class="subtitle">
                                 First Name
                             </td>

@@ -20,7 +20,7 @@
       <a href="?controller=client&action=dashboard/messeges/vendor/view" class="nav-item <?= isActive('messeges', $activePage) ?>">
         Messeges
       </a>
-      <a href="?controller=client&action=dashboard/wishlist" class="nav-item <?= isActive('whishlist', $activePage) ?>">
+      <a href="?controller=client&action=dashboard/wishlist" class="nav-item <?= isActive('wishlist', $activePage) ?>">
         Wishlist
       </a>
       <a href="?controller=client&action=dashboard/tracking" class="nav-item <?= isActive('tracking', $activePage) ?>">
