@@ -116,6 +116,15 @@ class GiftWrappingModel
             
         );";
 
+        $sql10 = "CREATE TABLE IF NOT EXISTS giftWrappingPackages (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(100) NOT NULL,
+            description VARCHAR(1500) NOT NULL,
+            price INT NOT NULL,
+            images TEXT NOT NULL
+        );";
+
+
         try {
             $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
@@ -126,6 +135,7 @@ class GiftWrappingModel
             $this->pdo->exec($sql7);
             $this->pdo->exec($sql8);
             $this->pdo->exec($sql9);
+            $this->pdo->exec($sql10);
 
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
@@ -391,22 +401,67 @@ class GiftWrappingModel
         return $stmt->execute([$id]);
     }
 
+    // ==================== Gift Wrapping Packages CRUD ====================
+
+    public function addGiftWrappingPackage($title, $description, $price, $images)
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO giftWrappingPackages (title, description, price, images) VALUES (?, ?, ?, ?)"
+        );
+        return $stmt->execute([$title, $description, $price, json_encode($images)]);
+    }
+
+    public function getGiftWrappingPackages()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM giftWrappingPackages");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getGiftWrappingPackageById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM giftWrappingPackages WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateGiftWrappingPackage($id, $title, $description, $price, $images = null)
+    {
+        if ($images !== null) {
+            $stmt = $this->pdo->prepare(
+                "UPDATE giftWrappingPackages SET title = ?, description = ?, price = ?, images = ? WHERE id = ?"
+            );
+            return $stmt->execute([$title, $description, $price, json_encode($images), $id]);
+        } else {
+            $stmt = $this->pdo->prepare(
+                "UPDATE giftWrappingPackages SET title = ?, description = ?, price = ? WHERE id = ?"
+            );
+            return $stmt->execute([$title, $description, $price, $id]);
+        }
+    }
+
+    public function deleteGiftWrappingPackage($id)
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM giftWrappingPackages WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
     // Add a new customWrap
-    public function addCustomWrap($data)
+    public function addCustomWrap($box, $boxDeco, $bag, $bagDeco, $softToy, $chocolate, $card, $price)
     {
         $stmt = $this->pdo->prepare(
             "INSERT INTO customWrap (box, boxDeco, bag, bagDeco, softToy, chocolate, card, price)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         );
         $stmt->execute([
-            $data['box'],
-            $data['boxDeco'],
-            $data['paper'],
-            $data['paperDeco'],
-            $data['softToy'],
-            $data['chocolate'],
-            $data['card'],
-            $data['totalPrice']
+            $box,
+            $boxDeco,
+            $bag,
+            $bagDeco,
+            $softToy,
+            $chocolate,
+            $card,
+            $price
         ]);
         return $this->pdo->lastInsertId();
     }
@@ -432,6 +487,7 @@ class GiftWrappingModel
         ]);
     }
 
+    
 
 }
 

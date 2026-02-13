@@ -188,7 +188,7 @@
     }
 
     function downloadReceipt(orderId) {
-      alert(`Downloading receipt for order ${orderId}`);
+      alert(Downloading receipt for order ${orderId});
     }
   </script>
 </body>

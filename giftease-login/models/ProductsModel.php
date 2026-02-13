@@ -304,8 +304,7 @@ class ProductsModel {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $status = 'all', $categoryId = 0) {
+public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $status = 'all', $categoryId = 0) {
         $sql = "SELECT * FROM products WHERE vendor_id = :vendor_id";
         if ($status !== 'all') {
             $sql .= " AND status = :status";
@@ -351,7 +350,6 @@ class ProductsModel {
 
         return (int) $stmt->fetchColumn();
     }
-
     // 🔹 Count total active products
     public function countAllProducts() {
         $stmt = $this->pdo->prepare("

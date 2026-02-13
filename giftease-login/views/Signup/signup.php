@@ -18,7 +18,7 @@ $role = $_POST['role'] ?? ($type === 'client' ? 'client' : '');
 <div class="authContainer">
 
   <div class="logo">
-    <img src="resources/ge5.png">
+    <img src="resources/iconL.png">
     <div class="gift">
       gift<span class="Ease">Ease</span>
         <h6>

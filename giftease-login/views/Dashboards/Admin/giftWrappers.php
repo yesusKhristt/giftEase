@@ -128,11 +128,11 @@
                             <!-- Actions Section -->
                             <div class="staff-actions">
                                 <?php if ($row['verified']): ?>
-                                    <a class="btn-unverify" href="?controller=admin&action=dashboard/giftWrappers/unverify/<?php echo htmlspecialchars($row['id']); ?>">
+                                    <a class="btn-unverify" href="?controller=admin&action=dashboard/giftWrappers/unverify/<?php echo htmlspecialchars($row['giftWrapper_id']); ?>">
                                         <i class="fas fa-times"></i> Unverify
                                     </a>
                                 <?php else: ?>
-                                    <a class="btn-verify" href="?controller=admin&action=dashboard/giftWrappers/verify/<?php echo htmlspecialchars($row['id']); ?>">
+                                    <a class="btn-verify" href="?controller=admin&action=dashboard/giftWrappers/verify/<?php echo htmlspecialchars($row['giftWrapper_id']); ?>">
                                         <i class="fas fa-check"></i> Verify
                                     </a>
                                 <?php endif; ?>

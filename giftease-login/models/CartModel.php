@@ -102,7 +102,7 @@ class CartModel
 
     public function removeFromCart($product_id, $client_id)
     {
-        $stmt = $this->pdo->prepare("DELETE FROM cart WHERE id = ? AND client_id = ?");
+        $stmt = $this->pdo->prepare("DELETE FROM cart WHERE product_id = ? AND client_id = ?");
         $stmt->execute([
             $product_id,
             $client_id

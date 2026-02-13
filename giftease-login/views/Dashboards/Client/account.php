@@ -32,7 +32,7 @@
                     <div>
                         <h3><?php echo htmlspecialchars($user2['first_name']) . ' ' . htmlspecialchars($user2['last_name']); ?>
                         </h3>
-                        <p>Member since <?php echo htmlspecialchars($joinData['join_month_year']); ?></p>
+                        <p>Member since <?php echo htmlspecialchars($user2['created_at']); ?></p>
                     </div>
                 </div>
 
@@ -53,7 +53,7 @@
                     <div class="form-group">
                         <label class="subtitle">Email</label>
                         <div type="email" class="form-input">
-                            <?php echo htmlspecialchars($user1['email']); ?>
+                            <?php echo htmlspecialchars($user2['email']); ?>
                         </div>
                     </div>
                     <div class="form-group">
@@ -62,18 +62,12 @@
                             <?php echo htmlspecialchars($user2['phone']); ?>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="subtitle">Emergency Contact</label>
-                        <div type="tel" class="form-input">
-                            0740862316
-                        </div>
-                    </div>
                 </div>
                 <div style="display: flex; gap: 15px;">
-                    <a href="?controller=client&action=editProfile/primary" class="btn1">
+                    <a href="?controller=client&action=dashboard/editProfile/primary" class="btn1">
                         Update Profile
                     </a>
-                    <a href="?controller=client&action=deleteProfile" class="btn1">
+                    <a href="?controller=client&action=dashboard/deleteProfile" class="btn1">
                         Delete Profile
                     </a>
                 </div>

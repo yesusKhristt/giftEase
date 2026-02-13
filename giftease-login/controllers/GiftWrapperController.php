@@ -3,12 +3,18 @@ class giftWrapperController
 {
     private $giftwrapper;
     private $notification;
+    private $giftWrapping;
+    private $giftWrapperService;
     public function __construct($pdo)
     {
         require_once __DIR__ . '/../models/GiftWrapperModel.php';
         require_once __DIR__ . '/../models/NotificationModel.php';
+        require_once __DIR__ . '/../models/GiftWrappingModel.php';
+        require_once __DIR__ . '/../models/GiftWrapperServiceModel.php';
         $this->giftwrapper = new GiftWrapperModel($pdo); //bruh
         $this->notification = new NotificationModel($pdo);
+        $this->giftWrapping = new GiftWrappingModel($pdo);
+        $this->giftWrapperService = new GiftWrapperServiceModel($pdo);
     }
     public function dashboard()
     {
@@ -66,6 +72,49 @@ class giftWrapperController
         exit;
     }
 
+    public function service($parts)
+    {
+        $giftWrapperId = $_SESSION['user']['id'] ?? null;
+        if (!$giftWrapperId) {
+            header("Location: index.php?controller=auth&action=handleLogin&type=staff");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $name = trim($_POST['name'] ?? '');
+            $description = trim($_POST['description'] ?? '');
+            $price = $_POST['price'] ?? 0;
+            $imagePath = null;
+
+            if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . '/../resources/uploads/giftWrapper/services/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                $originalName = basename($_FILES['image']['name']);
+                $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                $safeName = uniqid('service_', true) . ($extension ? '.' . $extension : '');
+                $targetPath = $uploadDir . $safeName;
+
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+                    $imagePath = 'resources/uploads/giftWrapper/services/' . $safeName;
+                }
+            }
+
+            if ($name !== '' && $description !== '') {
+                $priceValue = is_numeric($price) ? (float) $price : 0;
+                $this->giftWrapperService->addService($giftWrapperId, $name, $description, $priceValue, $imagePath);
+            }
+
+            header("Location: index.php?controller=giftWrapper&action=dashboard/service");
+            exit;
+        }
+
+        $services = $this->giftWrapperService->getServicesByGiftWrapper($giftWrapperId);
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/service.php';
+    }
+
     public function GiftWrapper($level1)
     {
         switch ($level1[1]) {
@@ -88,21 +137,53 @@ class giftWrapperController
                 $this->cancelOrder($level1);
                 break;
             case 'earnings':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/earning.php';
+                header("Location: index.php?controller=giftWrapper&action=dashboard/history");
+                break;
+            case 'history':
+                $giftWrapperId = $_SESSION['user']['id'] ?? null;
+                $dateFrom = $_GET['dateFrom'] ?? '';
+                $dateTo = $_GET['dateTo'] ?? '';
+                $status = $_GET['status'] ?? 'all';
+                $customer = $_GET['customer'] ?? '';
+                $filters = [
+                    'dateFrom' => $dateFrom,
+                    'dateTo' => $dateTo,
+                    'status' => $status,
+                    'customer' => $customer
+                ];
+                $history = $giftWrapperId ? $this->giftwrapper->getWrappingHistory($giftWrapperId, $filters) : [];
+                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/history.php';
                 break;
             case 'portfolio':
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/portfolio.php';
                 break;
             case 'profile':
+                $giftWrapperId = $_SESSION['user']['id'] ?? null;
+                $profile = $this->giftwrapper->getUserByEmail($_SESSION['user']['email']);
+                $totalAssignedOrdersCount = $giftWrapperId ? $this->giftwrapper->getTotalAssignedOrdersCount($giftWrapperId) : 0;
+                $completedOrdersCount = $giftWrapperId ? $this->giftwrapper->getCompletedOrdersCount($giftWrapperId) : 0;
+                $totalWrappedCount = $giftWrapperId ? $this->giftwrapper->getTotalWrappedCount($giftWrapperId) : 0;
+                $totalWrappingRevenue = $giftWrapperId ? $this->giftwrapper->getTotalWrappingRevenue($giftWrapperId) : 0;
+                $successRate = $totalAssignedOrdersCount > 0 ? ($completedOrdersCount / $totalAssignedOrdersCount) * 100 : 0;
+                $avgRating = null;
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/profile.php';
                 break;
             case 'settings':
+                $profile = $this->giftwrapper->getUserByEmail($_SESSION['user']['email']);
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/setting.php';
                 break;
             case 'service':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/service.php';
+                $this->service($level1);
                 break;
             default:
+                $giftWrapperId = $_SESSION['user']['id'] ?? null;
+                $allOrdersCount = $this->giftwrapper->getAllOrdersCount();
+                $totalAssignedOrdersCount = $giftWrapperId ? $this->giftwrapper->getTotalAssignedOrdersCount($giftWrapperId) : 0;
+                $pendingOrdersCount = $giftWrapperId ? $this->giftwrapper->getPendingOrdersCount($giftWrapperId) : 0;
+                $completedOrdersCount = $giftWrapperId ? $this->giftwrapper->getCompletedOrdersCount($giftWrapperId) : 0;
+                $weeklyRevenue = $giftWrapperId ? $this->giftwrapper->getWeeklyWrappingRevenue($giftWrapperId) : 0;
+                $weeklyOrderCount = $giftWrapperId ? $this->giftwrapper->getWeeklyWrappingOrderCount($giftWrapperId) : 0;
+                $avgWeeklyPerOrder = $weeklyOrderCount > 0 ? ($weeklyRevenue / $weeklyOrderCount) : 0;
                 require_once __DIR__ . '/../views/Dashboards/GiftWrapper/overview.php';
                 break;
         }

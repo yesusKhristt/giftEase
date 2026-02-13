@@ -135,11 +135,11 @@
 
                             <div class="staff-actions">
                                 <?php if ($vendor['verified']): ?>
-                                    <a class="btn-unverify" href="?controller=admin&action=dashboard/vendor/unverify/<?= htmlspecialchars($vendor['id']) ?>">
+                                    <a class="btn-unverify" href="?controller=admin&action=dashboard/vendor/unverify/<?= htmlspecialchars($vendor['vendor_id']) ?>">
                                         <i class="fas fa-times-circle"></i> Unverify
                                     </a>
                                 <?php else: ?>
-                                    <a class="btn-verify" href="?controller=admin&action=dashboard/vendor/verify/<?= htmlspecialchars($vendor['id']) ?>">
+                                    <a class="btn-verify" href="?controller=admin&action=dashboard/vendor/verify/<?= htmlspecialchars($vendor['vendor_id']) ?>">
                                         <i class="fas fa-check-circle"></i> Verify Vendor
                                     </a>
                                 <?php endif; ?>
