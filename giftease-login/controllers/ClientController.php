@@ -43,7 +43,7 @@ class ClientController {
     public function items($parts) {
         /* ================= PAGINATION LOGIC ================= */
 
-        $itemsPerPage = 4;
+        $itemsPerPage = 12;
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         if ($page < 1) $page = 1;
@@ -118,6 +118,29 @@ class ClientController {
 
     public function wrapping() {
         require_once __DIR__ . '/../views/Dashboards/Client/wrap.php';
+    }
+
+    public function wrappingPackages($parts) {
+        $packages = $this->giftWrapper->getGiftWrappingPackages();
+
+        // Handle package selection
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
+            $packageId = (int)$_POST['package_id'];
+            $package = $this->giftWrapper->getGiftWrappingPackageById($packageId);
+
+            if ($package) {
+                $_SESSION['checkout']['wrap'] = [
+                    'mode' => 'package',
+                    'packageId' => $package['id'],
+                    'totalPrice' => $package['price']
+                ];
+
+                header("Location: index.php?controller=client&action=dashboard/checkout/package");
+                exit;
+            }
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/wrappingPackages.php';
     }
 
     public function messeges($parts) {
@@ -353,7 +376,7 @@ class ClientController {
 
                 $_SESSION['checkout']['cart']['productPrice'] = $_POST['subtotal'] ?? null;
 
-                header("Location: index.php?controller=client&action=dashboard/custom");
+                header("Location: index.php?controller=client&action=dashboard/wrap");
                 exit;
             }
         }
@@ -479,6 +502,9 @@ class ClientController {
                 break;
             case 'custom':
                 $this->custom($parts);
+                break;
+            case 'wrappingPackages':
+                $this->wrappingPackages($parts);
                 break;
             case 'updateProfilePicture':
                 $this->updateProfilePicture();
