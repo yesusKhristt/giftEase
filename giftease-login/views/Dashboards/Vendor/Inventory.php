@@ -174,7 +174,7 @@
                 if (categoryId && Number(categoryId) > 0) {
                     params.set('category', categoryId);
                 }
-                window.location.href = ?${params.toString()};
+                window.location.href = `?${params.toString()}`;
             });
         }
     </script>

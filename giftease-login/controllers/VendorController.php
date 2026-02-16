@@ -202,7 +202,7 @@ class VendorController
     {
                 /* ================= PAGINATION LOGIC ================= */
 
-        $itemsPerPage = 2;
+        $itemsPerPage = 1;
 
         $statusFilter = $_GET['status'] ?? 'all';
         $categoryFilter = isset($_GET['category']) ? (int) $_GET['category'] : 0;
@@ -289,41 +289,6 @@ class VendorController
         $vendorId   = $_SESSION['user']['id'];
         $orderDetail = $this->order->getOrderDetailForVendor($orderId, $vendorId);
         require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
-    }
-
-    public function showHistory($parts)
-    {
-        $vendorId = $_SESSION['user']['id'];
-        $statusFilter = $_GET['status'] ?? 'all';
-        
-        // Fetch all orders for vendor
-        $allOrders = $this->order->getOrdersForVendor($vendorId);
-        
-        // Filter by status if needed
-        $filteredOrders = $allOrders;
-        if ($statusFilter !== 'all') {
-            $filteredOrders = array_filter($allOrders, function($order) use ($statusFilter) {
-                if ($statusFilter === 'delivered') {
-                    return $order['is_delivered'] == 1;
-                } elseif ($statusFilter === 'pending') {
-                    return $order['is_delivered'] == 0;
-                }
-                return true;
-            });
-        }
-        
-        // Pagination
-        $itemsPerPage = 10;
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        if ($page < 1) $page = 1;
-        
-        $totalItems = count($filteredOrders);
-        $totalPages = ceil($totalItems / $itemsPerPage);
-        $offset = ($page - 1) * $itemsPerPage;
-        
-        $paginatedOrders = array_slice($filteredOrders, $offset, $itemsPerPage);
-        
-        require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
     }
 
     public function Vendor($parts)
