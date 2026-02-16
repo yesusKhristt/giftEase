@@ -6,6 +6,7 @@
     <title>GiftEase - Professional Wrapping Service Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="public/Jeshani/styles.css" />
+    <link rel="icon" type="image/png" href="resources/1.png">
 </head>
 <body>
     <div class="dashboard-layout">
