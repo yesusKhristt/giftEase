@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Delivery Man</title>
   <link rel="stylesheet" href="public/style.css">
+  <link rel="icon" type="image/png" href="resources/1.png">
   <link rel="icon" href="resources/icon.png">
 </head>
 <body>
