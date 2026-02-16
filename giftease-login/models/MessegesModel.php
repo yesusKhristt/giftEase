@@ -21,6 +21,7 @@ class MessegesModel {
             giftWrapper_id INT DEFAULT NULL,
             messege VARCHAR(255) NOT NULL,
             sent BOOL NOT NULL,
+            is_read BOOL DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
             FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE,
