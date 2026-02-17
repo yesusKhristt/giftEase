@@ -39,6 +39,67 @@
             width: 150px;
             object-fit: cover;
         }
+
+        /* ── Chat header ── */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-bottom: 1px solid #e0e0e0;
+            min-height: 54px;
+        }
+
+        .chat-header-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #4f6ef7;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-header-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a1a2e;
+        }
+
+        .chat-header-placeholder {
+            color: #999;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* ── Unread badge ── */
+        .contact-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .unread-badge {
+            background: #ff4d4f;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            line-height: 1;
+        }
     </style>
 </head>
 
@@ -63,21 +124,24 @@
                 'shopName'   => $staffData,
                 'vendor_id'  => $directID,
                 'messege'    => "Contact " . $staffData . " Now",
-                'created_at' => ''
+                'created_at' => '',
+                'unread'     => 0
             ];
         } else if ($directType === 'giftwrapper') {
             $groupedMessagesGiftWrapper['direct'] = [
-                'giftWrapper'   => $staffData,
-                'giftWrapper_id'  => $directID,
-                'messege'    => "Contact " . $staffData . " Now",
-                'created_at' => ''
+                'giftWrapper'    => $staffData,
+                'giftWrapper_id' => $directID,
+                'messege'        => "Contact " . $staffData . " Now",
+                'created_at'     => '',
+                'unread'         => 0
             ];
         } else if ($directType === 'delivery') {
             $groupedMessagesDelivery['direct'] = [
-                'delivery'   => $staffData,
-                'delivery_id'  => $directID,
-                'messege'    => "Contact " . $staffData . " Now",
-                'created_at' => ''
+                'delivery'    => $staffData,
+                'delivery_id' => $directID,
+                'messege'     => "Contact " . $staffData . " Now",
+                'created_at'  => '',
+                'unread'      => 0
             ];
         }
     }
@@ -90,13 +154,18 @@
 
         if (!isset($groupedMessagesVendors[$keyVendor])) {
             $groupedMessagesVendors[$keyVendor] = [
-                'shopName'   => $row['shopName'],
-                'vendor_id'  => $row['vendor_id'],
-                'messege'    => $row['messege'],
-                'created_at' => $row['created_at'],
-                'sent'       => $row['sent'],
-                'attachments' => []
+                'shopName'    => $row['shopName'],
+                'vendor_id'   => $row['vendor_id'],
+                'messege'     => $row['messege'],
+                'created_at'  => $row['created_at'],
+                'sent'        => $row['sent'],
+                'attachments' => [],
+                'unread'      => 0
             ];
+        }
+        // Count unread messages per vendor thread
+        if (empty($row['sent']) && isset($row['is_read']) && !$row['is_read']) {
+            $groupedMessagesVendors[$keyVendor]['unread']++;
         }
 
         if (!isset($groupedMessagesGiftWrapper[$keyGift])) {
@@ -106,8 +175,12 @@
                 'messege'        => $row['messege'],
                 'created_at'     => $row['created_at'],
                 'sent'           => $row['sent'],
-                'attachments'    => []
+                'attachments'    => [],
+                'unread'         => 0
             ];
+        }
+        if (empty($row['sent']) && isset($row['is_read']) && !$row['is_read']) {
+            $groupedMessagesGiftWrapper[$keyGift]['unread']++;
         }
 
         if (!isset($groupedMessagesDelivery[$keyDelivery])) {
@@ -117,29 +190,48 @@
                 'messege'     => $row['messege'],
                 'created_at'  => $row['created_at'],
                 'sent'        => $row['sent'],
-                'attachments' => []
+                'attachments' => [],
+                'unread'      => 0
             ];
+        }
+        if (empty($row['sent']) && isset($row['is_read']) && !$row['is_read']) {
+            $groupedMessagesDelivery[$keyDelivery]['unread']++;
         }
 
         if (!empty($row['file_loc'])) {
-            $groupedMessagesVendors[$keyVendor]['attachments'][] = $row['file_loc'];
-            $groupedMessagesGiftWrapper[$keyGift]['attachments'][] = $row['file_loc'];
+            $groupedMessagesVendors[$keyVendor]['attachments'][]   = $row['file_loc'];
+            $groupedMessagesGiftWrapper[$keyGift]['attachments'][]  = $row['file_loc'];
             $groupedMessagesDelivery[$keyDelivery]['attachments'][] = $row['file_loc'];
         }
     }
 
-    $vendors = [];
+    /* =======================
+       BUILD STAFF MAPS WITH UNREAD COUNTS
+       ======================= */
+    $vendors      = [];  // [id => ['name' => ..., 'unread' => n]]
     $giftwrappers = [];
-    $delivery = [];
+    $delivery     = [];
 
     foreach ($groupedMessagesVendors as $m)
-        if (!empty($m['vendor_id'])) $vendors[$m['vendor_id']] = $m['shopName'];
+        if (!empty($m['vendor_id']))
+            $vendors[$m['vendor_id']] = [
+                'name'   => $m['shopName'],
+                'unread' => ($vendors[$m['vendor_id']]['unread'] ?? 0) + $m['unread']
+            ];
 
     foreach ($groupedMessagesGiftWrapper as $m)
-        if (!empty($m['giftWrapper_id'])) $giftwrappers[$m['giftWrapper_id']] = $m['giftWrapper'];
+        if (!empty($m['giftWrapper_id']))
+            $giftwrappers[$m['giftWrapper_id']] = [
+                'name'   => $m['giftWrapper'],
+                'unread' => ($giftwrappers[$m['giftWrapper_id']]['unread'] ?? 0) + $m['unread']
+            ];
 
     foreach ($groupedMessagesDelivery as $m)
-        if (!empty($m['delivery_id'])) $delivery[$m['delivery_id']] = $m['delivery'];
+        if (!empty($m['delivery_id']))
+            $delivery[$m['delivery_id']] = [
+                'name'   => $m['delivery'],
+                'unread' => ($delivery[$m['delivery_id']]['unread'] ?? 0) + $m['unread']
+            ];
     ?>
 
     <div class="container">
@@ -159,7 +251,11 @@
                 </div>
 
                 <div class="message-box">
-                    <div class="bold">Messages</div>
+                    <!-- Dynamic header: replaced "Messages" with avatar + name -->
+                    <div class="chat-header" id="chatHeader">
+                        <span class="chat-header-placeholder">Select a conversation</span>
+                    </div>
+
                     <div class="message-history" id="messageHistory"></div>
 
                     <div class="message-input">
@@ -191,6 +287,7 @@
             delivery: <?= json_encode(array_values($groupedMessagesDelivery)) ?>
         };
 
+        // STAFF now carries { id: { name, unread } }
         const STAFF = {
             vendor: <?= json_encode($vendors) ?>,
             giftwrapper: <?= json_encode($giftwrappers) ?>,
@@ -198,12 +295,12 @@
         };
 
         let activeType = null;
-        let activeId = null;
+        let activeId   = null;
 
         const DIRECT_DATA = {
             direct: <?= json_encode($direct ?? 0) ?>,
-            type: <?= json_encode($directType ?? null) ?>,
-            id: <?= json_encode($directID ?? null) ?>
+            type:   <?= json_encode($directType ?? null) ?>,
+            id:     <?= json_encode($directID ?? null) ?>
         };
 
         /* =======================
@@ -212,15 +309,12 @@
         function autoSelectDirectChat() {
             if (!DIRECT_DATA || DIRECT_DATA.direct != 1) return;
 
-            const {
-                type,
-                id
-            } = DIRECT_DATA;
+            const { type, id } = DIRECT_DATA;
 
             const typeClassMap = {
-                vendor: '.vendor-item',
+                vendor:      '.vendor-item',
                 giftwrapper: '.giftwrapper-item',
-                delivery: '.delivery-item'
+                delivery:    '.delivery-item'
             };
 
             const selector = `${typeClassMap[type]}[data-id="${id}"]`;
@@ -240,42 +334,91 @@
            CONFIG
            ======================= */
         const FILTER_KEY = {
-            vendor: 'vendor_id',
+            vendor:      'vendor_id',
             giftwrapper: 'giftWrapper_id',
-            delivery: 'delivery_id'
+            delivery:    'delivery_id'
         };
 
         const PATH = {
-            vendor: 'resources/uploads/vendor/attatchments',
+            vendor:      'resources/uploads/vendor/attatchments',
             giftwrapper: 'resources/uploads/giftWrapper/attatchments',
-            delivery: 'resources/uploads/delivery/attatchments'
+            delivery:    'resources/uploads/delivery/attatchments'
         };
 
         /* =======================
-           RENDER STAFF
+           AVATAR HELPERS
+           ======================= */
+        /**
+         * Returns 1–2 initials from a name string.
+         * e.g. "Fresh Farms" → "FF", "Acme" → "AC"
+         */
+        function getInitials(name) {
+            if (!name) return '?';
+            const words = name.trim().split(/\s+/);
+            if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        /** Consistent hue from a string so each contact gets its own colour */
+        function nameToColor(name) {
+            const palette = [
+                '#4f6ef7', '#e05c5c', '#2ecc71', '#e67e22',
+                '#9b59b6', '#1abc9c', '#e91e63', '#3498db'
+            ];
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            return palette[Math.abs(hash) % palette.length];
+        }
+
+        /* =======================
+           UPDATE CHAT HEADER
+           ======================= */
+        function updateChatHeader(name) {
+            const header = document.getElementById('chatHeader');
+            if (!name) {
+                header.innerHTML = `<span class="chat-header-placeholder">Select a conversation</span>`;
+                return;
+            }
+
+            const initials = getInitials(name);
+            const color    = nameToColor(name);
+
+            header.innerHTML = `
+                <div class="chat-header-avatar" style="background:${color};">${initials}</div>
+                <span class="chat-header-name">${escapeHtml(name)}</span>
+            `;
+        }
+
+        /* =======================
+           RENDER STAFF  (sorted: unread first)
            ======================= */
         function renderStaff(type, listId, className) {
-            const list = document.getElementById(listId);
+            const list  = document.getElementById(listId);
             const title = list.querySelector('.bold').outerHTML;
             list.innerHTML = title;
 
-            Object.entries(STAFF[type]).forEach(([id, name]) => {
-                const p = document.createElement('p');
-                p.className = className;
-                p.dataset.id = id;
-                p.textContent = name;
-                p.onclick = () => selectChat(type, id, p);
-                list.appendChild(p);
-            });
-        }
+            // Sort: contacts with unread messages appear first
+            const sorted = Object.entries(STAFF[type]).sort(([, a], [, b]) => b.unread - a.unread);
 
-        function loadMesseges(type, id) {
-            Object.entries(STAFF[type]).forEach(([id, name]) => {
+            sorted.forEach(([id, info]) => {
                 const p = document.createElement('p');
-                p.className = className;
-                p.dataset.id = id;
-                p.textContent = name;
-                renderMessages(type, id);
+                p.className   = className;
+                p.dataset.id  = id;
+                p.onclick     = () => selectChat(type, id, p);
+
+                const badge = info.unread > 0
+                    ? `<span class="unread-badge">${info.unread}</span>`
+                    : '';
+
+                p.innerHTML = `
+                    <span class="contact-name">${escapeHtml(info.name)}</span>
+                    ${badge}
+                `;
+                p.style.display = 'flex';
+                p.style.alignItems = 'center';
+                p.style.justifyContent = 'space-between';
+
+                list.appendChild(p);
             });
         }
 
@@ -293,18 +436,18 @@
                     div.className = `message ${msg.sent ? 'other' : 'user'}`;
 
                     div.innerHTML = `
-                <div class="text">${escapeHtml(msg.messege)}</div>
+                        <div class="text">${escapeHtml(msg.messege)}</div>
 
-                ${msg.attachments?.length ? `
-                    <div class="attachments">
-                        ${msg.attachments.map(f =>
-                            `<img src="${PATH[type]}/${f}" class="imageBox">`
-                        ).join('')}
-                    </div>
-                ` : ''}
+                        ${msg.attachments?.length ? `
+                            <div class="attachments">
+                                ${msg.attachments.map(f =>
+                                    `<img src="${PATH[type]}/${f}" class="imageBox">`
+                                ).join('')}
+                            </div>
+                        ` : ''}
 
-                <div class="timestamp">${msg.created_at}</div>
-            `;
+                        <div class="timestamp">${msg.created_at}</div>
+                    `;
 
                     history.appendChild(div);
                 });
@@ -322,9 +465,40 @@
 
             el.classList.add('active');
             activeType = type;
-            activeId = id;
+            activeId   = id;
+
+            // Update the chat header with this contact's name
+            const info = STAFF[type][id];
+            updateChatHeader(info ? info.name : id);
 
             renderMessages(type, id);
+
+            // If there are unread messages, clear them locally and persist to DB
+            if (info && info.unread > 0) {
+                info.unread = 1;
+                const badge = el.querySelector('.unread-badge');
+                if (badge) badge.remove();
+
+                markAsRead(type, id);
+            }
+        }
+
+        /* =======================
+           MARK AS READ (AJAX)
+           ======================= */
+        function markAsRead(type, id) {
+            fetch(`?controller=client&action=dashboard/messeges/${type}/markRead/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, id })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) {
+                    console.warn('markAsRead failed for', type, id);
+                }
+            })
+            .catch(err => console.error('markAsRead error:', err));
         }
 
         /* =======================
@@ -333,7 +507,7 @@
         function sendMessage() {
             if (!activeType || !activeId) return alert('Select a chat');
 
-            const input = document.getElementById('messageInput');
+            const input   = document.getElementById('messageInput');
             const message = input.value.trim();
             if (!message && !attachedFiles.length) return;
 
@@ -351,13 +525,13 @@
 
                     GROUPED_MESSAGES[activeType].push({
                         [FILTER_KEY[activeType]]: activeId,
-                        messege: message,
+                        messege:    message,
                         created_at: 'Just now',
-                        sent: 1,
+                        sent:       1,
                         attachments: []
                     });
 
-                    input.value = '';
+                    input.value   = '';
                     attachedFiles = [];
                     updateFilePreview();
                     renderMessages(activeType, activeId);
@@ -378,12 +552,14 @@
             preview.innerHTML = '';
             attachedFiles.forEach((f, i) => {
                 preview.innerHTML += `
-            <div class="file-item">
-                ${f.name}
-                <span class="remove-file" onclick="removeFile(${i})">&times;</span>
-            </div>`;
+                    <div class="file-item">
+                        ${f.name}
+                        <span class="remove-file" onclick="removeFile(${i})">&times;</span>
+                    </div>`;
             });
         }
+
+        
 
         function removeFile(i) {
             attachedFiles.splice(i, 1);
@@ -406,22 +582,21 @@
             return d.innerHTML;
         }
 
+        
+
         /* =======================
            INIT
            ======================= */
         document.addEventListener('DOMContentLoaded', () => {
-            renderStaff('vendor', 'vendorList', 'vendor-item');
+            renderStaff('vendor',      'vendorList',      'vendor-item');
             renderStaff('giftwrapper', 'giftWrapperList', 'giftwrapper-item');
-            renderStaff('delivery', 'deliveryList', 'delivery-item');
+            renderStaff('delivery',    'deliveryList',    'delivery-item');
 
             if (DIRECT_DATA.direct == 1) {
-                autoSelectDirectChat(); // ✅ works now
+                autoSelectDirectChat();
             }
         });
     </script>
-
-
-
 
 </body>
 

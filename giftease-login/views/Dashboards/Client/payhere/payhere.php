@@ -61,7 +61,8 @@
                     </td>
                 </tr>
             </table>
-            <button class="btn1"id="payhere-payment">Pay Now</button>
+            <button class="btn1"id="payhere-payment">Pay Through Card</button>
+            <a class="btn2"></a>
         </div>
     </div>
 

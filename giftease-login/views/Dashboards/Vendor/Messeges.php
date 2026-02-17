@@ -39,6 +39,61 @@
             width: 150px;
             object-fit: cover;
         }
+
+        /* ── Chat header ── */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-bottom: 1px solid #e0e0e0;
+            min-height: 54px;
+        }
+
+        .chat-header-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #4f6ef7;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-header-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a1a2e;
+        }
+
+        .chat-header-placeholder {
+            color: #999;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* ── Unread badge ── */
+        .unread-badge {
+            background: #ff4d4f;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            line-height: 1;
+        }
     </style>
 </head>
 
@@ -46,7 +101,7 @@
 
 <?php
     $activePage = 'messeges';
-    include 'views/commonElements/leftSidebarDilma.php';
+    include 'views/commonElements/leftSidebar.php';
 
     /* =======================
        GROUP MESSAGES (PHP)
@@ -59,13 +114,19 @@
 
         if (! isset($groupedMessages[$key])) {
             $groupedMessages[$key] = [
-                'clientName'       => $row['client'],
-                'client_id'      => $row['client_id'],
-                'messege'        => $row['messege'],
-                'created_at'     => $row['created_at'],
-                'sent'           => $row['sent'],
-                'attachments'    => [],
+                'clientName'  => $row['client'],
+                'client_id'   => $row['client_id'],
+                'messege'     => $row['messege'],
+                'created_at'  => $row['created_at'],
+                'sent'        => $row['sent'],
+                'attachments' => [],
+                'unread'      => 0,
             ];
+        }
+
+        // Count unread messages (sent = 0 means received from client, not yet read)
+        if ($row['sent'] && !$row['is_read']) {
+            $groupedMessages[$key]['unread']++;
         }
 
         if (! empty($row['file_loc'])) {
@@ -73,10 +134,15 @@
         }
     }
 
+    // Build clients map: id => { name, unread }
     $clients = [];
     foreach ($groupedMessages as $msg) {
         if (! empty($msg['client_id'])) {
-            $clients[$msg['client_id']] = $msg['clientName'];
+            $id = $msg['client_id'];
+            $clients[$id] = [
+                'name'   => $msg['clientName'],
+                'unread' => ($clients[$id]['unread'] ?? 0) + $msg['unread'],
+            ];
         }
     }
 ?>
@@ -86,19 +152,25 @@
         <div class="chat-dashboard">
 
             <!-- =======================
-                 client LIST
+                 CLIENT LIST
                  ======================= -->
             <div class="mesager-list" id="clientList">
-                <div class="bold">client</div>
+                <div class="bold">Clients</div>
             </div>
 
             <!-- =======================
                  MESSAGE BOX
                  ======================= -->
             <div class="message-box">
-                <div class="bold">Messages</div>
 
-                <div class="message-history" id="messageHistory"></div>
+                <!-- Dynamic header: avatar + name -->
+                <div class="chat-header" id="chatHeader">
+                    <span class="chat-header-placeholder">Select a conversation</span>
+                </div>
+
+                <div class="message-history" id="messageHistory">
+                    
+                </div>
                 <div class="message-input">
                     <label for="fileInput" class="attachment-button">📎</label>
                     <input type="file" id="fileInput" multiple hidden onchange="handleFileAttach(event)">
@@ -121,24 +193,81 @@
      DATA FROM PHP → JS
      ======================= -->
 <script>
-const GROUPED_MESSAGES =                         <?php echo json_encode(array_values($groupedMessages)) ?>;
-const CLIENTS =                <?php echo json_encode($clients) ?>;
-const client_ID =                 <?php echo (int) $client_id ?>;
+const GROUPED_MESSAGES = <?php echo json_encode(array_values($groupedMessages)) ?>;
+const CLIENTS          = <?php echo json_encode($clients) ?>;
+const CLIENT_ID        = <?php echo (int) $client_id ?>;
+
 let currentClientId = null;
-let attachedFiles = [];
+let attachedFiles   = [];
 
 /* =======================
-   RENDER VENDORS
+   AVATAR HELPERS
+   ======================= */
+function getInitials(name) {
+    if (!name) return '?';
+    const words = name.trim().split(/\s+/);
+    if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+}
+
+function nameToColor(name) {
+    const palette = [
+        '#4f6ef7', '#e05c5c', '#2ecc71', '#e67e22',
+        '#9b59b6', '#1abc9c', '#e91e63', '#3498db'
+    ];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return palette[Math.abs(hash) % palette.length];
+}
+
+/* =======================
+   UPDATE CHAT HEADER
+   ======================= */
+function updateChatHeader(name) {
+    const header = document.getElementById('chatHeader');
+    if (!name) {
+        header.innerHTML = `<span class="chat-header-placeholder">Select a conversation</span>`;
+        return;
+    }
+
+    const initials = getInitials(name);
+    const color    = nameToColor(name);
+
+    header.innerHTML = `
+        <div class="chat-header-avatar" style="background:${color};">${initials}</div>
+        <span class="chat-header-name">${escapeHtml(name)}</span>
+    `;
+}
+
+/* =======================
+   RENDER CLIENTS  (sorted: unread first)
    ======================= */
 function renderClients() {
-    const list = document.getElementById('clientList');
+    const list  = document.getElementById('clientList');
+    const title = list.querySelector('.bold').outerHTML;
+    list.innerHTML = title;
 
-    Object.entries(CLIENTS).forEach(([id, name]) => {
+    // Sort: contacts with unread messages appear first
+    const sorted = Object.entries(CLIENTS).sort(([, a], [, b]) => b.unread - a.unread);
+
+    sorted.forEach(([id, info]) => {
         const p = document.createElement('p');
-        p.className = 'client-item';
+        p.className       = 'client-item';
         p.dataset.clientId = id;
-        p.textContent = name;
+        p.style.display        = 'flex';
+        p.style.alignItems     = 'center';
+        p.style.justifyContent = 'space-between';
         p.onclick = () => selectClient(id, p);
+
+        const badge = info.unread > 0
+            ? `<span class="unread-badge">${info.unread}</span>`
+            : '';
+
+        p.innerHTML = `
+            <span class="contact-name">${escapeHtml(info.name)}</span>
+            ${badge}
+        `;
+
         list.appendChild(p);
     });
 }
@@ -177,7 +306,7 @@ function renderMessages(clientId) {
 }
 
 /* =======================
-   client SELECT
+   CLIENT SELECT
    ======================= */
 function selectClient(clientId, el) {
     document.querySelectorAll('.client-item')
@@ -185,15 +314,47 @@ function selectClient(clientId, el) {
 
     el.classList.add('active');
     currentClientId = clientId;
+
+    // Update chat header
+    const info = CLIENTS[clientId];
+    updateChatHeader(info ? info.name : clientId);
+
     renderMessages(clientId);
+
+    // If there are unread messages, clear locally and persist to DB
+    if (info && info.unread > 0) {
+        info.unread = 0;
+        const badge = el.querySelector('.unread-badge');
+        if (badge) badge.remove();
+
+        markAsRead(clientId);
+    }
+}
+
+/* =======================
+   MARK AS READ (AJAX)
+   ======================= */
+function markAsRead(clientId) {
+    fetch(`?controller=vendor&action=dashboard/messeges/markRead/${clientId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (!data.success) {
+            console.warn('markAsRead failed for client', clientId);
+        }
+    })
+    .catch(err => console.error('markAsRead error:', err));
 }
 
 /* =======================
    SEND MESSAGE
    ======================= */
 function sendMessage() {
-    if (!currentClientId)currentClientId = <?php echo json_encode($client_id); ?>;
-    const input = document.getElementById('messageInput');
+    if (!currentClientId) currentClientId = <?php echo json_encode($client_id); ?>;
+    const input   = document.getElementById('messageInput');
     const message = input.value.trim();
 
     if (!message && attachedFiles.length === 0) return;
@@ -263,8 +424,7 @@ renderClients();
 
 document.addEventListener('DOMContentLoaded', () => {
     const savedClientId = sessionStorage.getItem('activeClientId');
-
-    let clientIdToSelect = savedClientId ?? client_ID;
+    const clientIdToSelect = savedClientId ?? CLIENT_ID;
 
     const el = document.querySelector(
         `.client-item[data-client-id="${clientIdToSelect}"]`
@@ -272,12 +432,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (el) el.click();
 
-    // cleanup so normal navigation works later
     sessionStorage.removeItem('activeClientId');
 });
-
 </script>
 
 </body>
 </html>
-

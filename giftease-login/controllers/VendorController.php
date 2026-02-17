@@ -113,6 +113,20 @@ class VendorController
             echo json_encode(['success' => true]);
             exit;
         }
+        if ($parts[2] == "markRead") {
+            $id = $parts[3];
+
+            $id = (int) $id;
+            if ($id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+                return;
+            }
+
+            $result = $this->messeges->markMessagesAsReadStaff('vendor',$_SESSION['user']['id'], $id);
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => $result]);
+        }
         if ($parts[2] === 'view') {
             $myMessages = $this->messeges->getMessageVendor($_SESSION['user']['id']);
             require_once __DIR__ . '/../views/Dashboards/Vendor/Messeges.php';

@@ -273,6 +273,26 @@ class ClientController {
                 exit;
             }
         }
+        if ($parts[3] == "markRead") {
+            $type = $parts[2];
+            $staff_id = $parts[4];
+            $allowedTypes = ['vendor', 'giftwrapper', 'delivery'];
+            if (!in_array($type, $allowedTypes)) {
+                echo json_encode(['success' => false, 'error' => 'Invalid type']);
+                return;
+            }
+
+            $staff_id = (int) $staff_id;
+            if ($staff_id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+                return;
+            }
+
+            $result = $this->messeges->markMessagesAsReadClient($type, $staff_id, $_SESSION['user']['id']);
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => $result]);
+        }
         if ($parts[3] === 'view') {
             $direct = 0;
             $dirAccess = $parts[5] ?? '';
@@ -306,6 +326,29 @@ class ClientController {
         $id = (int)$parts[2];
         $this->notification->viewNotificationClient($id);
         exit();
+    }
+
+    public function wrappingPackages($parts) {
+        $packages = $this->giftWrapper->getGiftWrappingPackages();
+
+        // Handle package selection
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
+            $packageId = (int)$_POST['package_id'];
+            $package = $this->giftWrapper->getGiftWrappingPackageById($packageId);
+
+            if ($package) {
+                $_SESSION['checkout']['wrap'] = [
+                    'mode' => 'package',
+                    'packageId' => $package['id'],
+                    'totalPrice' => $package['price']
+                ];
+
+                header("Location: index.php?controller=client&action=dashboard/checkout/package");
+                exit;
+            }
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/wrappingPackages.php';
     }
 
     public function history() {
@@ -380,7 +423,7 @@ class ClientController {
 
                 $_SESSION['checkout']['cart']['productPrice'] = $_POST['subtotal'] ?? null;
 
-                header("Location: index.php?controller=client&action=dashboard/custom");
+                header("Location: index.php?controller=client&action=dashboard/wrap");
                 exit;
             }
         }
@@ -562,6 +605,9 @@ class ClientController {
                 break;
             case 'editProfile':
                 $this->editProfile($parts);
+                break;
+            case 'wrappingPackages':
+                $this->wrappingPackages($parts);
                 break;
             default:
                 $this->items($parts);

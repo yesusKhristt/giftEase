@@ -215,7 +215,7 @@ textarea {
 
 .filter-tabs .btn1:hover {
     color: #ffffff;
-    background: #e91e63;
+    background: #ffffff;
     box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
     transform: translateY(-2px);
 }
@@ -1343,7 +1343,7 @@ textarea {
 
 .chat-dashboard {
     display: flex;
-    height: 70vh;
+    height: 80vh;
     overflow-y: auto;
 }
 
@@ -1471,7 +1471,6 @@ body {
     font-family: Arial, sans-serif;
     background: #f9f9f9;
     margin: 0;
-    padding: 20px;
 }
 
 button {
