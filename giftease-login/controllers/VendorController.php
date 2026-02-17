@@ -202,7 +202,7 @@ class VendorController
     {
                 /* ================= PAGINATION LOGIC ================= */
 
-        $itemsPerPage = 2;
+        $itemsPerPage = 12;
 
         $statusFilter = $_GET['status'] ?? 'all';
         $categoryFilter = isset($_GET['category']) ? (int) $_GET['category'] : 0;

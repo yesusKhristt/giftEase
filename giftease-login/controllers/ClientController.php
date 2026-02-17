@@ -8,6 +8,7 @@ class ClientController {
     private $orders;
     private $notification;
     private $ratings;
+    private $wishlist;
 
     public function __construct($pdo) {
         require_once __DIR__ . '/../models/ClientModel.php';
@@ -18,6 +19,7 @@ class ClientController {
         require_once __DIR__ . '/../models/MessegesModel.php';
         require_once __DIR__ . '/../models/NotificationModel.php';
         require_once __DIR__ . '/../models/RatingModel.php';
+        require_once __DIR__ . '/../models/WishlistModel.php';
         $this->client       = new ClientModel($pdo);
         $this->products     = new ProductsModel($pdo);
         $this->cart         = new CartModel($pdo);
@@ -26,6 +28,7 @@ class ClientController {
         $this->messeges     = new MessegesModel($pdo);
         $this->notification = new NotificationModel($pdo);
         $this->ratings = new RatingModel($pdo);
+         $this->wishlist = new WishlistModel($pdo);
     }
 
     public function dashboard() {
@@ -81,6 +84,30 @@ class ClientController {
                 echo json_encode(['inCart' => true]);
             } else {
                 echo json_encode(['inCart' => false]);
+            }
+            exit;
+        }
+         if ($state === 'wishlist') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->wishlist->isInWishlist($client_id, $product_id)) {
+                $this->wishlist->removeFromWishlist($product_id, $client_id);
+                echo json_encode(['inWishlist' => false]);
+            } else {
+                $this->wishlist->addToWishlist($client_id, $product_id);
+                echo json_encode(['inWishlist' => true]);
+                exit;
+            }
+            exit;
+        } else if ($state === 'wishlistCheck') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->wishlist->isInWishlist($client_id, $product_id)) {
+                echo json_encode(['inWishlist' => true]);
+            } else {
+                echo json_encode(['inWishlist' => false]);
             }
             exit;
         }
@@ -456,7 +483,54 @@ class ClientController {
     }
 
     public function account($parts) {
-        require_once __DIR__ . '/../views/Dashboards/Client/settings.php';
+        $user2 = $_SESSION['user'];
+        require_once __DIR__ . '/../views/Dashboards/Client/account.php';
+    }
+
+    public function wishlist($parts) {
+        $itemsPerPage = 4;
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $itemsPerPage;
+
+        // Fetch paginated products
+        $allProducts = $this->products->fetchPaginated($itemsPerPage, $offset);
+
+        // Count total products
+        $totalItems = $this->products->countAllProducts();
+        $totalPages = ceil($totalItems / $itemsPerPage);
+
+        $state = $_GET['state'] ?? NULL;
+
+        if ($state === 'wishlist') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->wishlist->isInWishlist($client_id, $product_id)) {
+                $this->wishlist->removeFromWishlist($product_id, $client_id);
+                echo json_encode(['inWishlist' => false]);
+            } else {
+                $this->wishlist->addToWishlist($client_id, $product_id);
+                echo json_encode(['inWishlist' => true]);
+                exit;
+            }
+            exit;
+        } else if ($state === 'wishlistCheck') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->wishlist->isInWishlist($client_id, $product_id)) {
+                echo json_encode(['inWishlist' => true]);
+            } else {
+                echo json_encode(['inWishlist' => false]);
+            }
+            exit;
+        }
+
+        $allProducts = $this->wishlist->getWishlistForClient($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/wishlist.php';
     }
 
     public function Client($parts) {
@@ -465,7 +539,7 @@ class ClientController {
                 $this->cart($parts);
                 break;
             case 'wishlist':
-                require_once __DIR__ . '/../views/Dashboards/Client/wishlist.php';
+                $this->wishlist($parts);
                 break;
             case 'tracking':
                 require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
