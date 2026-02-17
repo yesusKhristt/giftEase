@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Delivery Partner Dashboard - GiftEase</title>
 <link rel="stylesheet" href="public/style.css" />
+<link rel="icon" type="image/png" href="resources/1.png">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -33,7 +34,7 @@ $customer = $_GET['customer'] ?? '';
     <input type="hidden" name="controller" value="delivery">
     <input type="hidden" name="action" value="history">
 
-    <div class="filter-tabs">
+    <div class="filter-tabs delivery-filter">
         <div class="filter-group">
             <label>Date From</label>
             <input type="date" name="dateFrom" value="<?= htmlspecialchars($dateFrom) ?>">
@@ -58,7 +59,7 @@ $customer = $_GET['customer'] ?? '';
             <input type="text" name="customer" placeholder="Search customer..." value="<?= htmlspecialchars($customer) ?>">
         </div>
 
-        <div class="filter-actions">
+        <div class="filter-actions delivery-filter-actions">
             <button type="submit" class="btn1"><i class="fas fa-search"></i> Filter</button>
             <a href="index.php?controller=delivery&action=history" class="btn1"><i class="fas fa-undo"></i> Reset</a>
         </div>

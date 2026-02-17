@@ -483,31 +483,6 @@ textarea {
 
 /* Individual gift */
 
-.gift-fall {
-    position: absolute;
-    top: -60px;
-    width: 40px;
-    height: 40px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    animation: fall linear infinite;
-    opacity: 0.8;
-}
-
-.topbar-container {
-    position: fixed;
-    top: 0;
-    left: 280px;
-    /* Match sidebar width */
-    width: calc(100% - 280px);
-    /* Fill the rest of the space */
-    height: 100px;
-    background: #032e3f;
-    display: flex;
-    align-items: center;
-    z-index: 11;
-    padding-left: 20px;
-}
 
 .left_sidebar::before {
     content: '';
@@ -863,6 +838,44 @@ textarea {
 .filter-tabs .btn1.active {
     background: #fedbd2;
     color: #d03c2e;
+}
+
+/* Delivery history filter bar layout */
+.delivery-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+    padding: 20px;
+    background: linear-gradient(135deg, #fed2ed 0%, #ffffff 100%);
+    border-radius: 18px;
+    border: 2px solid #e91e63;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.1);
+}
+
+.delivery-filter .filter-group {
+    flex: 1 1 200px;
+    min-width: 200px;
+    gap: 8px;
+}
+
+.delivery-filter-actions {
+    display: flex;
+    gap: 12px;
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+
+.delivery-filter-actions .btn1 {
+    flex: 0 0 auto;
+}
+
+.delivery-filter .btn1 {
+    margin: 0;
+    padding: 12px 18px;
+    border-radius: 10px;
+    white-space: nowrap;
 }
 
 
@@ -1909,6 +1922,20 @@ body {
     inset: 0;
     z-index: 0;
     pointer-events: none;
+}
+.gift-emoji {
+    position: absolute;
+    top: -50px;
+    /* Start above the screen */
+    animation: fall linear forwards;
+    pointer-events: none;
+    /* Prevent gifts from blocking clicks */
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(360deg);
+    }
 }
 
 .documents-section {

@@ -1,6 +1,5 @@
 <header class="browse-header">
-    <div class="falling-gifts">
-    </div>
+    
 
     <div class="topbar-container" style="display: flex; align-items: center; padding: 10px 20px;">
         <!-- Search Bar -->
