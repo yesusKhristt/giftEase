@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="container">
+    
         <?php
         $activePage = 'vendor';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -174,6 +174,6 @@
                 </div>
         </div>
         </section>
-    </div>
+    <
     </div>
 </body>

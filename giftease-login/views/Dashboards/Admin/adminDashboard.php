@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div class="container">
+ 
     <?php
     $activePage = 'dashboard';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -416,7 +416,7 @@
         </section>
       </main>
     </div>
-  </div>
+  
 
   Vendor Modal
   <div id="vendorModal" class="modal" aria-hidden="true" aria-labelledby="modalTitle" role="dialog">

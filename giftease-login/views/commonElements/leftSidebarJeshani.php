@@ -1,4 +1,27 @@
 <div class="permbar">
+  <div class="topbar-container">
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Search..." />
+    </div>
+
+    <div class="gift">
+      gift<span class="Ease">Ease
+      </span>
+    </div>
+
+    <!-- Right Side Links/Buttons -->
+    <nav class="topbar-actions">
+        <a href="?controller=giftWrapper&action=dashboard/settings"
+          class="settings-btn <?= isActive('settings', $activePage) ?>">
+          <i class="fas fa-cog"></i>
+        </a>
+        <a href="?controller=giftWrapper&action=dashboard/profile"
+          class="settings-btn <?= isActive('profile', $activePage) ?>">
+          <i class="fas fa-user"></i>
+        </a>
+      </nav>
+  </div>
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
@@ -9,8 +32,7 @@
       </div>
     </div>
     <?php
-    function isActive($pageName, $activePage)
-    {
+    function isActive($pageName, $activePage) {
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
@@ -27,17 +49,18 @@
         class="nav-item <?= isActive('assignedOrder', $activePage) ?>">
         Assigned Order
       </a>
+      <a href="?controller=giftWrapper&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
+        Messeges
+      </a>
       <a href="?controller=giftWrapper&action=dashboard/service"
         class="nav-item <?= isActive('service', $activePage) ?>">
         Service
       </a>
-      
+
       <a href="?controller=giftWrapper&action=dashboard/history"
         class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
-      
-
     </nav>
     <div class="button-section">
       <a href="?controller=giftWrapper&action=handleLogout" class="btn1">
@@ -46,31 +69,4 @@
       </a>
     </div>
   </div>
-  <div class="topbar-container">
-    <div class="gift-fall-layer"></div>
-    <div class="topbar-ui">
-      <!-- Search Bar -->
-      <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search..." />
-      </div>
-
-      <div class="gift">
-        gift<span class="Ease">Ease
-        </span>
-      </div>
-
-      <!-- Right Side Links/Buttons -->
-      <nav class="topbar-actions">
-        <a href="?controller=giftWrapper&action=dashboard/settings"
-          class="settings-btn <?= isActive('settings', $activePage) ?>">
-          <i class="fas fa-cog"></i>
-        </a>
-        <a href="?controller=giftWrapper&action=dashboard/profile"
-          class="settings-btn <?= isActive('profile', $activePage) ?>">
-          <i class="fas fa-user"></i>
-        </a>
-      </nav>
-    </div>
-  </div>
-  <script src="public/main.js"></script>
 </div>

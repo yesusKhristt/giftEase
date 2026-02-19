@@ -105,19 +105,35 @@ class VendorModel {
     }
 
     public function updateUser($data) {
-        $stmt = $this->pdo->prepare("UPDATE vendors SET first_name = ?, last_name = ?, shopeName = ?, phone = ?, address = ? WHERE id = ?");
+        $stmt = $this->pdo->prepare("UPDATE vendors SET first_name = ?, last_name = ?, shopName = ?, phone = ?, address = ? WHERE id = ?");
         return $stmt->execute([
             $data['first_name'],
             $data['last_name'],
             $data['shopName'],
             $data['phone'],
             $data['address'],
-            $data['id'],
+            $data['id']
         ]);
     }
 
     public function deleteUser($id) {
         $stmt = $this->pdo->prepare("UPDATE vendors SET status = 'inactive' WHERE id = ?");
-        $stmt->execute($id);
+        $stmt->execute([$id]);
+    }
+
+    public function updateProfilePicture($vendor_id, $profilePicPath) {
+        $stmt = $this->pdo->prepare("UPDATE vendors SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $vendor_id
+        ]);
+    }
+
+    public function getUserByID($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE id = ?");
+        $stmt->execute([$id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user;
     }
 }

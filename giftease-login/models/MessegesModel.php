@@ -136,13 +136,25 @@ class MessegesModel {
     }
 
     public function getMessage($client_id) {
-        $stmt = $this->pdo->prepare("SELECT v.shopName, d.first_name AS delivery, g.first_name AS giftWrapper, m.vendor_id,  m.delivery_id, m.giftWrapper_id, m.messege, m.created_at, a.file_loc, m.sent, m.is_read  FROM messeges m LEFT JOIN attachments a ON m.id = a.message_id LEFT JOIN vendors v ON v.id = m.vendor_id LEFT JOIN giftWrappers g ON g.id = m.giftWrapper_id LEFT JOIN delivery d ON d.id = m.delivery_id WHERE m.client_id = ? ORDER BY m.created_at ASC");
+        $stmt = $this->pdo->prepare("SELECT v.shopName, d.first_name AS delivery, g.first_name AS giftWrapper, v.image_loc AS vendor_image, g.image_loc AS giftwrapper_image, d.image_loc AS delivery_image, m.vendor_id,  m.delivery_id, m.giftWrapper_id, m.messege, m.created_at, a.file_loc, m.sent, m.is_read  FROM messeges m LEFT JOIN attachments a ON m.id = a.message_id LEFT JOIN vendors v ON v.id = m.vendor_id LEFT JOIN giftWrappers g ON g.id = m.giftWrapper_id LEFT JOIN delivery d ON d.id = m.delivery_id WHERE m.client_id = ? ORDER BY m.created_at ASC");
         $stmt->execute([$client_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getMessageVendor($staff_id) {
-        $stmt = $this->pdo->prepare("SELECT c.first_name AS client, m.client_id, m.messege, m.created_at, a.file_loc, m.sent, m.is_read  FROM messeges m LEFT JOIN attachments a ON m.id = a.message_id LEFT JOIN clients c ON c.id = m.client_id WHERE m.vendor_id = ? ORDER BY m.created_at ASC");
+        $stmt = $this->pdo->prepare("SELECT c.first_name AS client, c.image_loc AS client_image, m.client_id, m.messege, m.created_at, a.file_loc, m.sent, m.is_read  FROM messeges m LEFT JOIN attachments a ON m.id = a.message_id LEFT JOIN clients c ON c.id = m.client_id WHERE m.vendor_id = ? ORDER BY m.created_at ASC");
+        $stmt->execute([$staff_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getMessageDelivery($staff_id) {
+        $stmt = $this->pdo->prepare("SELECT c.first_name AS client, c.image_loc AS client_image, m.client_id, m.messege, m.created_at, a.file_loc, m.sent, m.is_read  FROM messeges m LEFT JOIN attachments a ON m.id = a.message_id LEFT JOIN clients c ON c.id = m.client_id WHERE m.delivery_id = ? ORDER BY m.created_at ASC");
+        $stmt->execute([$staff_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getMessageGiftWrapper($staff_id) {
+        $stmt = $this->pdo->prepare("SELECT c.first_name AS client, c.image_loc AS client_image, m.client_id, m.messege, m.created_at, a.file_loc, m.sent, m.is_read  FROM messeges m LEFT JOIN attachments a ON m.id = a.message_id LEFT JOIN clients c ON c.id = m.client_id WHERE m.giftWrapper_id = ? ORDER BY m.created_at ASC");
         $stmt->execute([$staff_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -181,7 +193,7 @@ class MessegesModel {
         UPDATE messeges
         SET    is_read = 1
         WHERE  {$column} = ?
-        AND client_id ?
+        AND client_id = ?
         AND sent = 0
         AND  is_read  = 0
     ");

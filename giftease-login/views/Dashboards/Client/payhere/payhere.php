@@ -49,6 +49,9 @@
                         <h2>Rs. <?php echo html_entity_decode($_SESSION['checkout']['wrap']['totalPrice']); ?></h2>
                     </td>
                 </tr>
+                <?php
+                // var_dump($_SESSION['checkout']);
+                ?>
                 <tr>
                     <td>
                         <h3>Total Price :</h3>
@@ -61,8 +64,13 @@
                     </td>
                 </tr>
             </table>
-            <button class="btn1"id="payhere-payment">Pay Through Card</button>
-            <a class="btn2"></a>
+            <div>
+                <button class="btn1" id="payhere-payment">Pay Through Card</button>
+                <form action="?controller=client&action=dashboard/payhere" method="post">
+                    <input type="hidden" value="cash" name="method">
+                    <button type="submit" class="btn1">Cash on Delivery</button>
+                </form>
+            </div>
         </div>
     </div>
 

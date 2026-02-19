@@ -12,7 +12,7 @@
 
 <body>
 
-    <div class="container">
+   
         <?php
         $activePage = 'giftWrapping';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    
     </div>
     </div>
 

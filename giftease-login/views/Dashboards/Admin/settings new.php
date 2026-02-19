@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div class="container">
+  
     <?php
     $activePage = 'settings';
     include 'views/commonElements/leftSidebarChathu.php';
@@ -52,7 +52,7 @@
         </div>
       </section>
     </div>
-  </div>
+
 
   <!-- Theme toggle script -->
   <script>

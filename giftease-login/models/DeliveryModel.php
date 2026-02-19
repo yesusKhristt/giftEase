@@ -1,7 +1,8 @@
 <?php
 // DeliveryModel.php***
 
-class DeliveryModel {
+class DeliveryModel
+ {
     private $pdo;
 
     public function __construct(PDO $pdo) {
@@ -295,4 +296,29 @@ class DeliveryModel {
             // Ignore backfill errors
         }
     }
+
+    public function getDeliveryById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateProfilePicture($delivery_id, $profilePicPath) {
+        $stmt = $this->pdo->prepare("UPDATE delivery SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $delivery_id
+        ]);
+    }
+
+    public function getUserByID($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE id = ?");
+        $stmt->execute([$id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user;
+    }
+
+    
 }

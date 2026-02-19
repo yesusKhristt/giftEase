@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="container">
+    
         <?php
         $activePage = 'admin';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -54,7 +54,7 @@
                 </table>
 
         </div>
-    </div>
+    
     </section>
     </div>
     </div>

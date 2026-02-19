@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="container">
+    
         <?php
         $activePage = 'giftWrappers';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -168,6 +168,6 @@
 
             </section>
         </div>
-    </div>
+    
 </body>
 </html>

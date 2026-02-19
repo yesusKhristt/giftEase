@@ -169,7 +169,7 @@
 </head>
 
 <body>
-    <div class="container">
+
         <?php
         $activePage = 'reports';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -304,7 +304,7 @@
                 </table>
             </div>
         </div>
-    </div>
+    
 
     <script>
         // Prepare data for charts

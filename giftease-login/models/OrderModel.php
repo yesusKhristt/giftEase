@@ -30,6 +30,7 @@ class OrderModel {
             productPrice INT DEFAULT 0 NOT NULL,
             deliveryPrice INT DEFAULT 0 NOT NULL,
             delivered_at TIMESTAMP DEFAULT NULL,
+            payment_method VARCHAR(10),
             FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );";
         $sql2 = "CREATE TABLE IF NOT EXISTS orderItems (
@@ -189,48 +190,76 @@ class OrderModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function confirmOrder($data, $wrap_id) {
+    public function confirmOrder($data, $client_id, $method) {
 
-        if ($data['mode'] === "custom") {
-            $stmt1 = $this->pdo->prepare("INSERT INTO orders (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice) VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
+        $wrap_id = $data['wrap']['id'];
+
+        if ($data['wrap']['mode'] === "custom") {
+
+            $stmt1 = $this->pdo->prepare(
+                "INSERT INTO orders 
+            (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice, payment_method) 
+            VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+
             $stmt1->execute([
-                $data['client_id'],
+                $client_id,
                 $wrap_id,
-                $data['orderType'],
-                $data['recipientName'],
-                $data['recipientPhone'],
-                $data['deliveryAddress'],
-                $data['locationType'],
-                $data['deliveryDate'],
-                $data['deliveryPrice']
+                $data['delivery']['orderType'],
+                $data['delivery']['recipientName'],
+                $data['delivery']['recipientPhone'],
+                $data['delivery']['deliveryAddress'],
+                $data['delivery']['locationType'],
+                $data['delivery']['deliveryDate'],
+                $data['delivery']['deliveryPrice'],
+                $method
             ]);
-        } else if ($data['mode'] === "package") {
-            $stmt1 = $this->pdo->prepare("INSERT INTO orders (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice) VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
+        } else if ($data['wrap']['mode'] === "package") {
+
+            $stmt1 = $this->pdo->prepare(
+                "INSERT INTO orders 
+            (client_id, customWrap_id, wrapPackage_id, orderType, recipientName, recipientPhone, deliveryAddress, locationType, deliveryDate, deliveryPrice, payment_method) 
+            VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+
             $stmt1->execute([
-                $data['client_id'],
+                $client_id,
                 $wrap_id,
-                $data['orderType'],
-                $data['recipientName'],
-                $data['recipientPhone'],
-                $data['deliveryAddress'],
-                $data['locationType'],
-                $data['deliveryDate'],
-                $data['deliveryPrice']
+                $data['delivery']['orderType'],
+                $data['delivery']['recipientName'],
+                $data['delivery']['recipientPhone'],
+                $data['delivery']['deliveryAddress'],
+                $data['delivery']['locationType'],
+                $data['delivery']['deliveryDate'],
+                $data['delivery']['deliveryPrice'],
+                $method
             ]);
         }
+
         $order_id = $this->pdo->lastInsertId();
         $price = 0;
-        foreach ($data['cartItems'] as $items) {
-            $price += $items['price'] * $items['quantity'];
-            $stmt2 = $this->pdo->prepare("INSERT INTO orderItems (order_id, item_id, quantity) VALUES (?, ?, ?)");
+
+        foreach ($data['cart'] as $item) {
+
+            $price += $item['price'] * $item['quantity'];
+
+            $stmt2 = $this->pdo->prepare(
+                "INSERT INTO orderItems (order_id, item_id, quantity) VALUES (?, ?, ?)"
+            );
+
             $stmt2->execute([
                 $order_id,
-                $items['product_id'],
-                $items['quantity']
+                $item['id'],
+                $item['quantity']
             ]);
         }
 
-        $stmt3 = $this->pdo->prepare("UPDATE `orders` SET `productPrice`= $price WHERE `id` = $order_id");
-        $stmt3->execute();
+        $stmt3 = $this->pdo->prepare(
+            "UPDATE orders SET productPrice = ? WHERE id = ?"
+        );
+
+        $stmt3->execute([$price, $order_id]);
+
+        return $order_id;
     }
 }

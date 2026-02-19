@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <div class="container">
+ 
     <?php
     $activePage = 'avenue';
     include 'views/commonElements/leftSidebarChathu.php';
@@ -67,7 +67,7 @@
         </table>
       </div>
     </div>
-  </div>
+ 
 </body>
 
 </html>

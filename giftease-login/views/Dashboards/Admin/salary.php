@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <div class="container">
+  
     <?php
     $activePage = 'salary';
     include 'views/commonElements/leftSidebarChathu.php';
@@ -58,7 +58,7 @@
         </table>
       </div>
     </div>
-  </div>
+  
 </body>
 
 </html>

@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="container">
+   
         <?php
             $activePage = 'deliveryman';
             include 'views/commonElements/leftSidebarChathu.php';
@@ -179,7 +179,7 @@
                 <?php endif; ?>
             </section>
         </div>
-    </div>
+   
 </body>
 
 </html>

@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <div class="container">
+   
         <?php
         $activePage = 'giftWrapping';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -70,7 +70,7 @@
                 </table>
             </form>
         </div>
-    </div>
+    
 
     <script>
         let selectedFiles = [];

@@ -9,8 +9,7 @@
       </div>
     </div>
     <?php
-    function isActive($pageName, $activePage)
-    {
+    function isActive($pageName, $activePage) {
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
@@ -24,6 +23,9 @@
       </a>
       <a href="?controller=delivery&action=dashboard/assignedOrder" class="nav-item <?= isActive('assignedOrder', $activePage) ?>">
         Assigned Order
+      </a>
+      <a href="?controller=delivery&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
+        Messeges
       </a>
       <a href="?controller=delivery&action=dashboard/map" class="nav-item <?= isActive('map', $activePage) ?>">
         Map
@@ -39,7 +41,7 @@
       <a href="?controller=delivery&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
-</a>
+      </a>
     </div>
   </div>
   <div class="topbar-container">

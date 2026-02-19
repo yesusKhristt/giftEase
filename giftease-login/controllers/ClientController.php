@@ -482,10 +482,12 @@ class ClientController {
             $_SESSION['checkout']['cart'] = $cartItems;
             $wrap_id = $this->giftWrapper->addCustomWrap($_SESSION['checkout']['wrap']);
 
+            $method = $_POST['method'];
+
             $_SESSION['checkout']['wrap']['id'] = $wrap_id;
 
 
-            $order_id = $this->orders->confirmOrder($_SESSION['checkout'], $_SESSION['user']['id']);
+            $order_id = $this->orders->confirmOrder($_SESSION['checkout'], $_SESSION['user']['id'], $method);
             $notificationTitle = "Order Placed!";
             $notificationMessege = "Your Order has been successfully Placed consisting of ";
             $href = "?controller=client&action=dashboard/tracking/" . $order_id;
