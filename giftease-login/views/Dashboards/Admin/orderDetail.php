@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <div class="container">
+  
     <?php
     $activePage = 'avenue';
     include 'views/commonElements/leftSidebarChathu.php';
@@ -76,7 +76,7 @@
         <a href="?controller=admin&action=dashboard/avenue" class="btn1"><i class="fas fa-arrow-left"></i>Back</a>
       </div>
     </div>
-  </div>
+  
 </body>
 
 </html>

@@ -21,7 +21,11 @@
       <div class="cardColour">
 
         <div class="profile-section">
-          <i class="profile-picture"></i>
+          
+            <a href="?controller=delivery&action=dashboard/updateProfilePicture">
+                        <img src="<?php echo htmlspecialchars($user2['image_loc']) ?>" class="profile-picture" alt="+">
+                    </a>
+          
           <div class="">
             <h4><?php echo htmlspecialchars(($deliveryProfile['first_name'] ?? '') . ' ' . ($deliveryProfile['last_name'] ?? '')); ?></h4>
             <p>Delivery Partner • Member since <?php echo htmlspecialchars(!empty($deliveryProfile['created_at']) ? date('M Y', strtotime($deliveryProfile['created_at'])) : 'N/A'); ?></p>

@@ -28,7 +28,7 @@ class ClientController {
         $this->messeges     = new MessegesModel($pdo);
         $this->notification = new NotificationModel($pdo);
         $this->ratings = new RatingModel($pdo);
-         $this->wishlist = new WishlistModel($pdo);
+        $this->wishlist = new WishlistModel($pdo);
     }
 
     public function dashboard() {
@@ -87,7 +87,7 @@ class ClientController {
             }
             exit;
         }
-         if ($state === 'wishlist') {
+        if ($state === 'wishlist') {
             $product_id = $parts[2];
             $client_id = $_SESSION['user']['id'];
 
@@ -145,29 +145,6 @@ class ClientController {
 
     public function wrapping() {
         require_once __DIR__ . '/../views/Dashboards/Client/wrap.php';
-    }
-
-    public function wrappingPackages($parts) {
-        $packages = $this->giftWrapper->getGiftWrappingPackages();
-
-        // Handle package selection
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
-            $packageId = (int)$_POST['package_id'];
-            $package = $this->giftWrapper->getGiftWrappingPackageById($packageId);
-
-            if ($package) {
-                $_SESSION['checkout']['wrap'] = [
-                    'mode' => 'package',
-                    'packageId' => $package['id'],
-                    'totalPrice' => $package['price']
-                ];
-
-                header("Location: index.php?controller=client&action=dashboard/checkout/package");
-                exit;
-            }
-        }
-
-        require_once __DIR__ . '/../views/Dashboards/Client/wrappingPackages.php';
     }
 
     public function messeges($parts) {
@@ -296,6 +273,26 @@ class ClientController {
                 exit;
             }
         }
+        if ($parts[3] == "markRead") {
+            $type = $parts[2];
+            $id = $parts[4];
+            $allowedTypes = ['vendor', 'giftwrapper', 'delivery'];
+            if (!in_array($type, $allowedTypes)) {
+                echo json_encode(['success' => false, 'error' => 'Invalid type']);
+                return;
+            }
+
+            $id = (int) $id;
+            if ($id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+                return;
+            }
+
+            $result = $this->messeges->markMessagesAsRead($type, $id);
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => $result]);
+        }
         if ($parts[3] === 'view') {
             $direct = 0;
             $dirAccess = $parts[5] ?? '';
@@ -329,6 +326,29 @@ class ClientController {
         $id = (int)$parts[2];
         $this->notification->viewNotificationClient($id);
         exit();
+    }
+
+    public function wrappingPackages($parts) {
+        $packages = $this->giftWrapper->getGiftWrappingPackages();
+
+        // Handle package selection
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
+            $packageId = (int)$_POST['package_id'];
+            $package = $this->giftWrapper->getGiftWrappingPackageById($packageId);
+
+            if ($package) {
+                $_SESSION['checkout']['wrap'] = [
+                    'mode' => 'package',
+                    'packageId' => $package['id'],
+                    'totalPrice' => $package['price']
+                ];
+
+                header("Location: index.php?controller=client&action=dashboard/checkout/package");
+                exit;
+            }
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/wrappingPackages.php';
     }
 
     public function history() {
@@ -577,9 +597,6 @@ class ClientController {
             case 'custom':
                 $this->custom($parts);
                 break;
-            case 'wrappingPackages':
-                $this->wrappingPackages($parts);
-                break;
             case 'updateProfilePicture':
                 $this->updateProfilePicture();
                 break;
@@ -588,6 +605,9 @@ class ClientController {
                 break;
             case 'editProfile':
                 $this->editProfile($parts);
+                break;
+            case 'wrappingPackages':
+                $this->wrappingPackages($parts);
                 break;
             default:
                 $this->items($parts);
@@ -638,6 +658,7 @@ class ClientController {
                 echo "File upload failed.";
             }
             $this->client->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+            $_SESSION['user'] = $this->client->getUserByID($_SESSION['user']['id']);
             header("Location: index.php?controller=client&action=dashboard/account");
             exit;
 

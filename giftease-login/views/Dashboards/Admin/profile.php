@@ -12,7 +12,7 @@
 
 <body>
 
-  <div class="container">
+  
     <?php
     $activePage = 'profile';
     include 'views/commonElements/leftSidebarChathu.php';
@@ -130,7 +130,7 @@
         <button class="btn1" onclick="changePassword()">Change Password</button>
       </div>
     </div>
-  </div>
+  
   <script src="main.js"></script>
 </body>
 

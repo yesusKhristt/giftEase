@@ -100,6 +100,15 @@ class GiftWrapperModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getUserByID($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM clients WHERE id = ?");
+        $stmt->execute([$id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user;
+    }
+
+
     public function addUser($data)
     {
         $stmt = $this->pdo->prepare("INSERT INTO giftWrappers (first_name, last_name, email, password, years_of_experience, phone, image_loc, address, identity_doc, address_proof, portfolio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -322,6 +331,14 @@ class GiftWrapperModel
         );
         $stmt->execute([$giftWrapperId]);
         return (float) $stmt->fetchColumn();
+    }
+
+     public function updateProfilePicture($client_id, $profilePicPath) {
+        $stmt = $this->pdo->prepare("UPDATE clients SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $client_id
+        ]);
     }
 
 }

@@ -16,8 +16,8 @@
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="?controller=vendor&action=dashboard/profile"
-        class="settings-btn <?= isActive('profile', $activePage) ?>">
+      <a href="?controller=vendor&action=dashboard/account"
+        class="settings-btn <?= isActive('account', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>

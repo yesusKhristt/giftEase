@@ -61,10 +61,7 @@ class DeliveryController {
     public function Delivery($parts) {
         switch ($parts[1]) {
             case 'profile':
-                $deliveryId = $_SESSION['user']['id'];
-                $deliveryProfile = $this->delivery->getDeliveryById($deliveryId);
-                $profileStats = $this->delivery->getProfileStats($deliveryId);
-                require_once __DIR__ . '/../views/Dashboards/Delivery/profile.php';
+                $this->profile();
                 break;
             case 'history':
                 $this->history();
@@ -84,51 +81,102 @@ class DeliveryController {
             case 'acceptOrder':
                 $this->acceptOrder($parts);
                 break;
-            case 'cancelOrder':
+                case 'cancelOrder':
                 $this->cancelOrder($parts);
                 break;
             case 'proof':
                 require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';
                 break;
             case 'settings':
-                $deliveryId = $_SESSION['user']['id'];
-                $deliveryProfile = $this->delivery->getDeliveryById($deliveryId);
-                require_once __DIR__ . '/../views/Dashboards/Delivery/Settings.php';
+                $this->settings();
+                break;
+             case 'updateProfilePicture':
+                $this->updateProfilePicture();
+                break;
+            case 'editProfile':
+                $this->editProfile();
                 break;
             default:
-                $deliveryId = $_SESSION['user']['id'];
-                $dashboardStats = $this->delivery->getDashboardStats($deliveryId);
-                require_once __DIR__ . '/../views/Dashboards/Delivery/home.php';
+               $this->home();
                 break;
         }
     }
+    public function home(){
+         $deliveryId = $_SESSION['user']['id'];
+                $dashboardStats = $this->delivery->getDashboardStats($deliveryId);
+                require_once __DIR__ . '/../views/Dashboards/Delivery/home.php';
+    }
+
+    public function settings() {
+        $deliveryId = $_SESSION['user']['id'];
+        $deliveryProfile = $this->delivery->getDeliveryById($deliveryId);
+        require_once __DIR__ . '/../views/Dashboards/Delivery/Settings.php';
+    }
+    
+public function profile(){
+    $deliveryId = $_SESSION['user']['id'];
+                $deliveryProfile = $this->delivery->getDeliveryById($deliveryId);
+                $profileStats = $this->delivery->getProfileStats($deliveryId);
+                require_once __DIR__ . '/../views/Dashboards/Delivery/profile.php';
+
+}
+
+ public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle file upload if user selected a new image
+            $uploadDir = "resources/uploads/delivery/profilePictures/";
+            if (! is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Get file info
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            // Move file to upload folder
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                // store the uploaded file path
+                $profilePicPath = $targetFile;
+                echo "File uploaded successfully: $profilePicPath";
+            } else {
+                echo "File upload failed.";
+            }
+            $this->delivery->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+            $_SESSION['user'] = $this->delivery->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=delivery&action=dashboard/profile");
+            exit;
+
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Delivery/addImage.php';
+    }
+
+
     public function handleLogout() {
         $_SESSION['delivery'] = null;
         header("Location: index.php?controller=auth&action=handleLogout");
         exit;
     }
+
     public function editProfile() {
-        // Logic to handle profile editing
-        $USER_ID = $_SESSION['user']['id'];
-        $stmt1 = $this->delivery->getpdo()->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt2 = $this->delivery->getpdo()->prepare("SELECT * FROM delivery WHERE user_id = ?");
-        $stmt1->execute([$USER_ID]);
-        $user1 = $stmt1->fetch();
-        $stmt2->execute([$USER_ID]);
-        $user2 = $stmt2->fetch();
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $FIRST_NAME = $_POST['first_name'] ?? '';
-            $LAST_NAME = $_POST['last_name'] ?? '';
-            $PHONE = $_POST['phone'] ?? '';
-            $ADDRESS = $_POST['address'] ?? '';
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name'  => $_POST['last_name'] ?? '',
+                'phone'      => $_POST['phone'] ?? '',
+                'id' => $_SESSION['user']['id']
+            ];
 
-
-            $this->delivery->updateUser($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
-            header("Location: index.php?controller=delivery&action=dashboard/account");
+            $this->delivery->updateUser($data);
+            $_SESSION['user'] = $this->delivery->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=delivery&action=dashboard/profile");
             exit;
 
-                
+            // Redirect or show a success message
         }
         require_once __DIR__ . '/../views/Dashboards/Delivery/edit.php';
     }
@@ -167,4 +215,6 @@ public function history() {
 
     require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
 }
+
+
 }

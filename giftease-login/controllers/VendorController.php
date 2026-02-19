@@ -68,7 +68,7 @@ class VendorController
         exit;
     }
 
-    public function messeges($parts)
+   public function messeges($parts)
     {
         $client_id = $parts[3] ?? '';
 
@@ -112,6 +112,20 @@ class VendorController
 
             echo json_encode(['success' => true]);
             exit;
+        }
+        if ($parts[2] == "markRead") {
+            $id = $parts[3];
+
+            $id = (int) $id;
+            if ($id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+                return;
+            }
+
+            $result = $this->messeges->markMessagesAsReadStaff('vendor',$_SESSION['user']['id'], $id);
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => $result]);
         }
         if ($parts[2] === 'view') {
             $myMessages = $this->messeges->getMessageVendor($_SESSION['user']['id']);
@@ -312,9 +326,9 @@ class VendorController
             case 'analysis':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
                 break;
-            case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/Profile.php';
-                break;
+            // case 'profile':
+            //     require_once __DIR__ . '/../views/Dashboards/Vendor/Profile.php';
+            //     break;
             case 'history':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
                 break;
@@ -330,11 +344,82 @@ class VendorController
             case 'edititem':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
                 break;
+            case 'account':
+                $this->account($parts);
+                break;
+            case 'editProfile':
+                $this->editProfile($parts);
+                break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
+                break;
             default:
                 $this->showOrders();
                 break;
         }
     }
+
+    public function account($parts) {
+        $user2 = $_SESSION['user'];
+        require_once __DIR__ . '/../views/Dashboards/Vendor/account.php';
+    }
+
+     public function editProfile($parts) {
+
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name'  => $_POST['last_name'] ?? '',
+                'phone'      => $_POST['phone'] ?? '',
+                'shopName'   => $_POST['shopName'] ?? '',
+                'address'   => $_POST['address'] ?? '',
+                 
+                'id' => $_SESSION['user']['id']
+            ];
+
+            $this->vendor->updateUser($data);
+            $_SESSION['user'] = $this->vendor->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=vendor&action=dashboard/account");
+            exit;
+
+            // Redirect or show a success message
+        }
+        require_once __DIR__ . '/../views/Dashboards/Vendor/edit.php';
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle file upload if user selected a new image
+            $uploadDir = "resources/uploads/vendor/profilePictures/";
+            if (! is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Get file info
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            // Move file to upload folder
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                // store the uploaded file path
+                $profilePicPath = $targetFile;
+                echo "File uploaded successfully: $profilePicPath";
+            } else {
+                echo "File upload failed.";
+            }
+            $this->vendor->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+            $_SESSION['user'] = $this->vendor->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=vendor&action=dashboard/account");
+            exit;
+
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
+
+        require_once __DIR__ . '/../views/commonElements/addImage.php';
+    }
+
 
     public function showHistory($parts)
     {
@@ -377,4 +462,5 @@ class VendorController
         header("Location: index.php");
         exit;
     }
+
 }

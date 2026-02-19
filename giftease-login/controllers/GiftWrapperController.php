@@ -175,6 +175,12 @@ class giftWrapperController
             case 'service':
                 $this->service($level1);
                 break;
+            case 'account':
+                $this->account($level1);
+                break;
+             case 'updateProfilePicture':
+                $this->updateProfilePicture();
+                break;
             default:
                 $giftWrapperId = $_SESSION['user']['id'] ?? null;
                 $allOrdersCount = $this->giftwrapper->getAllOrdersCount();
@@ -197,6 +203,12 @@ class giftWrapperController
 
     }
 
+    public function account($parts) {
+        $user2 = $_SESSION['user'];
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/account.php';
+    }
+
+
     public function deactivateUser()
     {
         $USER_ID = $_SESSION['user']['id'];
@@ -204,4 +216,57 @@ class giftWrapperController
         header("Location: index.php");
         exit;
     }
+    public function editProfile($parts) {
+
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name'  => $_POST['last_name'] ?? '',
+                'phone'      => $_POST['phone'] ?? '',
+                'id' => $_SESSION['user']['id']
+            ];
+
+            $this->client->updateUser($data);
+            $_SESSION['user'] = $this->client->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=client&action=dashboard/account");
+            exit;
+
+            // Redirect or show a success message
+        }
+        require_once __DIR__ . '/../views/Dashboards/Client/edit.php';
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle file upload if user selected a new image
+            $uploadDir = "resources/uploads/client/profilePictures/";
+            if (! is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Get file info
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            // Move file to upload folder
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                // store the uploaded file path
+                $profilePicPath = $targetFile;
+                echo "File uploaded successfully: $profilePicPath";
+            } else {
+                echo "File upload failed.";
+            }
+            $this->client->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+            $_SESSION['user'] = $this->client->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=client&action=dashboard/account");
+            exit;
+
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
+
+        require_once __DIR__ . '/../views/commonElements/addImage.php';
+    }
 }
+

@@ -358,4 +358,27 @@ public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $s
         $stmt->execute();
         return (int)$stmt->fetchColumn();
     }
+
+    public function fetchAllWithVendor()
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                p.id,
+                p.vendor_id,
+                p.name,
+                p.price,
+                p.description,
+                p.status,
+                p.mainCategory,
+                p.subCategory,
+                p.totalStock,
+                p.displayImage,
+                v.shopName
+            FROM products p
+            LEFT JOIN vendors v ON p.vendor_id = v.id
+            ORDER BY p.id DESC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -767,12 +767,15 @@ class AdminController
             case 'editGiftWrappingItems':
                 $this->editGiftWrappingItems($parts);
                 break;
+            case 'logout':
+                $this->handleLogout();
+                break;
 
             case 'reports':
                 $this->reports($parts);
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
+              $this->reports($parts);
                 break;
         }
     }

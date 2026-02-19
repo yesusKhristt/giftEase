@@ -12,7 +12,7 @@
 
 <body>
 
-    <div class="container">
+   
         <?php
         $activePage = 'category';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -126,7 +126,7 @@
                 </div>
             </div>
         </div>
-    </div>
+   
 </body>
 
 </html>

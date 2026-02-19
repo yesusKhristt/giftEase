@@ -12,7 +12,7 @@
 
 <body>
 
-    <div class="container">
+    
         <?php
         $activePage = 'settings';
         include 'views/commonElements/leftSidebarDilma.php';
@@ -86,7 +86,7 @@
 
 
 
-    </div>
+    
 
 </body>
 

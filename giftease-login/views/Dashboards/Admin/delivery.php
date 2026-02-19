@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div class="container">
+  
     <?php
         $activePage = 'delivery';
         include 'views/commonElements/leftSidebarChathu.php';
@@ -162,7 +162,7 @@
                     Page <?php echo $currentPage; ?> of <?php echo $totalPages; ?>
                 </div>
                 <?php endif; ?>
-  </div>
+  
 </body>
 
 </html>

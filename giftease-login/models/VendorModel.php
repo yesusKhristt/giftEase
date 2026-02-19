@@ -105,7 +105,7 @@ class VendorModel {
     }
 
     public function updateUser($data) {
-        $stmt = $this->pdo->prepare("UPDATE vendors SET first_name = ?, last_name = ?, shopeName = ?, phone = ?, address = ? WHERE id = ?");
+        $stmt = $this->pdo->prepare("UPDATE vendors SET first_name = ?, last_name = ?, shopName = ?, phone = ?, address = ? WHERE id = ?");
         return $stmt->execute([
             $data['first_name'],
             $data['last_name'],
@@ -118,6 +118,14 @@ class VendorModel {
 
     public function deleteUser($id) {
         $stmt = $this->pdo->prepare("UPDATE vendors SET status = 'inactive' WHERE id = ?");
-        $stmt->execute($id);
+        $stmt->execute([$id]);
+    }
+
+    public function updateProfilePicture($vendor_id, $profilePicPath) {
+        $stmt = $this->pdo->prepare("UPDATE vendors SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $vendor_id
+        ]);
     }
 }
