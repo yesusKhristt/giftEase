@@ -1,5 +1,5 @@
 <header class="browse-header">
-    <div class="falling-gifts">
+    <div class="gift-fall-layer">
     </div>
 
     <div class="topbar-container" style="display: flex; align-items: center; padding: 10px 20px;">
@@ -118,23 +118,6 @@
                 // initial
                 fetchCount();
                 setInterval(fetchCount, 15000);
-            })();
-        </script>
-        <script>
-            (function() {
-                const container = document.querySelector('.falling-gifts');
-                console.log('container:', container);
-
-                const test = document.createElement('div');
-                test.style.position = 'absolute';
-                test.style.top = '20px';
-                test.style.left = '20px';
-                test.style.width = '50px';
-                test.style.height = '50px';
-                test.style.background = 'red';
-                test.style.zIndex = '1';
-
-                container.appendChild(test);
             })();
         </script>
 

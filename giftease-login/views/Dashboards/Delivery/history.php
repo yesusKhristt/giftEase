@@ -114,4 +114,5 @@ $customer = $_GET['customer'] ?? '';
 
 
 </body>
+<script src="public/main.js"></script>
 </html>

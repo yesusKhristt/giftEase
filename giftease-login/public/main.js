@@ -11,10 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
             gift.className = "gift-emoji";
             gift.innerText = gifts[Math.floor(Math.random() * gifts.length)];
             gift.style.left = Math.random() * 100 + "%";
-            gift.style.fontSize = Math.random() * 12 + 18 + "px";
-            gift.style.animationDuration = Math.random() * 10 + 10 + "s";
+            gift.style.fontSize = Math.random() * 15 + 15 + "px";
+            gift.style.animationDuration = Math.random() * 3 + 3 + "s";
             giftLayer.appendChild(gift);
-            setTimeout(() => gift.remove(), 4000);
+            setTimeout(() => gift.remove(), 5000);
         }, 100);
     }
 });

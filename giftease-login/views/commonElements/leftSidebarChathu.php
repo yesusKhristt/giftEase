@@ -56,6 +56,7 @@
     </div>
   </div>
   <div class="topbar-container">
+    <div class="gift-fall-layer"></div>
     <!-- Search Bar -->
     <div class="search-bar">
       <input type="text" class="search-input" placeholder="Search..." />
@@ -78,3 +79,4 @@
     </nav>
   </div>
 </div>
+<script src="public/main.js"></script>

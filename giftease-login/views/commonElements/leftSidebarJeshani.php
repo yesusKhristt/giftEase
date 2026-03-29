@@ -48,7 +48,7 @@
   </div>
   <div class="topbar-container">
     <div class="gift-fall-layer"></div>
-    <div class="topbar-ui">
+    
       <!-- Search Bar -->
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="Search..." />
@@ -70,7 +70,7 @@
           <i class="fas fa-user"></i>
         </a>
       </nav>
-    </div>
+    
   </div>
   <script src="public/main.js"></script>
 </div>

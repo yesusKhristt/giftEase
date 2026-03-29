@@ -162,7 +162,7 @@ textarea {
 .filter-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .filter-group label {
@@ -171,6 +171,7 @@ textarea {
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    gap:10px;
 }
 
 .filter-group input,
