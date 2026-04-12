@@ -242,6 +242,134 @@ class DeliveryModel {
         ];
     }
 
+    public function getLastMonthAnalytics($deliveryId)
+    {
+        $sql = "SELECT
+                    SUM(CASE WHEN is_wrapped = 1
+                        AND normalized_date BETWEEN DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                                AND LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                        THEN 1 ELSE 0 END) AS assigned_last_month,
+
+                    SUM(CASE WHEN is_wrapped = 1 AND is_delivered = 1
+                        AND normalized_date BETWEEN DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                                AND LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                        THEN 1 ELSE 0 END) AS delivered_last_month,
+
+                    SUM(CASE WHEN is_wrapped = 1 AND is_delivered = 0
+                        AND normalized_date BETWEEN DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                                AND LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                        THEN 1 ELSE 0 END) AS pending_last_month,
+
+                    SUM(CASE WHEN is_wrapped = 1 AND is_delivered = 1
+                        AND normalized_date BETWEEN DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                                AND LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                        THEN deliveryPrice ELSE 0 END) AS earnings_last_month
+                FROM (
+                    SELECT
+                        is_wrapped,
+                        is_delivered,
+                        deliveryPrice,
+                        COALESCE(
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%d'),
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%d %H:%i:%s'),
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%dT%H:%i'),
+                            STR_TO_DATE(deliveryDate, '%m/%d/%Y'),
+                            STR_TO_DATE(deliveryDate, '%d/%m/%Y'),
+                            DATE(deliveryDate)
+                        ) AS normalized_date
+                    FROM orders
+                    WHERE delivery_id = ?
+                ) AS delivery_data";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$deliveryId]);
+        $stats = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $assigned = (int)($stats['assigned_last_month'] ?? 0);
+        $delivered = (int)($stats['delivered_last_month'] ?? 0);
+        $pending = (int)($stats['pending_last_month'] ?? 0);
+        $earnings = (float)($stats['earnings_last_month'] ?? 0);
+
+        $completionRate = $assigned > 0 ? round(($delivered / $assigned) * 100, 1) : 0;
+        $avgPerDelivery = $delivered > 0 ? round(($earnings / $delivered), 2) : 0;
+
+        return [
+            'month_label' => date('F Y', strtotime('first day of last month')),
+            'assigned_last_month' => $assigned,
+            'delivered_last_month' => $delivered,
+            'pending_last_month' => $pending,
+            'earnings_last_month' => $earnings,
+            'avg_per_delivery' => $avgPerDelivery,
+            'completion_rate' => $completionRate,
+        ];
+    }
+
+    public function getLastMonthTrend($deliveryId)
+    {
+        $sql = "SELECT
+                    normalized_date,
+                    SUM(CASE WHEN is_delivered = 1 THEN 1 ELSE 0 END) AS delivered_count,
+                    SUM(CASE WHEN is_delivered = 1 THEN deliveryPrice ELSE 0 END) AS earnings
+                FROM (
+                    SELECT
+                        is_delivered,
+                        deliveryPrice,
+                        COALESCE(
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%d'),
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%d %H:%i:%s'),
+                            STR_TO_DATE(deliveryDate, '%Y-%m-%dT%H:%i'),
+                            STR_TO_DATE(deliveryDate, '%m/%d/%Y'),
+                            STR_TO_DATE(deliveryDate, '%d/%m/%Y'),
+                            DATE(deliveryDate)
+                        ) AS normalized_date
+                    FROM orders
+                    WHERE delivery_id = ? AND is_wrapped = 1
+                ) AS trend_data
+                WHERE normalized_date BETWEEN DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')
+                                          AND LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+                GROUP BY normalized_date
+                ORDER BY normalized_date ASC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$deliveryId]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $byDay = [];
+        foreach ($rows as $row) {
+            if (empty($row['normalized_date'])) {
+                continue;
+            }
+            $dayKey = date('Y-m-d', strtotime($row['normalized_date']));
+            $byDay[$dayKey] = [
+                'delivered' => (int)($row['delivered_count'] ?? 0),
+                'earnings' => (float)($row['earnings'] ?? 0),
+            ];
+        }
+
+        $start = new DateTime('first day of last month');
+        $end = new DateTime('last day of last month');
+        $end->modify('+1 day');
+
+        $period = new DatePeriod($start, new DateInterval('P1D'), $end);
+
+        $labels = [];
+        $delivered = [];
+        $earnings = [];
+
+        foreach ($period as $date) {
+            $dayKey = $date->format('Y-m-d');
+            $labels[] = $date->format('M d');
+            $delivered[] = $byDay[$dayKey]['delivered'] ?? 0;
+            $earnings[] = round($byDay[$dayKey]['earnings'] ?? 0, 2);
+        }
+
+        return [
+            'labels' => $labels,
+            'delivered' => $delivered,
+            'earnings' => $earnings,
+        ];
+    }
+
     public function getProfileStats($deliveryId)
     {
         $sql = "SELECT

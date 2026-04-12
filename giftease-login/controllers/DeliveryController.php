@@ -23,7 +23,7 @@ class DeliveryController {
     }
 
     public function allOrder($parts) {
-        $orders = $this->delivery->getAllOrders();
+        $orders = $this->delivery->getAllOrders() ?? [];
         require_once __DIR__ . '/../views/Dashboards/Delivery/allOrders.php';
     }
 
@@ -47,7 +47,7 @@ class DeliveryController {
     public function markComplete($parts) {
 
         $this->delivery->markComplete($parts[2]);
-        header("Location: index.php?controller=delivery&action=dashboard/proof");
+        header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
         exit;
     }
 
@@ -95,10 +95,15 @@ class DeliveryController {
                 $deliveryProfile = $this->delivery->getDeliveryById($deliveryId);
                 require_once __DIR__ . '/../views/Dashboards/Delivery/Settings.php';
                 break;
-            default:
+            case 'home':
                 $deliveryId = $_SESSION['user']['id'];
                 $dashboardStats = $this->delivery->getDashboardStats($deliveryId);
+                $lastMonthAnalytics = $this->delivery->getLastMonthAnalytics($deliveryId);
+                $lastMonthTrend = $this->delivery->getLastMonthTrend($deliveryId);
                 require_once __DIR__ . '/../views/Dashboards/Delivery/home.php';
+                break;
+            default:
+                $this->allOrder($parts);
                 break;
         }
     }

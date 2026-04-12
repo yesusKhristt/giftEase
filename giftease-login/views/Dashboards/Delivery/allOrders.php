@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delivery Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/deliverystyle.css" />
     <link rel="icon" type="image/png" href="resources/1.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -26,6 +26,7 @@
                 <button class="btn2" onclick="markAllRead()">Mark All Read</button>
                 <button class="btn1" onclick="clearNotifications()">Clear All</button>
             </div> -->
+            <?php $orders = $orders ?? []; ?>
             <?php foreach ($orders as $row): ?>
                 <div class="notification-item unread" data-notification-id="1">
                     <div class="notification-icon notification-info">
@@ -51,8 +52,7 @@
 
                 </div>
             <?php endforeach ?>
-            <div class="notification-time">1 minutes ago</div>
-            <button class="notification-dismiss" onclick="dismissNotification(1)">&times;</button>
+            
         </div>
     </div>
     </div>

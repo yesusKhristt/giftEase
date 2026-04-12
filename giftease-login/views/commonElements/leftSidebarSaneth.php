@@ -15,25 +15,21 @@
     }
     ?>
     <nav class="nav-section">
-      <a href="?controller=delivery&action=dashboard/home" class="nav-item <?= isActive('home', $activePage) ?>">
-        Home
-      </a>
       <a href="?controller=delivery&action=dashboard/allOrder"
         class="nav-item <?= isActive('allOrder', $activePage) ?>">
         All Orders
       </a>
+      <a href="?controller=delivery&action=dashboard/home" class="nav-item <?= isActive('home', $activePage) ?>">
+        Home
+      </a>
       <a href="?controller=delivery&action=dashboard/assignedOrder" class="nav-item <?= isActive('assignedOrder', $activePage) ?>">
         Assigned Order
       </a>
-      <a href="?controller=delivery&action=dashboard/map" class="nav-item <?= isActive('map', $activePage) ?>">
-        Map
-      </a>
+      
       <a href="?controller=delivery&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
-      <a href="?controller=delivery&action=dashboard/proof" class="nav-item <?= isActive('proof', $activePage) ?>">
-        Proof
-      </a>
+      
     </nav>
     <div class="button-section">
       <a href="?controller=delivery&action=handleLogout" class="btn1">
@@ -45,9 +41,9 @@
   <div class="topbar-container">
     <div class="gift-fall-layer"></div>
     <!-- Search Bar -->
-    <div class="search-bar">
+    <!-- <div class="search-bar">
       <input type="text" class="search-input" placeholder="Search..." />
-    </div>
+    </div> -->
 
     <div class="gift">
       gift<span class="Ease">Ease
