@@ -40,6 +40,7 @@
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
 
                             Due: <?= htmlspecialchars($row['deliveryDate']) ?><br>
+                            Address: <?= htmlspecialchars($row['deliveryAddress'] ?? 'N/A') ?><br>
 
                             Fee: Rs <?= htmlspecialchars($row['deliveryPrice']) ?>
                         </div>
@@ -59,6 +60,13 @@
                                 href="?controller=delivery&action=dashboard/markComplete/<?= $row['id'] ?>">
                                 <i class="fas fa-check"></i>
                                 Mark Complete
+                            </a>
+
+                            <?php $routeAddress = urlencode($row['deliveryAddress'] ?? ''); ?>
+                            <a class='btn1' target="_blank" rel="noopener noreferrer"
+                                href="?controller=delivery&action=dashboard/map&destination=<?= $routeAddress ?>&order=<?= urlencode($row['id']) ?>">
+                                <i class="fas fa-route"></i>
+                                View Route
                             </a>
                         </div>
 

@@ -158,7 +158,6 @@ public function history() {
             'delivery_date' => $row['deliveryDate'],
             'status' => $row['is_delivered'] ? 'delivered' : 'pending',
             'earnings' => 'Rs.' . number_format($row['deliveryPrice'], 2),
-            'rating' => 'N/A',
             'distance' => 'N/A'
         ];
     }, $allHistory);

@@ -81,7 +81,6 @@ $customer = $_GET['customer'] ?? '';
             <th>Delivery Date</th>
             <th>Status</th>
             <th>Earnings</th>
-            <th>Rating</th>
             <th>Distance</th>
         </tr>
     </thead>
@@ -101,7 +100,6 @@ $customer = $_GET['customer'] ?? '';
                     <td><?= date('M d, Y', strtotime($row['delivery_date'])) ?></td>
                     <td><?= ucfirst($row['status']) ?></td>
                     <td><?= htmlspecialchars($row['earnings']) ?></td>
-                    <td><?= htmlspecialchars($row['rating']) ?></td>
                     <td><?= htmlspecialchars($row['distance']) ?></td>
                 </tr>
             <?php endforeach; ?>
