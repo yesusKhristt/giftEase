@@ -191,6 +191,21 @@ textarea {
     font-size: 14px;
 }
 
+.table th.action-col,
+.table td.action-cell {
+    text-align: center;
+    vertical-align: middle;
+    min-width: 320px;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 
 .view-btn {
     background: #e91e63;
