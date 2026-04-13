@@ -146,23 +146,29 @@ class GiftWrapperModel
 
     public function getAssignedOrders($id)
     {
-        $stmt = $this->pdo->prepare("SELECT *  FROM orders WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
+        $stmt = $this->pdo->prepare(
+            "SELECT
+                o.id,
+                o.client_id,
+                o.customWrap_id,
+                o.wrapPackage_id,
+                o.deliveryDate,
+                o.is_wrapped,
+                o.giftWrapper_id,
+                COALESCE(cw.price, gp.price, 0) AS price,
+                c.first_name,
+                c.last_name
+             FROM orders o
+             LEFT JOIN customwrap cw ON o.customWrap_id = cw.id
+             LEFT JOIN giftwrappackage gp ON o.wrapPackage_id = gp.id
+             LEFT JOIN clients c ON o.client_id = c.id
+             WHERE o.is_wrapped = 0
+               AND o.is_delivered = 0
+               AND o.giftWrapper_id = ?
+             ORDER BY o.deliveryDate ASC, o.id ASC"
+        );
         $stmt->execute([$id]);
-        $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($order) {
-            if ($order[0]['customWrap_id']) {
-                $stmt1 = $this->pdo->prepare("SELECT orders.id, client_id, customWrap_id, deliveryDate, is_wrapped, giftWrapper_id, customwrap.price, clients.first_name, clients.last_name FROM orders JOIN customwrap ON orders.customWrap_id = customwrap.id JOIN clients ON orders.client_id = clients.id WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
-                $stmt1->execute([$id]);
-                return $stmt1->fetchAll(PDO::FETCH_ASSOC);
-            } else if ($order[0]['wrapPackage_id']) {
-                $stmt1 = $this->pdo->prepare("SELECT orders.id, client_id, wrapPackage_id, deliveryDate, is_wrapped, giftWrapper_id, customwrap.price, clients.first_name, clients.last_name FROM orders JOIN giftwrappackage ON orders.customWrap_id = customwrap.id JOIN clients ON orders.client_id = clients.id WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
-                $stmt1->execute([$id]);
-                return $stmt1->fetchAll(PDO::FETCH_ASSOC);
-            }
-        } else {
-            return $order;
-        }
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function acceptOrder($order_id, $giftWrapper_id)

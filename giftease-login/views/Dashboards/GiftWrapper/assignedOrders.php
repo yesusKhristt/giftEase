@@ -25,10 +25,17 @@
 
     <div class="main-content">
       <div class="page-header">
-        <h1 class="title">Assigned Orders</h2>
-          <p class="subtitle">Monitor your orders</p>
+        <h1 class="title">Assigned Orders</h1>
+        <p class="subtitle">Monitor your orders</p>
       </div> 
-        <?php foreach ($myOrders as $row): ?>
+
+      <?php $ordersList = is_array($myOrders ?? null) ? $myOrders : []; ?>
+      <?php if (empty($ordersList)): ?>
+        <div class="card">
+          <p class="subtitle" style="color: #666;">No assigned orders right now.</p>
+        </div>
+      <?php else: ?>
+        <?php foreach ($ordersList as $row): ?>
           <div class="card">
             <div class="title">WRP-<?= htmlspecialchars($row['id']) ?></div>
             <div class="subtitle">Client:
@@ -53,8 +60,9 @@
                 </a>
               </div>
             </div>
-          <?php endforeach ?>
-        </div>
+          </div>
+        <?php endforeach ?>
+      <?php endif; ?>
       
     </div>
 </body>

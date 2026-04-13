@@ -37,7 +37,10 @@ class giftWrapperController
 
     public function assignedOrder($parts)
     {
-        $myOrders = $this->giftwrapper->getAssignedOrders($_SESSION['user']['id']) ?? '';
+        $myOrders = $this->giftwrapper->getAssignedOrders($_SESSION['user']['id']);
+        if (!is_array($myOrders)) {
+            $myOrders = [];
+        }
         require_once __DIR__ . '/../views/Dashboards/GiftWrapper/assignedOrders.php';
     }
 

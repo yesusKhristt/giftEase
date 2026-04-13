@@ -196,17 +196,35 @@ class OrderModel {
         }
         $order_id = $this->pdo->lastInsertId();
         $price = 0;
-        foreach ($data['cartItems'] as $items) {
-            $price += $items['price'] * $items['quantity'];
+        $cartItems = $data['cartItems'] ?? ($data['cart'] ?? []);
+        foreach ($cartItems as $items) {
+            $productId = (int)($items['product_id'] ?? $items['id'] ?? 0);
+            $quantity = (int)($items['quantity'] ?? 0);
+            $unitPrice = (float)($items['price'] ?? 0);
+
+            if ($productId <= 0 || $quantity <= 0) {
+                continue;
+            }
+
+            $price += $unitPrice * $quantity;
             $stmt2 = $this->pdo->prepare("INSERT INTO orderItems (order_id, item_id, quantity) VALUES (?, ?, ?)");
             $stmt2->execute([
                 $order_id,
-                $items['product_id'],
-                $items['quantity']
+                $productId,
+                $quantity
             ]);
         }
 
-        $stmt3 = $this->pdo->prepare("UPDATE `orders` SET `productPrice`= $price WHERE `id` = $order_id");
-        $stmt3->execute();
+        $stmtPickup = $this->pdo->prepare(
+            "INSERT IGNORE INTO pickupTasks (order_id, vendor_id)
+             SELECT DISTINCT ?, p.vendor_id
+             FROM orderItems oi
+             JOIN products p ON p.id = oi.item_id
+             WHERE oi.order_id = ?"
+        );
+        $stmtPickup->execute([$order_id, $order_id]);
+
+        $stmt3 = $this->pdo->prepare("UPDATE orders SET productPrice = ? WHERE id = ?");
+        $stmt3->execute([(int)$price, (int)$order_id]);
     }
 }
