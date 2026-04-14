@@ -127,9 +127,16 @@ class DeliveryController {
             $LAST_NAME = $_POST['last_name'] ?? '';
             $PHONE = $_POST['phone'] ?? '';
             $ADDRESS = $_POST['address'] ?? '';
+            $VEHICLE_PLATE = $_POST['vehiclePlate'] ?? '';
 
-
-            $this->delivery->updateUser($USER_ID, $FIRST_NAME, $LAST_NAME, $PHONE, $ADDRESS);
+            $this->delivery->updateUser([
+                'id' => $USER_ID,
+                'first_name' => $FIRST_NAME,
+                'last_name' => $LAST_NAME,
+                'phone' => $PHONE,
+                'address' => $ADDRESS,
+                'vehiclePlate' => $VEHICLE_PLATE,
+            ]);
             header("Location: index.php?controller=delivery&action=dashboard/account");
             exit;
 
@@ -146,8 +153,8 @@ public function history() {
     ];
 
     // Get delivery history from database
-    $delivery_id = $_SESSION['user']['id'];
-    $allHistory = $this->delivery->getDeliveryHistory($delivery_id, $filters);
+    $deliveryId = $_SESSION['user']['id'];
+    $allHistory = $this->delivery->getDeliveryHistory($deliveryId, $filters);
 
     // Process the data for display
     $history = array_map(function($row) {

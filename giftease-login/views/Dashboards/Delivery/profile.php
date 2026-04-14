@@ -89,26 +89,29 @@
             <input type="text" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['vehiclePlate'] ?? ''); ?>" readonly />
           </div>
           <div class="form-group">
-            <label class="subtitle">Insurance</label>
-            <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
-              <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('insuranceDoc')">View Insurance</button>
-              <div id="insuranceDoc" style="display: none; margin-top: 10px;">
-                <img src="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" alt="Vehicle Insurance" style="max-width: 100%; height: auto; border-radius: 8px;" />
-              </div>
-            <?php else: ?>
-              <input type="text" class="form-input" value="N/A" readonly />
-            <?php endif; ?>
+             <div class="doc-item">
+                    <span class="doc-label">Vehicle Insurance</span>
+                    <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
+                      <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" class="doc-link" target="_blank">
+                        <i class="fas fa-download"></i> View
+                      </a>
+                    <?php else: ?>
+                      <span class="doc-missing">Not Uploaded</span>
+                    <?php endif; ?>
+                  </div>
           </div>
           <div class="form-group">
-            <label class="subtitle">License</label>
-            <?php if (!empty($deliveryProfile['driving_license'])): ?>
-              <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('licenseDoc')">View License</button>
-              <div id="licenseDoc" style="display: none; margin-top: 10px;">
-                <img src="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" alt="Driving License" style="max-width: 100%; height: auto; border-radius: 8px;" />
-              </div>
-            <?php else: ?>
-              <input type="text" class="form-input" value="N/A" readonly />
-            <?php endif; ?>
+            <div class="doc-item">
+             <spna class="doc-label">Driving License</spna> 
+             <?php if (!empty($deliveryProfile['driving_license'])): ?>
+               <a href="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" class="doc-link" target="_blank">
+                <i class="fas fa-download"></i> View
+                      </a>
+                    <?php else: ?>
+                      <span class="doc-missing">Not Uploaded</span>
+                    <?php endif; ?>
+                  </div>
+            </div>
           </div>
         </div>
       </div>

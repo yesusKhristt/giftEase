@@ -16,6 +16,8 @@
     <?php
     $activePage = 'settings';
     include 'views\commonElements/leftSidebarSaneth.php';
+
+   
     ?>
     <div class="main-content">
       <div class="page-header">
@@ -41,50 +43,50 @@
         <div class="settings-section">
           <h3>Submitted Documentation</h3>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="form-group">
-              <label class="subtitle">Identity Document</label>
-              <?php if (!empty($deliveryProfile['identity_doc'])): ?>
-                <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('identityDoc')">View Identity</button>
-                <div id="identityDoc" style="display: none; margin-top: 10px;">
-                  <img src="<?php echo htmlspecialchars($deliveryProfile['identity_doc']); ?>" alt="Identity Document" style="max-width: 100%; height: auto; border-radius: 8px;" />
-                </div>
-              <?php else: ?>
-                <input type="text" class="form-input" value="Not uploaded" readonly />
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label class="subtitle">Driving License</label>
-              <?php if (!empty($deliveryProfile['driving_license'])): ?>
-                <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('licenseDoc')">View License</button>
-                <div id="licenseDoc" style="display: none; margin-top: 10px;">
-                  <img src="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" alt="Driving License" style="max-width: 100%; height: auto; border-radius: 8px;" />
-                </div>
-              <?php else: ?>
-                <input type="text" class="form-input" value="Not uploaded" readonly />
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label class="subtitle">Vehicle Registration</label>
-              <?php if (!empty($deliveryProfile['vehicle_registration'])): ?>
-                <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('registrationDoc')">View Registration</button>
-                <div id="registrationDoc" style="display: none; margin-top: 10px;">
-                  <img src="<?php echo htmlspecialchars($deliveryProfile['vehicle_registration']); ?>" alt="Vehicle Registration" style="max-width: 100%; height: auto; border-radius: 8px;" />
-                </div>
-              <?php else: ?>
-                <input type="text" class="form-input" value="Not uploaded" readonly />
-              <?php endif; ?>
-            </div>
-            <div class="form-group">
-              <label class="subtitle">Vehicle Insurance</label>
-              <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
-                <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('insuranceDoc')">View Insurance</button>
-                <div id="insuranceDoc" style="display: none; margin-top: 10px;">
-                  <img src="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" alt="Vehicle Insurance" style="max-width: 100%; height: auto; border-radius: 8px;" />
-                </div>
-              <?php else: ?>
-                <input type="text" class="form-input" value="Not uploaded" readonly />
-              <?php endif; ?>
-            </div>
+             <div class="doc-item">
+                    <span class="doc-label">Identity (NIC/Passport)</span>
+                    <?php if (!empty($deliveryProfile['identity_doc'])): ?>
+                      <a href="<?php echo htmlspecialchars($deliveryProfile['identity_doc']); ?>" class="doc-link" target="_blank">
+                        <i class="fas fa-download"></i> View
+                      </a>
+                    <?php else: ?>
+                      <span class="doc-missing">Not Uploaded</span>
+                    <?php endif; ?>
+                  </div>
+
+                  <div class="doc-item">
+                    <span class="doc-label">Driving License</span>
+                    <?php if (!empty($deliveryProfile['driving_license'])): ?>
+                      <a href="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" class="doc-link" target="_blank">
+                        <i class="fas fa-download"></i> View
+                      </a>
+                    <?php else: ?>
+                      <span class="doc-missing">Not Uploaded</span>
+                    <?php endif; ?>
+                  </div>
+
+                  <div class="doc-item">
+                    <span class="doc-label">Vehicle Registration</span>
+                    <?php if (!empty($deliveryProfile['vehicle_registration'])): ?>
+                      <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_registration']); ?>" class="doc-link" target="_blank">
+                        <i class="fas fa-download"></i> View
+                      </a>
+                    <?php else: ?>
+                      <span class="doc-missing">Not Uploaded</span>
+                    <?php endif; ?>
+                  </div>
+
+                  <div class="doc-item">
+                    <span class="doc-label">Vehicle Insurance</span>
+                    <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
+                      <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" class="doc-link" target="_blank">
+                        <i class="fas fa-download"></i> View
+                      </a>
+                    <?php else: ?>
+                      <span class="doc-missing">Not Uploaded</span>
+                    <?php endif; ?>
+                  </div>
+       
           </div>
         </div>
 

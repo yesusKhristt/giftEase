@@ -32,10 +32,10 @@ class DeliveryModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function acceptOrder($order_id, $delivery_id)
+    public function acceptOrder($orderId, $deliveryId)
     {
         $stmt = $this->pdo->prepare("UPDATE `orders` SET delivery_id = ? WHERE `id` = ?");
-        $stmt->execute([$delivery_id, $order_id]);
+        $stmt->execute([$deliveryId, $orderId]);
     }
     public function verifyUser($user_id)
     {
@@ -51,16 +51,16 @@ class DeliveryModel
         return $stmt->execute([$user_id]);
     }
 
-    public function markComplete($order_id)
+    public function markComplete($orderId)
     {
         $stmt = $this->pdo->prepare("UPDATE `orders` SET is_delivered = 1 WHERE `id` = ?");
-        $stmt->execute([$order_id]);
+        $stmt->execute([$orderId]);
     }
 
-    public function cancelOrder($order_id)
+    public function cancelOrder($orderId)
     {
         $stmt = $this->pdo->prepare("UPDATE `orders` SET delivery_id = null WHERE `id` = ?");
-        $stmt->execute([$order_id]);
+        $stmt->execute([$orderId]);
     }
 
     public function createTableIfNotExists()
@@ -123,6 +123,18 @@ class DeliveryModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getDeliveryById($id)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT d.*, dv.identity_doc, dv.driving_license, dv.vehicle_registration, dv.vehicle_insurance
+             FROM delivery d
+             LEFT JOIN deliveryVerify dv ON d.id = dv.delivery_id
+             WHERE d.id = ?"
+        );
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function addUser($data)
     {
         $stmt = $this->pdo->prepare("INSERT INTO delivery(first_name, last_name, email, password, vehicleType, vehiclePlate, phone, image_loc, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -175,7 +187,7 @@ class DeliveryModel
         return $stmt->fetchAll();
     }
 
-    public function getDeliveryHistory($delivery_id, $filters = [])
+    public function getDeliveryHistory($deliveryId, $filters = [])
     {
         $sql = "SELECT 
             o.id,
@@ -191,7 +203,7 @@ class DeliveryModel
         LEFT JOIN products p ON oi.item_id = p.id
         WHERE o.delivery_id = ?";
 
-        $params = [$delivery_id];
+        $params = [$deliveryId];
 
         // Add date filters
         if (!empty($filters['dateFrom'])) {

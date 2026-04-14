@@ -12,8 +12,8 @@
 <body>
   <div class="container">
     <?php
-        $activePage = 'delivery';
-        include 'views/commonElements/leftSidebarChathu.php';
+    $activePage = 'delivery';
+    include 'views/commonElements/leftSidebarChathu.php';
     ?>
     <div class="main-content">
       <section id="customers" class="page active">
@@ -24,35 +24,35 @@
 
         <!-- Search Bar -->
         <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center;">
-            <form id="searchForm" method="GET" style="display: flex; gap: 10px; flex: 1;">
-                <input type="hidden" name="controller" value="admin">
-                <input type="hidden" name="action" value="dashboard/delivery">
-                <input type="text" id="searchInput" name="search" placeholder="Search by name, email or vehicle plate..." value="<?php echo htmlspecialchars($search); ?>" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-                <button type="submit" style="padding: 10px 20px; background-color: #e91e63; color: white; border: none; border-radius: 5px; cursor: pointer; display: none;"><i class="fas fa-search"></i> Search</button>
-                <?php if (!empty($search)): ?>
-                    <a href="?controller=admin&action=dashboard/delivery" style="padding: 10px 15px; background-color: #999; color: white; border: none; border-radius: 5px; text-decoration: none; cursor: pointer;"><i class="fas fa-times"></i> Clear</a>
-                <?php endif; ?>
-            </form>
+          <form id="searchForm" method="GET" style="display: flex; gap: 10px; flex: 1;">
+            <input type="hidden" name="controller" value="admin">
+            <input type="hidden" name="action" value="dashboard/delivery">
+            <input type="text" id="searchInput" name="search" placeholder="Search by name, email or vehicle plate..." value="<?php echo htmlspecialchars($search); ?>" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            <button type="submit" style="padding: 10px 20px; background-color: #e91e63; color: white; border: none; border-radius: 5px; cursor: pointer; display: none;"><i class="fas fa-search"></i> Search</button>
+            <?php if (!empty($search)): ?>
+              <a href="?controller=admin&action=dashboard/delivery" style="padding: 10px 15px; background-color: #999; color: white; border: none; border-radius: 5px; text-decoration: none; cursor: pointer;"><i class="fas fa-times"></i> Clear</a>
+            <?php endif; ?>
+          </form>
         </div>
 
         <!-- Results Count -->
         <div style="margin-bottom: 15px; color: #666; font-size: 14px;">
-            Showing <?php echo count($paginatedDelivery); ?> of <?php echo $totalItems; ?> delivery partners
+          Showing <?php echo count($paginatedDelivery); ?> of <?php echo $totalItems; ?> delivery partners
         </div>
 
         <script>
-            document.getElementById('searchInput').addEventListener('input', function(e) {
-                clearTimeout(window.searchTimeout);
-                window.searchTimeout = setTimeout(function() {
-                    document.getElementById('searchForm').submit();
-                }, 300);
-            });
+          document.getElementById('searchInput').addEventListener('input', function(e) {
+            clearTimeout(window.searchTimeout);
+            window.searchTimeout = setTimeout(function() {
+              document.getElementById('searchForm').submit();
+            }, 300);
+          });
         </script>
 
         <div class="staff-cards-container">
           <?php foreach ($paginatedDelivery as $delivery): ?>
             <div class="staff-card <?php echo $delivery['verified'] ? 'verified' : 'pending'; ?>">
-           
+
               <div class="staff-header">
                 <div class="staff-info">
                   <h3><?php echo htmlspecialchars($delivery['first_name'] . ' ' . $delivery['last_name']); ?></h3>
@@ -140,30 +140,30 @@
           <?php endforeach; ?>
         </div>
 
-     <!-- Pagination Controls -->
-                <?php if ($totalPages > 1): ?>
-                <div style="margin-top: 30px; display: flex; justify-content: center; gap: 10px; align-items: center; flex-wrap: wrap;">
- 
-                    <?php 
-                    $startPage = max(1, $currentPage - 2);
-                    $endPage = min($totalPages, $currentPage + 2);
-                    
-                    if ($startPage > 1) echo '<span style="padding: 8px 5px;">...</span>';
-                    
-                    for ($i = $startPage; $i <= $endPage; $i++) {
-                        $isActive = $i === $currentPage;
-                        $bgColor = $isActive ? '#e91e63' : '#f0f0f0';
-                        $color = $isActive ? 'white' : 'black';
-                        $border = $isActive ? '1px solid #e91e63' : '1px solid #ddd';
-                        echo '<a href="?controller=admin&action=dashboard/delivery&page=' . $i . ((!empty($search) ? '&search=' . urlencode($search) : '')) . '" style="padding: 8px 12px; background-color: ' . $bgColor . '; color: ' . $color . '; border: ' . $border . '; border-radius: 4px; text-decoration: none; cursor: pointer;">' . $i . '</a>';
-                    }
-                    ?>  
-                </div>
-                <div style="text-align: center; margin-top: 15px; color: #666;">
-                    Page <?php echo $currentPage; ?> of <?php echo $totalPages; ?>
-                </div>
-                <?php endif; ?>
-  </div>
+        <!-- Pagination Controls -->
+        <?php if ($totalPages > 1): ?>
+          <div style="margin-top: 30px; display: flex; justify-content: center; gap: 10px; align-items: center; flex-wrap: wrap;">
+
+            <?php
+            $startPage = max(1, $currentPage - 2);
+            $endPage = min($totalPages, $currentPage + 2);
+
+            if ($startPage > 1) echo '<span style="padding: 8px 5px;">...</span>';
+
+            for ($i = $startPage; $i <= $endPage; $i++) {
+              $isActive = $i === $currentPage;
+              $bgColor = $isActive ? '#e91e63' : '#f0f0f0';
+              $color = $isActive ? 'white' : 'black';
+              $border = $isActive ? '1px solid #e91e63' : '1px solid #ddd';
+              echo '<a href="?controller=admin&action=dashboard/delivery&page=' . $i . ((!empty($search) ? '&search=' . urlencode($search) : '')) . '" style="padding: 8px 12px; background-color: ' . $bgColor . '; color: ' . $color . '; border: ' . $border . '; border-radius: 4px; text-decoration: none; cursor: pointer;">' . $i . '</a>';
+            }
+            ?>
+          </div>
+          <div style="text-align: center; margin-top: 15px; color: #666;">
+            Page <?php echo $currentPage; ?> of <?php echo $totalPages; ?>
+          </div>
+        <?php endif; ?>
+    </div>
 </body>
 
 </html>

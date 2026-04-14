@@ -959,5 +959,77 @@ textarea {
     color: #666;
 }
 
+.documents-section {
+    margin-bottom: 20px;
+}
+
+.documents-section h4 {
+    color: #2C2C2C;
+    font-size: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.documents-section h4 i {
+    color: #e91e63;
+}
+
+.documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.doc-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.doc-label {
+    color: #666;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.doc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #e91e63;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 12px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e91e63;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.doc-link:hover {
+    background: #e91e63;
+    color: white;
+    transform: translateX(2px);
+}
+
+.doc-link i {
+    font-size: 14px;
+}
+
+.doc-missing {
+    color: #999;
+    font-size: 13px;
+    font-style: italic;
+}
+
 
 
