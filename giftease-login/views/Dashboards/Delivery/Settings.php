@@ -17,7 +17,7 @@
     $activePage = 'settings';
     include 'views\commonElements/leftSidebarSaneth.php';
 
-   
+
     ?>
     <div class="main-content">
       <div class="page-header">
@@ -43,50 +43,50 @@
         <div class="settings-section">
           <h3>Submitted Documentation</h3>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-             <div class="doc-item">
-                    <span class="doc-label">Identity (NIC/Passport)</span>
-                    <?php if (!empty($deliveryProfile['identity_doc'])): ?>
-                      <a href="<?php echo htmlspecialchars($deliveryProfile['identity_doc']); ?>" class="doc-link" target="_blank">
-                        <i class="fas fa-download"></i> View
-                      </a>
-                    <?php else: ?>
-                      <span class="doc-missing">Not Uploaded</span>
-                    <?php endif; ?>
-                  </div>
+            <div class="doc-item">
+              <span class="doc-label">Identity (NIC/Passport)</span>
+              <?php if (!empty($deliveryProfile['identity_doc'])): ?>
+                <a href="<?php echo htmlspecialchars($deliveryProfile['identity_doc']); ?>" class="doc-link" target="_blank">
+                  <i class="fas fa-download"></i> View
+                </a>
+              <?php else: ?>
+                <span class="doc-missing">Not Uploaded</span>
+              <?php endif; ?>
+            </div>
 
-                  <div class="doc-item">
-                    <span class="doc-label">Driving License</span>
-                    <?php if (!empty($deliveryProfile['driving_license'])): ?>
-                      <a href="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" class="doc-link" target="_blank">
-                        <i class="fas fa-download"></i> View
-                      </a>
-                    <?php else: ?>
-                      <span class="doc-missing">Not Uploaded</span>
-                    <?php endif; ?>
-                  </div>
+            <div class="doc-item">
+              <span class="doc-label">Driving License</span>
+              <?php if (!empty($deliveryProfile['driving_license'])): ?>
+                <a href="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" class="doc-link" target="_blank">
+                  <i class="fas fa-download"></i> View
+                </a>
+              <?php else: ?>
+                <span class="doc-missing">Not Uploaded</span>
+              <?php endif; ?>
+            </div>
 
-                  <div class="doc-item">
-                    <span class="doc-label">Vehicle Registration</span>
-                    <?php if (!empty($deliveryProfile['vehicle_registration'])): ?>
-                      <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_registration']); ?>" class="doc-link" target="_blank">
-                        <i class="fas fa-download"></i> View
-                      </a>
-                    <?php else: ?>
-                      <span class="doc-missing">Not Uploaded</span>
-                    <?php endif; ?>
-                  </div>
+            <div class="doc-item">
+              <span class="doc-label">Vehicle Registration</span>
+              <?php if (!empty($deliveryProfile['vehicle_registration'])): ?>
+                <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_registration']); ?>" class="doc-link" target="_blank">
+                  <i class="fas fa-download"></i> View
+                </a>
+              <?php else: ?>
+                <span class="doc-missing">Not Uploaded</span>
+              <?php endif; ?>
+            </div>
 
-                  <div class="doc-item">
-                    <span class="doc-label">Vehicle Insurance</span>
-                    <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
-                      <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" class="doc-link" target="_blank">
-                        <i class="fas fa-download"></i> View
-                      </a>
-                    <?php else: ?>
-                      <span class="doc-missing">Not Uploaded</span>
-                    <?php endif; ?>
-                  </div>
-       
+            <div class="doc-item">
+              <span class="doc-label">Vehicle Insurance</span>
+              <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
+                <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" class="doc-link" target="_blank">
+                  <i class="fas fa-download"></i> View
+                </a>
+              <?php else: ?>
+                <span class="doc-missing">Not Uploaded</span>
+              <?php endif; ?>
+            </div>
+
           </div>
         </div>
 
@@ -111,29 +111,6 @@
           </div>
         </div>
 
-        <div class="settings-section">
-          <h3>Notification Preferences</h3>
-          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <span>Order updates</span>
-            <div class="toggle-switch active" onclick="toggleNotification(this)">
-              <div class="toggle-slider"></div>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <span>Delivery reminders</span>
-            <div class="toggle-switch active" onclick="toggleNotification(this)">
-              <div class="toggle-slider"></div>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <span>System announcements</span>
-            <div class="toggle-switch" onclick="toggleNotification(this)">
-              <div class="toggle-slider"></div>
-            </div>
-          </div>
-        </div>
-
-        
       </div>
     </div>
   </div>

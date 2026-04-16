@@ -55,10 +55,8 @@
       </div>
 
       <div class="card">
-
-
         <div class="chart-wrapper" style="margin-top: 20px; background: #fff; border-radius: 20px; padding: 18px; border: 1px solid #fed2ed;">
-          <h4 style="margin-bottom: 12px; color: #2C2C2C;">Daily Deliveries and Earnings Trend</h4>
+          <h4 style="margin-bottom: 12px; color: #2C2C2C;">Daily Deliveries and Earnings Trend (Last 30 Days)</h4>
           <canvas id="lastMonthAnalyticsChart" height="120"></canvas>
         </div>
       </div>

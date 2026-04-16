@@ -238,8 +238,9 @@ class DeliveryModel
                     COUNT(*) AS assigned_total,
                     SUM(CASE WHEN is_delivered = 0 THEN 1 ELSE 0 END) AS pending_total,
                     SUM(CASE WHEN is_delivered = 1 THEN 1 ELSE 0 END) AS delivered_total,
-                    SUM(CASE WHEN COALESCE(delivered_at, NOW()) >= CURDATE()
-                        AND COALESCE(delivered_at, NOW()) < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+                    SUM(CASE WHEN is_delivered = 1
+                        AND COALESCE(delivered_at, STR_TO_DATE(CONCAT(deliveryDate, ' 00:00:00'), '%Y-%m-%d %H:%i:%s')) >= CURDATE()
+                        AND COALESCE(delivered_at, STR_TO_DATE(CONCAT(deliveryDate, ' 00:00:00'), '%Y-%m-%d %H:%i:%s')) < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
                         THEN 1 ELSE 0 END) AS deliveries_today,
                     SUM(CASE WHEN is_delivered = 1
                         AND COALESCE(delivered_at, STR_TO_DATE(CONCAT(deliveryDate, ' 00:00:00'), '%Y-%m-%d %H:%i:%s'))
@@ -326,27 +327,27 @@ class DeliveryModel
     public function getLastMonthTrend($deliveryId)
     {
         $sql = "SELECT
-                    normalized_date,
-                    SUM(CASE WHEN is_delivered = 1 THEN 1 ELSE 0 END) AS delivered_count,
-                    SUM(CASE WHEN is_delivered = 1 THEN deliveryPrice ELSE 0 END) AS earnings
+                    DATE(completed_date) AS normalized_date,
+                    COUNT(*) AS delivered_count,
+                    SUM(deliveryPrice) AS earnings
                 FROM (
                     SELECT
-                        is_delivered,
                         deliveryPrice,
                         COALESCE(
+                            delivered_at,
                             STR_TO_DATE(deliveryDate, '%Y-%m-%d'),
                             STR_TO_DATE(deliveryDate, '%Y-%m-%d %H:%i:%s'),
                             STR_TO_DATE(deliveryDate, '%Y-%m-%dT%H:%i'),
                             STR_TO_DATE(deliveryDate, '%m/%d/%Y'),
                             STR_TO_DATE(deliveryDate, '%d/%m/%Y'),
                             DATE(deliveryDate)
-                        ) AS normalized_date
+                        ) AS completed_date
                     FROM orders
-                    WHERE delivery_id = ? AND is_wrapped = 1
+                    WHERE delivery_id = ? AND is_wrapped = 1 AND is_delivered = 1
                 ) AS trend_data
-                WHERE normalized_date BETWEEN DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')
-                                          AND LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
-                GROUP BY normalized_date
+                WHERE completed_date >= DATE_SUB(CURDATE(), INTERVAL 29 DAY)
+                  AND completed_date < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+                GROUP BY DATE(completed_date)
                 ORDER BY normalized_date ASC";
 
         $stmt = $this->pdo->prepare($sql);
@@ -365,8 +366,9 @@ class DeliveryModel
             ];
         }
 
-        $start = new DateTime('first day of last month');
-        $end = new DateTime('last day of last month');
+        $start = new DateTime('-29 days');
+        $start->setTime(0, 0, 0);
+        $end = new DateTime('today');
         $end->modify('+1 day');
 
         $period = new DatePeriod($start, new DateInterval('P1D'), $end);
