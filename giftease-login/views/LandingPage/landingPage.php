@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GiftEase - Global Gift Delivery Platform</title>
-    <link rel="stylesheet" href="public/style.css">
     <link rel="stylesheet" href="public/landingpageStyle.css">
     <link rel="icon" type="image/png" href="resources/1.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -35,7 +34,6 @@
                 <img src="resources/landing.png" class="landing-hero-image" alt="GiftEase festival delivery moment">
                 <div class="landing-hero-overlay"></div>
                 <div class="landing-shell landing-hero-inner">
-                    <div class="landing-badge">Gift Delivery Platform</div>
                     <h1 class="landing-hero-title">
                         Send Love <span>Anywhere</span><br>
                         and Everywhere

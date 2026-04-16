@@ -1,8 +1,77 @@
+@font-face {
+    font-family: 'Century Gothic';
+    src: url('fonts/centurygothic.ttf') format('truetype');
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
     background: #ffffff;
     font-family: 'Century Gothic', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.logo_img {
+    width: 100px;
+    height: 100px;
+}
+
+.gift {
+    font-size: 40px;
+    line-height: 1;
+    color: #d03c2e;
+    text-align: center;
+}
+
+.Ease {
+    font-size: 40px;
+    line-height: 1;
+    font-weight: 700;
+    color: #032e3f;
+}
+
+.btn1,
+.btn2 {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn2 {
+    color: #ffffff;
+    background: #d03c2e;
+    border: 2px solid #d03c2e;
+}
+
+.btn2:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 22px rgba(208, 60, 46, 0.25);
+}
+
+.btn1 {
+    color: #d03c2e;
+    background: #ffffff;
+    border: 2px solid #d03c2e;
+}
+
+.btn1:hover {
+    background: #d03c2e;
+    color: #ffffff;
+    transform: translateY(-2px);
 }
 
 .landing-header {
