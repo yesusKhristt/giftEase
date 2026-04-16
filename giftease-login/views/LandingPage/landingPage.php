@@ -31,19 +31,23 @@
 
     <main class="landing-main">
         <section class="landing-hero">
-            <div class="landing-shell landing-hero-inner">
-                <div class="landing-badge">Gift Delivery Platform</div>
-                <h1 class="landing-hero-title">
-                    Send Love <span>Anywhere</span><br>
-                    and Everywhere
-                </h1>
-                <p class="landing-hero-copy">
-                    Browse, customize, and send personalized gifts globally through our comprehensive platform
-                    connecting customers, vendors, delivery partners, and wrapping services.
-                </p>
-                <div class="landing-actions">
-                    <a href="?action=handleSignup&type=client" class="btn2 landing-primary-action">Start Shopping</a>
-                    <a href="?action=handleSignup&type=staff" class="btn1 landing-secondary-action">Join as Staff</a>
+            <div class="landing-hero-media">
+                <img src="resources/landing.png" class="landing-hero-image" alt="GiftEase festival delivery moment">
+                <div class="landing-hero-overlay"></div>
+                <div class="landing-shell landing-hero-inner">
+                    <div class="landing-badge">Gift Delivery Platform</div>
+                    <h1 class="landing-hero-title">
+                        Send Love <span>Anywhere</span><br>
+                        and Everywhere
+                    </h1>
+                    <p class="landing-hero-copy">
+                        Browse, customize, and send personalized gifts globally through our comprehensive platform
+                        connecting customers, vendors, delivery partners, and wrapping services.
+                    </p>
+                    <div class="landing-actions">
+                        <a href="?action=handleSignup&type=client" class="btn2 landing-primary-action">Start Shopping</a>
+                        <a href="?action=handleSignup&type=staff" class="btn1 landing-secondary-action">Join as Staff</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -51,10 +55,7 @@
         <section class="landing-stats">
             <div class="landing-shell">
                 <div class="landing-stats-grid">
-                    <div class="landing-stat">
-                        <div class="landing-stat-value">190+</div>
-                        <div class="landing-stat-label">Countries Served</div>
-                    </div>
+
                     <div class="landing-stat">
                         <div class="landing-stat-value">50K+</div>
                         <div class="landing-stat-label">Happy Customers</div>
@@ -80,7 +81,7 @@
                     <div class="landing-step-card">
                         <div class="landing-step-number">1</div>
                         <h3>Browse & Select</h3>
-                        <p>Choose from thousands of curated gifts from verified vendors worldwide</p>
+                        <p>Support local businesses while choosing from thousands of carefully curated gifts</p>
                     </div>
                     <div class="landing-step-card">
                         <div class="landing-step-number">2</div>
