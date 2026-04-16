@@ -23,8 +23,6 @@
     $activePage = 'home';
     include 'views\commonElements/leftSidebarSaneth.php';
     ?>
-    <!-- <div id="home" class="tab-content active"> -->
-    <!-- Home page -->
     <div class="main-content">
       <div class="page-header">
         <h1 class="title">Welcome Back, <?php echo htmlspecialchars($_SESSION['user']['first_name'] ?? 'Delivery Partner'); ?>!</h1>

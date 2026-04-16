@@ -248,7 +248,7 @@ textarea {
 .topbar-container {
     position: fixed;
     top: 0;
-    right: 280px; /* sidebar width */
+    left: 280px; /* sidebar width */
     right: 0;
     width: auto;
     height: 100px;
@@ -450,6 +450,7 @@ textarea {
     justify-content: flex-end;
     align-items: center;
     flex-shrink: 0;
+    margin-left: auto;
     padding: 0;
     gap: 12px;
 }
