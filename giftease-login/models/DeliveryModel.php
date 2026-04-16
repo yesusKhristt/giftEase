@@ -53,7 +53,7 @@ class DeliveryModel
 
     public function markComplete($orderId)
     {
-        $stmt = $this->pdo->prepare("UPDATE `orders` SET is_delivered = 1 WHERE `id` = ?");
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET is_delivered = 1, delivered_at = COALESCE(delivered_at, NOW()) WHERE `id` = ?");
         $stmt->execute([$orderId]);
     }
 
@@ -238,24 +238,12 @@ class DeliveryModel
                     COUNT(*) AS assigned_total,
                     SUM(CASE WHEN is_delivered = 0 THEN 1 ELSE 0 END) AS pending_total,
                     SUM(CASE WHEN is_delivered = 1 THEN 1 ELSE 0 END) AS delivered_total,
-                    SUM(CASE WHEN (
-                        DATE(deliveryDate) = CURDATE()
-                        OR deliveryDate = CURDATE()
-                        OR STR_TO_DATE(deliveryDate, '%Y-%m-%d') = CURDATE()
-                        OR STR_TO_DATE(deliveryDate, '%Y-%m-%d %H:%i:%s') = CURDATE()
-                        OR STR_TO_DATE(deliveryDate, '%Y-%m-%dT%H:%i') = CURDATE()
-                        OR STR_TO_DATE(deliveryDate, '%m/%d/%Y') = CURDATE()
-                        OR STR_TO_DATE(deliveryDate, '%d/%m/%Y') = CURDATE()
-                    ) THEN 1 ELSE 0 END) AS deliveries_today,
-                    SUM(CASE WHEN is_delivered = 1 AND
-                        COALESCE(
-                            STR_TO_DATE(deliveryDate, '%Y-%m-%d'),
-                            STR_TO_DATE(deliveryDate, '%Y-%m-%d %H:%i:%s'),
-                            STR_TO_DATE(deliveryDate, '%Y-%m-%dT%H:%i'),
-                            STR_TO_DATE(deliveryDate, '%m/%d/%Y'),
-                            STR_TO_DATE(deliveryDate, '%d/%m/%Y'),
-                            DATE(deliveryDate)
-                        ) BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE()
+                    SUM(CASE WHEN COALESCE(delivered_at, NOW()) >= CURDATE()
+                        AND COALESCE(delivered_at, NOW()) < DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+                        THEN 1 ELSE 0 END) AS deliveries_today,
+                    SUM(CASE WHEN is_delivered = 1
+                        AND COALESCE(delivered_at, STR_TO_DATE(CONCAT(deliveryDate, ' 00:00:00'), '%Y-%m-%d %H:%i:%s'))
+                            BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY)
                         THEN deliveryPrice ELSE 0 END) AS weekly_earnings
                 FROM orders
                 WHERE delivery_id = ? AND is_wrapped = 1";

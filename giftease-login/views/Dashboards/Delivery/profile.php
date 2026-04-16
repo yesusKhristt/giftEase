@@ -25,8 +25,8 @@
           <i class="profile-picture"></i>
           <div class="">
             <h4><?php echo htmlspecialchars(($deliveryProfile['first_name'] ?? '') . ' ' . ($deliveryProfile['last_name'] ?? '')); ?></h4>
-            <p>Delivery Partner • Member since <?php echo htmlspecialchars(!empty($deliveryProfile['created_at']) ? date('M Y', strtotime($deliveryProfile['created_at'])) : 'N/A'); ?></p>
-            <p><i class="fas fa-star"></i> <?php echo htmlspecialchars($profileStats['avg_rating'] ?? 'N/A'); ?> Rating • <i class="fas fa-motorcycle"></i> <?php echo htmlspecialchars($deliveryProfile['vehicleType'] ?? 'N/A'); ?></p>
+            <p>Member since <?php echo htmlspecialchars(!empty($deliveryProfile['created_at']) ? date('M Y', strtotime($deliveryProfile['created_at'])) : 'N/A'); ?></p>
+            <p><i class="fas fa-motorcycle"></i> <?php echo htmlspecialchars($deliveryProfile['vehicleType'] ?? ''); ?></p>
 
           </div>
         </div>
@@ -43,10 +43,6 @@
           <div class="card">
             <div class="title"><?php echo htmlspecialchars($profileStats['success_rate'] ?? 0); ?>%</div>
             <div class="subtitle">Success Rate</div>
-          </div>
-          <div class="card">
-            <div class="title"><?php echo htmlspecialchars($profileStats['avg_rating'] ?? 'N/A'); ?></div>
-            <div class="subtitle">Avg Rating</div>
           </div>
           <div class="card">
             <div class="title"><?php echo htmlspecialchars($profileStats['distance'] ?? 'N/A'); ?></div>
@@ -114,7 +110,7 @@
             </div>
           </div>
         </div>
-      </div>
+      
 
        <div style="display: flex; gap: 15px;">
                 <a href="?controller=delivery&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update
