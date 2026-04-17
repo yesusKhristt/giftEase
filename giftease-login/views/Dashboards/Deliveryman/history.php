@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pickup History - GiftEase</title>
     <link rel="stylesheet" href="public/deliverystyle.css">
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link rel="icon" type="image/png" href="resources/1.png">
 </head>
 
@@ -64,7 +65,7 @@
                 </div>
             </form>
 
-        
+
 
 
 

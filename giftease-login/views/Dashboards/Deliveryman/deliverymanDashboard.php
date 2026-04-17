@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Delivery Man Dashboard - GiftEase</title>
   <link rel="stylesheet" href="public/deliverystyle.css">
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link rel="icon" type="image/png" href="resources/1.png">
 </head>
+
 <body>
   <div class="container">
     <?php
-      $activePage = 'home';
-      include 'views/commonElements/leftSidebarDeliveryman.php';
+    $activePage = 'home';
+    include 'views/commonElements/leftSidebarDeliveryman.php';
     ?>
 
     <div class="main-content">
@@ -50,5 +53,5 @@
     </div>
   </div>
 </body>
-</html>
 
+</html>

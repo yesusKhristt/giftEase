@@ -5,7 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Delivery Partner Dashboard - GiftEase</title>
-  <link rel="stylesheet" href="public/deliverystyle.css" />
+  <link rel="stylesheet" href="public/delivery.css" />
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link rel="icon" type="image/png" href="resources/1.png">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -13,7 +14,7 @@
 
 <body>
 
-   <div class="container">
+  <div class="container">
     <?php
     $activePage = 'profile';
     include 'views\commonElements/leftSidebarSaneth.php';
@@ -85,39 +86,39 @@
             <input type="text" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['vehiclePlate'] ?? ''); ?>" readonly />
           </div>
           <div class="form-group">
-             <div class="doc-item">
-                    <span class="doc-label">Vehicle Insurance</span>
-                    <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
-                      <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" class="doc-link" target="_blank">
-                        <i class="fas fa-download"></i> View
-                      </a>
-                    <?php else: ?>
-                      <span class="doc-missing">Not Uploaded</span>
-                    <?php endif; ?>
-                  </div>
+            <div class="doc-item">
+              <span class="doc-label">Vehicle Insurance</span>
+              <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
+                <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" class="doc-link" target="_blank">
+                  <i class="fas fa-download"></i> View
+                </a>
+              <?php else: ?>
+                <span class="doc-missing">Not Uploaded</span>
+              <?php endif; ?>
+            </div>
           </div>
           <div class="form-group">
             <div class="doc-item">
-             <spna class="doc-label">Driving License</spna> 
-             <?php if (!empty($deliveryProfile['driving_license'])): ?>
-               <a href="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" class="doc-link" target="_blank">
-                <i class="fas fa-download"></i> View
-                      </a>
-                    <?php else: ?>
-                      <span class="doc-missing">Not Uploaded</span>
-                    <?php endif; ?>
-                  </div>
+              <spna class="doc-label">Driving License</spna>
+              <?php if (!empty($deliveryProfile['driving_license'])): ?>
+                <a href="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" class="doc-link" target="_blank">
+                  <i class="fas fa-download"></i> View
+                </a>
+              <?php else: ?>
+                <span class="doc-missing">Not Uploaded</span>
+              <?php endif; ?>
             </div>
           </div>
         </div>
-      
+      </div>
 
-       <div style="display: flex; gap: 15px;">
-                <a href="?controller=delivery&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update
-                    Profile</a>
-                <a href="?controller=delivery&action=deleteProfile" class="btn1" onclick="deleteProfile()">Delete
-                    Profile</a>
-            </div>
+
+      <div style="display: flex; gap: 15px;">
+        <a href="?controller=delivery&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update
+          Profile</a>
+        <a href="?controller=delivery&action=deleteProfile" class="btn1" onclick="deleteProfile()">Delete
+          Profile</a>
+      </div>
     </div>
   </div>
   <script src="main.js"></script>

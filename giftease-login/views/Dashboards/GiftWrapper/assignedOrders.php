@@ -5,7 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Delivery Partner Dashboard - GiftEase</title>
-  <link rel="stylesheet" href="public/giftwrapperStyle.css" />
+  <link rel="stylesheet" href="public/giftwrapper.css" />
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link rel="profile" href="profile.php" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -26,35 +27,35 @@
       <div class="page-header">
         <h1 class="title">Assigned Orders</h2>
           <p class="subtitle">Monitor your orders</p>
-      </div> 
-        <?php foreach ($myOrders as $row): ?>
-          <div class="card">
-            <div class="title">WRP-<?= htmlspecialchars($row['id']) ?></div>
-            <div class="subtitle">Client:
-              <?= htmlspecialchars($row['first_name']) ?>   <?= htmlspecialchars($row['last_name']) ?>
+      </div>
+      <?php foreach ($myOrders as $row): ?>
+        <div class="card">
+          <div class="title">WRP-<?= htmlspecialchars($row['id']) ?></div>
+          <div class="subtitle">Client:
+            <?= htmlspecialchars($row['first_name']) ?> <?= htmlspecialchars($row['last_name']) ?>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+              Due: <?= htmlspecialchars($row['deliveryDate']) ?><br>
+              Fee: Rs <?= htmlspecialchars($row['price']) ?>
             </div>
-            <div style="margin-bottom: 16px;">
-              <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                Due: <?= htmlspecialchars($row['deliveryDate']) ?><br>
-                Fee: Rs <?= htmlspecialchars($row['price']) ?>
-              </div>
+          </div>
+          <div class="progress-section">
+            <div class="progress-header">
             </div>
-            <div class="progress-section">
-              <div class="progress-header">
-              </div>
-              <div class="summary-grid">
-                <a class='btn1' href="?controller=giftWrapper&action=dashboard/cancelOrder/<?= $row['id'] ?>">
-                  Cancel Order
-                </a>
-                <a class='btn2' href="?controller=giftWrapper&action=dashboard/markComplete/<?= $row['id'] ?>">
-                  <i class="fas fa-check"></i>
-                  Mark Complete
-                </a>
-              </div>
+            <div class="summary-grid">
+              <a class='btn1' href="?controller=giftWrapper&action=dashboard/cancelOrder/<?= $row['id'] ?>">
+                Cancel Order
+              </a>
+              <a class='btn2' href="?controller=giftWrapper&action=dashboard/markComplete/<?= $row['id'] ?>">
+                <i class="fas fa-check"></i>
+                Mark Complete
+              </a>
             </div>
-          <?php endforeach ?>
+          </div>
+        <?php endforeach ?>
         </div>
-      
+
     </div>
 </body>
 

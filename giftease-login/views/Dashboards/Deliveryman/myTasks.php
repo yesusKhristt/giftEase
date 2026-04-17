@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Pickup Tasks - GiftEase</title>
   <link rel="stylesheet" href="public/deliverystyle.css">
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link rel="icon" type="image/png" href="resources/1.png">
 </head>
+
 <body>
   <div class="container">
     <?php
-      $activePage = 'myTasks';
-      include 'views/commonElements/leftSidebarDeliveryman.php';
+    $activePage = 'myTasks';
+    include 'views/commonElements/leftSidebarDeliveryman.php';
     ?>
 
     <div class="main-content">
@@ -40,13 +43,13 @@
             <?php else: ?>
               <?php foreach ($myTasks as $task): ?>
                 <?php
-                  $statusText = [
-                    'assigned' => 'Go to Shop',
-                    'picked_up' => 'Picked From Shop',
-                    'at_outlet' => 'Reached Outlet',
-                    'completed' => 'Completed',
-                    'cancelled' => 'Cancelled',
-                  ];
+                $statusText = [
+                  'assigned' => 'Go to Shop',
+                  'picked_up' => 'Picked From Shop',
+                  'at_outlet' => 'Reached Outlet',
+                  'completed' => 'Completed',
+                  'cancelled' => 'Cancelled',
+                ];
                 ?>
                 <tr>
                   <td>#PK-<?= htmlspecialchars((string)$task['id']) ?> / ORD-<?= htmlspecialchars((string)$task['order_id']) ?></td>
@@ -78,4 +81,5 @@
     </div>
   </div>
 </body>
+
 </html>

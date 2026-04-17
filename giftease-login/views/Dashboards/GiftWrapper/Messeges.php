@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Gift Wrapper Messages</title>
 
-    <link rel="stylesheet" href="public/style.css">
-    <link rel="stylesheet"
+    <link rel="stylesheet" href="public/giftwrapper.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />    <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="resources/icon.png">
 

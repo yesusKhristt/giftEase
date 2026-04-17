@@ -4,15 +4,18 @@ class DeliveryController {
     private $notification;
 
     private $messeges;
+    private $withdraw;
 
 
     public function __construct($pdo) {
         require_once __DIR__ . '/../models/DeliveryModel.php';
         require_once __DIR__ . '/../models/NotificationModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
+        require_once __DIR__ . '/../models/WithdrawModel.php';
         $this->notification = new NotificationModel($pdo);
         $this->delivery = new DeliveryModel($pdo);
         $this->messeges = new MessegesModel($pdo);
+        $this->withdraw = new WithdrawModel($pdo);
     }
 
     public function dashboard() {
@@ -42,8 +45,8 @@ class DeliveryController {
         $this->delivery->acceptOrder($order_id, $_SESSION['user']['id']);
 
         $notificationTitle = "Order picked up for Delivery!";
-        $notificationMessege = "Your Order was picked up by ".$_SESSION['user']['first_name'].' '.$_SESSION['user']['last_name'];
-        $href = "?controller=client&action=dashboard/messeges/delivery/view/".$_SESSION['user']['id']."/direct";
+        $notificationMessege = "Your Order was picked up by " . $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'];
+        $href = "?controller=client&action=dashboard/messeges/delivery/view/" . $_SESSION['user']['id'] . "/direct";
         $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
         header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
         exit;
@@ -95,10 +98,8 @@ class DeliveryController {
             case 'messeges':
                 $this->messeges($parts);
                 break;
-            case 'settings':
-                $deliveryId = $_SESSION['user']['id'];
-                $deliveryProfile = $this->delivery->getDeliveryById($deliveryId);
-                require_once __DIR__ . '/../views/Dashboards/Delivery/Settings.php';
+            case 'wallet':
+                $this->Finance($parts);
                 break;
             case 'home':
                 $deliveryId = $_SESSION['user']['id'];
@@ -112,6 +113,30 @@ class DeliveryController {
                 break;
         }
     }
+
+    public function Finance($parts) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($parts[2] == 'withdraw') {
+                $amount = $_POST['amount'];
+                $this->delivery->withdrawMoney($_SESSION['user']['id'], $amount);
+                $this->withdraw->requestWithdrawDelivery($_SESSION['user']['id'], $amount);
+            }
+            if ($parts[2] == 'updateBank') {
+                $bank_details = [
+                    "bank_name" => $_POST['bank_name'],
+                    "account_holder" => $_POST['account_number'],
+                    "account_name" => $_POST['account_holder'],
+                    "branch" => $_POST['branch']
+                ];
+                $this->delivery->saveBank($_SESSION['user']['id'], $bank_details);
+            }
+        }
+        $money = $this->delivery->getAccountBalance($_SESSION['user']['id']);
+        $pendingMoney = $this->delivery->getPendingBalance($_SESSION['user']['id']);
+        $bank = $this->delivery->getBank($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Delivery/wallet.php';
+    }
+
     public function handleLogout() {
         $_SESSION['delivery'] = null;
         header("Location: index.php?controller=auth&action=handleLogout");
@@ -144,48 +169,46 @@ class DeliveryController {
             ]);
             header("Location: index.php?controller=delivery&action=dashboard/account");
             exit;
-
-                
         }
         require_once __DIR__ . '/../views/Dashboards/Delivery/edit.php';
     }
-public function history() {
-    $filters = [
-        'dateFrom' => $_GET['dateFrom'] ?? '',
-        'dateTo'   => $_GET['dateTo'] ?? '',
-        'status'   => $_GET['status'] ?? 'all',
-        'customer' => $_GET['customer'] ?? ''
-    ];
-
-    // Get delivery history from database
-    $deliveryId = $_SESSION['user']['id'];
-    $allHistory = $this->delivery->getDeliveryHistory($deliveryId, $filters);
-
-    // Process the data for display
-    $history = array_map(function($row) {
-        return [
-            'id' => 'ORD-' . str_pad($row['id'], 3, '0', STR_PAD_LEFT),
-            'customer_name' => $row['first_name'] . ' ' . $row['last_name'],
-            'product_name' => $row['product_names'] ?? 'N/A',
-            'delivery_date' => $row['deliveryDate'],
-            'status' => $row['is_delivered'] ? 'delivered' : 'pending',
-            'earnings' => 'Rs.' . number_format($row['deliveryPrice'], 2),
-            'distance' => 'N/A'
+    public function history() {
+        $filters = [
+            'dateFrom' => $_GET['dateFrom'] ?? '',
+            'dateTo'   => $_GET['dateTo'] ?? '',
+            'status'   => $_GET['status'] ?? 'all',
+            'customer' => $_GET['customer'] ?? ''
         ];
-    }, $allHistory);
 
-    // Apply status filter if needed
-    if ($filters['status'] !== 'all') {
-        $history = array_filter($history, function($item) use ($filters) {
-            return $item['status'] === $filters['status'];
-        });
+        // Get delivery history from database
+        $deliveryId = $_SESSION['user']['id'];
+        $allHistory = $this->delivery->getDeliveryHistory($deliveryId, $filters);
+
+        // Process the data for display
+        $history = array_map(function ($row) {
+            return [
+                'id' => 'ORD-' . str_pad($row['id'], 3, '0', STR_PAD_LEFT),
+                'customer_name' => $row['first_name'] . ' ' . $row['last_name'],
+                'product_name' => $row['product_names'] ?? 'N/A',
+                'delivery_date' => $row['deliveryDate'],
+                'status' => $row['is_delivered'] ? 'delivered' : 'pending',
+                'earnings' => 'Rs.' . number_format($row['deliveryPrice'], 2),
+                'distance' => 'N/A'
+            ];
+        }, $allHistory);
+
+        // Apply status filter if needed
+        if ($filters['status'] !== 'all') {
+            $history = array_filter($history, function ($item) use ($filters) {
+                return $item['status'] === $filters['status'];
+            });
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
     }
 
-    require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
-}
 
-
-public function messeges($parts) {
+    public function messeges($parts) {
         $client_id = $parts[3] ?? '';
 
         if ($parts[2] === 'send') {

@@ -29,6 +29,12 @@ class GiftWrapperModel {
             identity_doc VARCHAR(500) DEFAULT NULL,
             address_proof VARCHAR(500) DEFAULT NULL,
             portfolio VARCHAR(500) DEFAULT NULL,
+            accountBalance int DEFAULT 0,
+            pendingBalance int DEFAULT 0,
+            bankName VARCHAR(50) DEFAULT NULL,
+            accountNumber VARCHAR(50) DEFAULT NULL,
+            accountName VARCHAR(50) DEFAULT NULL,
+            bankBranch VARCHAR(50) DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
 
@@ -42,6 +48,69 @@ class GiftWrapperModel {
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
+    }
+
+    public function getAccountBalance($id) {
+        $stmt = $this->pdo->prepare("SELECT accountBalance FROM giftWrappers WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_COLUMN);
+    }
+
+    public function getPendingBalance($id) {
+        $stmt = $this->pdo->prepare("SELECT pendingBalance FROM giftWrappers WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_COLUMN);
+    }
+
+    public function setAccountBalance($id, $amount) {
+        $stmt = $this->pdo->prepare("UPDATE giftWrappers SET accountBalance = ? WHERE id = ?");
+        $stmt->execute([$amount, $id]);
+    }
+
+    public function setPendingBalance($id, $amount) {
+        $stmt = $this->pdo->prepare("UPDATE giftWrappers SET pendingBalance = ? WHERE id = ?");
+        $stmt->execute([$amount, $id]);
+    }
+
+    public function withdrawMoney($id, $amount) {
+        $currAccountBalance = $this->getAccountBalance($id);
+        $currPendingBalance = $this->getPendingBalance($id);
+        $this->setAccountBalance($id, $currAccountBalance - $amount);
+        $this->setPendingBalance($id, $currPendingBalance + $amount);
+    }
+
+    public function approveWithdraw($id, $amount) {
+        $currPendingBalance = $this->getPendingBalance($id);
+        $this->setPendingBalance($id, $currPendingBalance - $amount);
+    }
+
+    public function rejectWithdraw($id, $amount) {
+        $currAccountBalance = $this->getAccountBalance($id);
+        $currPendingBalance = $this->getPendingBalance($id);
+        $this->setAccountBalance($id, $currAccountBalance + $amount);
+        $this->setPendingBalance($id, $currPendingBalance - $amount);
+    }
+
+    public function confirmWithdrawal($id) {
+        $stmt = $this->pdo->prepare("UPDATE giftWrappers SET pendingBalance = 0 WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+
+    public function saveBank($id, $bank_details) {
+        $stmt = $this->pdo->prepare("UPDATE giftWrappers SET bankName = ?, accountNumber = ?, accountName = ?, bankBranch = ? WHERE id = ?");
+        return $stmt->execute([
+            $bank_details['bank_name'],
+            $bank_details['account_holder'],
+            $bank_details['account_name'],
+            $bank_details['branch'],
+            $id
+        ]);
+    }
+
+    public function getBank($id) {
+        $stmt = $this->pdo->prepare("SELECT bankName, accountNumber, accountName, bankBranch FROM giftWrappers WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     private function addColumnIfNotExists($table, $column, $definition) {

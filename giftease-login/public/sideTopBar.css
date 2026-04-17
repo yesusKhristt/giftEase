@@ -16,9 +16,10 @@
 
 .topbar-actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: right;
     padding: 12px 20px;
     gap: 12px;
+    margin-left: auto
 }
 
 .left_sidebar {

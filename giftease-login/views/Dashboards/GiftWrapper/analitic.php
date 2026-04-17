@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wrapping Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/giftwrapper.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link rel="profile" href="profile.php" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -220,13 +221,11 @@
 
 
     <script>
-
         const riskCtx = document.getElementById('riskChart').getContext('2d');
 
         const riskData = {
             labels: ['January', 'February', 'March', 'April', 'May'],
-            datasets: [
-                {
+            datasets: [{
                     label: '',
                     data: [7, 11, 13, 2, 3],
                     backgroundColor: '#e91e63',
@@ -258,15 +257,29 @@
                 plugins: {
                     legend: {
                         display: true,
-                        labels: { boxWidth: 12, boxHeight: 12, padding: 12 }
+                        labels: {
+                            boxWidth: 12,
+                            boxHeight: 12,
+                            padding: 12
+                        }
                     },
-                    tooltip: { mode: 'index', intersect: false }
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
                 },
                 scales: {
                     x: {
                         stacked: true,
-                        grid: { display: false },
-                        ticks: { color: '#374151', font: { size: 12 } }
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#374151',
+                            font: {
+                                size: 12
+                            }
+                        }
                     },
                     y: {
                         stacked: true,
@@ -275,7 +288,9 @@
                         ticks: {
                             stepSize: 10,
                             color: '#6b7280',
-                            font: { size: 12 }
+                            font: {
+                                size: 12
+                            }
                         },
                         grid: {
                             borderDash: [4, 4],
@@ -306,7 +321,10 @@
             id: 'centerText',
             beforeDraw(chart) {
                 if (chart.config.type !== 'doughnut') return;
-                const { ctx, chartArea } = chart;
+                const {
+                    ctx,
+                    chartArea
+                } = chart;
                 const centerX = (chartArea.left + chartArea.right) / 2;
                 const centerY = (chartArea.top + chartArea.bottom) / 2;
 
@@ -335,7 +353,11 @@
                 plugins: {
                     legend: {
                         position: 'right',
-                        labels: { usePointStyle: true, pointStyle: 'circle', padding: 12 }
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            padding: 12
+                        }
                     },
                     tooltip: {
                         callbacks: {

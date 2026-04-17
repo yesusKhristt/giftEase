@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/giftwrapper.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -58,7 +59,7 @@
                             </td>
                             <td colspan="2">
                                 <input type="number" id="year" name="year" placeholder="number of years"
-                                    value="<?php echo (int) $_SESSION['user']['years_of_experience'];?>">
+                                    value="<?php echo (int) $_SESSION['user']['years_of_experience']; ?>">
                             </td>
                         </tr>
                         <tr>

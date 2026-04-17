@@ -5,7 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Delivery Partner Dashboard - GiftEase</title>
-  <link rel="stylesheet" href="public/deliverystyle.css" />
+  <link rel="stylesheet" href="public/delivery.css" />
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link rel="icon" type="image/png" href="resources/1.png">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -36,7 +37,7 @@
           <div class="card">
             <i class="fas fa-image" style="font-size: 2rem;"></i>
           </div>
-          <div >
+          <div>
             <div style="font-weight: 600; margin-bottom: 5px;">DEL-001 Delivery</div>
             <div style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Uploaded: 2 hours ago</div>
             <button class="btn2" onclick="viewProof('DEL-001')">View</button>
@@ -54,72 +55,72 @@
           </div>
         </div>
       </div>
-     
+
       <button class="btn1" style="margin-top: 10px;" onclick="reportIssue()">Report Issue</button>
       <table class="table">
         <thead>
           <tr>
-        <th>Order ID</th>
-        <th>Issue Description</th>
-        <!-- <th>Status</th> -->
-        <th>Reported On</th>
-        <th>Actions</th>
+            <th>Order ID</th>
+            <th>Issue Description</th>
+            <!-- <th>Status</th> -->
+            <th>Reported On</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-        <td>DEL-003</td>
-        <td>Customer not in address and can't contact.</td>
-        <!-- <td><span class="status pending">Pending</span></td> -->
-        <td>2024-06-10</td>
-        <td>
-          <div style="display:inline-flex; gap:8px; align-items:center;">
-            <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </div>
-        </td>
+            <td>DEL-003</td>
+            <td>Customer not in address and can't contact.</td>
+            <!-- <td><span class="status pending">Pending</span></td> -->
+            <td>2024-06-10</td>
+            <td>
+              <div style="display:inline-flex; gap:8px; align-items:center;">
+                <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
           </tr>
           <tr>
-        <td>DEL-004</td>
-        <td>Given Wrong Address.</td>
-        <!-- <td><span class="status resolved">Resolved</span></td> -->
-        <td>2024-06-08</td>
-        <td>
-          <div style="display:inline-flex; gap:8px; align-items:center;">
-            <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </div>
-        </td>
+            <td>DEL-004</td>
+            <td>Given Wrong Address.</td>
+            <!-- <td><span class="status resolved">Resolved</span></td> -->
+            <td>2024-06-08</td>
+            <td>
+              <div style="display:inline-flex; gap:8px; align-items:center;">
+                <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
           </tr>
           <tr>
-        <td>DEL-005</td>
-        <td>Customer don't pay.</td>
-        <!-- <td><span class="status resolved">Resolved</span></td> -->
-        <td>2024-06-09</td>
-        <td>
-          
-          <div style="display:inline-flex; gap:8px; align-items:center;">
-            <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </div>
-        </td>
+            <td>DEL-005</td>
+            <td>Customer don't pay.</td>
+            <!-- <td><span class="status resolved">Resolved</span></td> -->
+            <td>2024-06-09</td>
+            <td>
+
+              <div style="display:inline-flex; gap:8px; align-items:center;">
+                <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
 
-      
+
 
 </body>
 
