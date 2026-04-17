@@ -9,46 +9,41 @@
       </div>
     </div>
     <?php
-    function isActive($pageName, $activePage) {
+    function isActive($pageName, $activePage)
+    {
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
     <nav class="nav-section">
-      <a href="?controller=delivery&action=dashboard/home" class="nav-item <?= isActive('home', $activePage) ?>">
-        Home
-      </a>
       <a href="?controller=delivery&action=dashboard/allOrder"
         class="nav-item <?= isActive('allOrder', $activePage) ?>">
         All Orders
       </a>
+      <a href="?controller=delivery&action=dashboard/home" class="nav-item <?= isActive('home', $activePage) ?>">
+        Home
+      </a>
       <a href="?controller=delivery&action=dashboard/assignedOrder" class="nav-item <?= isActive('assignedOrder', $activePage) ?>">
         Assigned Order
       </a>
-      <a href="?controller=delivery&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
-        Messeges
-      </a>
-      <a href="?controller=delivery&action=dashboard/map" class="nav-item <?= isActive('map', $activePage) ?>">
-        Map
-      </a>
+      
       <a href="?controller=delivery&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
-      <a href="?controller=delivery&action=dashboard/proof" class="nav-item <?= isActive('proof', $activePage) ?>">
-        Proof
+
+       <a href="?controller=delivery&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
+        Messages
       </a>
+      
     </nav>
     <div class="button-section">
       <a href="?controller=delivery&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
-      </a>
+</a>
     </div>
   </div>
   <div class="topbar-container">
-    <!-- Search Bar -->
-    <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Search..." />
-    </div>
+    <div class="gift-fall-layer"></div>
 
     <div class="gift">
       gift<span class="Ease">Ease
@@ -67,3 +62,4 @@
     </nav>
   </div>
 </div>
+<script src="public/main.js"></script>

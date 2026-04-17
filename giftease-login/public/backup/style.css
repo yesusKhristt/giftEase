@@ -306,8 +306,6 @@ textarea {
     overflow-y: auto;
 }
 
-
-
 .left_sidebar::before {
     content: '';
     position: absolute;
@@ -818,37 +816,12 @@ textarea {
 
 /*top bar*/
 
-.gift {
-    font-size: 40px;
-    color: #d03c2e;
-    text-align: center;
-}
-
-.Ease {
-    font-size: 40px;
-    font-weight: bold;
-    color: #032e3f;
-}
-
-.search-bar {
-    display: flex;
-    align-items: center;
-    background: white;
-    outline: 1px solid #e91e63;
-    border-radius: 25px;
-    padding: 12px 20px;
-    gap: 12px;
-    flex: 1;
-    max-width: 600px;
-    margin:  auto;
-    transition: all 0.2s ease;
-}
-
 .topbar-actions {
     display: flex;
     justify-content: flex-end;
     padding: 12px 20px;
     gap: 12px;
+    z-index: 2;
 }
 
 .topbar-container .gift {
@@ -879,6 +852,7 @@ textarea {
     color: #e91e63;
     font-size: 16px;
 }
+
 .topbar-actions a {
     text-decoration: none;
     color: #d03c2e;
@@ -1368,13 +1342,6 @@ textarea {
         padding: 16px;
         gap: 16px;
     }
-    .topbar-container {
-        flex-direction: column;
-        gap: 16px;
-        padding: 16px 24px;
-        left: 0px;
-        width: 100%;
-    }
     .topbar-container .gift {
         display: block;
     }
@@ -1560,20 +1527,37 @@ body {
     }
 }
 
+
+/* .topbar-container {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    width: calc(100% - 280px);
+    height: 100px;
+    background: #032e3f;
+    display: flex;
+    align-items: center;
+    z-index: 11;
+    padding-left: 20px;
+} */
+
 .topbar-container {
     position: fixed;
     top: 0;
-    left: 280px; /* sidebar width */
+    left: 280px;
     width: calc(100% - 280px);
     height: 100px;
     background: #ffffff;
     z-index: 1000;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    z-index: 1;
 }
 
 .topbar-ui {
     position: relative;
-    z-index: 20; 
+    z-index: 20;
     height: 100%;
     display: flex;
     align-items: center;
@@ -1602,9 +1586,6 @@ body {
         transform: translateY(110vh) rotate(360deg);
     }
 }
-
-
-
 
 .pagination {
     display: flex;
@@ -1782,7 +1763,9 @@ body {
     padding-bottom: 12px;
 }
 
+
 /* Staff Cards Styles */
+
 .staff-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
@@ -2039,16 +2022,15 @@ body {
     .vendor-cards-container {
         grid-template-columns: 1fr;
     }
-    
     .vendor-header {
         flex-direction: column;
         gap: 12px;
     }
-    
     .vendor-status {
         align-items: flex-start;
     }
 }
+
 
 /* ==================== VENDOR RATINGS ==================== */
 

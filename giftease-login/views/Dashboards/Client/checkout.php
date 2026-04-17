@@ -20,7 +20,8 @@ if (isset($_POST['deliveryDistance'])) {
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/client.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         #map {
@@ -68,7 +69,7 @@ if (isset($_POST['deliveryDistance'])) {
                         <p id="distanceOutput">No location selected</p>
                         <div id="map"></div>
                         <input type="hidden" id="deliveryPrice" name="deliveryPrice">
-                        
+
 
                         <?php if ($total !== null): ?>
                             <p><strong>Delivery Fee:</strong> Rs. <?= htmlspecialchars($total) ?></p>
@@ -146,15 +147,14 @@ if (isset($_POST['deliveryDistance'])) {
                     .openPopup();
             }
 
-            const distanceKm = (haversine(outletLat, outletLng, lat, lng)*1.5).toFixed(2);
+            const distanceKm = (haversine(outletLat, outletLng, lat, lng) * 1.5).toFixed(2);
 
             document.getElementById('distanceOutput').innerText =
                 `Delivery Distance: ${distanceKm} km`;
 
-            document.getElementById('deliveryPrice').value = (distanceKm*50).toFixed(2);
+            document.getElementById('deliveryPrice').value = (distanceKm * 50).toFixed(2);
         });
     </script>
 </body>
 
 </html>
-

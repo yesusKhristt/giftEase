@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Vendor Messages</title>
-
-    <link rel="stylesheet" href="public/style.css">
+    <link rel="stylesheet" href="public/client.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="resources/icon.png">
@@ -295,12 +295,12 @@
         };
 
         let activeType = null;
-        let activeId   = null;
+        let activeId = null;
 
         const DIRECT_DATA = {
             direct: <?= json_encode($direct ?? 0) ?>,
-            type:   <?= json_encode($directType ?? null) ?>,
-            id:     <?= json_encode($directID ?? null) ?>
+            type: <?= json_encode($directType ?? null) ?>,
+            id: <?= json_encode($directID ?? null) ?>
         };
 
         /* =======================
@@ -309,12 +309,15 @@
         function autoSelectDirectChat() {
             if (!DIRECT_DATA || DIRECT_DATA.direct != 1) return;
 
-            const { type, id } = DIRECT_DATA;
+            const {
+                type,
+                id
+            } = DIRECT_DATA;
 
             const typeClassMap = {
-                vendor:      '.vendor-item',
+                vendor: '.vendor-item',
                 giftwrapper: '.giftwrapper-item',
-                delivery:    '.delivery-item'
+                delivery: '.delivery-item'
             };
 
             const selector = `${typeClassMap[type]}[data-id="${id}"]`;
@@ -334,15 +337,15 @@
            CONFIG
            ======================= */
         const FILTER_KEY = {
-            vendor:      'vendor_id',
+            vendor: 'vendor_id',
             giftwrapper: 'giftWrapper_id',
-            delivery:    'delivery_id'
+            delivery: 'delivery_id'
         };
 
         const PATH = {
-            vendor:      'resources/uploads/vendor/attatchments',
+            vendor: 'resources/uploads/vendor/attatchments',
             giftwrapper: 'resources/uploads/giftWrapper/attatchments',
-            delivery:    'resources/uploads/delivery/attatchments'
+            delivery: 'resources/uploads/delivery/attatchments'
         };
 
         /* =======================
@@ -381,7 +384,7 @@
             }
 
             const initials = getInitials(name);
-            const color    = nameToColor(name);
+            const color = nameToColor(name);
 
             header.innerHTML = `
                 <div class="chat-header-avatar" style="background:${color};">${initials}</div>
@@ -393,7 +396,7 @@
            RENDER STAFF  (sorted: unread first)
            ======================= */
         function renderStaff(type, listId, className) {
-            const list  = document.getElementById(listId);
+            const list = document.getElementById(listId);
             const title = list.querySelector('.bold').outerHTML;
             list.innerHTML = title;
 
@@ -402,13 +405,13 @@
 
             sorted.forEach(([id, info]) => {
                 const p = document.createElement('p');
-                p.className   = className;
-                p.dataset.id  = id;
-                p.onclick     = () => selectChat(type, id, p);
+                p.className = className;
+                p.dataset.id = id;
+                p.onclick = () => selectChat(type, id, p);
 
-                const badge = info.unread > 0
-                    ? `<span class="unread-badge">${info.unread}</span>`
-                    : '';
+                const badge = info.unread > 0 ?
+                    `<span class="unread-badge">${info.unread}</span>` :
+                    '';
 
                 p.innerHTML = `
                     <span class="contact-name">${escapeHtml(info.name)}</span>
@@ -465,7 +468,7 @@
 
             el.classList.add('active');
             activeType = type;
-            activeId   = id;
+            activeId = id;
 
             // Update the chat header with this contact's name
             const info = STAFF[type][id];
@@ -488,17 +491,22 @@
            ======================= */
         function markAsRead(type, id) {
             fetch(`?controller=client&action=dashboard/messeges/${type}/markRead/${id}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type, id })
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (!data.success) {
-                    console.warn('markAsRead failed for', type, id);
-                }
-            })
-            .catch(err => console.error('markAsRead error:', err));
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        type,
+                        id
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.success) {
+                        console.warn('markAsRead failed for', type, id);
+                    }
+                })
+                .catch(err => console.error('markAsRead error:', err));
         }
 
         /* =======================
@@ -507,7 +515,7 @@
         function sendMessage() {
             if (!activeType || !activeId) return alert('Select a chat');
 
-            const input   = document.getElementById('messageInput');
+            const input = document.getElementById('messageInput');
             const message = input.value.trim();
             if (!message && !attachedFiles.length) return;
 
@@ -525,13 +533,13 @@
 
                     GROUPED_MESSAGES[activeType].push({
                         [FILTER_KEY[activeType]]: activeId,
-                        messege:    message,
+                        messege: message,
                         created_at: 'Just now',
-                        sent:       1,
+                        sent: 1,
                         attachments: []
                     });
 
-                    input.value   = '';
+                    input.value = '';
                     attachedFiles = [];
                     updateFilePreview();
                     renderMessages(activeType, activeId);
@@ -559,7 +567,7 @@
             });
         }
 
-        
+
 
         function removeFile(i) {
             attachedFiles.splice(i, 1);
@@ -582,15 +590,15 @@
             return d.innerHTML;
         }
 
-        
+
 
         /* =======================
            INIT
            ======================= */
         document.addEventListener('DOMContentLoaded', () => {
-            renderStaff('vendor',      'vendorList',      'vendor-item');
+            renderStaff('vendor', 'vendorList', 'vendor-item');
             renderStaff('giftwrapper', 'giftWrapperList', 'giftwrapper-item');
-            renderStaff('delivery',    'deliveryList',    'delivery-item');
+            renderStaff('delivery', 'deliveryList', 'delivery-item');
 
             if (DIRECT_DATA.direct == 1) {
                 autoSelectDirectChat();

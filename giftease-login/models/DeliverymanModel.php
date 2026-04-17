@@ -7,6 +7,7 @@ class DeliverymanModel {
     public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTableIfNotExists(); // Create the table if not there
+        $this->createPickupTaskTableIfNotExists();
     }
 
     public function getpdo() {
@@ -127,5 +128,183 @@ class DeliverymanModel {
         $stmt = $this->pdo->prepare("SELECT * FROM deliveryman");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function createPickupTaskTableIfNotExists() {
+        $sql = "CREATE TABLE IF NOT EXISTS pickupTasks (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            order_id INT NOT NULL,
+            vendor_id INT NOT NULL,
+            deliveryman_id INT DEFAULT NULL,
+            status ENUM('pending_assignment', 'assigned', 'picked_up', 'at_outlet', 'completed', 'cancelled') DEFAULT 'pending_assignment',
+            assigned_at TIMESTAMP NULL DEFAULT NULL,
+            picked_up_at TIMESTAMP NULL DEFAULT NULL,
+            at_outlet_at TIMESTAMP NULL DEFAULT NULL,
+            completed_at TIMESTAMP NULL DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_order_vendor (order_id, vendor_id),
+            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+            FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE,
+            FOREIGN KEY (deliveryman_id) REFERENCES deliveryman(id) ON DELETE SET NULL
+        );";
+
+        try {
+            $this->pdo->exec($sql);
+        } catch (PDOException $e) {
+            // Ignore setup failure until dependent tables are available.
+        }
+    }
+
+    public function syncPickupTasksFromOrders() {
+        $sql = "
+            INSERT INTO pickupTasks (order_id, vendor_id)
+            SELECT DISTINCT o.id, p.vendor_id
+            FROM orders o
+            JOIN orderItems oi ON oi.order_id = o.id
+            JOIN products p ON p.id = oi.item_id
+            LEFT JOIN pickupTasks pt ON pt.order_id = o.id AND pt.vendor_id = p.vendor_id
+            WHERE o.is_wrapped = 0
+              AND o.is_delivered = 0
+              AND pt.id IS NULL
+        ";
+
+        try {
+            $this->pdo->exec($sql);
+        } catch (PDOException $e) {
+            // Ignore sync failure if required tables are not yet ready.
+        }
+    }
+
+    public function getDashboardStats($deliverymanId) {
+        $this->syncPickupTasksFromOrders();
+
+        $stmt = $this->pdo->prepare(
+            "SELECT
+                SUM(CASE WHEN status = 'pending_assignment' THEN 1 ELSE 0 END) AS available_total,
+                SUM(CASE WHEN deliveryman_id = ? AND status IN ('assigned', 'picked_up', 'at_outlet') THEN 1 ELSE 0 END) AS my_active_total,
+                SUM(CASE WHEN deliveryman_id = ? AND status = 'completed' THEN 1 ELSE 0 END) AS my_completed_total,
+                SUM(CASE WHEN deliveryman_id = ? AND status = 'picked_up' THEN 1 ELSE 0 END) AS picked_up_total
+             FROM pickupTasks"
+        );
+        $stmt->execute([$deliverymanId, $deliverymanId, $deliverymanId]);
+        $stats = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        return [
+            'available_total' => (int)($stats['available_total'] ?? 0),
+            'my_active_total' => (int)($stats['my_active_total'] ?? 0),
+            'my_completed_total' => (int)($stats['my_completed_total'] ?? 0),
+            'picked_up_total' => (int)($stats['picked_up_total'] ?? 0),
+        ];
+    }
+
+    public function getAvailablePickupTasks() {
+        $this->syncPickupTasksFromOrders();
+
+        $stmt = $this->pdo->prepare(
+            "SELECT
+                pt.id,
+                pt.order_id,
+                pt.status,
+                o.deliveryDate,
+                c.first_name AS client_first_name,
+                c.last_name AS client_last_name,
+                v.shopName,
+                v.address AS vendor_address,
+                v.phone AS vendor_phone,
+                GROUP_CONCAT(DISTINCT p.name ORDER BY p.name SEPARATOR ', ') AS products,
+                SUM(oi.quantity) AS total_quantity
+             FROM pickupTasks pt
+             JOIN orders o ON o.id = pt.order_id
+             JOIN clients c ON c.id = o.client_id
+             JOIN vendors v ON v.id = pt.vendor_id
+             LEFT JOIN orderItems oi ON oi.order_id = o.id
+             LEFT JOIN products p ON p.id = oi.item_id AND p.vendor_id = pt.vendor_id
+             WHERE pt.status = 'pending_assignment' AND pt.deliveryman_id IS NULL
+             GROUP BY pt.id, pt.order_id, pt.status, o.deliveryDate, c.first_name, c.last_name, v.shopName, v.address, v.phone
+             ORDER BY o.deliveryDate ASC, pt.id ASC"
+        );
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getMyPickupTasks($deliverymanId) {
+        $this->syncPickupTasksFromOrders();
+
+        $stmt = $this->pdo->prepare(
+            "SELECT
+                pt.id,
+                pt.order_id,
+                pt.status,
+                pt.assigned_at,
+                pt.picked_up_at,
+                pt.at_outlet_at,
+                pt.completed_at,
+                o.deliveryDate,
+                c.first_name AS client_first_name,
+                c.last_name AS client_last_name,
+                v.shopName,
+                v.address AS vendor_address,
+                v.phone AS vendor_phone,
+                GROUP_CONCAT(DISTINCT p.name ORDER BY p.name SEPARATOR ', ') AS products,
+                SUM(oi.quantity) AS total_quantity
+             FROM pickupTasks pt
+             JOIN orders o ON o.id = pt.order_id
+             JOIN clients c ON c.id = o.client_id
+             JOIN vendors v ON v.id = pt.vendor_id
+             LEFT JOIN orderItems oi ON oi.order_id = o.id
+             LEFT JOIN products p ON p.id = oi.item_id AND p.vendor_id = pt.vendor_id
+             WHERE pt.deliveryman_id = ?
+               GROUP BY pt.id, pt.order_id, pt.status, pt.assigned_at, pt.picked_up_at, pt.at_outlet_at, pt.completed_at, o.deliveryDate, c.first_name, c.last_name, v.shopName, v.address, v.phone
+             ORDER BY FIELD(pt.status, 'assigned', 'picked_up', 'at_outlet', 'completed', 'cancelled'), o.deliveryDate ASC, pt.id ASC"
+        );
+        $stmt->execute([$deliverymanId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function acceptPickupTask($taskId, $deliverymanId) {
+        $stmt = $this->pdo->prepare(
+            "UPDATE pickupTasks
+             SET deliveryman_id = ?, status = 'assigned', assigned_at = NOW()
+             WHERE id = ? AND deliveryman_id IS NULL AND status = 'pending_assignment'"
+        );
+        $stmt->execute([$deliverymanId, $taskId]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function updatePickupTaskStatus($taskId, $deliverymanId, $status) {
+        $statusMap = [
+            'picked_up' => 'picked_up_at',
+            'at_outlet' => 'at_outlet_at',
+            'completed' => 'completed_at',
+        ];
+
+        if (!isset($statusMap[$status])) {
+            return false;
+        }
+
+        $timeColumn = $statusMap[$status];
+        $stmt = $this->pdo->prepare(
+            "UPDATE pickupTasks
+             SET status = ?, {$timeColumn} = NOW()
+             WHERE id = ? AND deliveryman_id = ?"
+        );
+        $stmt->execute([$status, $taskId, $deliverymanId]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function cancelPickupTask($taskId, $deliverymanId) {
+        $stmt = $this->pdo->prepare(
+            "UPDATE pickupTasks
+             SET deliveryman_id = NULL,
+                 status = 'pending_assignment',
+                 assigned_at = NULL,
+                 picked_up_at = NULL,
+                 at_outlet_at = NULL
+             WHERE id = ?
+               AND deliveryman_id = ?
+               AND status = 'assigned'"
+        );
+        $stmt->execute([$taskId, $deliverymanId]);
+        return $stmt->rowCount() > 0;
     }
 }

@@ -5,8 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/client.css" />
-    <link rel="stylesheet" href="public/sideTopBar.css" />
+    <link rel="stylesheet" href="public/style.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -170,17 +169,17 @@
     <div class="container">
         <?php
         $activePage = 'customize';
-        include 'views/commonElements/leftSidebarDilma.php';
+        include 'views/commonElements/leftSidebarJeshani.php';
         ?>
         <div class="main-content">
             <div class="page-header">
                 <h1 class="title">Gift Wrapping Packages</h1>
-                <p class="subtitle">Choose from our ready-made gift wrapping packages</p>
+                <!-- <p class="subtitle">Choose from our ready-made gift wrapping packages</p> -->
             </div>
 
-            <a href="?controller=client&action=dashboard/wrap" class="back-link">
+            <!-- <a href="?controller=client&action=dashboard/wrap" class="back-link">
                 <i class="fas fa-arrow-left"></i> Back to wrapping options
-            </a>
+            </a> -->
 
             <?php if (!empty($packages)): ?>
                 <div class="package-grid">
@@ -236,7 +235,7 @@
         </div>
     </div>
 
-    <script>
+    <script> 
         function slideImage(btn, direction) {
             const container = btn.parentElement;
             const slider = container.querySelector('.package-image-slider');

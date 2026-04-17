@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/client.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -74,6 +75,6 @@
             </div>
         </div>
 </body>
-<script src ="public/main.js"></script>
+<script src="public/main.js"></script>
 
 </html>

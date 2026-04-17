@@ -5,7 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Delivery Partner Dashboard - GiftEase</title>
-  <link rel="stylesheet" href="public/style.css" />
+  <link rel="stylesheet" href="public/deliverystyle.css" />
+  <link rel="icon" type="image/png" href="resources/1.png">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -21,15 +22,11 @@
       <div class="cardColour">
 
         <div class="profile-section">
-          
-            <a href="?controller=delivery&action=dashboard/updateProfilePicture">
-                        <img src="<?php echo htmlspecialchars($deliveryProfile['image_loc']) ?>" class="profile-picture" alt="+">
-                    </a>
-          
+          <i class="profile-picture"></i>
           <div class="">
             <h4><?php echo htmlspecialchars(($deliveryProfile['first_name'] ?? '') . ' ' . ($deliveryProfile['last_name'] ?? '')); ?></h4>
-            <p>Delivery Partner • Member since <?php echo htmlspecialchars(!empty($deliveryProfile['created_at']) ? date('M Y', strtotime($deliveryProfile['created_at'])) : 'N/A'); ?></p>
-            <p><i class="fas fa-star"></i> <?php echo htmlspecialchars($profileStats['avg_rating'] ?? 'N/A'); ?> Rating • <i class="fas fa-motorcycle"></i> <?php echo htmlspecialchars($deliveryProfile['vehicleType'] ?? 'N/A'); ?></p>
+            <p>Member since <?php echo htmlspecialchars(!empty($deliveryProfile['created_at']) ? date('M Y', strtotime($deliveryProfile['created_at'])) : 'N/A'); ?></p>
+            <p><i class="fas fa-motorcycle"></i> <?php echo htmlspecialchars($deliveryProfile['vehicleType'] ?? ''); ?></p>
 
           </div>
         </div>
@@ -46,10 +43,6 @@
           <div class="card">
             <div class="title"><?php echo htmlspecialchars($profileStats['success_rate'] ?? 0); ?>%</div>
             <div class="subtitle">Success Rate</div>
-          </div>
-          <div class="card">
-            <div class="title"><?php echo htmlspecialchars($profileStats['avg_rating'] ?? 'N/A'); ?></div>
-            <div class="subtitle">Avg Rating</div>
           </div>
           <div class="card">
             <div class="title"><?php echo htmlspecialchars($profileStats['distance'] ?? 'N/A'); ?></div>
@@ -92,29 +85,32 @@
             <input type="text" class="form-input" value="<?php echo htmlspecialchars($deliveryProfile['vehiclePlate'] ?? ''); ?>" readonly />
           </div>
           <div class="form-group">
-            <label class="subtitle">Insurance</label>
-            <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
-              <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('insuranceDoc')">View Insurance</button>
-              <div id="insuranceDoc" style="display: none; margin-top: 10px;">
-                <img src="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" alt="Vehicle Insurance" style="max-width: 100%; height: auto; border-radius: 8px;" />
-              </div>
-            <?php else: ?>
-              <input type="text" class="form-input" value="N/A" readonly />
-            <?php endif; ?>
+             <div class="doc-item">
+                    <span class="doc-label">Vehicle Insurance</span>
+                    <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
+                      <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" class="doc-link" target="_blank">
+                        <i class="fas fa-download"></i> View
+                      </a>
+                    <?php else: ?>
+                      <span class="doc-missing">Not Uploaded</span>
+                    <?php endif; ?>
+                  </div>
           </div>
           <div class="form-group">
-            <label class="subtitle">License</label>
-            <?php if (!empty($deliveryProfile['driving_license'])): ?>
-              <button type="button" class="btn1" style="width: 100%; padding: 10px 14px; font-size: 14px;" onclick="toggleDoc('licenseDoc')">View License</button>
-              <div id="licenseDoc" style="display: none; margin-top: 10px;">
-                <img src="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" alt="Driving License" style="max-width: 100%; height: auto; border-radius: 8px;" />
-              </div>
-            <?php else: ?>
-              <input type="text" class="form-input" value="N/A" readonly />
-            <?php endif; ?>
+            <div class="doc-item">
+             <spna class="doc-label">Driving License</spna> 
+             <?php if (!empty($deliveryProfile['driving_license'])): ?>
+               <a href="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" class="doc-link" target="_blank">
+                <i class="fas fa-download"></i> View
+                      </a>
+                    <?php else: ?>
+                      <span class="doc-missing">Not Uploaded</span>
+                    <?php endif; ?>
+                  </div>
+            </div>
           </div>
         </div>
-      </div>
+      
 
        <div style="display: flex; gap: 15px;">
                 <a href="?controller=delivery&action=editProfile/primary" class="btn1" onclick="updateProfile()">Update

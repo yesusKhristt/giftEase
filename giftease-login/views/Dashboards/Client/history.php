@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/client.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -20,9 +21,11 @@
             display: inline-block;
             font-size: 14px;
         }
+
         .btn-rate:hover {
             background: #e68900;
         }
+
         .rated-badge {
             background: #4CAF50;
             color: white;
@@ -30,28 +33,33 @@
             border-radius: 3px;
             font-size: 12px;
         }
+
         .status-delivered {
             background: #4CAF50;
             color: white;
             padding: 5px 10px;
             border-radius: 5px;
         }
+
         .status-pending {
             background: #ff9800;
             color: white;
             padding: 5px 10px;
             border-radius: 5px;
         }
+
         .alert {
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 5px;
         }
+
         .alert-success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
+
         .alert-error {
             background: #f8d7da;
             color: #721c24;
@@ -64,7 +72,7 @@
 
     <div class="container">
         <?php
-        
+
         if (! isset($activePage)) {
             $activePage = 'history';
         }
@@ -164,13 +172,13 @@
                                 </td>
                                 <td>
                                     <?php if ($order['is_delivered'] && $order['vendor_id']): ?>
-                                     <?php if ($order['has_rated']): ?>
-                                     <span class="rated-badge"><i class="fas fa-check"></i> Rated</span>
-                                    <?php else: ?>
-                                     <a href="index.php?controller=Rating&action=form&vendor_id=<?= $order['vendor_id'] ?>&order_id=<?= $order['id'] ?>" class="btn-rate">
-                                     <i class="fas fa-star"></i> Rate Vendor
-                                      </a>
-                                      <?php endif; ?>
+                                        <?php if ($order['has_rated']): ?>
+                                            <span class="rated-badge"><i class="fas fa-check"></i> Rated</span>
+                                        <?php else: ?>
+                                            <a href="index.php?controller=Rating&action=form&vendor_id=<?= $order['vendor_id'] ?>&order_id=<?= $order['id'] ?>" class="btn-rate">
+                                                <i class="fas fa-star"></i> Rate Vendor
+                                            </a>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 </td>
                             </tr>

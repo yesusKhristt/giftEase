@@ -5,12 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/client.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-
         .wrap {
             display: grid;
             grid-template-columns: 1fr 360px;
@@ -317,7 +317,13 @@
         const CHOCOLATES = chocolates;
         const CARDS = cards;
 
-        const state = { base: null, basedeco: null, softToy: null, chocolates: null, cards: null };
+        const state = {
+            base: null,
+            basedeco: null,
+            softToy: null,
+            chocolates: null,
+            cards: null
+        };
 
         function el(tag, attrs = {}, children = '') {
             const e = document.createElement(tag);
@@ -332,7 +338,10 @@
         function renderGrid(list, container, onClick, key) {
             container.innerHTML = '';
             list.forEach(item => {
-                const card = el('div', { class: 'item', 'data-id': item.id });
+                const card = el('div', {
+                    class: 'item',
+                    'data-id': item.id
+                });
                 card.innerHTML = `<img src="${item.displayImage}"><div class="label">${item.name}</div>`;
 
                 // ✅ Add 'clicked' only if this item's ID matches that category's selected state
@@ -353,19 +362,26 @@
 
 
 
-        function selectBase(item) { state.base = item; renderPreview(); }
+        function selectBase(item) {
+            state.base = item;
+            renderPreview();
+        }
+
         function selectBaseDecor(item) {
             state.basedeco = (state.basedeco && state.basedeco.id == item.id) ? null : item;
             renderPreview();
         }
+
         function selectSoftToy(item) {
             state.softToy = (state.softToy && state.softToy.id == item.id) ? null : item;
             renderPreview();
         }
+
         function selectChocolate(item) {
             state.chocolates = (state.chocolates && state.chocolates.id == item.id) ? null : item;
             renderPreview();
         }
+
         function selectCard(item) {
             state.cards = (state.cards && state.cards.id == item.id) ? null : item;
             renderPreview();
@@ -412,13 +428,17 @@
                     const price = parseFloat(item.price) || 0;
                     totalPrice += price;
 
-                    const row = el('div', { class: 'preview-item' },
+                    const row = el('div', {
+                            class: 'preview-item'
+                        },
                         `<span>${item.name}</span><span style="margin-left:auto;">Rs ${price.toFixed(2)}</span>`
                     );
                     listDiv.appendChild(row);
                 });
 
-                const totalRow = el('div', { class: 'preview-total' },
+                const totalRow = el('div', {
+                        class: 'preview-total'
+                    },
                     `<strong>Total:</strong><strong style="margin-left:auto;">Rs ${totalPrice.toFixed(2)}</strong>`
                 );
                 listDiv.appendChild(totalRow);
@@ -505,7 +525,6 @@
             // Optional: log it before submission
             console.log("Submitting:", data);
         });
-
     </script>
 
 
