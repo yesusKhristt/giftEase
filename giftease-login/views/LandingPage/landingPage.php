@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GiftEase - Global Gift Delivery Platform</title>
     <!-- Updated CSS reference to use style2.css  -->
-    <link rel="stylesheet" href="public/style.css">
+    <link rel="stylesheet" href="public/landingpagestyle.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 

@@ -9,7 +9,7 @@
   <link rel="profile" href="profile.php" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
+
 </head>
 
 <body>
@@ -31,7 +31,7 @@
     $successRate = $successRate ?? 0;
     $avgRating = $avgRating ?? null;
     ?>
-   
+
     <div class="main-content">
       <div class="page-header">
         <h1 class="title">Profile Overview</h1>
@@ -40,8 +40,11 @@
       <div class="cardColour">
 
         <div class="profile-section">
-          <i class="profile-picture"></i>
+          <a href="?controller=giftWrapper&action=dashboard/updateProfilePicture">
+            <img src="<?php echo htmlspecialchars($_SESSION['user']['image_loc']) ?>" class="profile-picture" alt="+">
+          </a>
           <div class="">
+
             <h4><?= htmlspecialchars($displayName) ?></h4>
             <p>Professional Gift Wrapping Service</p>
             <p><i class="fas fa-star"></i>
@@ -93,9 +96,18 @@
           </div>
         </div>
       </div>
+      <?php
+      var_dump($_SESSION['user'])
+      ?>
       <div style="display: flex; gap: 15px;">
-        <button class="btn1" onclick="updateProfile()">Update Profile</button>
-        <button class="btn1" onclick="changePassword()">Change Password</button>
+        <div style="display: flex; gap: 15px;">
+          <a href="?controller=giftWrapper&action=dashboard/editProfile/primary" class="btn1">
+            Update Profile
+          </a>
+          <a href="?controller=giftWrapper&action=dashboard/deleteProfile" class="btn1">
+            Delete Profile
+          </a>
+        </div>
       </div>
 
     </div>

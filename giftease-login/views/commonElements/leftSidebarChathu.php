@@ -9,8 +9,7 @@
       </div>
     </div>
     <?php
-    function isActive($pageName, $activePage)
-    {
+    function isActive($pageName, $activePage) {
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
@@ -62,29 +61,29 @@
     </div>
   </div>
   <div class="topbar-container">
-         <div class="falling-gifts">
-         </div>
-            <!-- Search Bar -->
-            <div class="search-bar">
-              <input type="text" class="search-input" placeholder="Search..." />
-            </div>
-  
-            <div class="gift">
-              gift<span class="Ease">Ease
-              </span>
-            </div>
-  
-            <!-- Right Side Links/Buttons -->
-            <nav class="topbar-actions">
-              <a href="?controller=admin&action=dashboard/settings"
-                class="settings-btn <?= isActive('settings', $activePage) ?>">
-                <i class="fas fa-cog"></i>
-              </a>
-              <a href="?controller=admin&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
-                <i class="fas fa-user"></i>
-              </a>
-            </nav>
-          </div>
+    <div class="falling-gifts">
+    </div>
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Search..." />
+    </div>
+
+    <div class="gift">
+      gift<span class="Ease">Ease
+      </span>
+    </div>
+
+    <!-- Right Side Links/Buttons -->
+    <nav class="topbar-actions">
+      <a href="?controller=admin&action=dashboard/withdraw"
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
+        <i class="fa fa-credit-card" aria-hidden="true"></i>
+      </a>
+      <a href="?controller=admin&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
+        <i class="fas fa-user"></i>
+      </a>
+    </nav>
   </div>
-        <script src="public/main.js"></script>
+</div>
+<script src="public/main.js"></script>
 </div>

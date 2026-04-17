@@ -5,6 +5,7 @@ class VendorController {
     private $category;
     private $messeges;
     private $order;
+    private $withdraw;
 
     public function __construct($pdo) {
         require_once __DIR__ . '/../models/VendorModel.php';
@@ -12,11 +13,13 @@ class VendorController {
         require_once __DIR__ . '/../models/CategoryModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
         require_once __DIR__ . '/../models/OrderModel.php';
+        require_once __DIR__ . '/../models/WithdrawModel.php';
         $this->vendor   = new VendorModel($pdo);
         $this->product  = new ProductsModel($pdo);
         $this->category = new CategoryModel($pdo);
         $this->messeges = new MessegesModel($pdo);
         $this->order    = new OrderModel($pdo);
+        $this->withdraw    = new WithdrawModel($pdo);
     }
 
     public function dashboard() {
@@ -288,6 +291,29 @@ class VendorController {
         require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
     }
 
+    public function Finance($parts) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($parts[2] == 'withdraw') {
+                $amount = $_POST['amount'];
+                $this->vendor->withdrawMoney($_SESSION['user']['id'], $amount);
+                $this->withdraw->requestWithdrawVendor($_SESSION['user']['id'], $amount);
+            }
+            if ($parts[2] == 'updateBank') {
+                $bank_details = [
+                    "bank_name" => $_POST['bank_name'],
+                    "account_holder" => $_POST['account_number'],
+                    "account_name" => $_POST['account_holder'],
+                    "branch" => $_POST['branch']
+                ];
+                $this->vendor->saveBank($_SESSION['user']['id'], $bank_details);
+            }
+        }
+        $money = $this->vendor->getAccountBalance($_SESSION['user']['id']);
+        $pendingMoney = $this->vendor->getPendingBalance($_SESSION['user']['id']);
+        $bank = $this->vendor->getBank($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/Wallet.php';
+    }
+
     public function Vendor($parts) {
         switch ($parts[1]) {
             case 'inventory':
@@ -311,8 +337,8 @@ class VendorController {
             case 'history':
                 require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
                 break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/Settings.php';
+            case 'wallet':
+                $this->Finance($parts);
                 break;
             case 'item':
                 $this->handleitems($parts);

@@ -12,9 +12,9 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?controller=vendor&action=dashboard/settings"
+      <a href="?controller=vendor&action=dashboard/wallet"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
-        <i class="fas fa-cog"></i>
+        <i class="fa fa-credit-card" aria-hidden="true"></i>
       </a>
       <a href="?controller=vendor&action=dashboard/account"
         class="settings-btn <?= isActive('account', $activePage) ?>">

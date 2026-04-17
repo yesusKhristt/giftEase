@@ -8,6 +8,7 @@ class AdminController
     private $delivery;
     private $admin;
     private $vendor;
+    private $withdraw;
 
     public function __construct($pdo)
     {
@@ -18,6 +19,7 @@ class AdminController
         require_once __DIR__ . '/../models/DeliverymanModel.php';
         require_once __DIR__ . '/../models/AdminModel.php';
         require_once __DIR__ . '/../models/VendorModel.php';
+        require_once __DIR__ . '/../models/WithdrawModel.php';
         $this->giftWrapping = new GiftWrappingModel($pdo);
         $this->giftWrapper = new GiftWrapperModel($pdo);
         $this->category = new CategoryModel($pdo);
@@ -25,6 +27,7 @@ class AdminController
         $this->delivery = new DeliveryModel($pdo);
         $this->admin = new AdminModel($pdo);
         $this->vendor = new VendorModel($pdo);
+        $this->withdraw = new WithdrawModel($pdo);
     }
 
 
@@ -725,8 +728,8 @@ class AdminController
             case 'items':
                 $this->items($parts);
                 break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Admin/settings new.php';
+            case 'withdraw':
+                $this->Withdraw($parts);
                 break;
             case 'giftWrapping':
                 require_once __DIR__ . '/../views/Dashboards/Admin/giftWrapping.php';
@@ -775,9 +778,37 @@ class AdminController
                 $this->reports($parts);
                 break;
             default:
-              $this->reports($parts);
+                $this->reports($parts);
                 break;
         }
+    }
+
+    public function Withdraw($parts){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($parts[2] == 'approve') {
+                $withdraw_id = $_POST['withdraw_id'];
+                $amount = $_POST['amount'];
+                $userID = $_POST['user_id'];
+                $role = $_POST['role'];
+                $this->withdraw->aproveWithdrawal($withdraw_id, $_SESSION['user']['id']);
+                if($role === 'Vendor')$this->vendor->approveWithdraw($userID, $amount);
+                if($role === 'Delivery')$this->delivery()->approveWithdraw($userID, $amount);
+                if($role === 'Gift Wrapper')$this->giftwrappers()->approveWithdraw($userID, $amount);
+            }
+            if ($parts[2] == 'reject') {
+                $withdraw_id = $_POST['withdraw_id'];
+                $amount = $_POST['amount'];
+                $userID = $_POST['user_id'];
+                $role = $_POST['role'];
+                $this->withdraw->rejectWithdrawal($withdraw_id, $_SESSION['user']['id']);
+                if($role === 'Vendor')$this->vendor->rejectWithdraw($userID, $amount);
+                if($role === 'Delivery')$this->delivery()->rejectWithdraw($userID, $amount);
+                if($role === 'Gift Wrapper')$this->giftwrappers()->rejectWithdraw($userID, $amount);
+            }
+        }
+        $pending = $this->withdraw->getWithdrawRequestsPending();
+        $all = $this->withdraw->getWithdrawRequestsAll();
+        require_once __DIR__ . '/../views/Dashboards/Admin/withdraw.php';
     }
 
     public function items($parts){
@@ -796,8 +827,8 @@ class AdminController
         if (!empty($search)) {
             $allProducts = array_filter($allProducts, function($item) use ($search) {
                 return stripos($item['name'], $search) !== false ||
-                       stripos($item['description'], $search) !== false ||
-                       stripos($item['shopName'], $search) !== false;
+                    stripos($item['description'], $search) !== false ||
+                    stripos($item['shopName'], $search) !== false;
             });
         }
         

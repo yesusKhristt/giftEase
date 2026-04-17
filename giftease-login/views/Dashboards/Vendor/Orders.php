@@ -22,6 +22,22 @@
         <h1 class="title">Orders Dashboard</h1>
         <p class="subtitle">Manage and track your current orders</p>
       </div>
+      <div class="summary-grid">
+        <div class="card">
+          <p class="subtitle">Total Orders</p><br>
+          <p class="title"><?= (int)($orderStats['total_orders'] ?? 0) ?></p>
+        </div>
+
+        <div class="card">
+          <p class="subtitle">Total Revenue</p><br>
+          <p class="title">Rs. <?= number_format($orderStats['total_revenue'] ?? 0, 2) ?></p>
+        </div>
+
+        <div class="card">
+          <p class="subtitle">Urgent Orders</p><br>
+          <p class="title"><?= (int)($orderStats['urgent_orders'] ?? 0) ?></p>
+        </div>
+      </div>
       <div class="card">
         <h4>Current Orders</h4>
         <table class="table">
@@ -76,22 +92,6 @@
             <?php endif; ?>
           </tbody>
         </table>
-      </div>
-      <div class="summary-grid">
-        <div class="card">
-          <p class="subtitle">Total Orders</p><br>
-          <p class="title"><?= (int)($orderStats['total_orders'] ?? 0) ?></p>
-        </div>
-
-        <div class="card">
-          <p class="subtitle">Total Revenue</p><br>
-          <p class="title">Rs. <?= number_format($orderStats['total_revenue'] ?? 0, 2) ?></p>
-        </div>
-
-        <div class="card">
-          <p class="subtitle">Urgent Orders</p><br>
-          <p class="title"><?= (int)($orderStats['urgent_orders'] ?? 0) ?></p>
-        </div>
       </div>
     </div>
   </div>

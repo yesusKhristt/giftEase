@@ -192,10 +192,70 @@ class giftWrapperController {
             case 'service':
                 $this->service($level1);
                 break;
+            case 'editProfile':
+                $this->editProfile($parts);
+                break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
+                break;
             default:
                 $this->overview($level1);
                 break;
         }
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle file upload if user selected a new image
+            $uploadDir = "resources/uploads/giftWrapper/profilePictures/";
+            if (! is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Get file info
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            // Move file to upload folder
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                // store the uploaded file path
+                $profilePicPath = $targetFile;
+                echo "File uploaded successfully: $profilePicPath";
+            } else {
+                echo "File upload failed.";
+            }
+            $this->giftwrapper->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+            $_SESSION['user'] = $this->giftwrapper->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=giftwrapper&action=dashboard/profile");
+            exit;
+
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/addImage.php';
+    }
+
+    public function editProfile($parts) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name'  => $_POST['last_name'] ?? '',
+                'phone'      => $_POST['phone'] ?? '',
+                'years_of_experience'   => $_POST['year'] ?? '',
+                'address'   => $_POST['address'] ?? '',
+
+                'id' => $_SESSION['user']['id']
+            ];
+
+            $this->giftwrapper->updateUser($data);
+            $_SESSION['user'] = $this->giftwrapper->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=giftWrapper&action=dashboard/profile");
+            exit;
+
+            // Redirect or show a success message
+        }
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/edit.php';
     }
 
     public function messeges($parts) {

@@ -26,6 +26,12 @@ class VendorModel {
             rating FLOAT DEFAULT 0,
             rating_count INT DEFAULT 0,
             verified BOOL DEFAULT 0,
+            accountBalance int DEFAULT 0,
+            pendingBalance int DEFAULT 0,
+            bankName VARCHAR(50) DEFAULT NULL,
+            accountNumber VARCHAR(50) DEFAULT NULL,
+            accountName VARCHAR(50) DEFAULT NULL,
+            bankBranch VARCHAR(50) DEFAULT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
         $sql2 = "CREATE TABLE IF NOT EXISTS vendorVerify (
@@ -45,6 +51,52 @@ class VendorModel {
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
+    }
+
+    public function getAccountBalance($id) {
+        $stmt = $this->pdo->prepare("SELECT accountBalance FROM vendors WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_COLUMN);
+    }
+
+    public function getPendingBalance($id) {
+        $stmt = $this->pdo->prepare("SELECT pendingBalance FROM vendors WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_COLUMN);
+    }
+
+    public function setAccountBalance($id, $amount) {
+        $stmt = $this->pdo->prepare("UPDATE vendors SET accountBalance = ? WHERE id = ?");
+        $stmt->execute([$amount, $id]);
+    }
+
+    public function setPendingBalance($id, $amount) {
+        $stmt = $this->pdo->prepare("UPDATE vendors SET pendingBalance = ? WHERE id = ?");
+        $stmt->execute([$amount, $id]);
+    }
+
+    public function withdrawMoney($id, $amount){
+        $currAccountBalance = $this->getAccountBalance($id);
+        $currPendingBalance = $this->getPendingBalance($id);
+        $this->setAccountBalance($id, $currAccountBalance - $amount);
+        $this->setPendingBalance($id, $currPendingBalance + $amount);
+    }
+
+    public function approveWithdraw($id, $amount){
+        $currPendingBalance = $this->getPendingBalance($id);
+        $this->setPendingBalance($id, $currPendingBalance - $amount);
+    }
+
+    public function rejectWithdraw($id, $amount){
+        $currAccountBalance = $this->getAccountBalance($id);
+        $currPendingBalance = $this->getPendingBalance($id);
+        $this->setAccountBalance($id, $currAccountBalance + $amount);
+        $this->setPendingBalance($id, $currPendingBalance - $amount);
+    }
+
+    public function confirmWithdrawal($id) {
+        $stmt = $this->pdo->prepare("UPDATE vendors SET pendingBalance = 0 WHERE id = ?");
+        $stmt->execute([$id]);
     }
 
     public function verifyUser($user_id) {
@@ -114,6 +166,23 @@ class VendorModel {
             $data['address'],
             $data['id']
         ]);
+    }
+
+    public function saveBank($id, $bank_details){
+        $stmt = $this->pdo->prepare("UPDATE vendors SET bankName = ?, accountNumber = ?, accountName = ?, bankBranch = ? WHERE id = ?");
+        return $stmt->execute([
+            $bank_details['bank_name'],
+            $bank_details['account_holder'],
+            $bank_details['account_name'],
+            $bank_details['branch'],
+            $id
+        ]);
+    }
+
+    public function getBank($id){
+        $stmt = $this->pdo->prepare("SELECT bankName, accountNumber, accountName, bankBranch FROM vendors WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function deleteUser($id) {
