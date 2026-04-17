@@ -29,6 +29,10 @@
       <a href="?controller=delivery&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
+
+       <a href="?controller=delivery&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
+        Messages
+      </a>
       
     </nav>
     <div class="button-section">

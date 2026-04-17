@@ -93,7 +93,7 @@ class DeliveryModel
 
         try {
             $this->pdo->exec($sql1);
-            $this->pdo->exec($sql2);
+            $this->pdo->exec($sql2); 
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }

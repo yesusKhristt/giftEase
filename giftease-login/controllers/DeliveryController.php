@@ -3,11 +3,16 @@ class DeliveryController {
     private $delivery;
     private $notification;
 
+    private $messeges;
+
+
     public function __construct($pdo) {
         require_once __DIR__ . '/../models/DeliveryModel.php';
         require_once __DIR__ . '/../models/NotificationModel.php';
+        require_once __DIR__ . '/../models/MessegesModel.php';
         $this->notification = new NotificationModel($pdo);
         $this->delivery = new DeliveryModel($pdo);
+        $this->messeges = new MessegesModel($pdo);
     }
 
     public function dashboard() {
@@ -87,8 +92,8 @@ class DeliveryController {
             case 'cancelOrder':
                 $this->cancelOrder($parts);
                 break;
-            case 'proof':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';
+            case 'messeges':
+                $this->messeges($parts);
                 break;
             case 'settings':
                 $deliveryId = $_SESSION['user']['id'];
@@ -178,4 +183,69 @@ public function history() {
 
     require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
 }
+
+
+public function messeges($parts) {
+        $client_id = $parts[3] ?? '';
+
+        if ($parts[2] === 'send') {
+            $message = trim($_POST['message'] ?? '');
+
+            if ($message === '' && empty($_FILES['attachments']['name'][0])) {
+                echo json_encode(['success' => false, 'error' => 'Empty message']);
+                exit;
+            }
+
+            $attatchmentPath = [];
+
+            if (! empty($_FILES['attachments']['tmp_name'])) {
+
+                $uploadDir = "resources/uploads/delivery/attatchments/";
+                if (! is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                foreach ($_FILES['attachments']['tmp_name'] as $key => $tmpName) {
+
+                    $fileName   = time() . "_" . basename($_FILES['attachments']['name'][$key]);
+                    $targetFile = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($tmpName, $targetFile)) {
+                        $attatchmentPath[] = $fileName;
+                    }
+                }
+            }
+
+            $this->messeges->sendDeliveryMessege(
+                $client_id,
+                $_SESSION['user']['id'],
+                [
+                    'message'      => $message,
+                    'attatchments' => $attatchmentPath,
+                ],
+                0
+            );
+
+            echo json_encode(['success' => true]);
+            exit;
+        }
+        if ($parts[2] == "markRead") {
+            $id = $parts[3];
+
+            $id = (int) $id;
+            if ($id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+                return;
+            }
+
+            $result = $this->messeges->markMessagesAsReadStaff('delivery', $_SESSION['user']['id'], $id);
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => $result]);
+        }
+        if ($parts[2] === 'view') {
+            $myMessages = $this->messeges->getMessageDelivery($_SESSION['user']['id']);
+            require_once __DIR__ . '/../views/Dashboards/Delivery/Messeges.php';
+        }
+    }
 }
