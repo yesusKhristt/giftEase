@@ -6,11 +6,11 @@
   <title>Products</title>
   <link rel="stylesheet" href="public/backup/style.css">
   <link rel="stylesheet" href="public/sideTopBar.css" />
+  <link rel="icon" type="image/png" href="resources/1.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-
   <?php
   $activePage = 'items';
   include 'views/commonElements/leftSidebarChathu.php';
@@ -109,6 +109,11 @@
                 <div style="border-top: 1px solid #eee; padding-top: 10px; text-align: center;">
                   <small style="color: #999;">ID: #<?php echo htmlspecialchars($product['id']); ?></small>
                 </div>
+                <div style="margin-top: 14px; text-align: center;">
+                  <a class="btn1" href="?controller=admin&action=dashboard/items/view/<?= htmlspecialchars($product['id']) ?>">
+                    View Details
+                  </a>
+                </div>
               </div>
             </div>
           <?php endforeach; ?>
@@ -140,7 +145,6 @@
       <?php endif; ?>
     </section>
   </div>
-
 </body>
 
 </html>
