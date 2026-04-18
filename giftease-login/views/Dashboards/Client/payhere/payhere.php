@@ -67,6 +67,7 @@
                 </tr>
             </table>
             <div>
+
                 <button class="btn1" id="payhere-payment">Pay Through Card</button>
                 <form action="?controller=client&action=dashboard/payhere" method="post">
                     <input type="hidden" value="cash" name="method">
@@ -77,6 +78,26 @@
     </div>
 
     <script>
+        document.getElementById('payhere-payment').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            fetch('index.php?controller=client&action=dashboard/payhere', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'method=card'
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+
+                    // Example: redirect if needed
+                    // window.location.href = "some-success-page";
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
         const amountTotal = "<?= number_format($total, 2, '.', '') ?>";
 
         payhere.onCompleted = function(orderId) {
@@ -93,7 +114,7 @@
         };
 
         document.getElementById("payhere-payment").onclick = function() {
-            let ngrokURL = "https://0e81-192-248-22-102.ngrok-free.app"
+            let ngrokURL = "https://3584-112-134-193-75.ngrok-free.app"
             fetch("/giftEase/giftease-login/views/Dashboards/Client/payhere/get-hash.php", {
                     method: "POST",
                     headers: {

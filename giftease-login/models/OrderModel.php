@@ -30,7 +30,7 @@ class OrderModel {
             productPrice INT DEFAULT 0 NOT NULL,
             deliveryPrice INT DEFAULT 0 NOT NULL,
             delivered_at TIMESTAMP DEFAULT NULL,
-            payment_method VARCHAR(10),
+            payment_method VARCHAR(50),
             FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
         );";
         $sql2 = "CREATE TABLE IF NOT EXISTS orderItems (
