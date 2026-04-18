@@ -775,8 +775,8 @@ class AdminController {
                 $role = $_POST['role'];
                 $this->withdraw->aproveWithdrawal($withdraw_id, $_SESSION['user']['id']);
                 if ($role === 'Vendor') $this->vendor->approveWithdraw($userID, $amount);
-                if ($role === 'Delivery') $this->delivery()->approveWithdraw($userID, $amount);
-                if ($role === 'Gift Wrapper') $this->giftwrappers()->approveWithdraw($userID, $amount);
+                if ($role === 'Delivery') $this->delivery->approveWithdraw($userID, $amount);
+                if ($role === 'Gift Wrapper') $this->giftWrapper->approveWithdraw($userID, $amount);
             }
             if ($parts[2] == 'reject') {
                 $withdraw_id = $_POST['withdraw_id'];
@@ -785,8 +785,8 @@ class AdminController {
                 $role = $_POST['role'];
                 $this->withdraw->rejectWithdrawal($withdraw_id, $_SESSION['user']['id']);
                 if ($role === 'Vendor') $this->vendor->rejectWithdraw($userID, $amount);
-                if ($role === 'Delivery') $this->delivery()->rejectWithdraw($userID, $amount);
-                if ($role === 'Gift Wrapper') $this->giftwrappers()->rejectWithdraw($userID, $amount);
+                if ($role === 'Delivery') $this->delivery->rejectWithdraw($userID, $amount);
+                if ($role === 'Gift Wrapper') $this->giftWrapper->rejectWithdraw($userID, $amount);
             }
         }
         $pending = $this->withdraw->getWithdrawRequestsPending();
