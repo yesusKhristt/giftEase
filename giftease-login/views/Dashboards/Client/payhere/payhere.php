@@ -93,7 +93,7 @@
         };
 
         document.getElementById("payhere-payment").onclick = function() {
-            let ngrokURL = "https://localhost"
+            let ngrokURL = "https://0e81-192-248-22-102.ngrok-free.app"
             fetch("/giftEase/giftease-login/views/Dashboards/Client/payhere/get-hash.php", {
                     method: "POST",
                     headers: {

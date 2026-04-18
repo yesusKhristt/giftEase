@@ -133,8 +133,9 @@ class giftWrapperController {
             exit;
         }
 
-        $services = $this->giftWrapperService->getServicesByGiftWrapper($giftWrapperId);
-        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/service.php';
+        // $services = $this->giftWrapperService->getServicesByGiftWrapper($giftWrapperId);
+        $packages = $this->giftWrapping->getGiftWrappingPackages();
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/wrappingPackages.php';
     }
 
     public function history($parts) {
