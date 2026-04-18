@@ -31,7 +31,10 @@ class OrderModel {
             deliveryPrice INT DEFAULT 0 NOT NULL,
             delivered_at TIMESTAMP DEFAULT NULL,
             payment_method VARCHAR(50),
-            FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
+            clearance BOOL DEFAULT FALSE,
+            FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
+            FOREIGN KEY (delivery_id) REFERENCES delivery(id) ON DELETE CASCADE,
+            FOREIGN KEY (giftWrapper_id) REFERENCES giftwrappers(id) ON DELETE CASCADE
         );";
         $sql2 = "CREATE TABLE IF NOT EXISTS orderItems (
             order_id INT NOT NULL,
@@ -40,19 +43,9 @@ class OrderModel {
             PRIMARY KEY (order_id, item_id),
             FOREIGN KEY (item_id) REFERENCES products(id) ON DELETE CASCADE
         );";
-        $sql3 = "CREATE TABLE IF NOT EXISTS orderStatus (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            giftwrapper_id INT NOT NULL,
-            order_id INT,
-            is_wrapped BOOLEAN DEFAULT FALSE,
-            is_delivered BOOLEAN DEFAULT FALSE,
-            FOREIGN KEY (giftwrapper_id) REFERENCES giftwrappers(id) ON DELETE CASCADE,
-            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-        );";
         try {
             $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
-            $this->pdo->exec($sql3);
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
@@ -188,6 +181,28 @@ class OrderModel {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$vendorId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function approveOrder($order_id){
+        $stmt3 = $this->pdo->prepare(
+            "UPDATE orders SET clearance = 1 WHERE id = ?"
+        );
+
+        $stmt3->execute([$order_id]);
+    }
+
+    public function getPendingOrders() {
+        $stmt = $this->pdo->prepare("SELECT o.*, COALESCE(cw.price, gwp.price, 0) AS wrapPrice, (o.productPrice + o.deliveryPrice + COALESCE(cw.price, gwp.price, 0)) AS totalPrice
+            FROM orders o LEFT JOIN customWrap cw ON o.customWrap_id = cw.id LEFT JOIN giftWrappingPackages gwp ON o.wrapPackage_id = gwp.id WHERE is_wrapped = 1 AND is_delivered = 1 AND clearance = 0;");
+        $stmt->execute([]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllOrders() {
+        $stmt = $this->pdo->prepare("SELECT o.*, COALESCE(cw.price, gwp.price, 0) AS wrapPrice, (o.productPrice + o.deliveryPrice + COALESCE(cw.price, gwp.price, 0)) AS totalPrice
+            FROM orders o LEFT JOIN customWrap cw ON o.customWrap_id = cw.id LEFT JOIN giftWrappingPackages gwp ON o.wrapPackage_id = gwp.id;");
+        $stmt->execute([]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function confirmOrder($data, $client_id, $method) {

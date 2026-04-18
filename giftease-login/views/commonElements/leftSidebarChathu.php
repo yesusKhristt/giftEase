@@ -13,6 +13,9 @@
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
+    <a href="?controller=admin&action=dashboard/orders" class="nav-item <?= isActive('orders', $activePage) ?>">
+      Orders
+    </a>
     <a href="?controller=admin&action=dashboard/reports" class="nav-item <?= isActive('reports', $activePage) ?>">
       Reports
     </a>

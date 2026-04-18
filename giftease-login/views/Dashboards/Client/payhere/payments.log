@@ -12,3 +12,8 @@ Controller response: <br />
 <br />
 <b>Warning</b>:  Trying to access array offset on null in <b>C:\laragon\www\giftEase\giftease-login\controllers\ClientController.php</b> on line <b>35</b><br />
 
+13 SUCCESS
+14 | PayHere ID: 320032594050 SUCCESS
+2 | PayHere ID: 320032594054 SUCCESS
+3 | PayHere ID: 320032594056 SUCCESS
+4 | PayHere ID: 320032594057 SUCCESS

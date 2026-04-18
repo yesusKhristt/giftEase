@@ -78,31 +78,12 @@
     </div>
 
     <script>
-        document.getElementById('payhere-payment').addEventListener('click', function(e) {
-            e.preventDefault();
-
-            fetch('index.php?controller=client&action=dashboard/payhere', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'method=card'
-                })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-
-                    // Example: redirect if needed
-                    // window.location.href = "some-success-page";
-                })
-                .catch(error => console.error('Error:', error));
-        });
-
         const amountTotal = "<?= number_format($total, 2, '.', '') ?>";
+        let ngrokURL = "https://3584-112-134-193-75.ngrok-free.app";
 
         payhere.onCompleted = function(orderId) {
             console.log("Payment completed. OrderID:", orderId);
-            // You can redirect to success page here if needed
+            window.location.href = "index.php?controller=client&action=dashboard/tracking";
         };
 
         payhere.onDismissed = function() {
@@ -113,23 +94,36 @@
             console.log("PayHere Error:", error);
         };
 
-        document.getElementById("payhere-payment").onclick = function() {
-            let ngrokURL = "https://3584-112-134-193-75.ngrok-free.app"
-            fetch("/giftEase/giftease-login/views/Dashboards/Client/payhere/get-hash.php", {
-                    method: "POST",
+        document.getElementById("payhere-payment").addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Step 1: Create the order in DB first via AJAX
+            fetch('index.php?controller=client&action=dashboard/payhere', {
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json"
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: JSON.stringify({
-                        order_id: "ORDER_" + Date.now(),
-                        amount: amountTotal,
-                        currency: "LKR"
-                    })
+                    body: 'method=card'
                 })
-                .then(res => res.json())
+                .then(response => response.json()) // ← your controller must return JSON with order_id
+                .then(orderData => {
+                    const dbOrderId = orderData.order_id; // ← DB order ID
 
+                    // Step 2: Get PayHere hash using the DB order ID
+                    return fetch("/giftEase/giftease-login/views/Dashboards/Client/payhere/get-hash.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            order_id: dbOrderId,
+                            amount: amountTotal,
+                            currency: "LKR"
+                        })
+                    }).then(res => res.json());
+                })
                 .then(data => {
-
+                    // Step 3: Launch PayHere popup
                     var payment = {
                         sandbox: true,
                         merchant_id: "1233868",
@@ -154,8 +148,9 @@
                     };
 
                     payhere.startPayment(payment);
-                });
-        };
+                })
+                .catch(error => console.error('Error:', error));
+        });
     </script>
 
 </body>

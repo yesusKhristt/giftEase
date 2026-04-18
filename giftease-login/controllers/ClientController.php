@@ -477,49 +477,60 @@ class ClientController {
     }
 
     public function payhereNotify($parts) {
-        if($_SESSION['checkout']['method'])
-        $this->completeOrder($parts);
+        if ($_SESSION['checkout']['method'])
+            $this->completeOrder($parts);
     }
 
     public function payhere($parts) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['checkout']['method'] = $_POST['method'];
+            $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+            $_SESSION['checkout']['cart'] = $cartItems;
+            if($_SESSION['checkout']['wrap']['mode'] === 'custom'){
+                $wrap_id = $this->giftWrapper->addCustomWrap($_SESSION['checkout']['wrap']);
+            }
+            else if($_SESSION['checkout']['wrap']['mode'] === 'package'){
+                $wrap_id = $_SESSION['checkout']['wrap']['packageId'];
+            }
+            
+
+            $method = $_POST['method'];
+
+            $_SESSION['checkout']['wrap']['id'] = $wrap_id;
+
+
+            $order_id = $this->orders->confirmOrder($_SESSION['checkout'], $_SESSION['user']['id'], $method);
+
+            $notificationTitle = "Order Placed!";
+            $notificationMessege = "Your Order has been successfully Placed consisting of ";
+            $href = "?controller=client&action=dashboard/tracking/" . $order_id;
+            foreach ($_SESSION['checkout']['cart'] as $row) {
+                $product_id = $row['product_id'];
+                $vendor_id = $row['vendor_id'];
+                $name = $row['name'];
+                $notificationMessege = $notificationMessege . $name . ' ';
+
+                $notificationTitleVendor = "You have a new Order!";
+                $notificationMessegeVendor = "You have a new order, order" . $order_id . " for the item ID" . $product_id . " named " . "'" . $name . "'";
+                $hrefVendor = "?controller=vendor&action=dashboard/item/view/" . $product_id;
+                $this->notification->notifyVendor($vendor_id, $notificationTitleVendor, $notificationMessegeVendor, $hrefVendor);
+            }
+            $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+            $this->cart->emptyCart($_SESSION['user']['id']);
+            unset($_SESSION['checkout']);
+
+            if ($method === 'card') {
+                echo json_encode(['order_id' => $order_id]);
+                exit;
+            }
+
+            header("Location: index.php?controller=client&action=dashboard/tracking  ");
+            exit;
             $this->completeOrder($parts);
         }
         require_once __DIR__ . '/../views/Dashboards/Client/payhere/payhere.php';
     }
 
     private function completeOrder($parts) {
-        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
-        $_SESSION['checkout']['cart'] = $cartItems;
-        $wrap_id = $this->giftWrapper->addCustomWrap($_SESSION['checkout']['wrap']);
-
-        $method = $_SESSION['checkout']['method'];
-
-        $_SESSION['checkout']['wrap']['id'] = $wrap_id;
-
-
-        $order_id = $this->orders->confirmOrder($_SESSION['checkout'], $_SESSION['user']['id'], $method);
-        $notificationTitle = "Order Placed!";
-        $notificationMessege = "Your Order has been successfully Placed consisting of ";
-        $href = "?controller=client&action=dashboard/tracking/" . $order_id;
-        foreach ($_SESSION['checkout']['cart'] as $row) {
-            $product_id = $row['product_id'];
-            $vendor_id = $row['vendor_id'];
-            $name = $row['name'];
-            $notificationMessege = $notificationMessege . $name . ' ';
-
-            $notificationTitleVendor = "You have a new Order!";
-            $notificationMessegeVendor = "You have a new order, order" . $order_id . " for the item ID" . $product_id . " named " . "'" . $name . "'";
-            $hrefVendor = "?controller=vendor&action=dashboard/item/view/" . $product_id;
-            $this->notification->notifyVendor($vendor_id, $notificationTitleVendor, $notificationMessegeVendor, $hrefVendor);
-        }
-        $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
-        $this->cart->emptyCart($_SESSION['user']['id']);
-        unset($_SESSION['checkout']);
-
-        header("Location: index.php?controller=client&action=dashboard/tracking  ");
-        exit;
     }
 
     public function account($parts) {

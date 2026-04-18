@@ -8,6 +8,7 @@ class AdminController {
     private $admin;
     private $vendor;
     private $withdraw;
+    private $orders;
 
     public function __construct($pdo) {
         require_once __DIR__ . '/../models/CategoryModel.php';
@@ -18,6 +19,7 @@ class AdminController {
         require_once __DIR__ . '/../models/AdminModel.php';
         require_once __DIR__ . '/../models/VendorModel.php';
         require_once __DIR__ . '/../models/WithdrawModel.php';
+        require_once __DIR__ . '/../models/OrderModel.php';
         $this->giftWrapping = new GiftWrappingModel($pdo);
         $this->giftWrapper = new GiftWrapperModel($pdo);
         $this->category = new CategoryModel($pdo);
@@ -26,6 +28,7 @@ class AdminController {
         $this->admin = new AdminModel($pdo);
         $this->vendor = new VendorModel($pdo);
         $this->withdraw = new WithdrawModel($pdo);
+        $this->orders = new OrderModel($pdo);
     }
 
 
@@ -756,7 +759,9 @@ class AdminController {
             case 'logout':
                 $this->handleLogout();
                 break;
-
+            case 'orders':
+                $this->orders($parts);
+                break;
             case 'reports':
                 $this->reports($parts);
                 break;
@@ -764,6 +769,44 @@ class AdminController {
                 $this->reports($parts);
                 break;
         }
+    }
+
+    public function orders($parts) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($parts[2] == 'approve') {
+                $order_id = $_POST['order_id'];
+
+                $vendorsAndProducts = $this->vendor->getVendorsOnOrder($order_id);
+
+                $totals = [];
+
+                foreach ($vendorsAndProducts as $row) {
+                    $vendorId = $row['vendor_id'];
+                    $amount = $row['price'] * $row['quantity'];
+
+                    if (!isset($totals[$vendorId])) {
+                        $totals[$vendorId] = 0;
+                    }
+
+                    $totals[$vendorId] += $amount;
+                }
+
+                foreach ($totals as $vendorId => $total) {
+                    $this->vendor->addToBalance($vendorId, $total);
+                }
+                $delivery_id = $_POST['delivery_id'];
+                $giftWrapper_id = $_POST['giftWrapper_id'];
+                $wrappingPrice = $_POST['wrappingPrice'];
+                $deliveryPrice = $_POST['deliveryPrice'];
+
+                $this->orders->approveOrder($order_id);
+                $this->giftWrapper->addToBalance($giftWrapper_id, $wrappingPrice);
+                $this->delivery->addToBalance($delivery_id, $deliveryPrice);
+            }
+        }
+        $pendingOrders = $this->orders->getPendingOrders();
+        $allOrders = $this->orders->getAllOrders();
+        require_once __DIR__ . '/../views/Dashboards/Admin/orders.php';
     }
 
     public function Withdraw($parts) {

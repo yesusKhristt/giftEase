@@ -53,6 +53,32 @@ class VendorModel {
         }
     }
 
+    public function getVendorsOnOrder($orderID) {
+        $stmt = $this->pdo->prepare("
+                SELECT 
+                v.id AS vendor_id,
+                p.price,
+                oi.quantity
+
+            FROM orderItems oi
+
+            JOIN products p 
+                ON oi.item_id = p.id
+
+            JOIN vendors v 
+                ON p.vendor_id = v.id
+
+            WHERE oi.order_id = ?;
+        ");
+        $stmt->execute([$orderID]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function addToBalance($id, $price) {
+        $currAccountBalance = $this->getAccountBalance($id);
+        $this->setAccountBalance($id, $currAccountBalance + $price);
+    }
+
     public function getAccountBalance($id) {
         $stmt = $this->pdo->prepare("SELECT accountBalance FROM vendors WHERE id = ?");
         $stmt->execute([$id]);
@@ -75,19 +101,19 @@ class VendorModel {
         $stmt->execute([$amount, $id]);
     }
 
-    public function withdrawMoney($id, $amount){
+    public function withdrawMoney($id, $amount) {
         $currAccountBalance = $this->getAccountBalance($id);
         $currPendingBalance = $this->getPendingBalance($id);
         $this->setAccountBalance($id, $currAccountBalance - $amount);
         $this->setPendingBalance($id, $currPendingBalance + $amount);
     }
 
-    public function approveWithdraw($id, $amount){
+    public function approveWithdraw($id, $amount) {
         $currPendingBalance = $this->getPendingBalance($id);
         $this->setPendingBalance($id, $currPendingBalance - $amount);
     }
 
-    public function rejectWithdraw($id, $amount){
+    public function rejectWithdraw($id, $amount) {
         $currAccountBalance = $this->getAccountBalance($id);
         $currPendingBalance = $this->getPendingBalance($id);
         $this->setAccountBalance($id, $currAccountBalance + $amount);
@@ -168,7 +194,7 @@ class VendorModel {
         ]);
     }
 
-    public function saveBank($id, $bank_details){
+    public function saveBank($id, $bank_details) {
         $stmt = $this->pdo->prepare("UPDATE vendors SET bankName = ?, accountNumber = ?, accountName = ?, bankBranch = ? WHERE id = ?");
         return $stmt->execute([
             $bank_details['bank_name'],
@@ -179,7 +205,7 @@ class VendorModel {
         ]);
     }
 
-    public function getBank($id){
+    public function getBank($id) {
         $stmt = $this->pdo->prepare("SELECT bankName, accountNumber, accountName, bankBranch FROM vendors WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

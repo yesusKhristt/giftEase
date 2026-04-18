@@ -88,6 +88,11 @@ class DeliveryModel {
         }
     }
 
+    public function addToBalance($id, $price) {
+        $currAccountBalance = $this->getAccountBalance($id);
+        $this->setAccountBalance($id, $currAccountBalance + $price);
+    }
+
     public function getAccountBalance($id) {
         $stmt = $this->pdo->prepare("SELECT accountBalance FROM delivery WHERE id = ?");
         $stmt->execute([$id]);
