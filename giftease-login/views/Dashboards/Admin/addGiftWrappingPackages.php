@@ -5,72 +5,73 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Gift Wrapping Package - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/backup/style.css">
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-   
-        <?php
-        $activePage = 'giftWrapping';
-        include 'views/commonElements/leftSidebarChathu.php';
-        ?>
-        <div class="main-content">
 
-            <div class="page-header">
-                <h1 class="title">Add Gift Wrapping Package</h1>
-                <p class="subtitle">Create a new gift wrapping package for customers</p>
-            </div>
-            <form method="POST" action="?controller=admin&action=dashboard/addGiftWrappingPackages" id="uploadForm"
-                enctype="multipart/form-data">
-                <table class="table">
-                    <tr>
-                        <td style="width:15%" class="subtitle">Package Title</td>
-                        <td colspan="2">
-                            <input type="text" id="title" name="title" placeholder="Enter package title" required>
-                        </td>
-                    </tr>
+    <?php
+    $activePage = 'giftWrapping';
+    include 'views/commonElements/leftSidebarChathu.php';
+    ?>
+    <div class="main-content">
 
-                    <tr>
-                        <td class="subtitle">Price</td>
-                        <td colspan="2">
-                            <input type="number" id="price" name="price" placeholder="Price" min="1" required>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="subtitle">Description</td>
-                        <td colspan="2">
-                            <textarea name="description" rows="10" cols="50"
-                                placeholder="Enter package description" required></textarea>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="subtitle">Upload Images</td>
-                        <td colspan="2">
-                            <input type="file" id="fileInput" name="images[]" multiple style="display:none;"
-                                accept="image/*">
-
-                            <div class="upload-area" id="uploadArea">
-                                <i class="fas fa-cloud-upload-alt" style="font-size:3rem; color:#3498db;"></i>
-                                <h4>Drop files here or click to upload</h4>
-                                <p>Supported formats: JPG, PNG (Max 10MB)</p>
-                            </div>
-
-                            <div id="preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;"></div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><button type="submit" class="btn1">Submit</button></td>
-                        <td><button type="reset" class="btn2">Reset</button></td>
-                    </tr>
-                </table>
-            </form>
+        <div class="page-header">
+            <h1 class="title">Add Gift Wrapping Package</h1>
+            <p class="subtitle">Create a new gift wrapping package for customers</p>
         </div>
-    
+        <form method="POST" action="?controller=admin&action=dashboard/addGiftWrappingPackages" id="uploadForm"
+            enctype="multipart/form-data">
+            <table class="table">
+                <tr>
+                    <td style="width:15%" class="subtitle">Package Title</td>
+                    <td colspan="2">
+                        <input type="text" id="title" name="title" placeholder="Enter package title" required>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="subtitle">Price</td>
+                    <td colspan="2">
+                        <input type="number" id="price" name="price" placeholder="Price" min="1" required>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="subtitle">Description</td>
+                    <td colspan="2">
+                        <textarea name="description" rows="10" cols="50"
+                            placeholder="Enter package description" required></textarea>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="subtitle">Upload Images</td>
+                    <td colspan="2">
+                        <input type="file" id="fileInput" name="images[]" multiple style="display:none;"
+                            accept="image/*">
+
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt" style="font-size:3rem; color:#3498db;"></i>
+                            <h4>Drop files here or click to upload</h4>
+                            <p>Supported formats: JPG, PNG (Max 10MB)</p>
+                        </div>
+
+                        <div id="preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;"></div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><button type="submit" class="btn1">Submit</button></td>
+                    <td><button type="reset" class="btn2">Reset</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
 
     <script>
         let selectedFiles = [];

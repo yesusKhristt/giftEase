@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Withdraw Requests - GiftEase</title>
-  <link rel="stylesheet" href="public/style.css">
+  <link rel="stylesheet" href="public/backup/style.css">
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link rel="icon" type="image/png" href="resources/1.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
@@ -82,8 +83,10 @@
       display: flex;
       /* stack vertically */
       gap: 8px;
-      justify-content: center;  /* horizontal */
-      align-items: center;      /* vertical */
+      justify-content: center;
+      /* horizontal */
+      align-items: center;
+      /* vertical */
       /* optional: makes buttons full width */
     }
 

@@ -48,11 +48,21 @@ class DeliveryController {
         $notificationMessege = "Your Order was picked up by " . $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'];
         $href = "?controller=client&action=dashboard/messeges/delivery/view/" . $_SESSION['user']['id'] . "/direct";
         $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+
+        $notificationTitle = "You have a new delivery!";
+        $notificationMessege = "You've assigned yourself the delivery of order " . $order_id;
+        $href = "?controller=delivery&action=dashboard/assignedOrder";
+        $this->notification->notifyDelivery($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+
         header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
         exit;
     }
 
     public function markComplete($parts) {
+        $notificationTitle = "Delivery Complete!";
+        $notificationMessege = "Your Order has been successfully delivered";
+        $href = "?controller=client&action=dashboard/notifications";
+        $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
 
         $this->delivery->markComplete($parts[2]);
         header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
@@ -60,8 +70,15 @@ class DeliveryController {
     }
 
     public function cancelOrder($parts) {
+        $order_id = $parts[2];
 
-        $this->delivery->cancelOrder($parts[2]);
+        $this->delivery->cancelOrder($order_id);
+
+        $notificationTitle = "You cancelled a delivery!";
+        $notificationMessege = "You've cancelled your delivery of order " . $order_id;
+        $href = "?controller=delivery&action=dashboard/notification";
+        $this->notification->notifyDelivery($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+
         header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
         exit;
     }

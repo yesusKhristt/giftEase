@@ -249,7 +249,7 @@ class OrderModel {
 
             $stmt2->execute([
                 $order_id,
-                $item['id'],
+                $item['product_id'],
                 $item['quantity']
             ]);
         }

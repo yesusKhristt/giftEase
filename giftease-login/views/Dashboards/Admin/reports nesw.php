@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Reports & Analytics</title>
-    <link rel="stylesheet" href="public/style.css">
+    <link rel="stylesheet" href="public/backup/style.css">
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -151,7 +152,8 @@
             border-collapse: collapse;
         }
 
-        .top-products th, .top-products td {
+        .top-products th,
+        .top-products td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #fedbd2;
@@ -170,141 +172,127 @@
 
 <body>
 
-        <?php
-        $activePage = 'reports';
-        include 'views/commonElements/leftSidebarChathu.php';
-        
-        // Extract report data (passed from controller)
-        $totalOrders = $reportData['totalOrders'] ?? 0;
-        $totalProducts = $reportData['totalProducts'] ?? 0;
-        $totalClients = $reportData['totalClients'] ?? 0;
-        $totalVendors = $reportData['totalVendors'] ?? 0;
-        $totalRevenue = $reportData['totalRevenue'] ?? 0;
-        $monthlyGrowth = $reportData['monthlyGrowth'] ?? 0;
-        $topCategory = $reportData['topCategory'] ?? 'N/A';
-        $customerRetention = $reportData['customerRetention'] ?? 0;
-        $ordersByMonth = $reportData['ordersByMonth'] ?? [];
-        $topSellingProducts = $reportData['topSellingProducts'] ?? [];
-        $salesByCategory = $reportData['salesByCategory'] ?? [];
-        ?>
-        <div class="main-content">
-            <section id="reports" class="page active" aria-labelledby="reports-title">
-                <div class="page-header">
-                    <h1 class="title">Reports & Analytics</h1>
-                    <p class="subtitle">View business insights and generate reports</p>
-                </div>
+    <?php
+    $activePage = 'reports';
+    include 'views/commonElements/leftSidebarChathu.php';
 
-                <!-- Summary Cards -->
-                <section class="summary-cards">
-                    <div class="summary-card">
-                        <i class="fas fa-shopping-cart"></i>
-                        <h3>Total Orders</h3>
-                        <p><?php echo number_format($totalOrders); ?></p>
-                    </div>
-                    <div class="summary-card">
-                        <i class="fas fa-box"></i>
-                        <h3>Total Products</h3>
-                        <p><?php echo number_format($totalProducts); ?></p>
-                    </div>
-                    <div class="summary-card">
-                        <i class="fas fa-users"></i>
-                        <h3>Total Clients</h3>
-                        <p><?php echo number_format($totalClients); ?></p>
-                    </div>
-                    <div class="summary-card">
-                        <i class="fas fa-store"></i>
-                        <h3>Total Vendors</h3>
-                        <p><?php echo number_format($totalVendors); ?></p>
-                    </div>
-                    <div class="summary-card">
-                        <i class="fas fa-dollar-sign"></i>
-                        <h3>Total Revenue</h3>
-                        <p>Rs. <?php echo number_format($totalRevenue); ?></p>
-                    </div>
-                </section>
-
-                <!-- Report Buttons -->
-                <div class="report-buttons">
-                    <button class="card">
-                        <h4><i class="fas fa-store"></i> Vendor Report</h4>
-                    </button>
-                    <button class="card">
-                        <h4><i class="fas fa-box"></i> Items Report</h4>
-                    </button>
-                    <button class="card">
-                        <h4><i class="fas fa-calendar-day"></i> Daily Summary</h4>
-                    </button>
-                    <button class="card">
-                        <h4><i class="fas fa-chart-pie"></i> Cost Analysis</h4>
-                    </button>
-                </div>
-
-            </section>
-
-            <!-- Analytics Cards -->
-            <section class="cards">
-                <div class="card">
-                    <h3>Monthly Growth</h3>
-                    <p class="<?php echo $monthlyGrowth >= 0 ? 'positive' : 'negative'; ?>">
-                        <?php echo ($monthlyGrowth >= 0 ? '+' : '') . $monthlyGrowth; ?>%
-                    </p>
-                </div>
-                <div class="card">
-                    <h3>Top Category</h3>
-                    <p><?php echo htmlspecialchars($topCategory); ?></p>
-                </div>
-                <div class="card">
-                    <h3>Customer Retention</h3>
-                    <p><?php echo $customerRetention; ?>%</p>
-                </div>
-                <div class="card">
-                    <h3>Avg Order Value</h3>
-                    <p>Rs. <?php echo $totalOrders > 0 ? number_format($totalRevenue / $totalOrders) : 0; ?></p>
-                </div>
-            </section>
-
-            <!-- Charts -->
-            <section class="charts">
-                <div class="chart-container">
-                    <h3>Orders & Revenue (Last 6 Months)</h3>
-                    <canvas id="ordersChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Sales by Category</h3>
-                    <canvas id="categoryChart"></canvas>
-                </div>
-            </section>
-
-            <!-- Top Selling Products -->
-            <div class="top-products">
-                <h3><i class="fas fa-trophy"></i> Top Selling Products</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Product Name</th>
-                            <th>Units Sold</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($topSellingProducts)): ?>
-                            <tr>
-                                <td colspan="3" style="text-align: center; color: #999;">No sales data available</td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($topSellingProducts as $index => $product): ?>
-                                <tr>
-                                    <td><?php echo $index + 1; ?></td>
-                                    <td><?php echo htmlspecialchars($product['name']); ?></td>
-                                    <td><?php echo number_format($product['total_sold']); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+    // Extract report data (passed from controller)
+    $totalOrders = $reportData['totalOrders'] ?? 0;
+    $totalProducts = $reportData['totalProducts'] ?? 0;
+    $totalClients = $reportData['totalClients'] ?? 0;
+    $totalVendors = $reportData['totalVendors'] ?? 0;
+    $totalRevenue = $reportData['totalRevenue'] ?? 0;
+    $monthlyGrowth = $reportData['monthlyGrowth'] ?? 0;
+    $topCategory = $reportData['topCategory'] ?? 'N/A';
+    $customerRetention = $reportData['customerRetention'] ?? 0;
+    $ordersByMonth = $reportData['ordersByMonth'] ?? [];
+    $topSellingProducts = $reportData['topSellingProducts'] ?? [];
+    $salesByCategory = $reportData['salesByCategory'] ?? [];
+    ?>
+    <div class="main-content">
+        <section id="reports" class="page active" aria-labelledby="reports-title">
+            <div class="page-header">
+                <h1 class="title">Reports & Analytics</h1>
+                <p class="subtitle">View business insights and generate reports</p>
             </div>
+
+            <!-- Summary Cards -->
+            <section class="summary-cards">
+                <div class="summary-card">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Total Orders</h3>
+                    <p><?php echo number_format($totalOrders); ?></p>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-box"></i>
+                    <h3>Total Products</h3>
+                    <p><?php echo number_format($totalProducts); ?></p>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Total Clients</h3>
+                    <p><?php echo number_format($totalClients); ?></p>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-store"></i>
+                    <h3>Total Vendors</h3>
+                    <p><?php echo number_format($totalVendors); ?></p>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3>Total Revenue</h3>
+                    <p>Rs. <?php echo number_format($totalRevenue); ?></p>
+                </div>
+            </section>
+
+          
+
+        </section>
+
+        <!-- Analytics Cards -->
+        <section class="cards">
+            <div class="card">
+                <h3>Monthly Growth</h3>
+                <p class="<?php echo $monthlyGrowth >= 0 ? 'positive' : 'negative'; ?>">
+                    <?php echo ($monthlyGrowth >= 0 ? '+' : '') . $monthlyGrowth; ?>%
+                </p>
+            </div>
+            <div class="card">
+                <h3>Top Category</h3>
+                <p><?php echo htmlspecialchars($topCategory); ?></p>
+            </div>
+            <div class="card">
+                <h3>Customer Retention</h3>
+                <p><?php echo $customerRetention; ?>%</p>
+            </div>
+            <div class="card">
+                <h3>Avg Order Value</h3>
+                <p>Rs. <?php echo $totalOrders > 0 ? number_format($totalRevenue / $totalOrders) : 0; ?></p>
+            </div>
+        </section>
+
+        <!-- Charts -->
+        <section class="charts">
+            <div class="chart-container">
+                <h3>Orders & Revenue (Last 6 Months)</h3>
+                <canvas id="ordersChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Sales by Category</h3>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Top Selling Products -->
+        <div class="top-products">
+            <h3><i class="fas fa-trophy"></i> Top Selling Products</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Product Name</th>
+                        <th>Units Sold</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($topSellingProducts)): ?>
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #999;">No sales data available</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($topSellingProducts as $index => $product): ?>
+                            <tr>
+                                <td><?php echo $index + 1; ?></td>
+                                <td><?php echo htmlspecialchars($product['name']); ?></td>
+                                <td><?php echo number_format($product['total_sold']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
-    
+    </div>
+
 
     <script>
         // Prepare data for charts
@@ -317,8 +305,7 @@
             type: 'bar',
             data: {
                 labels: ordersByMonth.map(item => item.month),
-                datasets: [
-                    {
+                datasets: [{
                         label: 'Orders',
                         data: ordersByMonth.map(item => item.total_orders),
                         backgroundColor: '#ff8a8a',
@@ -342,13 +329,21 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        title: { display: true, text: 'Orders' }
+                        title: {
+                            display: true,
+                            text: 'Orders'
+                        }
                     },
                     y1: {
                         beginAtZero: true,
                         position: 'right',
-                        title: { display: true, text: 'Revenue (Rs.)' },
-                        grid: { drawOnChartArea: false }
+                        title: {
+                            display: true,
+                            text: 'Revenue (Rs.)'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
                     }
                 }
             }
