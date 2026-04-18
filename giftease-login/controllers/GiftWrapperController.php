@@ -56,6 +56,12 @@ class giftWrapperController
         exit;
     }
 
+    public function viewOrder($parts)
+    {  
+        $customwrap= $this->giftWrapping->getCustomWrapByOrderId($parts[2]);
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/orderDetails.php';
+    }
+
     public function markComplete($parts)
     {
 
@@ -135,6 +141,9 @@ class giftWrapperController
                 break;
             case 'cancelOrder':
                 $this->cancelOrder($level1);
+                break;
+            case 'viewOrder':
+                $this->viewOrder($level1);
                 break;
             case 'earnings':
                 header("Location: index.php?controller=giftWrapper&action=dashboard/history");

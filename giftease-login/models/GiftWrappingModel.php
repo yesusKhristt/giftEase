@@ -487,9 +487,32 @@ class GiftWrappingModel
         ]);
     }
 
-    
+    public function getCustomWrapByOrderId($orderId)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                orders.id AS id,
+                boxWrap.name AS boxName, 
+                paperBag.name AS bagName, 
+                paperBagRibbon.name AS bagDecoName, 
+                boxRibbon.name AS boxDecoName, 
+                cards.name AS cardName, 
+                softToys.name AS softToyName, 
+                chocolates.name AS chocolateName 
+            FROM orders
+            JOIN customWrap ON orders.customWrap_id = customWrap.id
+            LEFT JOIN boxWrap ON customWrap.box = boxWrap.id 
+            LEFT JOIN paperBag ON customWrap.bag = paperBag.id 
+            LEFT JOIN paperBagRibbon ON customWrap.bagDeco = paperBagRibbon.id 
+            LEFT JOIN boxRibbon ON customWrap.boxDeco = boxRibbon.id 
+            LEFT JOIN cards ON customWrap.card = cards.id 
+            LEFT JOIN softToys ON customWrap.softToy = softToys.id 
+            LEFT JOIN chocolates ON customWrap.chocolate = chocolates.id 
+            WHERE orders.id = ?
+        ");
+        $stmt->execute([$orderId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
 }
-
-
 ?>
