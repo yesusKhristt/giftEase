@@ -16,6 +16,10 @@
         class="settings-btn <?= isActive('settings', $activePage) ?>">
         <i class="fa fa-credit-card" aria-hidden="true"></i>
       </a>
+      <a href="?controller=vendor&action=dashboard/notifications"
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
+        <i class="fas fa-bell"></i>
+      </a>
       <a href="?controller=vendor&action=dashboard/account"
         class="settings-btn <?= isActive('account', $activePage) ?>">
         <i class="fas fa-user"></i>

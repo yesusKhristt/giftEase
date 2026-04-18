@@ -15,7 +15,7 @@
     <div class="container">
         <?php
         $activePage = 'allOrder';
-        include 'views\commonElements/leftSidebar.php';
+        include 'views\commonElements/leftSidebarSaneth.php';
         ?>
         <div class="main-content">
             <div class="page-header">
@@ -75,7 +75,7 @@
 </body>
 <script>
     async function loadPage(href, id) {
-        const url = "?controller=vendor&action=dashboard/notificationViewed/" + id;
+        const url = "?controller=delivery&action=dashboard/notificationViewed/" + id;
 
         const response = await fetch(url, {
             method: "GET",

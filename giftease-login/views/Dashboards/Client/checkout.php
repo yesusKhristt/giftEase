@@ -86,10 +86,6 @@ if (isset($_POST['deliveryDistance'])) {
                             </select>
                         </div>
 
-                        <?php
-                        var_dump($_SESSION['checkout']['cart'])
-                        ?>
-
                         <div class="field">
                             <label for="deliveryDate">Delivery Date</label>
                             <input id="deliveryDate" name="deliveryDate" type="date">

@@ -53,11 +53,22 @@ class giftWrapperController {
         $name = $_SESSION['first_name'] . ' ' . $_SESSION['last_name'];
         $notificationMessege = $notificationMessege . $name;
         $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+
+        $notificationTitle = "You have a new wrap Order!";
+        $notificationMessege = "You've assigned yourself the wrapping of order " . $order_id;
+        $href = "?controller=giftWrapper&action=dashboard/assignedOrder";
+        $this->notification->notifyGiftWrapper($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+
         header("Location: index.php?controller=giftWrapper&action=dashboard/assignedOrder");
         exit;
     }
 
     public function markComplete($parts) {
+        $client_id = $parts[3];
+        $notificationTitle = "Wrapping Complete!";
+        $notificationMessege = "Your Order has been successfully wrapped";
+        $href = "?controller=client&action=dashboard/notifications";
+        $this->notification->notifyClient($client_id, $notificationTitle, $notificationMessege, $href);
 
         $this->giftwrapper->markComplete($parts[2]);
         header("Location: index.php?controller=giftWrapper&action=dashboard/assignedOrder");
@@ -65,11 +76,24 @@ class giftWrapperController {
     }
 
     public function cancelOrder($parts) {
+        $order_id = $parts[2];
+        $client_id = $parts[3];
+        $this->giftwrapper->cancelOrder($order_id);
 
-        $this->giftwrapper->cancelOrder($parts[2]);
+        $notificationTitle = "You cancelled a wrapping order!";
+        $notificationMessege = "You've cancelled the wrapping of order " . $order_id;
+        $href = "?controller=giftWrapper&action=dashboard/notification";
+        $this->notification->notifyGiftWrapper($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+
+        $notificationTitle = "Wrapping Cancelled!";
+        $notificationMessege = "Your wrapping has been cancelled, please be patient";
+        $href = "?controller=client&action=dashboard/notifications";
+        $this->notification->notifyClient($client_id, $notificationTitle, $notificationMessege, $href);
+
         header("Location: index.php?controller=giftWrapper&action=dashboard/assignedOrder");
         exit;
     }
+
 
     public function service($parts) {
         $giftWrapperId = $_SESSION['user']['id'] ?? null;
@@ -191,6 +215,12 @@ class giftWrapperController {
             case 'wallet':
                 $this->Finance($level1);
                 break;
+            case 'notifications':
+                $this->notifications();
+                break;
+            case 'notificationViewed':
+                $this->notificationViewed($level1);
+                break;
             case 'service':
                 $this->service($level1);
                 break;
@@ -204,6 +234,17 @@ class giftWrapperController {
                 $this->overview($level1);
                 break;
         }
+    }
+
+    public function notifications() {
+        $notifications = $this->notification->getGiftWrapperNotifications($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/notification.php';
+    }
+
+    public function notificationViewed($parts) {
+        $id = (int)$parts[2];
+        $this->notification->viewNotificationGiftWrapper($id);
+        exit();
     }
 
     public function Finance($parts) {

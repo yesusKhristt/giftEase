@@ -456,7 +456,7 @@ class ClientController {
 
     public function checkout($parts) {
         $mode    = $parts[2];
-        var_dump($_SESSION['checkout']['wrap']);
+        // var_dump($_SESSION['checkout']['wrap']);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['checkout']['wrap']['mode'] = $mode;
             $data['orderType'] = $_POST['orderType'] ?? null;
@@ -491,9 +491,16 @@ class ClientController {
             $notificationTitle = "Order Placed!";
             $notificationMessege = "Your Order has been successfully Placed consisting of ";
             $href = "?controller=client&action=dashboard/tracking/" . $order_id;
-            foreach ($cartItems as $row) {
+            foreach ($_SESSION['checkout']['cart'] as $row) {
+                $product_id = $row['product_id'];
+                $vendor_id = $row['vendor_id'];
                 $name = $row['name'];
                 $notificationMessege = $notificationMessege . $name . ' ';
+
+                $notificationTitleVendor = "You have a new Order!";
+                $notificationMessegeVendor = "You have a new order, order". $order_id." for the item ID".$product_id." named "."'".$name."'";
+                $hrefVendor = "?controller=vendor&action=dashboard/item/view/" . $product_id;
+                $this->notification->notifyVendor($vendor_id, $notificationTitleVendor, $notificationMessegeVendor, $hrefVendor);
             }
             $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
             $this->cart->emptyCart($_SESSION['user']['id']);
@@ -590,6 +597,9 @@ class ClientController {
             case 'notifications':
                 $this->notifications();
                 break;
+            case 'notificationViewed':
+                $this->notificationViewed($parts);
+                break;
             case 'viewitem':
                 $this->displayproduct($parts);
                 break;
@@ -601,9 +611,6 @@ class ClientController {
                 break;
             case 'updateProfilePicture':
                 $this->updateProfilePicture();
-                break;
-            case 'notificationViewed':
-                $this->notificationViewed($parts);
                 break;
             case 'editProfile':
                 $this->editProfile($parts);

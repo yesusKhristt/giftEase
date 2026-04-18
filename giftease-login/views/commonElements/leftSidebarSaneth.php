@@ -9,8 +9,7 @@
       </div>
     </div>
     <?php
-    function isActive($pageName, $activePage)
-    {
+    function isActive($pageName, $activePage) {
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
@@ -25,21 +24,21 @@
       <a href="?controller=delivery&action=dashboard/assignedOrder" class="nav-item <?= isActive('assignedOrder', $activePage) ?>">
         Assigned Order
       </a>
-      
+
       <a href="?controller=delivery&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
         History
       </a>
 
-       <a href="?controller=delivery&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
+      <a href="?controller=delivery&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
         Messages
       </a>
-      
+
     </nav>
     <div class="button-section">
       <a href="?controller=delivery&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
-</a>
+      </a>
     </div>
   </div>
   <div class="topbar-container">
@@ -53,9 +52,13 @@
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
       <a href="?controller=delivery&action=dashboard/wallet"
-          class="settings-btn <?= isActive('settings', $activePage) ?>">
-          <i class="fa fa-credit-card"></i>
-        </a>
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
+        <i class="fa fa-credit-card"></i>
+      </a>
+      <a href="?controller=delivery&action=dashboard/notifications"
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
+        <i class="fas fa-bell"></i>
+      </a>
       <a href="?controller=delivery&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>

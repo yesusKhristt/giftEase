@@ -6,6 +6,7 @@ class VendorController {
     private $messeges;
     private $order;
     private $withdraw;
+    private $notification;
 
     public function __construct($pdo) {
         require_once __DIR__ . '/../models/VendorModel.php';
@@ -14,12 +15,14 @@ class VendorController {
         require_once __DIR__ . '/../models/MessegesModel.php';
         require_once __DIR__ . '/../models/OrderModel.php';
         require_once __DIR__ . '/../models/WithdrawModel.php';
+        require_once __DIR__ . '/../models/NotificationModel.php';
         $this->vendor   = new VendorModel($pdo);
         $this->product  = new ProductsModel($pdo);
         $this->category = new CategoryModel($pdo);
         $this->messeges = new MessegesModel($pdo);
         $this->order    = new OrderModel($pdo);
         $this->withdraw    = new WithdrawModel($pdo);
+        $this->notification = new NotificationModel($pdo);
     }
 
     public function dashboard() {
@@ -340,6 +343,12 @@ class VendorController {
             case 'wallet':
                 $this->Finance($parts);
                 break;
+            case 'notifications':
+                $this->notifications();
+                break;
+            case 'notificationViewed':
+                $this->notificationViewed($parts);
+                break;
             case 'item':
                 $this->handleitems($parts);
                 break;
@@ -362,6 +371,17 @@ class VendorController {
                 $this->showOrders();
                 break;
         }
+    }
+
+    public function notifications() {
+        $notifications = $this->notification->getVendorNotifications($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/notification.php';
+    }
+
+    public function notificationViewed($parts) {
+        $id = (int)$parts[2];
+        $this->notification->viewNotificationVendor($id);
+        exit();
     }
 
     public function account($parts) {

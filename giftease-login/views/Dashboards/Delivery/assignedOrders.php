@@ -53,12 +53,12 @@
 
                         <div class="summary-grid">
                             <a class='btn1'
-                                href="?controller=delivery&action=dashboard/cancelOrder/<?= $row['id'] ?>">
+                                href="?controller=delivery&action=dashboard/cancelOrder/<?= $row['id'] ?>/<?= $row['client_id']?>">
                                 Cancel Order
                             </a>
 
                             <a class='btn2'
-                                href="?controller=delivery&action=dashboard/markComplete/<?= $row['id'] ?>">
+                                href="?controller=delivery&action=dashboard/markComplete/<?= $row['id'] ?>/<?= $row['client_id']?>">
                                 <i class="fas fa-check"></i>
                                 Mark Complete
                             </a>

@@ -28,6 +28,7 @@
         <h1 class="title">Assigned Orders</h2>
           <p class="subtitle">Monitor your orders</p>
       </div>
+
       <?php foreach ($myOrders as $row): ?>
         <div class="card">
           <div class="title">WRP-<?= htmlspecialchars($row['id']) ?></div>
@@ -44,17 +45,18 @@
             <div class="progress-header">
             </div>
             <div class="summary-grid">
-              <a class='btn1' href="?controller=giftWrapper&action=dashboard/cancelOrder/<?= $row['id'] ?>">
+              <a class='btn1' href="?controller=giftWrapper&action=dashboard/cancelOrder/<?= $row['id'] ?>/<?= $row['client_id'] ?>">
                 Cancel Order
               </a>
-              <a class='btn2' href="?controller=giftWrapper&action=dashboard/markComplete/<?= $row['id'] ?>">
+              <a class='btn2' href="?controller=giftWrapper&action=dashboard/markComplete/<?= $row['id'] ?>/<?= $row['client_id'] ?>">
                 <i class="fas fa-check"></i>
                 Mark Complete
               </a>
             </div>
           </div>
-        <?php endforeach ?>
         </div>
+      <?php endforeach ?>
+
 
     </div>
 </body>

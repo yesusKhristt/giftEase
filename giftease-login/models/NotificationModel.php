@@ -182,4 +182,19 @@ class NotificationModel
         $stmt = $this->pdo->prepare("UPDATE notificationsClient SET is_read = 1 WHERE id = ?");
         $stmt->execute([$id]);
     }
+
+    public function viewNotificationDelivery($id){
+        $stmt = $this->pdo->prepare("UPDATE notificationsDelivery SET is_read = 1 WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+
+    public function viewNotificationGiftWrapper($id){
+        $stmt = $this->pdo->prepare("UPDATE notificationsGiftWrapper SET is_read = 1 WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+
+    public function viewNotificationVendor($id){
+        $stmt = $this->pdo->prepare("UPDATE notificationsVendor SET is_read = 1 WHERE id = ?");
+        $stmt->execute([$id]);
+    }
 }

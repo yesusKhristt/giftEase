@@ -23,7 +23,9 @@
                 <p class="subtitle">Confirm your payment moethod and Place your order</p>
             </div>
 
-
+            <?php
+            var_dump($_SESSION['checkout']['cart'])
+            ?>
             <table>
                 <tr>
                     <td>

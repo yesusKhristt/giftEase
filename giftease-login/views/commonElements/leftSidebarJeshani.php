@@ -12,15 +12,19 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-        <a href="?controller=giftWrapper&action=dashboard/wallet"
-          class="settings-btn <?= isActive('settings', $activePage) ?>">
-          <i class="fa fa-credit-card"></i>
-        </a>
-        <a href="?controller=giftWrapper&action=dashboard/profile"
-          class="settings-btn <?= isActive('profile', $activePage) ?>">
-          <i class="fas fa-user"></i>
-        </a>
-      </nav>
+      <a href="?controller=giftWrapper&action=dashboard/wallet"
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
+        <i class="fa fa-credit-card"></i>
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/notifications"
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
+        <i class="fas fa-bell"></i>
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/profile"
+        class="settings-btn <?= isActive('profile', $activePage) ?>">
+        <i class="fas fa-user"></i>
+      </a>
+    </nav>
   </div>
   <div class="left_sidebar">
     <!-- Logo -->

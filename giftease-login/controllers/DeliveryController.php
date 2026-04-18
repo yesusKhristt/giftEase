@@ -59,10 +59,11 @@ class DeliveryController {
     }
 
     public function markComplete($parts) {
+        $client_id = $parts[3];
         $notificationTitle = "Delivery Complete!";
         $notificationMessege = "Your Order has been successfully delivered";
         $href = "?controller=client&action=dashboard/notifications";
-        $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+        $this->notification->notifyClient($client_id, $notificationTitle, $notificationMessege, $href);
 
         $this->delivery->markComplete($parts[2]);
         header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
@@ -71,13 +72,18 @@ class DeliveryController {
 
     public function cancelOrder($parts) {
         $order_id = $parts[2];
-
+        $client_id = $parts[3];
         $this->delivery->cancelOrder($order_id);
 
         $notificationTitle = "You cancelled a delivery!";
         $notificationMessege = "You've cancelled your delivery of order " . $order_id;
         $href = "?controller=delivery&action=dashboard/notification";
         $this->notification->notifyDelivery($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+
+        $notificationTitle = "Delivery Cancelled!";
+        $notificationMessege = "Your delivery has been cancelled, please be patient";
+        $href = "?controller=client&action=dashboard/notifications";
+        $this->notification->notifyClient($client_id, $notificationTitle, $notificationMessege, $href);
 
         header("Location: index.php?controller=delivery&action=dashboard/assignedOrder");
         exit;
@@ -118,6 +124,12 @@ class DeliveryController {
             case 'wallet':
                 $this->Finance($parts);
                 break;
+            case 'notifications':
+                $this->notifications();
+                break;
+            case 'notificationViewed':
+                $this->notificationViewed($parts);
+                break;
             case 'home':
                 $deliveryId = $_SESSION['user']['id'];
                 $dashboardStats = $this->delivery->getDashboardStats($deliveryId);
@@ -129,6 +141,17 @@ class DeliveryController {
                 $this->allOrder($parts);
                 break;
         }
+    }
+
+    public function notifications() {
+        $notifications = $this->notification->getDeliveryNotifications($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Delivery/notification.php';
+    }
+
+    public function notificationViewed($parts) {
+        $id = (int)$parts[2];
+        $this->notification->viewNotificationDelivery($id);
+        exit();
     }
 
     public function Finance($parts) {
