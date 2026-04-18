@@ -773,6 +773,21 @@ class AdminController
     public function items($parts){
         require_once __DIR__ . '/../models/ProductsModel.php';
         $productsModel = new ProductsModel($this->delivery->getpdo());
+
+        $section = $parts[2] ?? '';
+        $productId = $parts[3] ?? null;
+
+        if ($section === 'view' && $productId) {
+            $productDetails = $productsModel->fetchProduct($productId);
+
+            if (empty($productDetails)) {
+                header("Location: index.php?controller=admin&action=dashboard/items");
+                exit;
+            }
+
+            require_once __DIR__ . '/../views/Dashboards/Admin/itemDetail.php';
+            return;
+        }
         
         // Get all products with vendor details
         $allProducts = $productsModel->fetchAllWithVendor();
@@ -829,5 +844,12 @@ class AdminController
         ];
         
         require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
+    }
+
+    public function ViewDetails($parts) {
+
+        $this->admin->viewOrderDetails($parts[2]);
+        header("Location: index.php?controller=admin&action=dashboard/viewOrder/" . $parts[2]);
+        exit;
     }
 }
