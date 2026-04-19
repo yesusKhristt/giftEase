@@ -1,21 +1,17 @@
 <?php
-class AdminModel
-{
+class AdminModel {
     private $pdo;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTableIfNotExists(); // Create the table if not there
     }
 
-    public function getpdo()
-    {
+    public function getpdo() {
         return $this->pdo;
     }
 
-    public function createTableIfNotExists()
-    {
+    public function createTableIfNotExists() {
         $sql1 = "CREATE TABLE IF NOT EXISTS admins (
             id INT AUTO_INCREMENT PRIMARY KEY,
             first_name VARCHAR(100) NOT NULL,
@@ -37,8 +33,7 @@ class AdminModel
         }
     }
 
-    public function authenticate($email, $password, $type, &$error)
-    {
+    public function authenticate($email, $password, $type, &$error) {
         $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -50,15 +45,96 @@ class AdminModel
         return null;
     }
 
-    public function getUserByEmail($email)
-    {
+    public function getUserByEmail($email) {
         $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE email = ?");
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function addUser($data)
-    {
+    public function getUserById($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateProfilePicture($id, $profilePicPath) {
+        $stmt = $this->pdo->prepare("UPDATE admins SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $id
+        ]);
+    }
+
+    public function getDetailedOrdersReport() {
+        $orderStmt = $this->pdo->prepare(
+            "SELECT o.*, 
+                    c.first_name AS client_first_name,
+                    c.last_name AS client_last_name,
+                    c.email AS client_email,
+                    c.phone AS client_phone
+             FROM orders o
+             LEFT JOIN clients c ON o.client_id = c.id
+             ORDER BY COALESCE(o.delivered_at, o.deliveryDate) DESC, o.id DESC"
+        );
+        $orderStmt->execute();
+        $orders = $orderStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $itemStmt = $this->pdo->prepare(
+            "SELECT oi.quantity,
+                    p.name AS product_name,
+                    p.price,
+                    COALESCE(v.shopName, 'N/A') AS vendor_shop,
+                    (oi.quantity * p.price) AS subtotal
+             FROM orderItems oi
+             JOIN products p ON oi.item_id = p.id
+             LEFT JOIN vendors v ON p.vendor_id = v.id
+             WHERE oi.order_id = ?"
+        );
+
+        foreach ($orders as &$order) {
+            $itemStmt->execute([$order['id']]);
+            $items = $itemStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $computedProductTotal = array_sum(array_map(function ($item) {
+                return (float) ($item['subtotal'] ?? 0);
+            }, $items));
+
+            $productPrice = isset($order['productPrice']) ? (float) $order['productPrice'] : $computedProductTotal;
+            $deliveryPrice = isset($order['deliveryPrice']) ? (float) $order['deliveryPrice'] : 0.0;
+
+            $order['items'] = $items;
+            $order['computed_product_total'] = $computedProductTotal;
+            $order['computed_grand_total'] = $productPrice + $deliveryPrice;
+        }
+        unset($order);
+
+        return $orders;
+    }
+
+    public function getDetailedOrdersReportSummary() {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*) AS total_orders,
+                    COALESCE(SUM(productPrice), 0) AS total_product_amount,
+                    COALESCE(SUM(deliveryPrice), 0) AS total_delivery_amount,
+                    COALESCE(SUM(productPrice + deliveryPrice), 0) AS grand_total
+             FROM orders"
+        );
+        $stmt->execute();
+        $summary = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $totalOrders = (int) ($summary['total_orders'] ?? 0);
+        $grandTotal = (float) ($summary['grand_total'] ?? 0);
+
+        return [
+            'total_orders' => $totalOrders,
+            'total_product_amount' => (float) ($summary['total_product_amount'] ?? 0),
+            'total_delivery_amount' => (float) ($summary['total_delivery_amount'] ?? 0),
+            'grand_total' => $grandTotal,
+            'avg_order_value' => $totalOrders > 0 ? ($grandTotal / $totalOrders) : 0.0,
+        ];
+    }
+
+    public function addUser($data) {
         $stmt = $this->pdo->prepare("INSERT INTO admins (first_name, last_name, email, password, designation, phone, image_loc, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         return $stmt->execute([
             $data['first_name'],
@@ -72,8 +148,7 @@ class AdminModel
         ]);
     }
 
-    public function updateUser($data)
-    {
+    public function updateUser($data) {
         $stmt = $this->pdo->prepare("UPDATE admins SET first_name = ?, last_name = ?, designation = ?, phone = ?, address = ? WHERE id = ?");
         return $stmt->execute([
             $data['first_name'],
@@ -85,115 +160,98 @@ class AdminModel
         ]);
     }
 
-    public function deleteUser($id)
-    {
+    public function deleteUser($id) {
         $stmt = $this->pdo->prepare("UPDATE admins SET status = 'inactive' WHERE id = ?");
         $stmt->execute($id);
     }
 
-    public function getAllClients()
-    {
+    public function getAllClients() {
         $stmt = $this->pdo->prepare("SELECT * FROM clients");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllVerifiedVendors()
-    {
+    public function getAllVerifiedVendors() {
         $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE verified = 1");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
-    public function getAllUnverifiedVendors()
-    {
+    public function getAllUnverifiedVendors() {
         $stmt = $this->pdo->prepare("SELECT * FROM vendors v JOIN vendorVerify VV ON v.id = VV.vendor_id ORDER BY created_at DESC");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllAdmins()
-    {
+    public function getAllAdmins() {
         $stmt = $this->pdo->prepare("SELECT * FROM admins");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllVerifiedDelivery()
-    {
+    public function getAllVerifiedDelivery() {
         $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE verified = 1");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
-    public function getAllUnverifiedDelivery()
-    {
+    public function getAllUnverifiedDelivery() {
         $stmt = $this->pdo->prepare("SELECT * FROM delivery d JOIN deliveryVerify DD ON d.id = DD.delivery_id ORDER BY created_at DESC");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllVerifiedDeliveryman()
-    {
+    public function getAllVerifiedDeliveryman() {
         $stmt = $this->pdo->prepare("SELECT * FROM deliveryman WHERE verified = 1");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
-    public function getAllUnverifiedDeliveryman()
-    {
+    public function getAllUnverifiedDeliveryman() {
         $stmt = $this->pdo->prepare("SELECT * FROM deliveryman d JOIN deliverymanVerify DD ON d.id = DD.deliveryman_id ORDER BY created_at DESC");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllVerifiedGiftwrapper()
-    {
+    public function getAllVerifiedGiftwrapper() {
         $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers WHERE verified = 1");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
-    public function getAllUnverifiedGiftwrapper()
-    {
+    public function getAllUnverifiedGiftwrapper() {
         $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers g JOIN giftWrappersVerify GG ON g.id = GG.giftWrapper_id  ORDER BY created_at DESC");
         $stmt->execute([]);
         return $stmt->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllVendors()
-    {
+    public function getAllVendors() {
         $stmt = $this->pdo->prepare("SELECT * FROM vendors ORDER BY created_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAllDelivery()
-    {
+    public function getAllDelivery() {
         $stmt = $this->pdo->prepare("SELECT * FROM delivery ORDER BY created_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAllDeliveryman()
-    {
+    public function getAllDeliveryman() {
         $stmt = $this->pdo->prepare("SELECT * FROM deliveryman ORDER BY created_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAllGiftWrappers()
-    {
+    public function getAllGiftWrappers() {
         $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers ORDER BY created_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getVendorById($id)
-    {
+    public function getVendorById($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM vendors WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getVendorEarnings($vendorId)
-    {
+    public function getVendorEarnings($vendorId) {
         $stmt = $this->pdo->prepare(
             "SELECT COALESCE(SUM(oi.quantity * p.price), 0)
              FROM orderItems oi
@@ -206,8 +264,7 @@ class AdminModel
         return (float) $stmt->fetchColumn();
     }
 
-    public function getVendorMonthlyEarnings($vendorId)
-    {
+    public function getVendorMonthlyEarnings($vendorId) {
         $stmt = $this->pdo->prepare(
             "SELECT COALESCE(SUM(oi.quantity * p.price), 0)
              FROM orderItems oi
@@ -222,8 +279,7 @@ class AdminModel
         return (float) $stmt->fetchColumn();
     }
 
-    public function getVendorTotalSold($vendorId)
-    {
+    public function getVendorTotalSold($vendorId) {
         $stmt = $this->pdo->prepare(
             "SELECT COALESCE(SUM(oi.quantity), 0)
              FROM orderItems oi
@@ -236,15 +292,13 @@ class AdminModel
         return (int) $stmt->fetchColumn();
     }
 
-    public function getVendorProductCount($vendorId)
-    {
+    public function getVendorProductCount($vendorId) {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM products WHERE vendor_id = ?");
         $stmt->execute([$vendorId]);
         return (int) $stmt->fetchColumn();
     }
 
-    public function getVendorRatingStats($vendorId)
-    {
+    public function getVendorRatingStats($vendorId) {
         $stmt = $this->pdo->prepare(
             "SELECT COALESCE(AVG(rating), 0) AS rating, COUNT(*) AS total
              FROM vendor_ratings
@@ -254,8 +308,7 @@ class AdminModel
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: ['rating' => 0, 'total' => 0];
     }
 
-    public function getVendorProducts($vendorId)
-    {
+    public function getVendorProducts($vendorId) {
         $stmt = $this->pdo->prepare(
             "SELECT id, name, price, displayImage, status
              FROM products
@@ -266,15 +319,13 @@ class AdminModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getDeliveryById($id)
-    {
+    public function getDeliveryById($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getDeliveryEarnings($deliveryId)
-    {
+    public function getDeliveryEarnings($deliveryId) {
         $stmt = $this->pdo->prepare(
             "SELECT COALESCE(SUM(o.deliveryPrice), 0)
              FROM orders o
@@ -285,8 +336,7 @@ class AdminModel
         return (float) $stmt->fetchColumn();
     }
 
-    public function getDeliveryMonthlyEarnings($deliveryId)
-    {
+    public function getDeliveryMonthlyEarnings($deliveryId) {
         $stmt = $this->pdo->prepare(
             "SELECT COALESCE(SUM(o.deliveryPrice), 0)
              FROM orders o
@@ -299,8 +349,7 @@ class AdminModel
         return (float) $stmt->fetchColumn();
     }
 
-    public function getDeliveryCompletedCount($deliveryId)
-    {
+    public function getDeliveryCompletedCount($deliveryId) {
         $stmt = $this->pdo->prepare(
             "SELECT COUNT(*)
              FROM orders o
@@ -311,22 +360,19 @@ class AdminModel
         return (int) $stmt->fetchColumn();
     }
 
-    public function getDeliverymanById($id)
-    {
+    public function getDeliverymanById($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM deliveryman WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getGiftWrapperById($id)
-    {
+    public function getGiftWrapperById($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM giftwrappers WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getGiftWrapperEarnings($giftWrapperId)
-    {
+    public function getGiftWrapperEarnings($giftWrapperId) {
         $stmt = $this->pdo->prepare(
             "SELECT COALESCE(SUM(COALESCE(cw.price, gp.price)), 0)
              FROM orders o
@@ -339,8 +385,7 @@ class AdminModel
         return (float) $stmt->fetchColumn();
     }
 
-    public function getGiftWrapperMonthlyEarnings($giftWrapperId)
-    {
+    public function getGiftWrapperMonthlyEarnings($giftWrapperId) {
         $stmt = $this->pdo->prepare(
             "SELECT COALESCE(SUM(COALESCE(cw.price, gp.price)), 0)
              FROM orders o
@@ -355,8 +400,7 @@ class AdminModel
         return (float) $stmt->fetchColumn();
     }
 
-    public function getGiftWrapperCompletedCount($giftWrapperId)
-    {
+    public function getGiftWrapperCompletedCount($giftWrapperId) {
         $stmt = $this->pdo->prepare(
             "SELECT COUNT(*)
              FROM orders o
@@ -367,8 +411,7 @@ class AdminModel
         return (int) $stmt->fetchColumn();
     }
 
-    public function getVendorSoldItems($vendorId)
-    {
+    public function getVendorSoldItems($vendorId) {
         $stmt = $this->pdo->prepare(
             "SELECT o.id AS order_id,
                     o.deliveryDate,
@@ -388,8 +431,7 @@ class AdminModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getVendorSoldItemsList($vendorId)
-    {
+    public function getVendorSoldItemsList($vendorId) {
         $stmt = $this->pdo->prepare(
             "SELECT o.id AS order_id,
                     o.deliveryDate,
@@ -410,8 +452,7 @@ class AdminModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getDeliveryOrders($deliveryId)
-    {
+    public function getDeliveryOrders($deliveryId) {
         $stmt = $this->pdo->prepare(
             "SELECT o.id AS order_id,
                     o.deliveryDate,
@@ -428,8 +469,7 @@ class AdminModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getDeliveryCompletedOrders($deliveryId)
-    {
+    public function getDeliveryCompletedOrders($deliveryId) {
         $stmt = $this->pdo->prepare(
             "SELECT o.id AS order_id,
                     o.deliveryDate,
@@ -446,13 +486,11 @@ class AdminModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getDeliverymanCompletedOrders($deliverymanId)
-    {
+    public function getDeliverymanCompletedOrders($deliverymanId) {
         return [];
     }
 
-    public function getGiftWrapperOrders($giftWrapperId)
-    {
+    public function getGiftWrapperOrders($giftWrapperId) {
         $stmt = $this->pdo->prepare(
             "SELECT o.id AS order_id,
                     o.deliveryDate,
@@ -471,8 +509,7 @@ class AdminModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getGiftWrapperCompletedOrders($giftWrapperId)
-    {
+    public function getGiftWrapperCompletedOrders($giftWrapperId) {
         $stmt = $this->pdo->prepare(
             "SELECT o.id AS order_id,
                     o.deliveryDate,
@@ -491,8 +528,7 @@ class AdminModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getOrderDetail($orderId)
-    {
+    public function getOrderDetail($orderId) {
         $stmt = $this->pdo->prepare(
             "SELECT o.*, c.first_name, c.last_name
              FROM orders o
@@ -504,8 +540,7 @@ class AdminModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getOrderItems($orderId)
-    {
+    public function getOrderItems($orderId) {
         $stmt = $this->pdo->prepare(
             "SELECT oi.quantity, p.name, p.price, v.shopName
              FROM orderItems oi
@@ -517,8 +552,7 @@ class AdminModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getTotalOrders()
-    {
+    public function getTotalOrders() {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders");
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -528,8 +562,7 @@ class AdminModel
     /**
      * Get total number of products
      */
-    public function getTotalProducts()
-    {
+    public function getTotalProducts() {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM products");
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -539,8 +572,7 @@ class AdminModel
     /**
      * Get total number of clients
      */
-    public function getTotalClients()
-    {
+    public function getTotalClients() {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM clients WHERE status = 'active'");
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -550,8 +582,7 @@ class AdminModel
     /**
      * Get total number of vendors
      */
-    public function getTotalVendors()
-    {
+    public function getTotalVendors() {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM vendors WHERE status = 'active'");
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -561,8 +592,7 @@ class AdminModel
     /**
      * Get total revenue from orders
      */
-    public function getTotalRevenue()
-    {
+    public function getTotalRevenue() {
         $stmt = $this->pdo->prepare("SELECT COALESCE(SUM(productPrice + deliveryPrice), 0) as total FROM orders");
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -573,8 +603,7 @@ class AdminModel
      * Get monthly growth percentage (comparing current month vs previous month orders)
      * Uses deliveryDate since orders table has no created_at column
      */
-    public function getMonthlyGrowth()
-    {
+    public function getMonthlyGrowth() {
         // Current month orders
         $stmt1 = $this->pdo->prepare("SELECT COUNT(*) as total FROM orders WHERE MONTH(deliveryDate) = MONTH(CURRENT_DATE()) AND YEAR(deliveryDate) = YEAR(CURRENT_DATE())");
         $stmt1->execute();
@@ -594,8 +623,7 @@ class AdminModel
     /**
      * Get top category by number of products sold
      */
-    public function getTopCategory()
-    {
+    public function getTopCategory() {
         $stmt = $this->pdo->prepare("
             SELECT c.name, COALESCE(SUM(oi.quantity), 0) as total_sold
             FROM categories c
@@ -613,8 +641,7 @@ class AdminModel
     /**
      * Get customer retention rate (returning customers / total customers * 100)
      */
-    public function getCustomerRetention()
-    {
+    public function getCustomerRetention() {
         // Count customers with more than one order
         $stmt1 = $this->pdo->prepare("SELECT COUNT(DISTINCT client_id) as returning_customers FROM orders GROUP BY client_id HAVING COUNT(*) > 1");
         $stmt1->execute();
@@ -635,8 +662,7 @@ class AdminModel
      * Get orders by month for chart (last 6 months)
      * Uses deliveryDate since orders table has no created_at column
      */
-    public function getOrdersByMonth()
-    {
+    public function getOrdersByMonth() {
         $stmt = $this->pdo->prepare("
             SELECT 
                 DATE_FORMAT(deliveryDate, '%Y-%m') as month,
@@ -654,8 +680,7 @@ class AdminModel
     /**
      * Get top selling products
      */
-    public function getTopSellingProducts($limit = 5)
-    {
+    public function getTopSellingProducts($limit = 5) {
         $limit = (int) $limit;
         $stmt = $this->pdo->prepare("
             SELECT p.name, COALESCE(SUM(oi.quantity), 0) as total_sold
@@ -672,8 +697,7 @@ class AdminModel
     /**
      * Get sales by category for pie chart
      */
-    public function getSalesByCategory()
-    {
+    public function getSalesByCategory() {
         $stmt = $this->pdo->prepare("
             SELECT c.name, COALESCE(SUM(oi.quantity), 0) as total_sold
             FROM categories c

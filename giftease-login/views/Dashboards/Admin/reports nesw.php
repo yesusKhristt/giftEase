@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Reports & Analytics</title>
+    <link rel="icon" type="image/png" href="resources/1.png">
     <link rel="stylesheet" href="public/backup/style.css">
     <link rel="stylesheet" href="public/sideTopBar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -167,6 +168,30 @@
         .top-products tr:hover {
             background: #fff5f8;
         }
+
+        .export-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .export-btn {
+            background: #d03c2e;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-btn:hover {
+            background: #b93428;
+        }
     </style>
 </head>
 
@@ -194,6 +219,13 @@
             <div class="page-header">
                 <h1 class="title">Reports & Analytics</h1>
                 <p class="subtitle">View business insights and generate reports</p>
+            </div>
+
+            <div class="export-actions">
+                <a class="export-btn" href="?controller=admin&action=dashboard/reports/print-orders" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-file-pdf"></i>
+                    Export Detailed Orders (PDF)
+                </a>
             </div>
 
             <!-- Summary Cards -->

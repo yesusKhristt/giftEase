@@ -485,13 +485,12 @@ class ClientController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
             $_SESSION['checkout']['cart'] = $cartItems;
-            if($_SESSION['checkout']['wrap']['mode'] === 'custom'){
+            if ($_SESSION['checkout']['wrap']['mode'] === 'custom') {
                 $wrap_id = $this->giftWrapper->addCustomWrap($_SESSION['checkout']['wrap']);
-            }
-            else if($_SESSION['checkout']['wrap']['mode'] === 'package'){
+            } else if ($_SESSION['checkout']['wrap']['mode'] === 'package') {
                 $wrap_id = $_SESSION['checkout']['wrap']['packageId'];
             }
-            
+
 
             $method = $_POST['method'];
 
@@ -650,6 +649,12 @@ class ClientController {
     }
 
     public function editProfile($parts) {
+        $USER_ID = $_SESSION['user']['id'];
+        $stmt = $this->client->getpdo()->prepare("SELECT * FROM clients WHERE id = ?");
+        $stmt->execute([$USER_ID]);
+        $clientUser = $stmt->fetch();
+        $user1 = $clientUser;
+        $user2 = $clientUser;
 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -699,6 +704,13 @@ class ClientController {
             //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
         }
 
-        require_once __DIR__ . '/../views/commonElements/addImage.php';
+        require_once __DIR__ . '/../views/Dashboards/Client/addImage.php';
+    }
+
+    public function handleLogout() {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
+        exit;
     }
 }

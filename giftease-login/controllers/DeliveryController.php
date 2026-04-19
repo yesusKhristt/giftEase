@@ -137,11 +137,19 @@ class DeliveryController {
                 $lastMonthTrend = $this->delivery->getLastMonthTrend($deliveryId);
                 require_once __DIR__ . '/../views/Dashboards/Delivery/home.php';
                 break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
+                break;
+            case 'editProfile':
+                $this->editProfile();
+                break;
             default:
                 $this->allOrder($parts);
                 break;
         }
     }
+
+
 
     public function notifications() {
         $notifications = $this->notification->getDeliveryNotifications($_SESSION['user']['id']);
@@ -178,19 +186,55 @@ class DeliveryController {
     }
 
     public function handleLogout() {
-        $_SESSION['delivery'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle file upload if user selected a new image
+            $uploadDir = "resources/uploads/delivery/profilePictures/";
+            if (! is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $profilePicPath = null;
+
+            // Get file info
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            // Move file to upload folder
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                // store the uploaded file path
+                $profilePicPath = $targetFile;
+            }
+
+            if ($profilePicPath !== null) {
+                $this->delivery->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+                $_SESSION['user'] = $this->delivery->getUserByEmail($_SESSION['user']['email']);
+            }
+
+            header("Location: index.php?controller=delivery&action=dashboard/profile");
+            exit;
+
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Delivery/addImage.php';
     }
     public function editProfile() {
         // Logic to handle profile editing
+
         $USER_ID = $_SESSION['user']['id'];
-        $stmt1 = $this->delivery->getpdo()->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt2 = $this->delivery->getpdo()->prepare("SELECT * FROM delivery WHERE user_id = ?");
-        $stmt1->execute([$USER_ID]);
-        $user1 = $stmt1->fetch();
-        $stmt2->execute([$USER_ID]);
-        $user2 = $stmt2->fetch();
+        $stmt = $this->delivery->getpdo()->prepare("SELECT * FROM delivery WHERE id = ?");
+        $stmt->execute([$USER_ID]);
+        $deliveryUser = $stmt->fetch();
+        $user1 = $deliveryUser;
+        $user2 = $deliveryUser;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $FIRST_NAME = $_POST['first_name'] ?? '';

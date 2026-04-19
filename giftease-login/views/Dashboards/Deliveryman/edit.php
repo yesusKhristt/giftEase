@@ -17,7 +17,7 @@
     <div class="container">
         <?php
         $activePage = 'account';
-        include 'views/commonElements/leftSidebarSaneth.php';
+        include 'views/commonElements/leftSidebarDeliveryman.php';
         ?>
         <div class="main-content">
             <div class="page-header">
@@ -27,42 +27,54 @@
             <div class="card">
                 <form method="post">
                     <table class="table">
-                      
+                        
                         <tr>
                             <td style="width:15%" class="subtitle">
                                 First Name
                             </td>
                             <td colspan="2">
-                                <input type="text" id="first_name" name="first_name" placeholder="First Name" value="<?php echo isset($user2['first_name']) ? htmlspecialchars($user2['first_name']) : ''; ?>">
+                                <input type="text" id="first_name" name="first_name" placeholder="First Name" value="<?php echo htmlspecialchars($deliverymanProfile['first_name'] ?? ''); ?>">
                             </td>
-
-
                         </tr>
                         <tr>
                             <td class="subtitle">
                                 Last Name
                             </td>
                             <td colspan="2">
-                                <input type="text" id="last_name" name="last_name" placeholder="Last Name" value="<?php echo isset($user2['last_name']) ? htmlspecialchars($user2['last_name']) : ''; ?>">
+                                <input type="text" id="last_name" name="last_name" placeholder="Last Name" value="<?php echo htmlspecialchars($deliverymanProfile['last_name'] ?? ''); ?>">
                             </td>
                         </tr>
                         <tr>
                             <td class="subtitle">Email</td>
                             <td colspan="2">
-                                <input type="email" id="email" name="email" placeholder="Email" value="<?php echo isset($user1['email']) ? htmlspecialchars($user1['email']) : ''; ?>" readonly>
+                                <input type="email" id="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($deliverymanProfile['email'] ?? ''); ?>" readonly>
                             </td>
                         </tr>
                         <tr>
                             <td class="subtitle">Mobile Phone number</td>
                             <td colspan="2">
-                                <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number" value="<?php echo isset($user2['phone']) ? htmlspecialchars($user2['phone']) : ''; ?>">
+                                <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number" value="<?php echo htmlspecialchars($deliverymanProfile['phone'] ?? ''); ?>">
                             </td>
                         </tr>
-
-
+                        <tr>
+                            <td class="subtitle">Address</td>
+                            <td colspan="2">
+                                <input type="text" id="address" name="address" placeholder="Address" value="<?php echo htmlspecialchars($deliverymanProfile['address'] ?? ''); ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subtitle">Vehicle Type</td>
+                            <td colspan="2">
+                                <input type="text" id="vehicleType" name="vehicleType" placeholder="Vehicle Type" value="<?php echo htmlspecialchars($deliverymanProfile['vehicleType'] ?? ''); ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subtitle">License Plate</td>
+                            <td colspan="2">
+                                <input type="text" id="vehiclePlate" name="vehiclePlate" placeholder="Vehicle Plate" value="<?php echo htmlspecialchars($deliverymanProfile['vehiclePlate'] ?? ''); ?>">
+                            </td>
+                        </tr>
                     </table>
-
-
 
                     <div style="margin-top: 20px;">
                         <table>
@@ -79,7 +91,7 @@
                 </form>
             </div>
         </div>
-
+    </div>
 </body>
 
 </html>

@@ -156,6 +156,14 @@ class DeliveryModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function updateProfilePicture($id, $profilePicPath) {
+        $stmt = $this->pdo->prepare("UPDATE delivery SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $id
+        ]);
+    }
+
     public function authenticate($email, $password, $type, &$error) {
         $stmt = $this->pdo->prepare("SELECT * FROM delivery WHERE email = ?");
         $stmt->execute([$email]);

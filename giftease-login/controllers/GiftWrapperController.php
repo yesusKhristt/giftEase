@@ -33,6 +33,12 @@ class giftWrapperController {
         $this->GiftWrapper($parts);
     }
 
+    public function viewOrder($parts)
+    {  
+        $customwrap= $this->giftWrapping->getCustomWrapByOrderId($parts[2]);
+        require_once __DIR__ . '/../views/Dashboards/GiftWrapper/orderDetails.php';
+    }
+
     public function allOrder($parts) {
         $orders = $this->giftwrapper->getAllOrders();
         require_once __DIR__ . '/../views/Dashboards/GiftWrapper/allOrders.php';
@@ -231,6 +237,9 @@ class giftWrapperController {
             case 'updateProfilePicture':
                 $this->updateProfilePicture($level1);
                 break;
+            case 'viewOrder':
+                $this->viewOrder($level1);
+                break;
             default:
                 $this->overview($level1);
                 break;
@@ -304,6 +313,12 @@ class giftWrapperController {
     }
 
     public function editProfile($parts) {
+        $USER_ID = $_SESSION['user']['id'];
+        $stmt = $this->giftwrapper->getpdo()->prepare("SELECT * FROM giftwrappers WHERE id = ?");
+        $stmt->execute([$USER_ID]);
+        $giftWrapperUser = $stmt->fetch();
+        $user1 = $giftWrapperUser;
+        $user2 = $giftWrapperUser;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'first_name' => $_POST['first_name'] ?? '',
@@ -389,8 +404,9 @@ class giftWrapperController {
     }
 
     public function handleLogout() {
-        $_SESSION['giftWrapper'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
     }
 

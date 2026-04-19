@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Delivery Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/delivery.css" />
+    <link rel="stylesheet" href="public/deliverystyle.css" />
     <link rel="stylesheet" href="public/sideTopBar.css" />
     <link rel="icon" type="image/png" href="resources/1.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
@@ -16,17 +16,17 @@
     <div class="container">
         <?php
         $activePage = 'profile';
-        include 'views/commonElements/leftSidebarSaneth.php';
+        include 'views/commonElements/leftSidebarDeliveryman.php';
         ?>
 
         <div class="main-content">
             <div class="page-header">
                 <h1 class="title">Update Profile Picture</h1>
-                <p class="subtitle">Upload a new image for your delivery profile</p>
+                <p class="subtitle">Upload a new image for your deliveryman profile</p>
             </div>
 
             <div class="card">
-                <form method="POST" action="?controller=delivery&action=dashboard/updateProfilePicture" id="uploadForm" enctype="multipart/form-data">
+                <form method="POST" action="?controller=deliveryman&action=dashboard/updateProfilePicture" id="uploadForm" enctype="multipart/form-data">
                     <table class="table">
                         <tr>
                             <td class="subtitle">Upload Profile Picture</td>
@@ -51,7 +51,7 @@
                                 <button type="reset" class="btn2">Reset</button>
                             </td>
                             <td>
-                                <a href="?controller=delivery&action=dashboard/profile" class="btn2">Cancel</a>
+                                <a href="?controller=deliveryman&action=dashboard/profile" class="btn2">Cancel</a>
                             </td>
                         </tr>
                     </table>

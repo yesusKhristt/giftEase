@@ -316,8 +316,9 @@ class AdminController {
         require_once __DIR__ . '/../views/Dashboards/Admin/editGiftWrappingPackages.php';
     }
     public function handleLogout() {
-        $_SESSION['admin'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
     }
 
@@ -736,7 +737,13 @@ class AdminController {
                 $this->salarySummary();
                 break;
             case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
+                $this->profile($parts);
+                break;
+            case 'editProfile':
+                $this->editProfile($parts);
+                break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
                 break;
             case 'vendor':
                 $this->vendors($parts);
@@ -769,6 +776,90 @@ class AdminController {
                 $this->reports($parts);
                 break;
         }
+    }
+
+    public function profile($parts) {
+        $adminId = $_SESSION['user']['id'] ?? null;
+        if (!$adminId) {
+            header('Location: index.php?controller=auth&action=landing');
+            exit;
+        }
+
+        $adminProfile = $this->admin->getUserById($adminId);
+        if (!$adminProfile) {
+            header('Location: index.php?controller=auth&action=landing');
+            exit;
+        }
+
+        $profileStats = [
+            'total_admins' => count($this->admin->getAllAdmins()),
+            'total_vendors' => count($this->admin->getAllVendors()),
+            'total_delivery' => count($this->admin->getAllDelivery()),
+            'total_deliveryman' => count($this->admin->getAllDeliveryman()),
+            'total_gift_wrappers' => count($this->admin->getAllGiftWrappers()),
+            'total_clients' => count($this->admin->getAllClients())
+        ];
+
+        require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
+    }
+
+    public function editProfile($parts) {
+        $adminId = $_SESSION['user']['id'] ?? null;
+        if (!$adminId) {
+            header('Location: index.php?controller=auth&action=landing');
+            exit;
+        }
+
+        $adminProfile = $this->admin->getUserById($adminId);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name' => $_POST['last_name'] ?? '',
+                'designation' => $_POST['designation'] ?? '',
+                'phone' => $_POST['phone'] ?? '',
+                'address' => $_POST['address'] ?? '',
+                'id' => $adminId
+            ];
+
+            $this->admin->updateUser($data);
+            $_SESSION['user'] = $this->admin->getUserById($adminId);
+
+            header('Location: index.php?controller=admin&action=dashboard/profile');
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Admin/edit.php';
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $uploadDir = 'resources/uploads/admin/profilePictures/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $profilePicPath = null;
+            if (!empty($_FILES['profilePic']) && ($_FILES['profilePic']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
+                $tmpName = $_FILES['profilePic']['tmp_name'];
+                $fileName = time() . '_' . basename($_FILES['profilePic']['name']);
+                $targetFile = $uploadDir . $fileName;
+
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $profilePicPath = $targetFile;
+                }
+            }
+
+            if ($profilePicPath !== null) {
+                $this->admin->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+                $_SESSION['user'] = $this->admin->getUserById($_SESSION['user']['id']);
+            }
+
+            header('Location: index.php?controller=admin&action=dashboard/profile');
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Admin/addImage.php';
     }
 
     public function orders($parts) {
@@ -891,6 +982,16 @@ class AdminController {
     }
 
     public function reports($parts) {
+        $section = $parts[2] ?? '';
+
+        if ($section === 'print-orders') {
+            $detailedOrders = $this->admin->getDetailedOrdersReport();
+            $reportSummary = $this->admin->getDetailedOrdersReportSummary();
+            $generatedAt = date('Y-m-d H:i:s');
+
+            require_once __DIR__ . '/../views/Dashboards/Admin/reportsOrdersPrint.php';
+            return;
+        }
         // Fetch report data
         $reportData = [
             'totalOrders' => $this->admin->getTotalOrders(),

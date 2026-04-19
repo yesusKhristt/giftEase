@@ -12,6 +12,17 @@
 </head>
 
 <body>
+    <div class="container">
+        <?php
+        $activePage = 'profile';
+        include 'views/commonElements/leftSidebarJeshani.php';
+        ?>
+         <div class="main-content">
+            <div class="page-header">
+                <h1 class="title">Update Profile Picture</h1>
+                <p class="subtitle">Upload a new image for your gift wrapper profile</p>
+            </div>
+            <div class="card">
     <form method="POST" action="?controller=giftWrapper&action=dashboard/updateProfilePicture" id="uploadForm"
         enctype="multipart/form-data">
         <table class="table">
@@ -42,7 +53,8 @@
             document.querySelector('input[name="profilePic"]').click();
         });
     </script>
-
+    </div>
+    </div>
 </body>
 
 </html>

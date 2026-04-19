@@ -70,7 +70,7 @@
             </form>
 
             <!-- RESULTS INFO -->
-            <div style="margin: 15px 0; color: #666;">
+            <div class="history-record-count">
                 Showing <?= count($history) ?> records
             </div>
 

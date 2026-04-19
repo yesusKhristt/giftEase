@@ -49,6 +49,37 @@ class DeliverymanModel {
         }
     }
 
+    public function getProfileStats($deliverymanId) {
+        $this->syncPickupTasksFromOrders();
+
+        $stmt = $this->pdo->prepare(
+            "SELECT
+                COUNT(*) AS total_tasks,
+                SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_total,
+                SUM(CASE WHEN status IN ('assigned', 'picked_up', 'at_outlet') THEN 1 ELSE 0 END) AS active_total,
+                SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled_total
+             FROM pickupTasks
+             WHERE deliveryman_id = ?"
+        );
+        $stmt->execute([$deliverymanId]);
+        $stats = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $totalTasks = (int)($stats['total_tasks'] ?? 0);
+        $completedTotal = (int)($stats['completed_total'] ?? 0);
+
+        return [
+            'total_tasks' => $totalTasks,
+            'assigned_total' => $totalTasks,
+            'completed_total' => $completedTotal,
+            'delivered_total' => $completedTotal,
+            'active_total' => (int)($stats['active_total'] ?? 0),
+            'cancelled_total' => (int)($stats['cancelled_total'] ?? 0),
+            'success_rate' => $totalTasks > 0 ? round(($completedTotal / $totalTasks) * 100, 1) : 0,
+            'total_earnings' => 0,
+            'distance' => null,
+        ];
+    }
+
     public function verifyUser($user_id) {
         $sql  = "UPDATE deliveryman SET verified = 1 WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
@@ -66,20 +97,45 @@ class DeliverymanModel {
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password']) && $type == 'deliveryman') {
+        if ($user && $user['status'] === 'active' && password_verify($password, $user['password']) && $type == 'deliveryman') {
             if (!$user['verified']) {
                 $error = "User Not verified";
+                return null;
+            }
+            if ($user && $user['status'] !== 'active') {
+                $error = "Account is inactive";
                 return null;
             }
             return $user;
         }
         $error = "Invalid Username or Password";
+
         return null;
+    }
+
+    public function updateProfilePicture($id, $profilePicPath) {
+        $stmt = $this->pdo->prepare("UPDATE deliveryman SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $id
+        ]);
     }
 
     public function getUserByEmail($email) {
         $stmt = $this->pdo->prepare("SELECT * FROM deliveryman WHERE email = ?");
         $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserById($id) {
+        $stmt = $this->pdo->prepare(
+            "SELECT d.*, dv.identity_doc, dv.driving_license, dv.vehicle_registration, dv.vehicle_insurance
+             FROM deliveryman d
+             LEFT JOIN deliverymanVerify dv ON dv.deliveryman_id = d.id
+             WHERE d.id = ?
+             LIMIT 1"
+        );
+        $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -121,7 +177,7 @@ class DeliverymanModel {
 
     public function deleteUser($id) {
         $stmt = $this->pdo->prepare("UPDATE deliveryman SET status = 'inactive' WHERE id = ?");
-        $stmt->execute($id);
+        return $stmt->execute([$id]);
     }
 
     public function getAllDeliveryMan() {

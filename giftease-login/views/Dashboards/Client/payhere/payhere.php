@@ -79,7 +79,7 @@
 
     <script>
         const amountTotal = "<?= number_format($total, 2, '.', '') ?>";
-        let ngrokURL = "https://3584-112-134-193-75.ngrok-free.app";
+        let ngrokURL = "https://f99b-192-248-22-102.ngrok-free.app";
 
         payhere.onCompleted = function(orderId) {
             console.log("Payment completed. OrderID:", orderId);

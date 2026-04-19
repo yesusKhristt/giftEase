@@ -11,6 +11,17 @@
 </head>
 
 <body>
+        <div class="container">
+            <?php
+            $activePage = 'profile';
+            include 'views/commonElements/leftSidebar.php'; 
+            ?>
+             <div class="main-content">
+                <div class="page-header">
+                    <h1 class="title">Update Profile Picture</h1>
+                    <p class="subtitle">Upload a new image for your vendor profile</p>
+                </div>
+                <div class="card">
     <form method="POST" action="?controller=vendor&action=dashboard/updateProfilePicture" id="uploadForm"
         enctype="multipart/form-data">
         <table class="table">
@@ -40,6 +51,8 @@
         document.getElementById('uploadArea').addEventListener('click', () => {
             document.querySelector('input[name="profilePic"]').click();
         });
+
+        
     </script>
 
 </body>

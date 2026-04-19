@@ -1,7 +1,6 @@
 <?php
 
-class AuthController
-{
+class AuthController {
     private $giftWrapper;
     private $deliveryman;
     private $delivery;
@@ -9,8 +8,7 @@ class AuthController
     private $client;
     private $vendor;
 
-    public function __construct($pdo)
-    {
+    public function __construct($pdo) {
         require_once __DIR__ . '/../models/CategoryModel.php';
         require_once __DIR__ . '/../models/GiftWrapperModel.php';
         require_once __DIR__ . '/../models/DeliveryModel.php';
@@ -25,13 +23,11 @@ class AuthController
         $this->client = new ClientModel($pdo);
         $this->vendor = new VendorModel($pdo);
     }
-    public function landing()
-    {
+    public function landing() {
         require_once __DIR__ . '/../views/LandingPage/landingPage.php';
     }
 
-    public function handleLogin()
-    {
+    public function handleLogin() {
         $error = '';
         $user = null;
 
@@ -89,17 +85,22 @@ class AuthController
                         header("Location: index.php?controller=giftWrapper&action=dashboard/primary");
                         exit;
                 }
-
             }
         }
 
         // Load different views based on user type
         require_once __DIR__ . '/../views/Login/login.php';
-
     }
 
-    public function handleSignup()
-    {
+    public function logout() {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
+        exit;
+    }
+
+
+    public function handleSignup() {
         $error = '';
         $success = '';
 
@@ -140,10 +141,10 @@ class AuthController
                         if (!is_dir($uploadDir)) {
                             mkdir($uploadDir, 0755, true);
                         }
-                        
+
                         $docs = [];
                         $docFields = ['identity_doc', 'business_cert', 'tin_doc', 'address_proof', 'bank_details'];
-                        
+
                         foreach ($docFields as $field) {
                             if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
                                 $file = $_FILES[$field];
@@ -154,7 +155,7 @@ class AuthController
                                 }
                             }
                         }
-                        
+
                         $this->vendor->addUser([
                             'first_name' => $firstname,
                             'last_name' => $lastname,
@@ -183,10 +184,10 @@ class AuthController
                         if (!is_dir($uploadDir)) {
                             mkdir($uploadDir, 0755, true);
                         }
-                        
+
                         $docs = [];
                         $docFields = ['wrapper_identity', 'wrapper_address', 'portfolio'];
-                        
+
                         foreach ($docFields as $field) {
                             if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
                                 $file = $_FILES[$field];
@@ -197,7 +198,7 @@ class AuthController
                                 }
                             }
                         }
-                        
+
                         $this->giftWrapper->addUser([
                             'first_name' => $firstname,
                             'last_name' => $lastname,
@@ -224,10 +225,10 @@ class AuthController
                         if (!is_dir($uploadDir)) {
                             mkdir($uploadDir, 0755, true);
                         }
-                        
+
                         $docs = [];
                         $docFields = ['delivery_identity', 'driving_license', 'vehicle_registration', 'vehicle_insurance'];
-                        
+
                         foreach ($docFields as $field) {
                             if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
                                 $file = $_FILES[$field];
@@ -238,7 +239,7 @@ class AuthController
                                 }
                             }
                         }
-                        
+
                         $this->delivery->addUser([
                             'first_name' => $firstname,
                             'last_name' => $lastname,
@@ -248,7 +249,7 @@ class AuthController
                             'address' => $address,
                             'phone' => $phone,
                             'vehiclePlate' => $vehiclePlate,
-                                'vehicleType' => $_POST['vehicleType'] ?? '',
+                            'vehicleType' => $_POST['vehicleType'] ?? '',
                             'identity_doc' => $docs['delivery_identity'] ?? null,
                             'driving_license' => $docs['driving_license'] ?? null,
                             'vehicle_registration' => $docs['vehicle_registration'] ?? null,
@@ -266,10 +267,10 @@ class AuthController
                         if (!is_dir($uploadDir)) {
                             mkdir($uploadDir, 0755, true);
                         }
-                        
+
                         $docs = [];
                         $docFields = ['delivery_identity', 'driving_license', 'vehicle_registration', 'vehicle_insurance'];
-                        
+
                         foreach ($docFields as $field) {
                             if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
                                 $file = $_FILES[$field];
@@ -280,7 +281,7 @@ class AuthController
                                 }
                             }
                         }
-                        
+
                         $this->deliveryman->addUser([
                             'first_name' => $firstname,
                             'last_name' => $lastname,
@@ -290,7 +291,7 @@ class AuthController
                             'address' => $address,
                             'phone' => $phone,
                             'vehiclePlate' => $vehiclePlate,
-                                'vehicleType' => $_POST['vehicleType'] ?? '',
+                            'vehicleType' => $_POST['vehicleType'] ?? '',
                             'identity_doc' => $docs['delivery_identity'] ?? null,
                             'driving_license' => $docs['driving_license'] ?? null,
                             'vehicle_registration' => $docs['vehicle_registration'] ?? null,
@@ -322,6 +323,5 @@ class AuthController
             exit;
         }
         require_once __DIR__ . '/../views/Signup/signup.php';
-
     }
 }

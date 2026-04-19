@@ -45,6 +45,9 @@
             <div class="progress-header">
             </div>
             <div class="summary-grid">
+              <a class='btn1' href="?controller=giftWrapper&action=dashboard/viewOrder/<?= $row['id'] ?>">
+                View Details
+              </a>
               <a class='btn1' href="?controller=giftWrapper&action=dashboard/cancelOrder/<?= $row['id'] ?>/<?= $row['client_id'] ?>">
                 Cancel Order
               </a>

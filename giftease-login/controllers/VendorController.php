@@ -275,8 +275,9 @@ class VendorController {
     }
 
     public function handleLogout() {
-        $_SESSION['vendor'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
     }
 
