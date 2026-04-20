@@ -138,7 +138,6 @@ class VendorController {
             $subcategory = $_POST['subcategory'];
             $price       = $_POST['price'];
             $description = $_POST['description'];
-            $deliverable = $_POST['hours24'];
 
             // Handle file upload if user selected a new image
             $profilePicPath = []; // start with empty array
@@ -161,7 +160,7 @@ class VendorController {
 
             switch ($parts[2]) {
                 case 'add':
-                    $productID = $this->product->addProduct($_SESSION['user']['id'], $title, $price, $description, $category, $subcategory, $profilePicPath, $deliverable);
+                    $productID = $this->product->addProduct($_SESSION['user']['id'], $title, $price, $description, $category, $subcategory, $profilePicPath);
                     header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
                     exit;
                 case 'edit':
@@ -172,8 +171,7 @@ class VendorController {
                         $description,
                         $category,
                         $subcategory,
-                        $profilePicPath,
-                        $deliverable
+                        $profilePicPath
                     );
                     header("Location: index.php?controller=vendor&action=dashboard/item/view/" . urlencode($parts[3]));
                     exit;
@@ -339,7 +337,7 @@ class VendorController {
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
                 break;
             case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
+                $this->History($parts);
                 break;
             case 'wallet':
                 $this->Finance($parts);
@@ -372,6 +370,10 @@ class VendorController {
                 $this->showOrders();
                 break;
         }
+    }
+    public function History($parts){
+        $paginatedOrders = $this->vendor->getAllOrderByVendor($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
     }
 
     public function notifications() {

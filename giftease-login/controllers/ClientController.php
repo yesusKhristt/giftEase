@@ -121,6 +121,7 @@ class ClientController {
     public function displayProduct($parts) {
         $productId      = $parts[2];
         $productDetails = $this->products->fetchProduct($productId);
+        $ratings = $this->products->fetchRating($productId);
 
         require_once __DIR__ . '/../views/Dashboards/Client/Viewitem.php';
     }
@@ -390,6 +391,7 @@ class ClientController {
     }
 
     public function cart($parts) {
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $state      = $parts[3] ?? '';
             $product_id = $parts[2] ?? '';
@@ -414,7 +416,27 @@ class ClientController {
                 exit;
             }
             if ($state == 'submit') {
-                $$_SESSION['checkout'] = [
+
+                $errors = [];
+
+                foreach ($cartItems as $row) {
+                    $available = $row['totalStock'] - $row['reservedStock'];
+
+                    if ($row['quantity'] > $available) {
+                        $errors[] = $row['name'] . " is out of stock (only $available left)";
+                    }
+                }
+
+                // If there are errors
+                if (!empty($errors)) {
+                    $_SESSION['stock_errors'] = $errors;
+
+                    header("Location: index.php?controller=client&action=dashboard/cart");
+                    exit;
+                }
+
+                // Continue if everything is valid
+                $_SESSION['checkout'] = [
                     'wrap' => [],
                     'delivery' => [],
                     'payment' => [],
@@ -427,7 +449,7 @@ class ClientController {
                 exit;
             }
         }
-        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+
         require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
     }
 
@@ -482,8 +504,9 @@ class ClientController {
     }
 
     public function payhere($parts) {
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+
             $_SESSION['checkout']['cart'] = $cartItems;
             if ($_SESSION['checkout']['wrap']['mode'] === 'custom') {
                 $wrap_id = $this->giftWrapper->addCustomWrap($_SESSION['checkout']['wrap']);
@@ -498,6 +521,8 @@ class ClientController {
 
 
             $order_id = $this->orders->confirmOrder($_SESSION['checkout'], $_SESSION['user']['id'], $method);
+            $this->products->reduceVendorStock($cartItems);
+
 
             $notificationTitle = "Order Placed!";
             $notificationMessege = "Your Order has been successfully Placed consisting of ";
@@ -522,7 +547,7 @@ class ClientController {
                 exit;
             }
 
-            header("Location: index.php?controller=client&action=dashboard/tracking  ");
+            header("Location: index.php?controller=client&action=dashboard/tracking/$order_id");
             exit;
             $this->completeOrder($parts);
         }
@@ -591,14 +616,8 @@ class ClientController {
             case 'wishlist':
                 $this->wishlist($parts);
                 break;
-            case 'tracking':
-                require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
-                break;
             case 'history':
                 $this->history();
-                break;
-            case 'rate':
-                $this->rate();
                 break;
             case 'messeges':
                 $this->messeges($parts);
@@ -642,10 +661,61 @@ class ClientController {
             case 'wrappingPackages':
                 $this->wrappingPackages($parts);
                 break;
+            case 'orders':
+                $this->orders($parts);
+                break;
+            case 'tracking':
+                $this->trackOrder($parts);
+                break;
+            case 'orderItems':
+                $this->viewItems($parts);
+                break;
+            case 'rate':
+                $this->rateItems($parts);
+                break;
             default:
                 $this->items($parts);
                 break;
         }
+    }
+
+    public function rateItems($parts) {
+        $order_id = $parts[2];
+        $order = $this->orders->getOrderByID2($order_id);
+        $orderItems = $this->orders->getItemsInOrder3($order_id, $_SESSION['user']['id']);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // $product_id = $parts[3];
+            $rating = $_POST['rating'];
+            $review = $_POST['review'];
+            $productId = $_POST['product_id'];
+
+            $this->orders->rateProduct($_SESSION['user']['id'], $productId, $order_id, $rating, $review);
+
+            header("Location: index.php?controller=client&action=dashboard/rate/$order_id");
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/rateItems.php';
+    }
+
+
+    public function orders($parts) {
+        $myOrders = $this->orders->getAllClientOrders($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/orders.php';
+    }
+
+    public function trackOrder($parts) {
+        $order_id = $parts[2];
+        $order = $this->orders->getOrderByID($order_id);
+        require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
+    }
+
+    public function viewItems($parts) {
+        $order_id = $parts[2];
+        $order = $this->orders->getOrderByID($order_id);
+        $orderItems = $this->orders->getItemsInOrder($order_id);
+        require_once __DIR__ . '/../views/Dashboards/Client/viewOrder.php';
     }
 
     public function editProfile($parts) {

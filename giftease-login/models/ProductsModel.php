@@ -103,6 +103,12 @@ class ProductsModel {
         ];
     }
 
+    public function reduceVendorStock($cartItems) {
+        foreach ($cartItems as $row):
+            $this->addReserved($row['id'], $row['quantity']);
+        endforeach;
+    }
+
     public function fetchProductPic($productId) {
         $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
         $stmt2->execute();
@@ -121,8 +127,8 @@ class ProductsModel {
         $stmt1->execute();
     }
 
-    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath, $deliverable) {
-        $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, status, mainCategory, subCategory, totalStock, reservedStock, sold, impressions, clicks, raiting, displayImage, deliverable, created_at) VALUES (?, ?, ?, ?, 'active',? ,  ? , 0 ,0, 0, 0, 0, 0, ? , ?, CURRENT_TIMESTAMP)");
+    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath) {
+        $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, status, mainCategory, subCategory, totalStock, reservedStock, sold, impressions, clicks, raiting, displayImage, created_at) VALUES (?, ?, ?, ?, 'active',? ,  ? , 0 ,0, 0, 0, 0, 0, ?, CURRENT_TIMESTAMP)");
         $stmt1->execute([
             $vendor_id,
             $name,
@@ -130,8 +136,7 @@ class ProductsModel {
             $description,
             $mainC,
             $subC,
-            $profilePath[0],
-            ($deliverable === "1")
+            $profilePath[0]
         ]);
         $productID = $this->pdo->lastInsertId();;
         $sort = 1;
@@ -179,6 +184,24 @@ class ProductsModel {
         }
     }
 
+    public function fetchRating($productId) {
+        $stmt = $this->pdo->prepare("
+        SELECT  
+            r.rating,
+            r.review,
+            r.created_at,
+            c.first_name,
+            c.last_name
+        FROM ratings r 
+        JOIN clients c ON r.client_id = c.id
+        WHERE r.product_id = ?
+        ORDER BY r.created_at DESC
+        LIMIT 20
+    ");
+        $stmt->execute([$productId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     public function addReserved($product_id, $stockQuantity) {
         $stmt1 = $this->pdo->prepare("SELECT reservedStock from products WHERE id = ?");
@@ -212,7 +235,7 @@ class ProductsModel {
         }
     }
 
-    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath, $deliverable) {
+    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath) {
         // fallback to DB images if $profilePath is empty
         if (empty($profilePath)) {
             $profilePath = $this->fetchProductPic($product_id);
@@ -232,7 +255,7 @@ class ProductsModel {
         // update products table
         $stmt1 = $this->pdo->prepare('
         UPDATE products 
-        SET name = ?, price = ?, description = ?, mainCategory = ?, subCategory = ?, displayImage = ? , deliverable = ? 
+        SET name = ?, price = ?, description = ?, mainCategory = ?, subCategory = ?, displayImage = ? 
         WHERE id = ?
     ');
         $stmt1->execute([
@@ -242,7 +265,6 @@ class ProductsModel {
             $mainC,
             $subC,
             $displayImage,
-            $deliverable,
             $product_id
         ]);
 
@@ -304,7 +326,7 @@ class ProductsModel {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $status = 'all', $categoryId = 0) {
+    public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $status = 'all', $categoryId = 0) {
         $sql = "SELECT * FROM products WHERE vendor_id = :vendor_id";
         if ($status !== 'all') {
             $sql .= " AND status = :status";
@@ -359,8 +381,7 @@ public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $s
         return (int)$stmt->fetchColumn();
     }
 
-    public function fetchAllWithVendor()
-    {
+    public function fetchAllWithVendor() {
         $stmt = $this->pdo->prepare("
             SELECT 
                 p.id,
@@ -382,4 +403,3 @@ public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $s
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-

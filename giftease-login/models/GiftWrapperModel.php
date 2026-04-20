@@ -216,13 +216,13 @@ class GiftWrapperModel {
     }
 
     public function getAllOrders() {
-        $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id IS NULL");
+        $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE in_warehouse = 1 AND is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id IS NULL ORDER BY id DESC;");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getAssignedOrders($id) {
-        $stmt = $this->pdo->prepare("SELECT *  FROM orders WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
+        $stmt = $this->pdo->prepare("SELECT *  FROM orders WHERE in_warehouse = 1 AND is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ? ORDER BY id DESC;");
         $stmt->execute([$id]);
         $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

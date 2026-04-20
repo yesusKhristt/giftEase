@@ -14,14 +14,14 @@ class DeliveryModel {
     }
 
     public function getAllOrders() {
-        $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE is_delivered = 0 AND is_wrapped = 1 AND delivery_id IS NULL");
+        $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE is_delivered = 0 AND is_wrapped = 1 AND delivery_id IS NULL ORDER BY id DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getAssignedOrders($id) {
         $stmt = $this->pdo->prepare(
-            "SELECT orders.id, client_id, deliveryDate, is_delivered, delivery_id, deliveryPrice, deliveryAddress, clients.first_name, clients.last_name FROM orders JOIN clients ON orders.client_id = clients.id WHERE is_delivered = 0 AND is_wrapped = 1 AND delivery_id = ?"
+            "SELECT orders.id, client_id, deliveryDate, is_delivered, delivery_id, deliveryPrice, deliveryAddress, clients.first_name, clients.last_name FROM orders JOIN clients ON orders.client_id = clients.id WHERE is_delivered = 0 AND is_wrapped = 1 AND delivery_id = ?  ORDER BY id DESC"
         );
         $stmt->execute([$id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

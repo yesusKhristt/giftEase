@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Client Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/client.css" />
-    <link rel="stylesheet" href="public/sideTopBar.css" />
+  <link rel="stylesheet" href="public/client.css" />
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -80,20 +80,30 @@
 
                 </td>
               </tr>
+
             <?php endforeach; ?>
           </tbody>
         </table>
 
 
         <!-- Order Summary -->
-        <div class="cardColour">
+        <div class="card">
+          <?php if (!empty($_SESSION['stock_errors'])): ?>
+            <table class="table">
+
+              <?php foreach ($_SESSION['stock_errors'] as $error): ?>
+                <tr>
+                  <td>
+                    <p><?= htmlspecialchars($error) ?></p>
+                  <td>
+                </tr>
+              <?php endforeach; ?>
+
+            </table>
+            <?php unset($_SESSION['stock_errors']); ?>
+          <?php endif; ?>
           <h4>Order Summary</h4>
           <p class="summary-line">Total: <strong>Rs. <?= htmlspecialchars($subtotal) ?></strong></p>
-
-          <div style="margin:15px 0;">
-            <input type="text" placeholder="Enter Voucher Code" style="width:70%;margin-bottom:10px;">
-            <button class="btn1">Apply</button>
-          </div>
 
           <form method="POST" action="?controller=client&action=dashboard/cart/0/submit">
             <input type="hidden" name="subtotal" value="<?= htmlspecialchars($subtotal) ?>">

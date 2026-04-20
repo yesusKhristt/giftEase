@@ -23,11 +23,8 @@
       <a href="?controller=client&action=dashboard/wishlist" class="nav-item <?= isActive('wishlist', $activePage) ?>">
         Wishlist
       </a>
-      <a href="?controller=client&action=dashboard/tracking" class="nav-item <?= isActive('tracking', $activePage) ?>">
-        Track Order
-      </a>
-      <a href="?controller=client&action=dashboard/history" class="nav-item <?= isActive('history', $activePage) ?>">
-        Order History
+      <a href="?controller=client&action=dashboard/orders" class="nav-item <?= isActive('history', $activePage) ?>">
+        My Orders
       </a>
       <a href="?controller=client&action=dashboard/payment" class="nav-item <?= isActive('payment', $activePage) ?>">
         Payment

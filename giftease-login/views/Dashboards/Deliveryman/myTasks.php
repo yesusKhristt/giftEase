@@ -64,7 +64,7 @@
                         <a class="btn1" style="display: inline-flex; width: auto;" href="?controller=deliveryman&action=dashboard/markPickedUp/<?= (int)$task['id'] ?>">Confirm Pickup</a>
                         <a class="btn1" style="display: inline-flex; width: auto; background: #b91c1c;" href="?controller=deliveryman&action=dashboard/cancelTask/<?= (int)$task['id'] ?>" onclick="return confirm('Cancel this task and return it to available tasks?');">Cancel Task</a>
                       <?php elseif ($task['status'] === 'picked_up'): ?>
-                        <a class="btn1" style="display: inline-flex; width: auto;" href="?controller=deliveryman&action=dashboard/markAtOutlet/<?= (int)$task['id'] ?>">Confirm At Outlet</a>
+                        <a class="btn1" style="display: inline-flex; width: auto;" href="?controller=deliveryman&action=dashboard/markAtOutlet/<?= (int)$task['id'] ?>/<?= $task['order_id'] ?>">Confirm At Outlet</a>
                       <?php elseif ($task['status'] === 'at_outlet'): ?>
                         <a class="btn1" style="display: inline-flex; width: auto;" href="?controller=deliveryman&action=dashboard/markCompleted/<?= (int)$task['id'] ?>">Finish Task</a>
                       <?php else: ?>

@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Client Partner Dashboard - GiftEase</title>
-    <link rel="stylesheet" href="public/style.css" />
+    <link rel="stylesheet" href="public/client.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
@@ -16,64 +17,85 @@
         <?php
         $activePage = 'cart';
         include 'views/commonElements/leftSidebarDilma.php';
+
+        $productPrice  = $_SESSION['checkout']['cart']['productPrice'];
+        $deliveryPrice = $_SESSION['checkout']['delivery']['deliveryPrice'];
+        $wrapPrice     = $_SESSION['checkout']['wrap']['totalPrice'];
+        $total         = $productPrice + $deliveryPrice + $wrapPrice;
         ?>
+
         <div class="main-content">
             <div class="page-header">
                 <h1 class="title">Payment Details</h1>
-                <p class="subtitle">Confirm your payment moethod and Place your order</p>
+                <p class="subtitle">Review your order and choose a payment method</p>
             </div>
 
-            <?php
-            var_dump($_SESSION['checkout']['cart'])
-            ?>
-            <table>
-                <tr>
-                    <td>
-                        <h3>Product Price :</h3>
-                    </td>
-                    <td>
-                        <h2>Rs. <?php echo html_entity_decode($_SESSION['checkout']['cart']['productPrice']); ?></h2>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h3>Delivery Price :</h3>
-                    </td>
-                    <td>
-                        <h2>Rs. <?php echo html_entity_decode($_SESSION['checkout']['delivery']['deliveryPrice']); ?></h2>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h3>Wrapping Price :</h3>
-                    </td>
-                    <td>
-                        <h2>Rs. <?php echo html_entity_decode($_SESSION['checkout']['wrap']['totalPrice']); ?></h2>
-                    </td>
-                </tr>
-                <?php
-                // var_dump($_SESSION['checkout']);
-                ?>
-                <tr>
-                    <td>
-                        <h3>Total Price :</h3>
-                    </td>
-                    <td>
-                        <?php
-                        $total = $_SESSION['checkout']['wrap']['totalPrice'] + $_SESSION['checkout']['delivery']['deliveryPrice'] + $_SESSION['checkout']['cart']['productPrice'];
-                        ?>
-                        <h2>Rs. <?php echo html_entity_decode($total); ?></h2>
-                    </td>
-                </tr>
-            </table>
-            <div>
+            <!-- Order Summary -->
+            <div class="cardColour">
+                <h4>Order Summary</h4>
 
-                <button class="btn1" id="payhere-payment">Pay Through Card</button>
-                <form action="?controller=client&action=dashboard/payhere" method="post">
-                    <input type="hidden" value="cash" name="method">
-                    <button type="submit" class="btn1">Cash on Delivery</button>
-                </form>
+                <table class="table" style="margin-bottom: 0;">
+                    <tbody>
+                        <tr>
+                            <td><i class="fas fa-gift" style="color:#d03c2e; margin-right:8px;"></i> Products</td>
+                            <td style="text-align:right;">Rs. <?= number_format($productPrice, 2) ?></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-truck" style="color:#d03c2e; margin-right:8px;"></i> Delivery</td>
+                            <td style="text-align:right;">Rs. <?= number_format($deliveryPrice, 2) ?></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-box-open" style="color:#d03c2e; margin-right:8px;"></i> Gift Wrapping</td>
+                            <td style="text-align:right;">Rs. <?= number_format($wrapPrice, 2) ?></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td style="text-align:right;">
+                                <span class="title" style="font-size:22px;">
+                                    Rs. <?= number_format($total, 2) ?>
+                                </span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
+
+            <!-- Payment Methods -->
+            <div class="card">
+                <h4>Choose Payment Method</h4>
+
+                <div class="summary-grid">
+
+                    <!-- Card payment -->
+                    <button class="cardColour" id="payhere-payment"
+                        style="cursor:pointer; text-align:center; border:none;">
+                        <i class="fas fa-credit-card"
+                            style="font-size:2rem; color:#d03c2e; margin-bottom:12px; display:block;"></i>
+                        <p style="font-weight:700; font-size:15px; color:#032e3f;">Pay by Card</p>
+                        <p class="subtitle" style="font-size:12px; margin-top:6px;">
+                            Visa, Mastercard, PayHere
+                        </p>
+                    </button>
+
+                    <!-- Cash on delivery -->
+                    <form action="?controller=client&action=dashboard/payhere" method="POST">
+                        <input type="hidden" name="method" value="cash">
+                        <button type="submit" class="cardColour"
+                            style="width:100%; cursor:pointer; text-align:center; border:none;">
+                            <i class="fas fa-money-bill-wave"
+                                style="font-size:2rem; color:#d03c2e; margin-bottom:12px; display:block;"></i>
+                            <p style="font-weight:700; font-size:15px; color:#032e3f;">Cash on Delivery</p>
+                            <p class="subtitle" style="font-size:12px; margin-top:6px;">
+                                Pay when your order arrives
+                            </p>
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
         </div>
     </div>
 

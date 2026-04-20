@@ -100,17 +100,6 @@
                 </td>
             </tr> -->
                     <tr>
-                        <td class="subtitle">Can be prepared in 24 hours</td>
-                        <td colspan="2">
-                            <label class="radio-inline">
-                                <input type="radio" name="hours24" value="1"> Yes
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="hours24" value="0"> No
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
                         <td class="subtitle">Upload Images</td>
                         <td colspan="2">
                             <input type="file" id="fileInput" name="images[]" multiple style="display:none;"

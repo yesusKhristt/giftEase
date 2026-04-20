@@ -275,7 +275,7 @@ class DeliverymanModel {
              JOIN vendors v ON v.id = pt.vendor_id
              LEFT JOIN orderItems oi ON oi.order_id = o.id
              LEFT JOIN products p ON p.id = oi.item_id AND p.vendor_id = pt.vendor_id
-             WHERE pt.status = 'pending_assignment' AND pt.deliveryman_id IS NULL
+             WHERE pt.status = 'pending_assignment' AND pt.deliveryman_id IS NULL AND o.in_warehouse = 0
              GROUP BY pt.id, pt.order_id, pt.status, o.deliveryDate, c.first_name, c.last_name, v.shopName, v.address, v.phone
              ORDER BY o.deliveryDate ASC, pt.id ASC"
         );
@@ -362,5 +362,10 @@ class DeliverymanModel {
         );
         $stmt->execute([$taskId, $deliverymanId]);
         return $stmt->rowCount() > 0;
+    }
+
+    public function markInWarehouse($order_id) {
+        $stmt = $this->pdo->prepare("UPDATE `orders` SET in_warehouse = 1 WHERE `id` = ?");
+        $stmt->execute([$order_id]);
     }
 }

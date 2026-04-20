@@ -231,4 +231,23 @@ class VendorModel {
 
         return $user;
     }
+
+    public function getAllOrderByVendor($vendor_id){
+        $stmt = $this->pdo->prepare("
+        SELECT 
+        p.*, 
+        oi.quantity AS quantity,
+        oi.order_id AS order_id,
+        CONCAT(c.first_name, ' ', c.last_name) AS client_name,
+        c.email AS client_email,
+        o.is_delivered AS is_delivered,
+        (oi.quantity * p.price) AS vendor_total
+        FROM orderItems oi
+        JOIN products p ON oi.item_id = p.id
+        JOIN orders o ON o.id = oi.order_id
+        JOIN clients c ON c.id = o.client_id
+        WHERE p.vendor_id = ?");
+        $stmt->execute([$vendor_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

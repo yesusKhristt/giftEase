@@ -23,6 +23,7 @@ class OrderModel {
             deliveryAddress VARCHAR(500),
             locationType VARCHAR(20),
             deliveryDate DATE,
+            in_warehouse BOOL DEFAULT FALSE,
             is_wrapped BOOL DEFAULT FALSE,
             is_delivered BOOL DEFAULT FALSE,
             giftWrapper_id INT DEFAULT NULL,
@@ -43,12 +44,58 @@ class OrderModel {
             PRIMARY KEY (order_id, item_id),
             FOREIGN KEY (item_id) REFERENCES products(id) ON DELETE CASCADE
         );";
+        $sql3 = "CREATE TABLE IF NOT EXISTS ratings (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            client_id INT NOT NULL,
+            product_id INT NOT NULL,
+            order_id INT NOT NULL,
+            rating INT CHECK (rating BETWEEN 1 AND 5),
+            review VARCHAR(500),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            -- This prevents duplicate ratings
+            UNIQUE (client_id, product_id, order_id)
+        );";
         try {
             $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
+            $this->pdo->exec($sql3);
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
+    }
+
+    public function alreadyRated($client_id, $product_id, $order_id) {
+        $sql = "SELECT COUNT(*) FROM ratings 
+        WHERE client_id = ? AND product_id = ? AND order_id = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$client_id, $product_id, $order_id]);
+
+        return $stmt->fetchColumn();
+    }
+
+    public function rateProduct($client_id, $product_id, $order_id, $rating, $review) {
+        $sql = "INSERT INTO ratings (client_id, product_id, order_id, rating, review)
+        VALUES (?, ?, ?, ?, ?)";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        try {
+            $stmt->execute([$client_id, $product_id, $order_id, $rating, $review]);
+        } catch (PDOException $e) {
+            // catches duplicate entry if user tries to bypass frontend
+            echo "You already rated this item.";
+        }
+    }
+
+    public function getAllClientOrders($client_id) {
+        $sql = "SELECT * 
+            FROM orders 
+            WHERE client_id = ? 
+            ORDER BY id DESC;";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$client_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -134,6 +181,7 @@ class OrderModel {
      * even if it contains multiple items from the same vendor.
      */
 
+
     public function getOrdersByClient($clientId) {
         $sql = "
             SELECT 
@@ -156,6 +204,89 @@ class OrderModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getItemsInOrder($orderID) {
+        $stmt = $this->pdo->prepare("
+                SELECT 
+                p.name AS item_name,
+                p.displayImage AS item_image,
+                p.price,
+                oi.quantity
+
+            FROM orderItems oi
+
+            JOIN products p 
+                ON oi.item_id = p.id
+
+            WHERE oi.order_id = ?;
+        ");
+        $stmt->execute([$orderID]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getItemsInOrder3($orderID, $clientId) {
+        $stmt = $this->pdo->prepare("
+                SELECT 
+                p.name AS item_name,
+                p.displayImage AS item_image,
+                v.shopName AS shopName,
+                v.id AS vendor_id,
+                p.price,
+                p.id AS product_ID,
+                oi.quantity
+
+            FROM orderItems oi
+
+            JOIN products p 
+                ON oi.item_id = p.id
+            JOIN vendors v
+                ON p.vendor_id = v.id
+
+            WHERE oi.order_id = ?;
+        ");
+        $stmt->execute([$orderID]);
+        $items =  $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($items as &$row) {
+            $alreadyRated = $this->alreadyRated($clientId, $row['product_ID'], $orderID);
+            $row['alreadyRated'] = $alreadyRated;
+        }
+        unset($row); // important cleanup
+        return $items;
+    }
+
+    public function getItemsInOrder2($orderID) {
+        $stmt = $this->pdo->prepare("
+                SELECT * FROM orderItems WHERE order_id = ?;
+        ");
+        $stmt->execute([$orderID]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderByID($orderID) {
+        $stmt = $this->pdo->prepare("
+                SELECT * FROM orders WHERE id = ?;
+        ");
+        $stmt->execute([$orderID]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderByID2($orderID) {
+        $stmt = $this->pdo->prepare("
+                SELECT 
+                o.*,
+                g.first_name AS giftWrapperFName,
+                g.last_name AS giftWrapperLName,
+                d.first_name AS deliveryFName,
+                d.last_name AS deliveryLName
+                FROM orders o
+                JOIN delivery d 
+                ON o.delivery_id = d.id
+                JOIN giftWrappers g 
+                ON o.giftWrapper_id = g.id
+                WHERE o.id = ?;
+        ");
+        $stmt->execute([$orderID]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     public function getVendorOrderStats($vendorId) {
         $sql = "
@@ -183,7 +314,7 @@ class OrderModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function approveOrder($order_id){
+    public function approveOrder($order_id) {
         $stmt3 = $this->pdo->prepare(
             "UPDATE orders SET clearance = 1 WHERE id = ?"
         );
@@ -204,6 +335,7 @@ class OrderModel {
         $stmt->execute([]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function confirmOrder($data, $client_id, $method) {
 
@@ -264,7 +396,7 @@ class OrderModel {
 
             $stmt2->execute([
                 $order_id,
-                $item['product_id'],
+                $item['id'],
                 $item['quantity']
             ]);
         }

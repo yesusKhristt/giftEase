@@ -19,8 +19,8 @@
         ?>
         <div class="main-content">
             <div class="page-header">
-                <h1 class="title">All Orders</h1>
-                <p class="subtitle">Orders currently placed by clients.</p>
+                <h1 class="title">Notifications</h1>
+                <p class="subtitle">View all client notifications</p>
             </div>
             <div class="filter-tabs">
                 <button class="btn2" onclick="markAllRead()">Mark All Read</button>

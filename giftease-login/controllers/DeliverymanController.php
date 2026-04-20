@@ -1,15 +1,18 @@
 <?php
-class DeliverymanController
-{
+class DeliverymanController {
     private $deliveryman;
+    private $orders;
+    private $product;
 
-    public function __construct($pdo)
-    {
+    public function __construct($pdo) {
         require_once __DIR__ . '/../models/DeliverymanModel.php';
+        require_once __DIR__ . '/../models/OrderModel.php';
+        require_once __DIR__ . '/../models/ProductsModel.php';
         $this->deliveryman = new DeliverymanModel($pdo);
+        $this->orders = new OrderModel($pdo);
+        $this->product = new ProductsModel($pdo);
     }
-    public function dashboard()
-    {
+    public function dashboard() {
         $currentUser = $this->deliveryman->getUserByEmail($_SESSION['user']['email']);
         if (!$currentUser || ($currentUser['status'] ?? 'active') !== 'active') {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
@@ -22,8 +25,7 @@ class DeliverymanController
         $this->Delivery($parts);
     }
 
-    public function Delivery($parts)
-    {
+    public function Delivery($parts) {
         switch ($parts[1]) {
             case 'profile':
                 $deliverymanId = $_SESSION['user']['id'];
@@ -168,8 +170,7 @@ class DeliverymanController
         require_once __DIR__ . '/../views/Dashboards/Deliveryman/addImage.php';
     }
 
-    public function acceptTask($parts)
-    {
+    public function acceptTask($parts) {
         $taskId = isset($parts[2]) ? (int)$parts[2] : 0;
         if ($taskId > 0) {
             $this->deliveryman->acceptPickupTask($taskId, $_SESSION['user']['id']);
@@ -178,8 +179,7 @@ class DeliverymanController
         exit;
     }
 
-    public function markPickedUp($parts)
-    {
+    public function markPickedUp($parts) {
         $taskId = isset($parts[2]) ? (int)$parts[2] : 0;
         if ($taskId > 0) {
             $this->deliveryman->updatePickupTaskStatus($taskId, $_SESSION['user']['id'], 'picked_up');
@@ -188,18 +188,24 @@ class DeliverymanController
         exit;
     }
 
-    public function markAtOutlet($parts)
-    {
+    public function markAtOutlet($parts) {
         $taskId = isset($parts[2]) ? (int)$parts[2] : 0;
+        $orderId = $parts[3];
         if ($taskId > 0) {
             $this->deliveryman->updatePickupTaskStatus($taskId, $_SESSION['user']['id'], 'at_outlet');
+            $this->deliveryman->markInWarehouse($orderId);
+            $items = $this->orders->getItemsInOrder2($orderId);
+
+            foreach ($items as $row) {
+                $this->product->substractReserved($row['item_id'], $row['quantity']);
+                $this->product->substractStock($row['item_id'], $row['quantity']);
+            }
         }
         header("Location: index.php?controller=deliveryman&action=dashboard/myTasks");
         exit;
     }
 
-    public function markCompleted($parts)
-    {
+    public function markCompleted($parts) {
         $taskId = isset($parts[2]) ? (int)$parts[2] : 0;
         if ($taskId > 0) {
             $this->deliveryman->updatePickupTaskStatus($taskId, $_SESSION['user']['id'], 'completed');
@@ -208,8 +214,7 @@ class DeliverymanController
         exit;
     }
 
-    public function cancelTask($parts)
-    {
+    public function cancelTask($parts) {
         $taskId = isset($parts[2]) ? (int)$parts[2] : 0;
         if ($taskId > 0) {
             $this->deliveryman->cancelPickupTask($taskId, $_SESSION['user']['id']);
@@ -218,16 +223,13 @@ class DeliverymanController
         exit;
     }
 
-    public function handleLogout()
-    {
+    public function handleLogout() {
         session_unset();
         session_destroy();
         header("Location: index.php?controller=auth&action=landing");
         exit;
-
     }
-    public function deactivateUser()
-    {
+    public function deactivateUser() {
         $USER_ID = $_SESSION['user']['id'];
         $this->deliveryman->deleteUser($USER_ID);
         session_unset();
