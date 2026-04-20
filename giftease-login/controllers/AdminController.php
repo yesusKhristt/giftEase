@@ -9,6 +9,7 @@ class AdminController {
     private $vendor;
     private $withdraw;
     private $orders;
+    private $products;
 
     public function __construct($pdo) {
         require_once __DIR__ . '/../models/CategoryModel.php';
@@ -20,6 +21,7 @@ class AdminController {
         require_once __DIR__ . '/../models/VendorModel.php';
         require_once __DIR__ . '/../models/WithdrawModel.php';
         require_once __DIR__ . '/../models/OrderModel.php';
+        require_once __DIR__ . '/../models/ProductsModel.php';
         $this->giftWrapping = new GiftWrappingModel($pdo);
         $this->giftWrapper = new GiftWrapperModel($pdo);
         $this->category = new CategoryModel($pdo);
@@ -29,6 +31,7 @@ class AdminController {
         $this->vendor = new VendorModel($pdo);
         $this->withdraw = new WithdrawModel($pdo);
         $this->orders = new OrderModel($pdo);
+        $this->products = new ProductsModel($pdo);
     }
 
 
