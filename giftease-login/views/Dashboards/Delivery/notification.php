@@ -22,10 +22,6 @@
                 <h1 class="title">Notifications</h1>
                 <p class="subtitle">View all delivery notifications</p>
             </div>
-            <div class="filter-tabs">
-                <button class="btn2" onclick="markAllRead()">Mark All Read</button>
-                <button class="btn1" onclick="clearNotifications()">Clear All</button>
-            </div>
             <?php foreach ($notifications as $row): ?>
                 <?php
                 $seconds = time() - strtotime($row['created_at']) + 19800;
