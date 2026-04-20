@@ -128,12 +128,6 @@
                                 <?= htmlspecialchars($productDetails['shop']) ?>
                             </p>
 
-                            <a class="btn1"
-                                href="?controller=client&action=dashboard/messeges/vendor/view/<?= htmlspecialchars($productDetails['vendor_id']) ?>/direct"
-                                style="width:fit-content;">
-                                <i class="fas fa-comment-dots"></i> Contact Vendor
-                            </a>
-
                         </div>
                     </div>
                     <div class="card">

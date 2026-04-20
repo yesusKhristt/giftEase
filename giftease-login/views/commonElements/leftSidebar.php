@@ -1,9 +1,9 @@
 <div class="permbar">
   <div class="topbar-container">
     <!-- Search Bar -->
-    <div class="search-bar">
+    <!-- <div class="search-bar">
       <input type="text" class="search-input" placeholder="Search..." />
-    </div>
+    </div> -->
 
     <div class="gift">
       gift<span class="Ease">Ease

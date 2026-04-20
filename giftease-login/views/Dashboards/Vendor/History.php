@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Order History - GiftEase Vendor</title>
   <link rel="stylesheet" href="public/style.css" />
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -91,10 +92,6 @@
                       class="btn btn-ghost btn-small" title="View Details">
                       <i class="fas fa-eye"></i>
                     </a>
-                    <button class="btn btn-ghost btn-small" onclick="downloadReceipt('<?= htmlspecialchars($order['order_id']) ?>')"
-                      title="Download Receipt">
-                      <i class="fas fa-download"></i>
-                    </button>
                   </div>
                 </td>
               </tr>
