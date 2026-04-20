@@ -335,6 +335,13 @@ class VendorController {
                 $this->showOrders();
                 break;
             case 'analysis':
+                $selectedRange = $_GET['range'] ?? 'month';
+                if (!in_array($selectedRange, ['week', 'month', 'year'], true)) {
+                    $selectedRange = 'month';
+                }
+
+                $analysisStats = $this->vendor->getAnalysisStats((int) $_SESSION['user']['id'], $selectedRange);
+                $salesTrend = $this->vendor->getSalesTrend((int) $_SESSION['user']['id'], $selectedRange);
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
                 break;
             case 'history':

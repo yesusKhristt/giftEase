@@ -33,6 +33,10 @@
         Messages
       </a>
 
+      <a href="?controller=delivery&action=dashboard/proof" class="nav-item <?= isActive('proof', $activePage) ?>">
+        Upload Proof
+      </a>
+
     </nav>
     <div class="button-section">
       <a href="?controller=delivery&action=handleLogout" class="btn1">

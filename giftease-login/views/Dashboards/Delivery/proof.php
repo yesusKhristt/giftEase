@@ -4,11 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Delivery Partner Dashboard - GiftEase</title>
+  <title>Delivery Proof Details - GiftEase</title>
   <link rel="stylesheet" href="public/delivery.css" />
   <link rel="stylesheet" href="public/sideTopBar.css" />
   <link rel="icon" type="image/png" href="resources/1.png">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -16,112 +15,107 @@
   <div class="container">
     <?php
     $activePage = 'proof';
-    include 'views\commonElements/leftSidebarSaneth.php';
+    include 'views/commonElements/leftSidebarSaneth.php';
     ?>
     <div class="main-content">
       <div class="page-header">
-        <h1 class="title">Upload Proof</h1>
-        <p class="subtitle">Upload delivery confirmation photos and documents for completed deliveries.</p>
+        <h1 class="title">Delivery Proof Details</h1>
+        <p class="subtitle">Submit completion details with client information. Admin can view these records.</p>
       </div>
 
-      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-        <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #3498db; margin-bottom: 15px;"></i>
-        <h4>Drop files here or click to upload</h4>
-        <p>Supported formats: JPG, PNG, PDF (Max 10MB)</p>
-        <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="display: none;"
-          onchange="handleFileUpload(event)" />
+      <div class="card proof-card">
+        <h3 class="proof-section-title">Submit New Proof Details</h3>
+        
+
+        <?php if (!empty($uploadError)) : ?>
+          <div class="proof-alert error"><?= htmlspecialchars($uploadError) ?></div>
+        <?php endif; ?>
+        <?php if (!empty($uploadSuccess)) : ?>
+          <div class="proof-alert success"><?= htmlspecialchars($uploadSuccess) ?></div>
+        <?php endif; ?>
+
+        <form method="POST" action="?controller=delivery&action=dashboard/proof">
+          <div class="proof-form-grid">
+            <div class="proof-field">
+              <label for="order_id">Order ID</label>
+              <input type="number" min="1" name="order_id" id="order_id" placeholder="Example: 1024" required>
+            </div>
+
+            <div class="proof-field">
+              <label for="client_name">Client Name</label>
+              <input type="text" id="client_name" name="client_name" maxlength="150" placeholder="Enter client full name" required>
+            </div>
+
+            <div class="proof-field">
+              <label for="client_phone">Client Phone</label>
+              <input type="text" id="client_phone" name="client_phone" maxlength="30" placeholder="Enter client phone number" required>
+            </div>
+
+            <div class="proof-field proof-field-full">
+              <label for="proof_details">Proof Details</label>
+              <textarea id="proof_details" name="proof_details" rows="3" maxlength="1000" placeholder="Example: Package handed over to client at main gate. Client verified OTP." required></textarea>
+            </div>
+
+            <div class="proof-field proof-field-full">
+              <label for="note">Note (optional)</label>
+              <textarea id="note" name="note" rows="3" maxlength="255" placeholder="Example: Handed over package at front desk to client"></textarea>
+            </div>
+          </div>
+
+          <div class="proof-submit-row">
+            <button type="submit" class="btn2"><i class="fas fa-check"></i> Submit Details</button>
+          </div>
+        </form>
       </div>
 
-      <div class="card" id="proofGallery">
-        <div class="summary-grid">
-          <div class="card">
-            <i class="fas fa-image" style="font-size: 2rem;"></i>
-          </div>
-          <div>
-            <div style="font-weight: 600; margin-bottom: 5px;">DEL-001 Delivery</div>
-            <div style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Uploaded: 2 hours ago</div>
-            <button class="btn2" onclick="viewProof('DEL-001')">View</button>
-          </div>
-        </div>
+      <div class="card">
+        <h3 style="margin-top: 0;">My Uploaded Proofs</h3>
+        <p class="subtitle">These records are visible to admin with order and client details.</p>
 
-        <div class="summary-grid">
-          <div class="card">
-            <i class="fas fa-file-pdf" style="font-size: 2rem; color: #e74c3c;"></i>
-          </div>
-          <div>
-            <div style="font-weight: 600; margin-bottom: 5px;">DEL-002 Receipt</div>
-            <div style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Uploaded: 1 hour ago</div>
-            <button class="btn2" onclick="viewProof('DEL-002')">View</button>
-          </div>
-        </div>
+        <table class="table proof-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Client</th>
+              <th>Client Phone</th>
+              <th>Delivery Date</th>
+              <th>Proof Details</th>
+              <th>Note</th>
+              <th>Uploaded At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if (empty($myProofs)) : ?>
+              <tr>
+                <td colspan="7" class="proof-empty">No proofs uploaded yet.</td>
+              </tr>
+            <?php else : ?>
+              <?php foreach ($myProofs as $proof) : ?>
+                <?php
+                $clientName = trim((string)($proof['client_name'] ?? ''));
+                if ($clientName === '') {
+                  $clientName = trim(($proof['first_name'] ?? '') . ' ' . ($proof['last_name'] ?? ''));
+                }
+                $uploadedLabel = !empty($proof['uploaded_at']) ? date('M d, Y h:i A', strtotime($proof['uploaded_at'])) : 'N/A';
+                $deliveryDateLabel = !empty($proof['deliveryDate']) ? date('M d, Y', strtotime($proof['deliveryDate'])) : 'N/A';
+                ?>
+                <tr>
+                  <td>#<?= htmlspecialchars($proof['order_id']) ?></td>
+                  <td><?= htmlspecialchars($clientName !== '' ? $clientName : 'N/A') ?></td>
+                  <td><?= htmlspecialchars($proof['client_phone'] ?? ($proof['phone'] ?? 'N/A')) ?></td>
+                  <td><?= htmlspecialchars($deliveryDateLabel) ?></td>
+                  <td><?= htmlspecialchars($proof['proof_details'] ?? '-') ?></td>
+                  <td><?= htmlspecialchars($proof['note'] ?? '-') ?></td>
+                  <td><?= htmlspecialchars($uploadedLabel) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </tbody>
+        </table>
       </div>
 
-      <button class="btn1" style="margin-top: 10px;" onclick="reportIssue()">Report Issue</button>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Issue Description</th>
-            <!-- <th>Status</th> -->
-            <th>Reported On</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>DEL-003</td>
-            <td>Customer not in address and can't contact.</td>
-            <!-- <td><span class="status pending">Pending</span></td> -->
-            <td>2024-06-10</td>
-            <td>
-              <div style="display:inline-flex; gap:8px; align-items:center;">
-                <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>DEL-004</td>
-            <td>Given Wrong Address.</td>
-            <!-- <td><span class="status resolved">Resolved</span></td> -->
-            <td>2024-06-08</td>
-            <td>
-              <div style="display:inline-flex; gap:8px; align-items:center;">
-                <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>DEL-005</td>
-            <td>Customer don't pay.</td>
-            <!-- <td><span class="status resolved">Resolved</span></td> -->
-            <td>2024-06-09</td>
-            <td>
-
-              <div style="display:inline-flex; gap:8px; align-items:center;">
-                <button class="btn1" onclick="updateIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn1" onclick="deleteIssue('DEL-003')" style="display:inline-flex; align-items:center;">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-
-
+    </div>
+  </div>
 </body>
 
 </html>

@@ -80,9 +80,34 @@ class DeliveryModel {
             FOREIGN KEY (delivery_id) REFERENCES delivery(id) ON DELETE CASCADE
         );";
 
+        $sql3 = "CREATE TABLE IF NOT EXISTS delivery_proofs (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            order_id INT NOT NULL,
+            delivery_id INT NOT NULL,
+            client_name VARCHAR(150) DEFAULT NULL,
+            client_phone VARCHAR(30) DEFAULT NULL,
+            proof_details TEXT DEFAULT NULL,
+            proof_path VARCHAR(500) DEFAULT NULL,
+            note VARCHAR(255) DEFAULT NULL,
+            uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_delivery_proofs_order_id (order_id),
+            INDEX idx_delivery_proofs_delivery_id (delivery_id),
+            FOREIGN KEY (delivery_id) REFERENCES delivery(id) ON DELETE CASCADE
+        );";
+
         try {
             $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
+            $this->pdo->exec($sql3);
+            $this->addColumnIfNotExists('delivery_proofs', 'client_name', 'VARCHAR(150) DEFAULT NULL');
+            $this->addColumnIfNotExists('delivery_proofs', 'client_phone', 'VARCHAR(30) DEFAULT NULL');
+            $this->addColumnIfNotExists('delivery_proofs', 'proof_details', 'TEXT DEFAULT NULL');
+
+            try {
+                $this->pdo->exec("ALTER TABLE delivery_proofs MODIFY proof_path VARCHAR(500) DEFAULT NULL");
+            } catch (PDOException $e) {
+                // Ignore when column already compatible.
+            }
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
@@ -495,4 +520,104 @@ class DeliveryModel {
             // Ignore backfill errors
         }
     }
+
+    public function getCompletedOrdersForProof($deliveryId) {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.id,
+                    o.deliveryDate,
+                    o.deliveryAddress,
+                    c.first_name,
+                    c.last_name,
+                    c.phone
+             FROM orders o
+             JOIN clients c ON o.client_id = c.id
+             WHERE o.delivery_id = ? AND o.is_delivered = 1
+             ORDER BY COALESCE(o.delivered_at, o.deliveryDate) DESC, o.id DESC"
+        );
+        $stmt->execute([$deliveryId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function canUploadProofForOrder($deliveryId, $orderId) {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*)
+             FROM orders
+             WHERE id = ? AND delivery_id = ? AND is_delivered = 1"
+        );
+        $stmt->execute([$orderId, $deliveryId]);
+        return ((int)$stmt->fetchColumn()) > 0;
+    }
+
+    public function saveDeliveryProof($deliveryId, $orderId, $clientName, $clientPhone, $proofDetails, $note = null) {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO delivery_proofs (order_id, delivery_id, client_name, client_phone, proof_details, note)
+             VALUES (?, ?, ?, ?, ?, ?)"
+        );
+        return $stmt->execute([$orderId, $deliveryId, $clientName, $clientPhone, $proofDetails, $note]);
+    }
+
+    public function getDeliveryProofsByDelivery($deliveryId) {
+        $stmt = $this->pdo->prepare(
+            "SELECT dp.id,
+                    dp.order_id,
+                    dp.client_name,
+                    dp.client_phone,
+                    dp.proof_details,
+                    dp.note,
+                    dp.uploaded_at,
+                    o.deliveryDate,
+                    c.first_name,
+                    c.last_name,
+                    c.phone
+             FROM delivery_proofs dp
+             JOIN orders o ON o.id = dp.order_id
+             JOIN clients c ON c.id = o.client_id
+             WHERE dp.delivery_id = ?
+             ORDER BY dp.uploaded_at DESC, dp.id DESC"
+        );
+        $stmt->execute([$deliveryId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function validation($data) {
+        $errors = [];
+
+        if (empty($data['client_phone']) || !preg_match('/^0[0-9]{9}$/', $data['client_phone'])) {
+            $errors[] = "Please enter a valid client phone number.";
+        }
+
+        if (empty($data['proof_details']) || strlen($data['proof_details']) < 2 || strlen($data['proof_details']) > 1000) {
+            $errors[] = "Proof details must be between 2 and 1000 characters.";
+        }
+
+        return $errors;
+    }
+
+    public function getDeliveryProofsForAdmin($deliveryId) {
+        $stmt = $this->pdo->prepare(
+            "SELECT dp.id,
+                    dp.order_id,
+                    dp.client_name,
+                    dp.client_phone,
+                    dp.proof_details,
+                    dp.note,
+                    dp.uploaded_at,
+                    c.first_name,
+                    c.last_name,
+                    c.phone,
+                    o.deliveryDate,
+                    d.first_name AS delivery_first_name,
+                    d.last_name AS delivery_last_name
+             FROM delivery_proofs dp
+             JOIN orders o ON o.id = dp.order_id
+             JOIN clients c ON c.id = o.client_id
+             JOIN delivery d ON d.id = dp.delivery_id
+             WHERE dp.delivery_id = ?
+             ORDER BY dp.uploaded_at DESC, dp.id DESC"
+        );
+        $stmt->execute([$deliveryId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    
 }

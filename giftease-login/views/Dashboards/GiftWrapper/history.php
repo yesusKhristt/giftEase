@@ -35,7 +35,7 @@
                 <input type="hidden" name="controller" value="giftWrapper">
                 <input type="hidden" name="action" value="dashboard/history">
 
-                <div class="filter-tabs">
+                <div class="filter-tabs history-filters">
                     <div class="filter-group">
                         <label>Date From</label>
                         <input type="date" name="dateFrom" value="<?= htmlspecialchars($dateFrom) ?>">

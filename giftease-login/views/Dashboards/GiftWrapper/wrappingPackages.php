@@ -168,7 +168,7 @@
 
     <div class="container">
         <?php
-        $activePage = 'customize';
+        $activePage = 'service';
         include 'views/commonElements/leftSidebarJeshani.php';
         ?>
         <div class="main-content">
@@ -213,13 +213,9 @@
                             <div class="package-info">
                                 <h3 class="package-title"><?= htmlspecialchars($package['title']) ?></h3>
                                 <p class="package-description"><?= htmlspecialchars($package['description']) ?></p>
-                                <div class="package-price">Rs <?= number_format($package['price']) ?></div>
 
                                 <form method="POST" action="?controller=client&action=dashboard/wrappingPackages">
                                     <input type="hidden" name="package_id" value="<?= $package['id'] ?>">
-                                    <button type="submit" class="package-select-btn">
-                                        <i class="fas fa-check-circle"></i> Select Package
-                                    </button>
                                 </form>
                             </div>
                         </div>

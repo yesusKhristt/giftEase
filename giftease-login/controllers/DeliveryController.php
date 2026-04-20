@@ -130,6 +130,9 @@ class DeliveryController {
             case 'notificationViewed':
                 $this->notificationViewed($parts);
                 break;
+            case 'proof':
+                $this->uploadProof($parts);
+                break;
             case 'home':
                 $deliveryId = $_SESSION['user']['id'];
                 $dashboardStats = $this->delivery->getDashboardStats($deliveryId);
@@ -354,5 +357,57 @@ class DeliveryController {
             $myMessages = $this->messeges->getMessageDelivery($_SESSION['user']['id']);
             require_once __DIR__ . '/../views/Dashboards/Delivery/Messeges.php';
         }
+    }
+
+    public function uploadProof($parts)
+    {
+        $deliveryId = (int)($_SESSION['user']['id'] ?? 0);
+        $uploadError = '';
+        $uploadSuccess = '';
+
+        if (isset($_GET['proofStatus']) && $_GET['proofStatus'] === 'success') {
+            $uploadSuccess = 'Proof uploaded successfully.';
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $orderId = (int)($_POST['order_id'] ?? 0);
+            $clientName = trim((string)($_POST['client_name'] ?? ''));
+            $clientPhone = trim((string)($_POST['client_phone'] ?? ''));
+            $proofDetails = trim((string)($_POST['proof_details'] ?? ''));
+            $note = trim((string)($_POST['note'] ?? ''));
+
+            $validationErrors = $this->delivery->validation([
+                'client_phone' => $clientPhone,
+                'proof_details' => $proofDetails
+            ]);
+            if (!empty($validationErrors)) {
+                $uploadError = implode(', ', $validationErrors);
+            } elseif ($orderId <= 0) {
+                $uploadError = 'Please enter a valid order ID.';
+            } elseif ($clientName === '' || $clientPhone === '' || $proofDetails === '') {
+                $uploadError = 'Client name, phone, and proof details are required.';
+            } elseif (!$this->delivery->canUploadProofForOrder($deliveryId, $orderId)) {
+                $uploadError = 'Order is not a completed order assigned to you.';
+            } else {
+                $saved = $this->delivery->saveDeliveryProof(
+                    $deliveryId,
+                    $orderId,
+                    $clientName,
+                    $clientPhone,
+                    $proofDetails,
+                    $note !== '' ? $note : null
+                );
+
+                if (!$saved) {
+                    $uploadError = 'Proof details could not be saved.';
+                } else {
+                    header('Location: index.php?controller=delivery&action=dashboard/proof&proofStatus=success');
+                    exit;
+                }
+            }
+        }
+
+        $myProofs = $this->delivery->getDeliveryProofsByDelivery($deliveryId);
+        require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';
     }
 }

@@ -250,4 +250,149 @@ class VendorModel {
         $stmt->execute([$vendor_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getAnalysisStats(int $vendorId, string $range = 'month'): array {
+        $stats = [
+            'itemsSold' => 0,
+            'clientInteractions' => 0,
+            'repeatClients' => 0,
+            'lowStock' => 0,
+        ];
+
+        $startDate = $this->resolveStartDateForRange($range);
+
+        try {
+            $dateClause = '';
+            $params = [$vendorId];
+            if ($startDate !== null) {
+                $dateClause = ' AND o.deliveryDate >= ?';
+                $params[] = $startDate;
+            }
+
+            $stmt1 = $this->pdo->prepare(
+                "SELECT COALESCE(SUM(oi.quantity), 0)
+                 FROM orderItems oi
+                 JOIN products p ON p.id = oi.item_id
+                 JOIN orders o ON o.id = oi.order_id
+                 WHERE p.vendor_id = ?
+                   AND o.is_delivered = 1" . $dateClause
+            );
+            $stmt1->execute($params);
+            $stats['itemsSold'] = (int) $stmt1->fetchColumn();
+
+            $msgParams = [$vendorId];
+            $msgDateClause = '';
+            if ($startDate !== null) {
+                $msgDateClause = ' AND m.created_at >= ?';
+                $msgParams[] = $startDate . ' 00:00:00';
+            }
+
+            $stmt2 = $this->pdo->prepare(
+                "SELECT COUNT(*)
+                 FROM messeges m
+                 WHERE m.vendor_id = ?" . $msgDateClause
+            );
+            $stmt2->execute($msgParams);
+            $stats['clientInteractions'] = (int) $stmt2->fetchColumn();
+
+            $stmt3 = $this->pdo->prepare(
+                "SELECT COUNT(*)
+                 FROM (
+                    SELECT o.client_id
+                    FROM orders o
+                    JOIN orderItems oi ON oi.order_id = o.id
+                    JOIN products p ON p.id = oi.item_id
+                    WHERE p.vendor_id = ?
+                      AND o.is_delivered = 1" . $dateClause . "
+                    GROUP BY o.client_id
+                    HAVING COUNT(DISTINCT o.id) >= 2
+                 ) AS repeat_clients"
+            );
+            $stmt3->execute($params);
+            $stats['repeatClients'] = (int) $stmt3->fetchColumn();
+
+            $stmt4 = $this->pdo->prepare(
+                "SELECT COUNT(*)
+                 FROM products p
+                 WHERE p.vendor_id = ?
+                   AND p.status = 'active'
+                   AND (p.totalStock - p.reservedStock) <= 5"
+            );
+            $stmt4->execute([$vendorId]);
+            $stats['lowStock'] = (int) $stmt4->fetchColumn();
+        } catch (PDOException $e) {
+            return $stats;
+        }
+
+        return $stats;
+    }
+
+    public function getSalesTrend(int $vendorId, string $range = 'month'): array {
+        $allowedRanges = ['week', 'month', 'year'];
+        $range = in_array($range, $allowedRanges, true) ? $range : 'month';
+
+        $startDate = $this->resolveStartDateForRange($range);
+        $bucketExpr = "DATE(o.deliveryDate)";
+        $labelExpr = "DATE_FORMAT(o.deliveryDate, '%d %b')";
+
+        if ($range === 'week') {
+            $labelExpr = "DATE_FORMAT(o.deliveryDate, '%a')";
+        }
+
+        if ($range === 'year') {
+            $bucketExpr = "DATE_FORMAT(o.deliveryDate, '%Y-%m')";
+            $labelExpr = "DATE_FORMAT(o.deliveryDate, '%b')";
+        }
+
+        $rows = [];
+        try {
+            $stmt = $this->pdo->prepare(
+                "SELECT " . $bucketExpr . " AS bucket,
+                        " . $labelExpr . " AS label,
+                        COALESCE(SUM(oi.quantity), 0) AS sold_units
+                 FROM orders o
+                 JOIN orderItems oi ON oi.order_id = o.id
+                 JOIN products p ON p.id = oi.item_id
+                 WHERE p.vendor_id = ?
+                   AND o.is_delivered = 1
+                   AND o.deliveryDate >= ?
+                 GROUP BY bucket, label
+                 ORDER BY bucket ASC"
+            );
+            $stmt->execute([$vendorId, $startDate]);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        } catch (PDOException $e) {
+            return [
+                'labels' => [],
+                'values' => [],
+            ];
+        }
+
+        $labels = [];
+        $values = [];
+
+        foreach ($rows as $row) {
+            $labels[] = (string) ($row['label'] ?? '');
+            $values[] = (int) ($row['sold_units'] ?? 0);
+        }
+
+        return [
+            'labels' => $labels,
+            'values' => $values,
+        ];
+    }
+
+    private function resolveStartDateForRange(string $range): ?string {
+        $today = new DateTime('today');
+
+        switch ($range) {
+            case 'week':
+                return $today->modify('-6 days')->format('Y-m-d');
+            case 'month':
+                return $today->modify('-29 days')->format('Y-m-d');
+            case 'year':
+                return $today->modify('first day of -11 months')->format('Y-m-d');
+            default:
+                return null;
+        }
+    }
 }
