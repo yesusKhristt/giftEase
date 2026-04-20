@@ -91,33 +91,49 @@
 
 
 
-                        <div style="padding:10px;">
-                            <h4><?= htmlspecialchars($productDetails['name']) ?></h4>
-                            <p>
-                                <?php
+                        <div style="padding: 10px;">
 
-                                require_once 'views/commonElements/rating.php';
-                                $rating = $productDetails['rating'];
-                                echo render_stars($rating);
-                                echo "<div class='rating-text'>$rating Rating</div>"
-                                ?>
-                            <div class="title">Rs.<?= htmlspecialchars($productDetails['price']) ?></div>
-                            <table class="table">
-                                <tr>
-                                    <td>Available Stock</td>
-                                    <td><?= htmlspecialchars($productDetails['totalStock'] - $productDetails['reservedStock']) ?>
-                                    </td>
-                                </tr>
-                            </table>
-                            <h4 class="subtitle">Sold By</h4>
-                            <h3 class="subtitle"><?= htmlspecialchars($productDetails['shop']) ?></h3>
-                            <?php
-                            $rating = $productDetails['vendorRating'];
-                            echo render_stars($rating);
-                            echo "<div class='rating-text'>$rating Rating</div>"
-                            ?>
-                            <a class="btn1" href="?controller=client&action=dashboard/messeges/vendor/view/<?= htmlspecialchars($productDetails['vendor_id']) ?>/direct">Contact Now</a>
+                            <!-- Product name -->
+                            <h2 style="color:#032e3f; margin-bottom:8px;">
+                                <?= htmlspecialchars($productDetails['name']) ?>
+                            </h2>
+
+                            <!-- Price -->
+                            <p class="subtitle" style="margin-bottom:2px;">Price</p>
+                            <p class="title" style="margin-bottom:20px;">
+                                Rs. <?= number_format($productDetails['price'], 2) ?>
                             </p>
+
+                            <!-- Stock -->
+                            <?php $stock = $productDetails['totalStock'] - $productDetails['reservedStock']; ?>
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                                <span style="font-size:13px; color:#999;">Available Stock</span>
+                                <span style="
+            background: <?= $stock > 0 ? '#dcfce7' : '#fee2e2' ?>;
+            color:       <?= $stock > 0 ? '#166534' : '#991b1b' ?>;
+            padding: 4px 12px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;">
+                                    <?= $stock > 0 ? $stock . ' in stock' : 'Out of stock' ?>
+                                </span>
+                            </div>
+
+                            <!-- Divider -->
+                            <hr style="border:none; border-top:1px solid #fedbd2; margin-bottom:20px;">
+
+                            <!-- Vendor -->
+                            <p class="subtitle" style="font-size:12px; margin-bottom:4px;">Sold By</p>
+                            <p style="font-weight:700; color:#032e3f; font-size:15px; margin-bottom:8px;">
+                                <?= htmlspecialchars($productDetails['shop']) ?>
+                            </p>
+
+                            <a class="btn1"
+                                href="?controller=client&action=dashboard/messeges/vendor/view/<?= htmlspecialchars($productDetails['vendor_id']) ?>/direct"
+                                style="width:fit-content;">
+                                <i class="fas fa-comment-dots"></i> Contact Vendor
+                            </a>
+
                         </div>
                     </div>
                     <div class="card">

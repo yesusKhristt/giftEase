@@ -56,6 +56,7 @@ class VendorController {
 
     public function viewItem($parts) {
         $productId      = $parts[3];
+        $ratings = $this->product->fetchRating($productId);
         $productDetails = $this->product->fetchProduct($productId);
         require_once __DIR__ . '/../views/Dashboards/Vendor/ViewItem.php';
     }
