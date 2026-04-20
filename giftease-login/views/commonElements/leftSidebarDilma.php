@@ -26,9 +26,7 @@
       <a href="?controller=client&action=dashboard/orders" class="nav-item <?= isActive('history', $activePage) ?>">
         My Orders
       </a>
-      <a href="?controller=client&action=dashboard/payment" class="nav-item <?= isActive('payment', $activePage) ?>">
-        Payment
-      </a>
+
     </nav>
     <div class="button-section">
       <a href="?controller=client&action=handleLogout" class="btn1">
