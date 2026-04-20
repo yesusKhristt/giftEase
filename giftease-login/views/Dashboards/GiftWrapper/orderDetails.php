@@ -60,7 +60,7 @@
             </div>
     <?php endif; ?>
 
-    <?php if (!empty($customwrap['boxDecoName'])) ?>
+    <?php if (!empty($customwrap['boxDecoName'])): ?>
         <div class="subtitle">
                 Box Deco: <?= htmlspecialchars($customwrap['boxDecoName']) ?>
         </div>
