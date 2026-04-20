@@ -19,12 +19,8 @@
         ?>
         <div class="main-content">
             <div class="page-header">
-                <h1 class="title">All Orders</h1>
-                <p class="subtitle">Orders currently placed by clients.</p>
-            </div>
-            <div class="filter-tabs">
-                <button class="btn2" onclick="markAllRead()">Mark All Read</button>
-                <button class="btn1" onclick="clearNotifications()">Clear All</button>
+                <h1 class="title">All Notification</h1>
+                <p class="subtitle">Notifications related to your deliveries.</p>
             </div>
             <?php foreach ($notifications as $row): ?>
                 <?php

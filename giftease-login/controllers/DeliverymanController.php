@@ -10,7 +10,8 @@ class DeliverymanController
     }
     public function dashboard()
     {
-        if (!$this->deliveryman->getUserByEmail($_SESSION['user']['email'])) {
+        $currentUser = $this->deliveryman->getUserByEmail($_SESSION['user']['email']);
+        if (!$currentUser || ($currentUser['status'] ?? 'active') !== 'active') {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
         }
@@ -18,14 +19,27 @@ class DeliverymanController
         $path = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
-        $this->Deliveryman($parts);
+        $this->Delivery($parts);
     }
 
-    public function Deliveryman($parts)
+    public function Delivery($parts)
     {
-        $level1 = $parts[1] ?? 'home';
-
-        switch ($level1) {
+        switch ($parts[1]) {
+            case 'profile':
+                $deliverymanId = $_SESSION['user']['id'];
+                $deliverymanProfile = $this->deliveryman->getUserById($deliverymanId);
+                $profileStats = $this->deliveryman->getProfileStats($deliverymanId);
+                require_once __DIR__ . '/../views/Dashboards/Deliveryman/profile.php';
+                break;
+            case 'editProfile':
+                $this->editProfile($parts);
+                break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
+                break;
+            case 'deleteProfile':
+                $this->deactivateUser();
+                break;
             case 'acceptTask':
                 $this->acceptTask($parts);
                 break;
@@ -100,6 +114,59 @@ class DeliverymanController
                 break;
         }
     }
+    public function editProfile($parts) {
+        $userId = $_SESSION['user']['id'];
+        $deliverymanProfile = $this->deliveryman->getUserById($userId);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name' => $_POST['last_name'] ?? '',
+                'phone' => $_POST['phone'] ?? '',
+                'address' => $_POST['address'] ?? '',
+                'vehicleType' => $_POST['vehicleType'] ?? '',
+                'vehiclePlate' => $_POST['vehiclePlate'] ?? '',
+                'id' => $userId,
+            ];
+
+            $this->deliveryman->updateUser($data);
+            $_SESSION['user'] = $this->deliveryman->getUserById($userId);
+            header("Location: index.php?controller=deliveryman&action=dashboard/profile");
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Deliveryman/edit.php';
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $uploadDir = 'resources/uploads/deliveryman/profilePictures/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $profilePicPath = null;
+            if (!empty($_FILES['profilePic']) && ($_FILES['profilePic']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
+                $tmpName = $_FILES['profilePic']['tmp_name'];
+                $fileName = time() . '_' . basename($_FILES['profilePic']['name']);
+                $targetFile = $uploadDir . $fileName;
+
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $profilePicPath = $targetFile;
+                }
+            }
+
+            if ($profilePicPath !== null) {
+                $this->deliveryman->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+                $_SESSION['user'] = $this->deliveryman->getUserById($_SESSION['user']['id']);
+            }
+
+            header('Location: index.php?controller=deliveryman&action=dashboard/profile');
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Deliveryman/addImage.php';
+    }
 
     public function acceptTask($parts)
     {
@@ -153,17 +220,19 @@ class DeliverymanController
 
     public function handleLogout()
     {
-        $_SESSION['deliveryman'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
 
     }
-
-            public function deactivateUser()
+    public function deactivateUser()
     {
         $USER_ID = $_SESSION['user']['id'];
         $this->deliveryman->deleteUser($USER_ID);
-        header("Location: index.php");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
     }
 }

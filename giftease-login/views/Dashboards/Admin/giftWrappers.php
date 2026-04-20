@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="resources/1.png">
     <title>Gift Wrappers</title>
     <link rel="stylesheet" href="public/backup/style.css">
     <link rel="stylesheet" href="public/sideTopBar.css" />
@@ -95,7 +96,7 @@
                                     <span class="doc-label">Identity (NIC)</span>
                                     <?php if (!empty($row['identity_doc'])): ?>
                                         <a href="<?php echo htmlspecialchars($row['identity_doc']); ?>" class="doc-link" target="_blank">
-                                            <i class="fas fa-download"></i> View
+                                            <i class="fas fa-eye"></i> View
                                         </a>
                                     <?php else: ?>
                                         <span class="doc-missing">Not Uploaded</span>
@@ -106,7 +107,7 @@
                                     <span class="doc-label">Address Proof (Utility Bill)</span>
                                     <?php if (!empty($row['address_proof'])): ?>
                                         <a href="<?php echo htmlspecialchars($row['address_proof']); ?>" class="doc-link" target="_blank">
-                                            <i class="fas fa-download"></i> View
+                                            <i class="fas fa-eye"></i> View
                                         </a>
                                     <?php else: ?>
                                         <span class="doc-missing">Not Uploaded</span>
@@ -117,7 +118,7 @@
                                     <span class="doc-label">Portfolio/Samples</span>
                                     <?php if (!empty($row['portfolio'])): ?>
                                         <a href="<?php echo htmlspecialchars($row['portfolio']); ?>" class="doc-link" target="_blank">
-                                            <i class="fas fa-download"></i> View
+                                            <i class="fas fa-eye"></i> View
                                         </a>
                                     <?php else: ?>
                                         <span class="doc-missing">Not Uploaded</span>

@@ -324,4 +324,12 @@ class AuthController
         require_once __DIR__ . '/../views/Signup/signup.php';
 
     }
+
+    public function logout()
+    {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
+        exit;
+    }
 }

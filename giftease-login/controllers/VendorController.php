@@ -275,8 +275,9 @@ class VendorController {
     }
 
     public function handleLogout() {
-        $_SESSION['vendor'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
     }
 
@@ -335,6 +336,13 @@ class VendorController {
                 $this->showOrders();
                 break;
             case 'analysis':
+                $selectedRange = $_GET['range'] ?? 'month';
+                if (!in_array($selectedRange, ['week', 'month', 'year'], true)) {
+                    $selectedRange = 'month';
+                }
+
+                $analysisStats = $this->vendor->getAnalysisStats((int) $_SESSION['user']['id'], $selectedRange);
+                $salesTrend = $this->vendor->getSalesTrend((int) $_SESSION['user']['id'], $selectedRange);
                 require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
                 break;
             case 'history':
@@ -390,7 +398,12 @@ class VendorController {
     }
 
     public function editProfile($parts) {
-
+        $USER_ID = $_SESSION['user']['id'];
+        $stmt = $this->vendor->getpdo()->prepare("SELECT * FROM vendors WHERE id = ?");
+        $stmt->execute([$USER_ID]);
+        $vendorUser = $stmt->fetch();
+        $user1 = $vendorUser;
+        $user2 = $vendorUser;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [

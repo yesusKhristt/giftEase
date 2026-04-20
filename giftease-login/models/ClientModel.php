@@ -119,4 +119,17 @@ class ClientModel {
             $client_id
         ]);
     }
+
+    public function getProductsByCategory($category) {
+        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE category = ?");
+        $stmt->execute([$category]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getProductsBySubcategory($subcategory) {
+        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE subcategory = ?");
+        $stmt->execute([$subcategory]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }

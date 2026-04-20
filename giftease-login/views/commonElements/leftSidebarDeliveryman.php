@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <div class="permbar">
   <div class="left_sidebar">
     <div class="logo">
@@ -41,11 +42,17 @@
   <div class="topbar-container">
     <div class="gift-fall-layer"></div>
 
+
     <div class="gift">
       gift<span class="Ease">Ease
       </span>
     </div>
 
+    <nav class="topbar-actions">
+      <a href="?controller=deliveryman&action=dashboard/profile" class="settings-btn <?= isActiveDeliveryman('profile', $activePage) ?>">
+        <i class="fas fa-user"></i>
+      </a>
+    </nav>
   
   </div>
 </div>

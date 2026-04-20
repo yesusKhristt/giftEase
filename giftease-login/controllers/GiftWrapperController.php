@@ -303,6 +303,13 @@ class giftWrapperController {
     }
 
     public function editProfile($parts) {
+        $USER_ID = $_SESSION['user']['id'];
+        $stmt = $this->giftwrapper->getpdo()->prepare("SELECT * FROM giftwrappers WHERE id = ?");
+        $stmt->execute([$USER_ID]);
+        $giftWrapperUser = $stmt->fetch();
+        $user1 = $giftWrapperUser;
+        $user2 = $giftWrapperUser;
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'first_name' => $_POST['first_name'] ?? '',
@@ -388,8 +395,9 @@ class giftWrapperController {
     }
 
     public function handleLogout() {
-        $_SESSION['giftWrapper'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
     }
 

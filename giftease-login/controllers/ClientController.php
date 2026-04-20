@@ -1,7 +1,9 @@
 <?php
-class ClientController {
+class ClientController
+{
     private $client;
     private $products;
+    private $category;
     private $cart;
     private $giftWrapper;
     private $messeges;
@@ -10,9 +12,11 @@ class ClientController {
     private $ratings;
     private $wishlist;
 
-    public function __construct($pdo) {
+    public function __construct($pdo)
+    {
         require_once __DIR__ . '/../models/ClientModel.php';
         require_once __DIR__ . '/../models/ProductsModel.php';
+        require_once __DIR__ . '/../models/CategoryModel.php';
         require_once __DIR__ . '/../models/CartModel.php';
         require_once __DIR__ . '/../models/GiftWrappingModel.php';
         require_once __DIR__ . '/../models/OrderModel.php';
@@ -22,6 +26,7 @@ class ClientController {
         require_once __DIR__ . '/../models/WishlistModel.php';
         $this->client       = new ClientModel($pdo);
         $this->products     = new ProductsModel($pdo);
+        $this->category     = new CategoryModel($pdo);
         $this->cart         = new CartModel($pdo);
         $this->giftWrapper  = new GiftWrappingModel($pdo);
         $this->orders       = new OrderModel($pdo);
@@ -31,7 +36,8 @@ class ClientController {
         $this->wishlist = new WishlistModel($pdo);
     }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         if (! $this->client->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=client");
             exit;
@@ -43,26 +49,11 @@ class ClientController {
         $this->Client($parts);
     }
 
-    public function items($parts) {
-        /* ================= PAGINATION LOGIC ================= */
+    public function items($parts)
+    {
+        /* ================= CART/WISHLIST AJAX LOGIC ================= */
 
-        $itemsPerPage = 12;
-
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        if ($page < 1) $page = 1;
-
-        $offset = ($page - 1) * $itemsPerPage;
-
-        // Fetch paginated products
-        $allProducts = $this->products->fetchPaginated($itemsPerPage, $offset);
-
-        // Count total products
-        $totalItems = $this->products->countAllProducts();
-        $totalPages = ceil($totalItems / $itemsPerPage);
-
-        /* ================= CART AJAX LOGIC ================= */
-
-        $state = $_GET['state'] ?? NULL;
+        $state = $_GET['state'] ?? null;
 
         if ($state === 'cart') {
             $product_id = $parts[2];
@@ -87,6 +78,7 @@ class ClientController {
             }
             exit;
         }
+
         if ($state === 'wishlist') {
             $product_id = $parts[2];
             $client_id = $_SESSION['user']['id'];
@@ -97,7 +89,6 @@ class ClientController {
             } else {
                 $this->wishlist->addToWishlist($client_id, $product_id);
                 echo json_encode(['inWishlist' => true]);
-                exit;
             }
             exit;
         } else if ($state === 'wishlistCheck') {
@@ -112,13 +103,43 @@ class ClientController {
             exit;
         }
 
+        /* ================= PAGINATION LOGIC ================= */
+
+        $itemsPerPage = 12;
+        $selectedCategoryId = isset($_GET['category']) ? (int) $_GET['category'] : 0;
+        $selectedSubcategoryId = isset($_GET['subcategory']) ? (int) $_GET['subcategory'] : 0;
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $itemsPerPage;
+
+        $allProducts = $this->products->fetchPaginatedFilteredForClient(
+            $itemsPerPage,
+            $offset,
+            $selectedCategoryId,
+            $selectedSubcategoryId
+        );
+
+        $totalItems = $this->products->countAllProductsFilteredForClient(
+            $selectedCategoryId,
+            $selectedSubcategoryId
+        );
+        $totalPages = ceil($totalItems / $itemsPerPage);
+
+        $categories = $this->category->getCategory();
+        $subcategories = $selectedCategoryId > 0
+            ? $this->category->getSubcategory($selectedCategoryId)
+            : $this->category->getAllSubcategory();
+
         /* ================= LOAD VIEW ================= */
 
         require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
     }
 
 
-    public function displayProduct($parts) {
+    public function displayProduct($parts)
+    {
         $productId      = $parts[2];
         $productDetails = $this->products->fetchProduct($productId);
 
@@ -143,11 +164,13 @@ class ClientController {
     //     require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
     // }
 
-    public function wrapping() {
+    public function wrapping()
+    {
         require_once __DIR__ . '/../views/Dashboards/Client/wrap.php';
     }
 
-    public function messeges($parts) {
+    public function messeges($parts)
+    {
         $staff_id = $parts[4] ?? '';
 
         if ($parts[3] === 'send') {
@@ -317,18 +340,21 @@ class ClientController {
         }
     }
 
-    public function notifications() {
+    public function notifications()
+    {
         $notifications = $this->notification->getClientNotifications($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Client/notification.php';
     }
 
-    public function notificationViewed($parts) {
+    public function notificationViewed($parts)
+    {
         $id = (int)$parts[2];
         $this->notification->viewNotificationClient($id);
         exit();
     }
 
-    public function wrappingPackages($parts) {
+    public function wrappingPackages($parts)
+    {
         $packages = $this->giftWrapper->getGiftWrappingPackages();
 
         // Handle package selection
@@ -351,7 +377,8 @@ class ClientController {
         require_once __DIR__ . '/../views/Dashboards/Client/wrappingPackages.php';
     }
 
-    public function history() {
+    public function history()
+    {
         $clientId = $_SESSION['user']['id'];
         $orders = $this->orders->getOrdersByClient($clientId);
 
@@ -370,7 +397,8 @@ class ClientController {
         include __DIR__ . '/../views/Dashboards/Client/history.php';
     }
 
-    public function rate() {
+    public function rate()
+    {
         $clientId = $_SESSION['user']['id'];
         $orders = $this->orders->getOrdersByClient($clientId);
 
@@ -389,7 +417,8 @@ class ClientController {
         include __DIR__ . '/views/Dashboards/Client/history.php';
     }
 
-    public function cart($parts) {
+    public function cart($parts)
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $state      = $parts[3] ?? '';
             $product_id = $parts[2] ?? '';
@@ -431,7 +460,8 @@ class ClientController {
         require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
     }
 
-    public function custom($parts) {
+    public function custom($parts)
+    {
         $boxWrap        = $this->giftWrapper->getBoxWrap();
         $boxRibbon      = $this->giftWrapper->getBoxRibbon();
         $paperBag       = $this->giftWrapper->getPaperBag();
@@ -454,7 +484,8 @@ class ClientController {
         require_once __DIR__ . '/../views/Dashboards/Client/custom.php';
     }
 
-    public function checkout($parts) {
+    public function checkout($parts)
+    {
         $mode    = $parts[2];
         // var_dump($_SESSION['checkout']['wrap']);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -476,7 +507,8 @@ class ClientController {
         require_once __DIR__ . '/../views/Dashboards/Client/checkout.php';
     }
 
-    public function payhere($parts) {
+    public function payhere($parts)
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
             $_SESSION['checkout']['cart'] = $cartItems;
@@ -498,7 +530,7 @@ class ClientController {
                 $notificationMessege = $notificationMessege . $name . ' ';
 
                 $notificationTitleVendor = "You have a new Order!";
-                $notificationMessegeVendor = "You have a new order, order". $order_id." for the item ID".$product_id." named "."'".$name."'";
+                $notificationMessegeVendor = "You have a new order, order" . $order_id . " for the item ID" . $product_id . " named " . "'" . $name . "'";
                 $hrefVendor = "?controller=vendor&action=dashboard/item/view/" . $product_id;
                 $this->notification->notifyVendor($vendor_id, $notificationTitleVendor, $notificationMessegeVendor, $hrefVendor);
             }
@@ -511,12 +543,14 @@ class ClientController {
         require_once __DIR__ . '/../views/Dashboards/Client/payhere/payhere.php';
     }
 
-    public function account($parts) {
+    public function account($parts)
+    {
         $user2 = $_SESSION['user'];
         require_once __DIR__ . '/../views/Dashboards/Client/account.php';
     }
 
-    public function wishlist($parts) {
+    public function wishlist($parts)
+    {
         $itemsPerPage = 4;
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -562,7 +596,8 @@ class ClientController {
         require_once __DIR__ . '/../views/Dashboards/Client/wishlist.php';
     }
 
-    public function Client($parts) {
+    public function Client($parts)
+    {
         switch ($parts[1]) {
             case 'cart':
                 $this->cart($parts);
@@ -624,7 +659,14 @@ class ClientController {
         }
     }
 
-    public function editProfile($parts) {
+    public function editProfile($parts)
+    {
+        $USER_ID = $_SESSION['user']['id'];
+        $stmt = $this->client->getpdo()->prepare("SELECT * FROM clients WHERE id = ?");
+        $stmt->execute([$USER_ID]);
+        $clientUser = $stmt->fetch();
+        $user1 = $clientUser;
+        $user2 = $clientUser;
 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -645,7 +687,8 @@ class ClientController {
         require_once __DIR__ . '/../views/Dashboards/Client/edit.php';
     }
 
-    public function updateProfilePicture() {
+    public function updateProfilePicture()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle file upload if user selected a new image
             $uploadDir = "resources/uploads/client/profilePictures/";
@@ -674,6 +717,25 @@ class ClientController {
             //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
         }
 
-        require_once __DIR__ . '/../views/commonElements/addImage.php';
+        require_once __DIR__ . '/../views/Dashboards/Client/addImage.php';
+    }
+
+    public function handleLogout()
+    {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
+        exit;
+    }
+
+    public function filterItems()
+    {
+        $categoryId = isset($_GET['category']) ? (int) $_GET['category'] : 0;
+        $subcategoryId = isset($_GET['subcategory']) ? (int) $_GET['subcategory'] : 0;
+
+        $filteredProducts = $this->products->fetchPaginatedFilteredForClient(200, 0, $categoryId, $subcategoryId);
+
+        header('Content-Type: application/json');
+        echo json_encode($filteredProducts);
     }
 }

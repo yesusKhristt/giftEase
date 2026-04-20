@@ -1,5 +1,6 @@
 <?php
-class DeliveryController {
+class DeliveryController
+{
     private $delivery;
     private $notification;
 
@@ -7,7 +8,8 @@ class DeliveryController {
     private $withdraw;
 
 
-    public function __construct($pdo) {
+    public function __construct($pdo)
+    {
         require_once __DIR__ . '/../models/DeliveryModel.php';
         require_once __DIR__ . '/../models/NotificationModel.php';
         require_once __DIR__ . '/../models/MessegesModel.php';
@@ -18,7 +20,8 @@ class DeliveryController {
         $this->withdraw = new WithdrawModel($pdo);
     }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         if (!$this->delivery->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
@@ -30,17 +33,20 @@ class DeliveryController {
         $this->Delivery($parts);
     }
 
-    public function allOrder($parts) {
+    public function allOrder($parts)
+    {
         $orders = $this->delivery->getAllOrders() ?? [];
         require_once __DIR__ . '/../views/Dashboards/Delivery/allOrders.php';
     }
 
-    public function assignedOrder($parts) {
+    public function assignedOrder($parts)
+    {
         $myOrders = $this->delivery->getAssignedOrders($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Delivery/assignedOrders.php';
     }
 
-    public function acceptOrder($parts) {
+    public function acceptOrder($parts)
+    {
         $order_id = $parts[2];
         $this->delivery->acceptOrder($order_id, $_SESSION['user']['id']);
 
@@ -58,7 +64,8 @@ class DeliveryController {
         exit;
     }
 
-    public function markComplete($parts) {
+    public function markComplete($parts)
+    {
         $client_id = $parts[3];
         $notificationTitle = "Delivery Complete!";
         $notificationMessege = "Your Order has been successfully delivered";
@@ -70,7 +77,8 @@ class DeliveryController {
         exit;
     }
 
-    public function cancelOrder($parts) {
+    public function cancelOrder($parts)
+    {
         $order_id = $parts[2];
         $client_id = $parts[3];
         $this->delivery->cancelOrder($order_id);
@@ -89,7 +97,8 @@ class DeliveryController {
         exit;
     }
 
-    public function Delivery($parts) {
+    public function Delivery($parts)
+    {
         switch ($parts[1]) {
             case 'profile':
                 $deliveryId = $_SESSION['user']['id'];
@@ -100,8 +109,8 @@ class DeliveryController {
             case 'history':
                 $this->history();
                 break;
-            case 'map':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/map.php';
+            case 'proof':
+                $this->uploadProof($parts);
                 break;
             case 'allOrder':
                 $this->allOrder($parts);
@@ -130,6 +139,12 @@ class DeliveryController {
             case 'notificationViewed':
                 $this->notificationViewed($parts);
                 break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
+                break;
+            case 'editProfile':
+                $this->editProfile();
+                break;
             case 'home':
                 $deliveryId = $_SESSION['user']['id'];
                 $dashboardStats = $this->delivery->getDashboardStats($deliveryId);
@@ -143,18 +158,21 @@ class DeliveryController {
         }
     }
 
-    public function notifications() {
+    public function notifications()
+    {
         $notifications = $this->notification->getDeliveryNotifications($_SESSION['user']['id']);
         require_once __DIR__ . '/../views/Dashboards/Delivery/notification.php';
     }
 
-    public function notificationViewed($parts) {
+    public function notificationViewed($parts)
+    {
         $id = (int)$parts[2];
         $this->notification->viewNotificationDelivery($id);
         exit();
     }
 
-    public function Finance($parts) {
+    public function Finance($parts)
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($parts[2] == 'withdraw') {
                 $amount = $_POST['amount'];
@@ -177,20 +195,57 @@ class DeliveryController {
         require_once __DIR__ . '/../views/Dashboards/Delivery/wallet.php';
     }
 
-    public function handleLogout() {
-        $_SESSION['delivery'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+    public function handleLogout()
+    {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
     }
-    public function editProfile() {
+    public function updateProfilePicture()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle file upload if user selected a new image
+            $uploadDir = "resources/uploads/delivery/profilePictures/";
+            if (! is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $profilePicPath = null;
+
+            // Get file info
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            // Move file to upload folder
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                // store the uploaded file path
+                $profilePicPath = $targetFile;
+            }
+
+            if ($profilePicPath !== null) {
+                $this->delivery->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+                $_SESSION['user'] = $this->delivery->getUserByEmail($_SESSION['user']['email']);
+            }
+
+            header("Location: index.php?controller=delivery&action=dashboard/profile");
+            exit;
+
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Delivery/addImage.php';
+    }
+    public function editProfile()
+    {
         // Logic to handle profile editing
         $USER_ID = $_SESSION['user']['id'];
-        $stmt1 = $this->delivery->getpdo()->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt2 = $this->delivery->getpdo()->prepare("SELECT * FROM delivery WHERE user_id = ?");
-        $stmt1->execute([$USER_ID]);
-        $user1 = $stmt1->fetch();
-        $stmt2->execute([$USER_ID]);
-        $user2 = $stmt2->fetch();
+        $stmt = $this->delivery->getpdo()->prepare("SELECT * FROM delivery WHERE id = ?");
+        $stmt->execute([$USER_ID]);
+        $deliveryUser = $stmt->fetch();
+        $user1 = $deliveryUser;
+        $user2 = $deliveryUser;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $FIRST_NAME = $_POST['first_name'] ?? '';
@@ -212,12 +267,14 @@ class DeliveryController {
         }
         require_once __DIR__ . '/../views/Dashboards/Delivery/edit.php';
     }
-    public function history() {
+    public function history()
+    {
         $filters = [
             'dateFrom' => $_GET['dateFrom'] ?? '',
             'dateTo'   => $_GET['dateTo'] ?? '',
             'status'   => $_GET['status'] ?? 'all',
-            'customer' => $_GET['customer'] ?? ''
+            'customer' => $_GET['customer'] ?? '',
+            'product' => $_GET['product'] ?? '',
         ];
 
         // Get delivery history from database
@@ -247,8 +304,63 @@ class DeliveryController {
         require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
     }
 
+    public function uploadProof($parts)
+    {
+        $deliveryId = (int)($_SESSION['user']['id'] ?? 0);
+        $uploadError = '';
+        $uploadSuccess = '';
 
-    public function messeges($parts) {
+        if (isset($_GET['proofStatus']) && $_GET['proofStatus'] === 'success') {
+            $uploadSuccess = 'Proof uploaded successfully.';
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $orderId = (int)($_POST['order_id'] ?? 0);
+            $clientName = trim((string)($_POST['client_name'] ?? ''));
+            $clientPhone = trim((string)($_POST['client_phone'] ?? ''));
+            $clientGender = trim((string)($_POST['gender'] ?? ''));
+            $proofDetails = trim((string)($_POST['proof_details'] ?? ''));
+            $note = trim((string)($_POST['note'] ?? ''));
+
+            $validationErrors = $this->delivery->validation([
+                'client_phone' => $clientPhone,
+                'proof_details' => $proofDetails
+            ]);
+            if (!empty($validationErrors)) {
+                $uploadError = implode(', ', $validationErrors);
+            } elseif ($orderId <= 0) {
+                $uploadError = 'Please enter a valid order ID.';
+            } elseif ($clientName === '' || $clientPhone === '' || $proofDetails === '') {
+                $uploadError = 'Client name, phone, and proof details are required.';
+            } elseif (!$this->delivery->canUploadProofForOrder($deliveryId, $orderId)) {
+                $uploadError = 'Order is not a completed order assigned to you.';
+            } else {
+                $saved = $this->delivery->saveDeliveryProof(
+                    $deliveryId,
+                    $orderId,
+                    $clientName,
+                    $clientPhone,
+                    $clientGender,
+                    $proofDetails,
+                    $note !== '' ? $note : null
+                );
+
+                if (!$saved) {
+                    $uploadError = 'Proof details could not be saved.';
+                } else {
+                    header('Location: index.php?controller=delivery&action=dashboard/proof&proofStatus=success');
+                    exit;
+                }
+            }
+        }
+
+        $myProofs = $this->delivery->getDeliveryProofsByDelivery($deliveryId);
+        require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';
+    }
+
+
+    public function messeges($parts)
+    {
         $client_id = $parts[3] ?? '';
 
         if ($parts[2] === 'send') {

@@ -57,6 +57,13 @@ class AdminModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getUserById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function addUser($data)
     {
         $stmt = $this->pdo->prepare("INSERT INTO admins (first_name, last_name, email, password, designation, phone, image_loc, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -82,6 +89,15 @@ class AdminModel
             $data['phone'],
             $data['address'],
             $data['id']
+        ]);
+    }
+
+    public function updateProfilePicture($id, $profilePicPath)
+    {
+        $stmt = $this->pdo->prepare("UPDATE admins SET image_loc = ? WHERE id = ?");
+        return $stmt->execute([
+            $profilePicPath,
+            $id
         ]);
     }
 
@@ -684,5 +700,76 @@ class AdminModel
         ");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDetailedOrdersReport()
+    {
+        $orderStmt = $this->pdo->prepare(
+            "SELECT o.*, 
+                    c.first_name AS client_first_name,
+                    c.last_name AS client_last_name,
+                    c.email AS client_email,
+                    c.phone AS client_phone
+             FROM orders o
+             LEFT JOIN clients c ON o.client_id = c.id
+             ORDER BY COALESCE(o.delivered_at, o.deliveryDate) DESC, o.id DESC"
+        );
+        $orderStmt->execute();
+        $orders = $orderStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $itemStmt = $this->pdo->prepare(
+            "SELECT oi.quantity,
+                    p.name AS product_name,
+                    p.price,
+                    COALESCE(v.shopName, 'N/A') AS vendor_shop,
+                    (oi.quantity * p.price) AS subtotal
+             FROM orderItems oi
+             JOIN products p ON oi.item_id = p.id
+             LEFT JOIN vendors v ON p.vendor_id = v.id
+             WHERE oi.order_id = ?"
+        );
+
+        foreach ($orders as &$order) {
+            $itemStmt->execute([$order['id']]);
+            $items = $itemStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $computedProductTotal = array_sum(array_map(function ($item) {
+                return (float) ($item['subtotal'] ?? 0);
+            }, $items));
+
+            $productPrice = isset($order['productPrice']) ? (float) $order['productPrice'] : $computedProductTotal;
+            $deliveryPrice = isset($order['deliveryPrice']) ? (float) $order['deliveryPrice'] : 0.0;
+
+            $order['items'] = $items;
+            $order['computed_product_total'] = $computedProductTotal;
+            $order['computed_grand_total'] = $productPrice + $deliveryPrice;
+        }
+        unset($order);
+
+        return $orders;
+    }
+
+    public function getDetailedOrdersReportSummary()
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*) AS total_orders,
+                    COALESCE(SUM(productPrice), 0) AS total_product_amount,
+                    COALESCE(SUM(deliveryPrice), 0) AS total_delivery_amount,
+                    COALESCE(SUM(productPrice + deliveryPrice), 0) AS grand_total
+             FROM orders"
+        );
+        $stmt->execute();
+        $summary = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $totalOrders = (int) ($summary['total_orders'] ?? 0);
+        $grandTotal = (float) ($summary['grand_total'] ?? 0);
+
+        return [
+            'total_orders' => $totalOrders,
+            'total_product_amount' => (float) ($summary['total_product_amount'] ?? 0),
+            'total_delivery_amount' => (float) ($summary['total_delivery_amount'] ?? 0),
+            'grand_total' => $grandTotal,
+            'avg_order_value' => $totalOrders > 0 ? ($grandTotal / $totalOrders) : 0.0,
+        ];
     }
 }

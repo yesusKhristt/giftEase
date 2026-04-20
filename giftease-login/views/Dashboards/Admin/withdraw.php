@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="resources/1.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Withdraw Requests - GiftEase</title>
   <link rel="stylesheet" href="public/backup/style.css">
@@ -12,14 +13,15 @@
   <style>
     .withdraw-layout {
       display: grid;
-      gap: 24px;
+      grid-template-columns: 1fr;
+      gap: 16px;
     }
 
     .withdraw-card {
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-      padding: 18px;
+      padding: 16px;
     }
 
     .withdraw-card h2 {
@@ -102,6 +104,7 @@
       border: 0;
       border-radius: 8px;
       padding: 5px 9px;
+
       font-size: 0.7rem;
       cursor: pointer;
       font-weight: 700;
@@ -185,9 +188,9 @@
                   </tr>
                 <?php else : ?>
                   <?php foreach ($pending as $row) :
-                    $id;
-                    $role;
-                    $status;
+                    $id = '';
+                    $role = '';
+                    $status = 'Pending';
                     //var_dump($row);
                     if ($row['vendor_id']) {
                       $id = htmlspecialchars($row['vendor_id']);
@@ -205,10 +208,10 @@
                     if ($row['status'] === null) {
                       $status = 'Pending';
                     }
-                    if ($row['status'] === 1) {
+                    if ((string) $row['status'] === '1') {
                       $status = 'Aproved';
                     }
-                    if ($row['status'] === 0) {
+                    if ((string) $row['status'] === '0') {
                       $status = 'Rejected';
                     }
                   ?>
@@ -220,14 +223,14 @@
                       <td><?= htmlspecialchars($status) ?></td>
                       <td>
                         <div class="actions">
-                          <form method="POST" action="?controller=admin&action=dashboard/withdraw/approve">
+                          <form method="POST" action="?controller=admin&action=dashboard/withdraw/approve" class="withdraw-action-form" data-action-label="approve">
                             <input type="hidden" name="withdraw_id" value="<?= htmlspecialchars($row['id']) ?>">
                             <input type="hidden" name="amount" value="<?= htmlspecialchars($row['amount']) ?>">
                             <input type="hidden" name="role" value="<?= htmlspecialchars($role) ?>">
                             <input type="hidden" name="user_id" value="<?= htmlspecialchars($id) ?>">
                             <button type="submit" name="decision" value="approve" class="btn-mini btn-approve">Approve</button>
                           </form>
-                          <form method="POST" action="?controller=admin&action=dashboard/withdraw/reject">
+                          <form method="POST" action="?controller=admin&action=dashboard/withdraw/reject" class="withdraw-action-form" data-action-label="reject">
                             <input type="hidden" name="withdraw_id" value="<?= htmlspecialchars($row['id']) ?>">
                             <input type="hidden" name="amount" value="<?= htmlspecialchars($row['amount']) ?>">
                             <input type="hidden" name="role" value="<?= htmlspecialchars($role) ?>">
@@ -268,9 +271,9 @@
                   </tr>
                 <?php else : ?>
                   <?php foreach ($all as $row) :
-                    $id;
-                    $role;
-                    $status;
+                    $id = '';
+                    $role = '';
+                    $status = 'Pending';
                     //var_dump($row);
                     if ($row['vendor_id']) {
                       $id = htmlspecialchars($row['vendor_id']);
@@ -288,10 +291,10 @@
                     if ($row['status'] === null) {
                       $status = 'Pending';
                     }
-                    if ($row['status'] === 1) {
+                    if ((string) $row['status'] === '1') {
                       $status = 'Aproved';
                     }
-                    if ($row['status'] === 0) {
+                    if ((string) $row['status'] === '0') {
                       $status = 'Rejected';
                     }
                   ?>
@@ -313,5 +316,16 @@
   </div>
   </div>
 </body>
+  <script>
+    document.querySelectorAll('.withdraw-action-form').forEach(function(form) {
+      form.addEventListener('submit', function(event) {
+        var actionLabel = form.getAttribute('data-action-label') || 'proceed with';
+        var confirmed = window.confirm('Are you sure you want to ' + actionLabel + ' this withdrawal request?');
+        if (!confirmed) {
+          event.preventDefault();
+        }
+      });
+    });
+  </script>
 
 </html>

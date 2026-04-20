@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="resources/1.png">
   <title>Delivery Partners</title>
   <link rel="stylesheet" href="public/backup/style.css">
   <link rel="stylesheet" href="public/sideTopBar.css" />
@@ -81,7 +82,7 @@
                   <span class="doc-label">Identity (NIC/Passport)</span>
                   <?php if (!empty($delivery['identity_doc'])): ?>
                     <a href="<?php echo htmlspecialchars($delivery['identity_doc']); ?>" class="doc-link" target="_blank">
-                      <i class="fas fa-download"></i> View
+                      <i class="fas fa-eye"></i> View
                     </a>
                   <?php else: ?>
                     <span class="doc-missing">Not Uploaded</span>
@@ -92,7 +93,7 @@
                   <span class="doc-label">Driving License</span>
                   <?php if (!empty($delivery['driving_license'])): ?>
                     <a href="<?php echo htmlspecialchars($delivery['driving_license']); ?>" class="doc-link" target="_blank">
-                      <i class="fas fa-download"></i> View
+                      <i class="fas fa-eye"></i> View
                     </a>
                   <?php else: ?>
                     <span class="doc-missing">Not Uploaded</span>
@@ -103,7 +104,7 @@
                   <span class="doc-label">Vehicle Registration</span>
                   <?php if (!empty($delivery['vehicle_registration'])): ?>
                     <a href="<?php echo htmlspecialchars($delivery['vehicle_registration']); ?>" class="doc-link" target="_blank">
-                      <i class="fas fa-download"></i> View
+                      <i class="fas fa-eye"></i> View
                     </a>
                   <?php else: ?>
                     <span class="doc-missing">Not Uploaded</span>
@@ -114,7 +115,7 @@
                   <span class="doc-label">Vehicle Insurance</span>
                   <?php if (!empty($delivery['vehicle_insurance'])): ?>
                     <a href="<?php echo htmlspecialchars($delivery['vehicle_insurance']); ?>" class="doc-link" target="_blank">
-                      <i class="fas fa-download"></i> View
+                      <i class="fas fa-eye"></i> View
                     </a>
                   <?php else: ?>
                     <span class="doc-missing">Not Uploaded</span>

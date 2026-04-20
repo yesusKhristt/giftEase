@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="resources/1.png">
   <title>Products</title>
   <link rel="stylesheet" href="public/backup/style.css">
   <link rel="stylesheet" href="public/sideTopBar.css" />
@@ -111,7 +112,7 @@
                 </div>
                 <div style="margin-top: 14px; text-align: center;">
                   <a class="btn1" href="?controller=admin&action=dashboard/items/view/<?= htmlspecialchars($product['id']) ?>">
-                    View Details
+                    <i class="fas fa-eye"></i> View Details
                   </a>
                 </div>
               </div>

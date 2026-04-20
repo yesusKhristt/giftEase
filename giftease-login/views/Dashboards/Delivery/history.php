@@ -23,6 +23,7 @@
         $dateTo   = $_GET['dateTo'] ?? '';
         $status   = $_GET['status'] ?? 'all';
         $customer = $_GET['customer'] ?? '';
+        $product =$_GET['product'] ?? '';
         ?>
 
         <div class="main-content">
@@ -61,6 +62,10 @@
                         <label>Customer Name</label>
                         <input type="text" name="customer" placeholder="Search customer..." value="<?= htmlspecialchars($customer) ?>">
                     </div>
+                    <div class="filter-group">
+                        <label>Product Name</label>
+                        <input type="text" name="product" placeholder="Search product..." value="<?= htmlspecialchars($product) ?>">
+                    </div>
 
                     <div class="filter-actions history-filter-actions">
                         <button type="submit" class="btn1"><i class="fas fa-search"></i> Filter</button>
@@ -70,7 +75,7 @@
             </form>
 
             <!-- RESULTS INFO -->
-            <div style="margin: 15px 0; color: #666;">
+            <div class="history-record-count">
                 Showing <?= count($history) ?> records
             </div>
 
@@ -115,6 +120,6 @@
 
 
 </body>
-<script src="public/main.js"></script>
+<!-- <script src="public/main.js"></script> -->
 
 </html>

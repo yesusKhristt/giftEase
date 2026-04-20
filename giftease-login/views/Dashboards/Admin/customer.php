@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="resources/1.png">
   <title>Vendor Analysis</title>
   <link rel="stylesheet" href="public/backup/style.css">
   <link rel="stylesheet" href="public/sideTopBar.css" />

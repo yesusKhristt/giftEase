@@ -97,9 +97,6 @@
           </div>
         </div>
       </div>
-      <?php
-      var_dump($_SESSION['user'])
-      ?>
       <div style="display: flex; gap: 15px;">
         <div style="display: flex; gap: 15px;">
           <a href="?controller=giftWrapper&action=dashboard/editProfile/primary" class="btn1">

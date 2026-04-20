@@ -27,17 +27,7 @@
             <div class="card">
                 <form method="post">
                     <table class="table">
-                        <tr>
-                            <td class="subtitle">Profile Picture</td>
-                            <td colspan="2">
-                                <div style="display: flex; align-items: center; gap: 20px;">
-                                    <img id="profilePreview" src="" alt="Profile Preview"
-                                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 1px solid #ccc; display: none;" />
-                                    <input type="file" id="profilePicInput" name="profile_picture" accept="image/*"
-                                        onchange="previewProfilePic(event)" />
-                                </div>
-                            </td>
-                        </tr>
+                      
                         <tr>
                             <td style="width:15%" class="subtitle">
                                 First Name
@@ -90,23 +80,6 @@
             </div>
         </div>
 
-        <!-- <script>
-function previewProfilePic(event) {
-    const input = event.target;
-    const preview = document.getElementById('profilePreview');
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        }
-        reader.readAsDataURL(input.files[0]);
-    } else {
-        preview.src = '';
-        preview.style.display = 'none';
-    }
-}
-</script> -->
 </body>
 
 </html>

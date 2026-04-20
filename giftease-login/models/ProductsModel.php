@@ -284,6 +284,32 @@ class ProductsModel {
     }
 
 
+    public function fetchPaginatedFilteredForClient($limit, $offset, $categoryId = 0, $subcategoryId = 0) {
+        $sql = "SELECT * FROM products WHERE status = 'active'";
+
+        if ((int) $categoryId > 0) {
+            $sql .= " AND mainCategory = :category_id";
+        }
+        if ((int) $subcategoryId > 0) {
+            $sql .= " AND subCategory = :subcategory_id";
+        }
+
+        $sql .= " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->pdo->prepare($sql);
+        if ((int) $categoryId > 0) {
+            $stmt->bindValue(':category_id', (int) $categoryId, PDO::PARAM_INT);
+        }
+        if ((int) $subcategoryId > 0) {
+            $stmt->bindValue(':subcategory_id', (int) $subcategoryId, PDO::PARAM_INT);
+        }
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function fetchPaginatedFromVendor($limit, $offset, $vendor_id) {
         $stmt = $this->pdo->prepare("
     SELECT *
@@ -357,6 +383,28 @@ public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $s
     ");
         $stmt->execute();
         return (int)$stmt->fetchColumn();
+    }
+
+    public function countAllProductsFilteredForClient($categoryId = 0, $subcategoryId = 0) {
+        $sql = "SELECT COUNT(*) FROM products WHERE status = 'active'";
+
+        if ((int) $categoryId > 0) {
+            $sql .= " AND mainCategory = :category_id";
+        }
+        if ((int) $subcategoryId > 0) {
+            $sql .= " AND subCategory = :subcategory_id";
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        if ((int) $categoryId > 0) {
+            $stmt->bindValue(':category_id', (int) $categoryId, PDO::PARAM_INT);
+        }
+        if ((int) $subcategoryId > 0) {
+            $stmt->bindValue(':subcategory_id', (int) $subcategoryId, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
     }
 
     public function fetchAllWithVendor()

@@ -18,12 +18,15 @@
     <?php
     $activePage = 'profile';
     include 'views\commonElements/leftSidebarSaneth.php';
+    
     ?>
     <div class="main-content">
       <div class="cardColour">
 
         <div class="profile-section">
-          <i class="profile-picture"></i>
+            <a href="?controller=delivery&action=dashboard/updateProfilePicture">
+            <img src="<?php echo htmlspecialchars($_SESSION['user']['image_loc']) ?>" class="profile-picture" alt="+">
+          </a>
           <div class="">
             <h4><?php echo htmlspecialchars(($deliveryProfile['first_name'] ?? '') . ' ' . ($deliveryProfile['last_name'] ?? '')); ?></h4>
             <p>Member since <?php echo htmlspecialchars(!empty($deliveryProfile['created_at']) ? date('M Y', strtotime($deliveryProfile['created_at'])) : 'N/A'); ?></p>
@@ -44,10 +47,6 @@
           <div class="card">
             <div class="title"><?php echo htmlspecialchars($profileStats['success_rate'] ?? 0); ?>%</div>
             <div class="subtitle">Success Rate</div>
-          </div>
-          <div class="card">
-            <div class="title"><?php echo htmlspecialchars($profileStats['distance'] ?? 'N/A'); ?></div>
-            <div class="subtitle">Distance Traveled</div>
           </div>
         </div>
       </div>
@@ -90,7 +89,7 @@
               <span class="doc-label">Vehicle Insurance</span>
               <?php if (!empty($deliveryProfile['vehicle_insurance'])): ?>
                 <a href="<?php echo htmlspecialchars($deliveryProfile['vehicle_insurance']); ?>" class="doc-link" target="_blank">
-                  <i class="fas fa-download"></i> View
+                  <i class="fas fa-eye"></i> View
                 </a>
               <?php else: ?>
                 <span class="doc-missing">Not Uploaded</span>
@@ -102,7 +101,7 @@
               <spna class="doc-label">Driving License</spna>
               <?php if (!empty($deliveryProfile['driving_license'])): ?>
                 <a href="<?php echo htmlspecialchars($deliveryProfile['driving_license']); ?>" class="doc-link" target="_blank">
-                  <i class="fas fa-download"></i> View
+                  <i class="fas fa-eye"></i> View
                 </a>
               <?php else: ?>
                 <span class="doc-missing">Not Uploaded</span>

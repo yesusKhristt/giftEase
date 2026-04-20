@@ -313,8 +313,9 @@ class AdminController {
         require_once __DIR__ . '/../views/Dashboards/Admin/editGiftWrappingPackages.php';
     }
     public function handleLogout() {
-        $_SESSION['admin'] = null;
-        header("Location: index.php?controller=auth&action=handleLogout");
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
         exit;
     }
 
@@ -553,6 +554,12 @@ class AdminController {
             require_once __DIR__ . '/../views/Dashboards/Admin/deliveryCompleted.php';
             return;
         }
+        if ($section === 'deliveryProofs' && $id) {
+            $delivery = $this->admin->getDeliveryById($id);
+            $proofs = $this->delivery->getDeliveryProofsForAdmin($id);
+            require_once __DIR__ . '/../views/Dashboards/Admin/deliveryProofs.php';
+            return;
+        }
         if ($section === 'deliveryman' && $id) {
             $detail = $this->admin->getDeliverymanById($id);
             $stats = [
@@ -733,7 +740,13 @@ class AdminController {
                 $this->salarySummary();
                 break;
             case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
+                $this->profile($parts);
+                break;
+            case 'editProfile':
+                $this->editProfile($parts);
+                break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
                 break;
             case 'vendor':
                 $this->vendors($parts);
@@ -766,6 +779,90 @@ class AdminController {
         }
     }
 
+    public function profile($parts) {
+        $adminId = $_SESSION['user']['id'] ?? null;
+        if (!$adminId) {
+            header('Location: index.php?controller=auth&action=landing');
+            exit;
+        }
+
+        $adminProfile = $this->admin->getUserById($adminId);
+        if (!$adminProfile) {
+            header('Location: index.php?controller=auth&action=landing');
+            exit;
+        }
+
+        $profileStats = [
+            'total_admins' => count($this->admin->getAllAdmins()),
+            'total_vendors' => count($this->admin->getAllVendors()),
+            'total_delivery' => count($this->admin->getAllDelivery()),
+            'total_deliveryman' => count($this->admin->getAllDeliveryman()),
+            'total_gift_wrappers' => count($this->admin->getAllGiftWrappers()),
+            'total_clients' => count($this->admin->getAllClients())
+        ];
+
+        require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
+    }
+
+    public function editProfile($parts) {
+        $adminId = $_SESSION['user']['id'] ?? null;
+        if (!$adminId) {
+            header('Location: index.php?controller=auth&action=landing');
+            exit;
+        }
+
+        $adminProfile = $this->admin->getUserById($adminId);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name' => $_POST['last_name'] ?? '',
+                'designation' => $_POST['designation'] ?? '',
+                'phone' => $_POST['phone'] ?? '',
+                'address' => $_POST['address'] ?? '',
+                'id' => $adminId
+            ];
+
+            $this->admin->updateUser($data);
+            $_SESSION['user'] = $this->admin->getUserById($adminId);
+
+            header('Location: index.php?controller=admin&action=dashboard/profile');
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Admin/edit.php';
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $uploadDir = 'resources/uploads/admin/profilePictures/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $profilePicPath = null;
+            if (!empty($_FILES['profilePic']) && ($_FILES['profilePic']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
+                $tmpName = $_FILES['profilePic']['tmp_name'];
+                $fileName = time() . '_' . basename($_FILES['profilePic']['name']);
+                $targetFile = $uploadDir . $fileName;
+
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $profilePicPath = $targetFile;
+                }
+            }
+
+            if ($profilePicPath !== null) {
+                $this->admin->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+                $_SESSION['user'] = $this->admin->getUserById($_SESSION['user']['id']);
+            }
+
+            header('Location: index.php?controller=admin&action=dashboard/profile');
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Admin/addImage.php';
+    }
+
     public function Withdraw($parts) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($parts[2] == 'approve') {
@@ -775,8 +872,8 @@ class AdminController {
                 $role = $_POST['role'];
                 $this->withdraw->aproveWithdrawal($withdraw_id, $_SESSION['user']['id']);
                 if ($role === 'Vendor') $this->vendor->approveWithdraw($userID, $amount);
-                if ($role === 'Delivery') $this->delivery()->approveWithdraw($userID, $amount);
-                if ($role === 'Gift Wrapper') $this->giftwrappers()->approveWithdraw($userID, $amount);
+                if ($role === 'Delivery') $this->delivery->approveWithdraw($userID, $amount);
+                if ($role === 'Gift Wrapper') $this->giftWrapper->approveWithdraw($userID, $amount);
             }
             if ($parts[2] == 'reject') {
                 $withdraw_id = $_POST['withdraw_id'];
@@ -785,8 +882,8 @@ class AdminController {
                 $role = $_POST['role'];
                 $this->withdraw->rejectWithdrawal($withdraw_id, $_SESSION['user']['id']);
                 if ($role === 'Vendor') $this->vendor->rejectWithdraw($userID, $amount);
-                if ($role === 'Delivery') $this->delivery()->rejectWithdraw($userID, $amount);
-                if ($role === 'Gift Wrapper') $this->giftwrappers()->rejectWithdraw($userID, $amount);
+                if ($role === 'Delivery') $this->delivery->rejectWithdraw($userID, $amount);
+                if ($role === 'Gift Wrapper') $this->giftWrapper->rejectWithdraw($userID, $amount);
             }
         }
         $pending = $this->withdraw->getWithdrawRequestsPending();
@@ -842,12 +939,23 @@ class AdminController {
 
     public function deactivateUser() {
         $USER_ID = $_SESSION['user']['id'];
-        $this->user->deactivateUser($USER_ID);
+        $this->admin->deleteUser($USER_ID);
         header("Location: index.php");
         exit;
     }
 
     public function reports($parts) {
+        $section = $parts[2] ?? '';
+
+        if ($section === 'print-orders') {
+            $detailedOrders = $this->admin->getDetailedOrdersReport();
+            $reportSummary = $this->admin->getDetailedOrdersReportSummary();
+            $generatedAt = date('Y-m-d H:i:s');
+
+            require_once __DIR__ . '/../views/Dashboards/Admin/reportsOrdersPrint.php';
+            return;
+        }
+
         // Fetch report data
         $reportData = [
             'totalOrders' => $this->admin->getTotalOrders(),

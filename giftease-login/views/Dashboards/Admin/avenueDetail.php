@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="resources/1.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Avenue - GiftEase</title>
   <link rel="stylesheet" href="public/backup/style.css">
@@ -122,6 +123,10 @@
             <a class="card" href="?controller=admin&action=dashboard/avenue/deliveryCompleted/<?= htmlspecialchars($detail['id'] ?? '') ?>">
               <div class="title"><?= htmlspecialchars($stats['completed'] ?? 0) ?></div>
               <div class="subtitle">Completed Orders (click to view)</div>
+            </a>
+            <a class="card" href="?controller=admin&action=dashboard/avenue/deliveryProofs/<?= htmlspecialchars($detail['id'] ?? '') ?>">
+              <div class="title"><i class="fas fa-file-upload"></i></div>
+              <div class="subtitle">Uploaded Proofs (click to view)</div>
             </a>
           <?php elseif ($type === 'giftWrapper') : ?>
             <a class="card" href="?controller=admin&action=dashboard/avenue/giftWrapperCompleted/<?= htmlspecialchars($detail['id'] ?? '') ?>">
