@@ -222,23 +222,65 @@ class GiftWrapperModel {
     }
 
     public function getAssignedOrders($id) {
-        $stmt = $this->pdo->prepare("SELECT *  FROM orders WHERE in_warehouse = 1 AND is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ? ORDER BY id DESC;");
+        $stmt = $this->pdo->prepare("
+        SELECT 
+            o.*,
+            c.first_name, c.last_name
+        FROM orders o 
+        JOIN clients c ON o.client_id = c.id 
+        WHERE o.in_warehouse = 1 
+          AND o.is_wrapped = 0 
+          AND o.is_delivered = 0 
+          AND o.giftWrapper_id = ? 
+        ORDER BY o.id DESC
+    ");
         $stmt->execute([$id]);
-        $order = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($order) {
-            if ($order[0]['customWrap_id']) {
-                $stmt1 = $this->pdo->prepare("SELECT orders.id, client_id, customWrap_id, deliveryDate, is_wrapped, giftWrapper_id, customwrap.price, clients.first_name, clients.last_name FROM orders JOIN customwrap ON orders.customWrap_id = customwrap.id JOIN clients ON orders.client_id = clients.id WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
-                $stmt1->execute([$id]);
-                return $stmt1->fetchAll(PDO::FETCH_ASSOC);
-            } else if ($order[0]['wrapPackage_id']) {
-                $stmt1 = $this->pdo->prepare("SELECT orders.id, client_id, wrapPackage_id, deliveryDate, is_wrapped, giftWrapper_id, customwrap.price, clients.first_name, clients.last_name FROM orders JOIN giftwrappackage ON orders.customWrap_id = customwrap.id JOIN clients ON orders.client_id = clients.id WHERE is_wrapped = 0 AND is_delivered = 0 AND giftWrapper_id = ?");
-                $stmt1->execute([$id]);
-                return $stmt1->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($orders as &$order) {  // <-- & to modify in place
+            if ($order['customWrap_id']) {
+
+                $stmt1 = $this->pdo->prepare("
+                SELECT 
+                    orders.id, client_id, customWrap_id, deliveryDate, 
+                    is_wrapped, giftWrapper_id, customwrap.price, 
+                    clients.first_name, clients.last_name 
+                FROM orders 
+                JOIN customwrap ON orders.customWrap_id = customwrap.id 
+                JOIN clients ON orders.client_id = clients.id 
+                WHERE orders.id = ?   -- fetch only this order's detail
+            ");
+                $stmt1->execute([$order['id']]);  // <-- use current order id
+                $order['package'] = $stmt1->fetch(PDO::FETCH_ASSOC);
+            } elseif ($order['wrapPackage_id']) {
+
+                $stmt2 = $this->pdo->prepare("
+                SELECT 
+                    orders.id, client_id, wrapPackage_id, deliveryDate, 
+                    is_wrapped, giftWrapper_id, 
+                    giftwrappingpackages.price, 
+                    giftwrappingpackages.title, 
+                    giftwrappingpackages.description, 
+                    giftwrappingpackages.images,
+                    clients.first_name, clients.last_name 
+                FROM orders 
+                JOIN giftwrappingpackages ON orders.wrapPackage_id = giftwrappingpackages.id 
+                JOIN clients ON orders.client_id = clients.id 
+                WHERE orders.id = ?   -- fetch only this order's detail
+            ");
+                $stmt2->execute([$order['id']]);  // <-- use current order id
+                $package = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+                if ($package) {
+                    $package['images'] = json_decode($package['images'], true) ?? [];
+                }
+
+                $order['package'] = $package;
             }
-        } else {
-            return $order;
         }
+        unset($order); // break the reference after foreach
+
+        return $orders; // <-- return ALL orders after the loop
     }
 
     public function acceptOrder($order_id, $giftWrapper_id) {

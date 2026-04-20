@@ -38,16 +38,25 @@
           <div style="margin-bottom: 16px;">
             <div style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
               Due: <?= htmlspecialchars($row['deliveryDate']) ?><br>
-              Fee: Rs <?= htmlspecialchars($row['price']) ?>
             </div>
           </div>
           <div class="progress-section">
             <div class="progress-header">
             </div>
             <div class="summary-grid">
-              <a class='btn1' href="?controller=giftWrapper&action=dashboard/viewOrder/<?= $row['id'] ?>">
-                View Details
-              </a>
+              <?php
+              if ($row['wrapPackage_id']):
+              ?>
+                <h3><?= htmlspecialchars($row['package']['title']) ?></h3>
+              <?php
+              else:
+              ?>
+                <a class='btn1' href="?controller=giftWrapper&action=dashboard/viewOrder/<?= (int)$row['id'] ?>">
+                  View Details
+                </a>
+              <?php
+              endif;
+              ?>
               <a class='btn1' href="?controller=giftWrapper&action=dashboard/cancelOrder/<?= $row['id'] ?>/<?= $row['client_id'] ?>">
                 Cancel Order
               </a>

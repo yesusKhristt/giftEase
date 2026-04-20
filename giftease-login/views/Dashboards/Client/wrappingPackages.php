@@ -178,7 +178,7 @@
                 <p class="subtitle">Choose from our ready-made gift wrapping packages</p>
             </div>
 
-            <a href="?controller=client&action=dashboard/wrap" class="back-link">
+            <a href="?controller=client&action=dashboard/wrap" class="subtitle">
                 <i class="fas fa-arrow-left"></i> Back to wrapping options
             </a>
 
@@ -218,7 +218,7 @@
 
                                 <form method="POST" action="?controller=client&action=dashboard/wrappingPackages">
                                     <input type="hidden" name="package_id" value="<?= $package['id'] ?>">
-                                    <button type="submit" class="package-select-btn">
+                                    <button type="submit" class="btn2">
                                         <i class="fas fa-check-circle"></i> Select Package
                                     </button>
                                 </form>

@@ -867,6 +867,7 @@ class AdminController {
 
     public function orders($parts) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $percentage = 10;
             if ($parts[2] == 'approve') {
                 $order_id = $_POST['order_id'];
 
@@ -886,7 +887,7 @@ class AdminController {
                 }
 
                 foreach ($totals as $vendorId => $total) {
-                    $this->vendor->addToBalance($vendorId, $total);
+                    $this->vendor->addToBalance($vendorId, ($total *(100 - $percentage)/100));
                 }
                 $delivery_id = $_POST['delivery_id'];
                 $giftWrapper_id = $_POST['giftWrapper_id'];
@@ -894,8 +895,8 @@ class AdminController {
                 $deliveryPrice = $_POST['deliveryPrice'];
 
                 $this->orders->approveOrder($order_id);
-                $this->giftWrapper->addToBalance($giftWrapper_id, $wrappingPrice);
-                $this->delivery->addToBalance($delivery_id, $deliveryPrice);
+                $this->giftWrapper->addToBalance($giftWrapper_id, ($wrappingPrice * $percentage/ 100));
+                $this->delivery->addToBalance($delivery_id, ($deliveryPrice * (100 - $percentage)/100));
             }
         }
         $pendingOrders = $this->orders->getPendingOrders();
