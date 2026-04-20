@@ -7,6 +7,8 @@ class GiftWrapperModel {
     public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTables(); // Create the table if not there
+        // Ensure gender column exists for migrations on older DBs
+        // $this->ensureGenderColumn();
     }
 
     public function getpdo() {
@@ -20,6 +22,7 @@ class GiftWrapperModel {
             last_name VARCHAR(100) NOT NULL,
             email VARCHAR(100) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
+            -- age INT DEFAULT NULL,
             status ENUM('active', 'inactive') DEFAULT 'active',
             address VARCHAR(255),
             years_of_experience VARCHAR(20),
@@ -45,6 +48,8 @@ class GiftWrapperModel {
             $this->addColumnIfNotExists('giftWrappers', 'identity_doc', 'VARCHAR(500) DEFAULT NULL');
             $this->addColumnIfNotExists('giftWrappers', 'address_proof', 'VARCHAR(500) DEFAULT NULL');
             $this->addColumnIfNotExists('giftWrappers', 'portfolio', 'VARCHAR(500) DEFAULT NULL');
+            $this->addColumnIfNotExists('giftWrappers', 'gender', "VARCHAR(10) DEFAULT NULL");
+            // $this->addColumnIfNotExists('giftWrappers', 'age', 'INT DEFAULT NULL');
         } catch (PDOException $e) {
             die("Error creating tables: " . $e->getMessage());
         }
@@ -126,6 +131,18 @@ class GiftWrapperModel {
         }
     }
 
+    // Backstop migration: ensure `gender` column exists (safe to call repeatedly)
+    private function ensureGenderColumn() {
+        try {
+            $stmt = $this->pdo->query("SHOW COLUMNS FROM `giftWrappers` LIKE 'gender'");
+            if ($stmt === false || $stmt->rowCount() == 0) {
+                $this->pdo->exec("ALTER TABLE `giftWrappers` ADD COLUMN `gender` VARCHAR(10) DEFAULT NULL");
+            }
+        } catch (PDOException $e) {
+            // ignore failures (table may not exist yet or insufficient privileges)
+        }
+    }
+
     public function verifyUser($user_id) {
         $sql  = "UPDATE giftWrappers SET verified = 1 WHERE id = ?";
         $stmt = $this->pdo->prepare($sql);
@@ -161,12 +178,13 @@ class GiftWrapperModel {
     }
 
     public function addUser($data) {
-        $stmt = $this->pdo->prepare("INSERT INTO giftWrappers (first_name, last_name, email, password, years_of_experience, phone, image_loc, address, identity_doc, address_proof, portfolio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->pdo->prepare("INSERT INTO giftWrappers (first_name, last_name, email, password, age, years_of_experience, phone, image_loc, address, identity_doc, address_proof, portfolio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         return $stmt->execute([
             $data['first_name'],
             $data['last_name'],
             $data['email'],
             $data['password'],
+            // $data['age'] ?? null,
             $data['years_of_experience'],
             $data['phone'],
             $data['imageloc'],
@@ -178,10 +196,11 @@ class GiftWrapperModel {
     }
 
     public function updateUser($data) {
-        $stmt = $this->pdo->prepare("UPDATE giftWrappers SET first_name = ?, last_name = ?, years_of_experience = ?, phone = ?, address = ? WHERE id = ?");
+        $stmt = $this->pdo->prepare("UPDATE giftWrappers SET first_name = ?, last_name = ?, age = ?, years_of_experience = ?, phone = ?, address = ? WHERE id = ?");
         return $stmt->execute([
             $data['first_name'],
             $data['last_name'],
+            // $data['age'] ?? null,
             $data['years_of_experience'],
             $data['phone'],
             $data['address'],
@@ -196,6 +215,18 @@ class GiftWrapperModel {
             $id
         ]);
     }
+
+    // Update only the gender field for a gift wrapper
+    public function updateGender($id, $gender) {
+        $stmt = $this->pdo->prepare("UPDATE giftWrappers SET gender = ? WHERE id = ?");
+        return $stmt->execute([$gender, $id]);
+    }
+
+    // Update only the address field for a gift wrapper
+    // public function updateAddress($id, $address) {
+    //     $stmt = $this->pdo->prepare("UPDATE giftWrappers SET address = ? WHERE id = ?");
+    //     return $stmt->execute([$address, $id]);
+    // }
 
     public function getUserByID($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM giftWrappers WHERE id = ?");
@@ -348,6 +379,11 @@ class GiftWrapperModel {
         $sql = "SELECT o.id,
                        o.deliveryDate,
                        o.is_wrapped,
+                       CASE
+                           WHEN o.customWrap_id IS NOT NULL THEN 'custom'
+                           WHEN o.wrapPackage_id IS NOT NULL THEN 'package'
+                           ELSE 'unknown'
+                       END AS wrap_type,
                        COALESCE(cw.price, gp.price, 0) AS amount,
                        c.first_name,
                        c.last_name

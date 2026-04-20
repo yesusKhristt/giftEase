@@ -27,7 +27,7 @@
         <div class="card">
             <div class="services-grid">
                 <a href="?controller=admin&action=dashboard/category/add" style="text-decoration: none;">
-                    <div class="card">
+                   + <div class="card">
                         <div class="service-icon">
                             <i class="fas fa-gift"></i>
                         </div>

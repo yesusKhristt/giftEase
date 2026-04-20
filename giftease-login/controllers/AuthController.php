@@ -43,6 +43,7 @@ class AuthController
             $password = $_POST['password'] ?? '';
             $type = $_GET['type'] ?? 'client';
             $role = $_POST['role'] ?? '';
+            $gender = $_POST['gender'] ?? null;
             $error;
 
             switch ($role) {
@@ -67,6 +68,18 @@ class AuthController
             }
             if ($user) {
                 $_SESSION['user'] = $user;
+
+                // Persist address only for giftWrapper login and update session
+                // if ($role === 'giftWrapper' && $address !== '') {
+                //     $this->giftWrapper->updateAddress($user['id'], $address);
+                //     $_SESSION['user']['address'] = $address;
+                // }
+
+                // If login was for giftWrapper and a gender was provided, save it and update session
+                if ($role === 'giftWrapper' && !empty($gender)) {
+                    $this->giftWrapper->updateGender($user['id'], $gender);
+                    $_SESSION['user']['gender'] = $gender;
+                }
 
                 // 🔑 Navigation happens here
                 switch ($role) {
@@ -175,6 +188,7 @@ class AuthController
 
                 case 'giftWrapper':
                     $years = $_POST['years'] ?? '';
+                    // $age = $_POST['age'] ?? null;
                     if ($this->giftWrapper->getUserByEmail($email)) {
                         $error = 'User already exists.';
                     } else {
@@ -206,6 +220,7 @@ class AuthController
                             'imageloc' => NULL,
                             'address' => $address,
                             'phone' => $phone,
+                            // 'age' => $age,
                             'years_of_experience' => $years,
                             'identity_doc' => $docs['wrapper_identity'] ?? null,
                             'address_proof' => $docs['wrapper_address'] ?? null,
@@ -301,6 +316,7 @@ class AuthController
 
                 case 'admin':
                     $designation = $_POST['designation'] ?? '';
+                    $age = $_POST['age'] ?? null;
                     if ($this->admin->getUserByEmail($email)) {
                         $error = 'User already exists.';
                     } else {
@@ -312,7 +328,8 @@ class AuthController
                             'imageloc' => NULL,
                             'address' => $address,
                             'phone' => $phone,
-                            'designation' => $designation
+                            'designation' => $designation,
+                            'age' => $age
                         ]);
                     }
                     break;

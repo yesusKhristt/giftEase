@@ -83,9 +83,11 @@ $role = $_POST['role'] ?? ($type === 'client' ? 'client' : '');
         </div>
         <div id="giftWrapperFields" style="display: none;">
           <input type="number" name="years" placeholder="Years of Experience" min="0">
+          <!-- <input type="number" name="age" placeholder="Age" min="0"> -->
         </div>
         <div id="adminFields" style="display: none;">
           <input type="text" name="designation" placeholder="Designation">
+          <input type="number" name="age" placeholder="Age" min="0">
         </div>
       <?php endif; ?>
 

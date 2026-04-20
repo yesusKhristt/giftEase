@@ -26,6 +26,14 @@ class CategoryModel
             FOREIGN KEY (category) REFERENCES categories(id) ON DELETE CASCADE
         );
         ";
+        $sql2 = "
+        CREATE TABLE IF NOT EXISTS subCategories (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(20) NOT NULL,
+            category INT NOT NULL,
+            FOREIGN KEY (category) REFERENCES categories(id) ON DELETE CASCADE
+        );
+        ";
 
         try {
             $this->pdo->exec($sql1);
@@ -61,7 +69,18 @@ class CategoryModel
         $stmt->execute([$category_ID]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function addsubsubcategory($name, $subsubcategory)
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO subCategories (name, subsubcategory) VALUES (?, ?)");
+        $stmt->execute([$name, $subsubcategory]);
+    }
 
+    public function getsubsubcategory()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM subsubcategories");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function getAllSubcategory()
     {
         $stmt = $this->pdo->prepare("SELECT * FROM subCategories");

@@ -56,19 +56,19 @@
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
         <div class="form-group">
           <label class="subtitle">Full Name</label>
-          <input type="text" class="form-input" value="Saneth" readonly />
+          <input type="text" class="form-input" value="<?= htmlspecialchars(trim((($_SESSION['user']['first_name'] ?? '') . ' ' . ($_SESSION['user']['last_name'] ?? '')))) ?>" readonly />
         </div>
         <div class="form-group">
           <label class="subtitle">Email</label>
-          <input type="email" class="form-input" value="sanethsiriwardhana@gmail.com" readonly />
+          <input type="email" class="form-input" value="<?= htmlspecialchars($_SESSION['user']['email'] ?? '') ?>" readonly />
         </div>
         <div class="form-group">
           <label class="subtitle">Phone</label>
-          <input type="tel" class="form-input" value="+94 761694206" />
+          <input type="tel" class="form-input" value="<?= htmlspecialchars($_SESSION['user']['phone'] ?? '') ?>" />
         </div>
         <div class="form-group">
-          <label class="subtitle">Emergency Contact</label>
-          <input type="tel" class="form-input" value="+94 761694206" />
+          <label class="subtitle">Age</label>
+          <input type="number" class="form-input" value="<?= htmlspecialchars($_SESSION['user']['age'] ?? '') ?>" readonly />
         </div>
       </div>
     </div>

@@ -69,6 +69,49 @@
                             </div>
                         </td>
                     </tr>
+
+                    
+                </table>
+
+            </form>
+            <form action="?controller=admin&action=dashboard/category/add/subcategory/subsubcategory" method="post">
+                <h3>SubSubcategories</h3>
+                <table class="table">
+                    <tr>
+                        <td>Category</td>
+                        <td colspan="2" style="text-align: center;">
+                            <select id="category" name="category" style="width:80%">
+                                <?php foreach($categories as $row):?>
+                                <option value=<?=htmlspecialchars($row['id'])?>><?=htmlspecialchars($row['name'])?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Subcategory</td>
+                        <td colspan="2" style="text-align: center;">
+                            <select id="Subcategory" name="subcategory" style="width:80%">
+                                <?php foreach($subcategories as $row):?>
+                                <option value=<?=htmlspecialchars($row['id'])?>><?=htmlspecialchars($row['name'])?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:15%" class="subtitle">SubSubcategory</td>
+                        <td colspan="2">
+                            <input type="text" id="title" name="name" placeholder="Title">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div style="display: flex; justify-content: center;">
+                                <input class="btn1" type="submit" style="width:200px">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    
                 </table>
 
             </form>
@@ -79,5 +122,3 @@
         </div>
     
 </body>
-
-</html>

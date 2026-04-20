@@ -79,12 +79,13 @@
                         <th>Delivery Date</th>
                         <th>Status</th>
                         <th>Amount</th>
+                        <th>Wrap_type</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($history)) : ?>
                         <tr>
-                            <td colspan="5" style="text-align:center; padding:30px; color:#999;">
+                            <td colspan="6" style="text-align:center; padding:30px; color:#999;">
                                 No records found matching your filters.
                             </td>
                         </tr>
@@ -95,6 +96,7 @@
                                 $customerName = trim(($row['first_name'] ?? '') . ' ' . ($row['last_name'] ?? ''));
                                 $statusLabel = ((int) ($row['is_wrapped'] ?? 0)) === 1 ? 'Completed' : 'Pending';
                                 $statusClass = ((int) ($row['is_wrapped'] ?? 0)) === 1 ? 'status-verified' : 'status-pending';
+                                $wrap_type = $row['wrap_type'] ?? 'N/A';
                             ?>
                             <tr>
                                 <td>#<?= htmlspecialchars($row['id']) ?></td>
@@ -102,6 +104,7 @@
                                 <td><?= htmlspecialchars($dateLabel) ?></td>
                                 <td><span class="status-badge <?= $statusClass ?>"><?= htmlspecialchars($statusLabel) ?></span></td>
                                 <td style="font-weight: 600;">Rs<?= htmlspecialchars(number_format((float) ($row['amount'] ?? 0), 2)) ?></td>
+                                <td><?= htmlspecialchars($wrap_type) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

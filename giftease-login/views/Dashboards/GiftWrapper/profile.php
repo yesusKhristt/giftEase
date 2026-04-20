@@ -92,6 +92,11 @@
             <input type="tel" class="form-input" value="<?= htmlspecialchars($phone) ?>" readonly />
           </div>
           <div class="form-group">
+            <label class="subtitle">Gender</label>
+            <input type="text" class="form-input" value="<?= htmlspecialchars($profile['gender'] ?? $_SESSION['user']['gender'] ?? '') ?>" readonly />
+          </div>
+          
+          <div class="form-group">
             <label class="subtitle">Business Address</label>
             <input type="address" class="form-input" value="<?= htmlspecialchars($address) ?>" readonly />
           </div>

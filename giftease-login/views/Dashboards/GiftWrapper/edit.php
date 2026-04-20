@@ -62,6 +62,7 @@
                                     value="<?php echo (int) $_SESSION['user']['years_of_experience']; ?>">
                             </td>
                         </tr>
+                     
                         <tr>
                             <td class="subtitle">
                                 Address
