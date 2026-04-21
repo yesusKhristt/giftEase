@@ -429,3 +429,200 @@ $dateTo   = $_GET['date_to']   ?? '';
 .date               { font-size: 12px; color: #aaa; }
 .no-results         { color: #888; grid-column: 1/-1; text-align: center; padding: 40px; }
 </style>
+
+
+
+SELECT 
+    price,
+    discount_percent,
+    price * (1 - discount_percent / 100) AS discounted_price
+FROM products;
+
+<?php
+class ProductsModel {
+    // ... all your existing code stays the same ...
+
+    // ✅ ADD THESE 3 NEW METHODS AT THE BOTTOM, BEFORE THE LAST }
+
+    public function calculateDiscount(array $product): array {
+        $original = (float) $product['price'];
+        $type     = $product['discount_type']    ?? 'none';
+        $percent  = (float)($product['discount_percent'] ?? 0);
+        $fixed    = (float)($product['discount_amount']  ?? 0);
+
+        switch ($type) {
+            case 'percent':
+                $discountAmt = round(($original * $percent) / 100, 2);
+                $finalPrice  = round($original - $discountAmt, 2);
+                $displayPct  = $percent;
+                break;
+            case 'fixed':
+                $discountAmt = min($fixed, $original);
+                $finalPrice  = round(max(0, $original - $discountAmt), 2);
+                $displayPct  = round(($discountAmt / $original) * 100, 2);
+                break;
+            default:
+                $discountAmt = 0;
+                $finalPrice  = $original;
+                $displayPct  = 0;
+                break;
+        }
+
+        return [
+            'original_price'   => $original,
+            'final_price'      => $finalPrice,
+            'discount_amount'  => $discountAmt,
+            'discount_percent' => $displayPct,
+            'discount_type'    => $type,
+            'has_discount'     => $type !== 'none' && $discountAmt > 0,
+        ];
+    }
+
+    public function setDiscount(int $product_id, string $type, float $value): bool {
+        if (!in_array($type, ['none', 'percent', 'fixed'])) return false;
+
+        if ($type === 'percent') {
+            $stmt = $this->pdo->prepare("UPDATE products SET discount_type = ?, discount_percent = ?, discount_amount = 0 WHERE id = ?");
+            return $stmt->execute([$type, $value, $product_id]);
+        }
+        if ($type === 'fixed') {
+            $stmt = $this->pdo->prepare("UPDATE products SET discount_type = ?, discount_amount = ?, discount_percent = 0 WHERE id = ?");
+            return $stmt->execute([$type, $value, $product_id]);
+        }
+
+        $stmt = $this->pdo->prepare("UPDATE products SET discount_type = 'none', discount_percent = 0, discount_amount = 0 WHERE id = ?");
+        return $stmt->execute([$product_id]);
+    }
+
+    public function removeDiscount(int $product_id): bool {
+        return $this->setDiscount($product_id, 'none', 0);
+    }
+}
+
+`VendorController.Claude's response was interruptedRetryYou said: one one fille but all to getherone one fille but all to gether10:51 AMClaude responded: ProductsModel.ProductsModel.php
+php// ADD these 3 methods before the last closing }
+
+public function calculateDiscount(array $product): array {
+    $original = (float) $product['price'];
+    $type     = $product['discount_type']    ?? 'none';
+    $percent  = (float)($product['discount_percent'] ?? 0);
+    $fixed    = (float)($product['discount_amount']  ?? 0);
+
+    switch ($type) {
+        case 'percent':
+            $discountAmt = round(($original * $percent) / 100, 2);
+            $finalPrice  = round($original - $discountAmt, 2);
+            $displayPct  = $percent;
+            break;
+        case 'fixed':
+            $discountAmt = min($fixed, $original);
+            $finalPrice  = round(max(0, $original - $discountAmt), 2);
+            $displayPct  = round(($discountAmt / $original) * 100, 2);
+            break;
+        default:
+            $discountAmt = 0;
+            $finalPrice  = $original;
+            $displayPct  = 0;
+            break;
+    }
+
+    return [
+        'original_price'   => $original,
+        'final_price'      => $finalPrice,
+        'discount_amount'  => $discountAmt,
+        'discount_percent' => $displayPct,
+        'discount_type'    => $type,
+        'has_discount'     => $type !== 'none' && $discountAmt > 0,
+    ];
+}
+
+public function setDiscount(int $product_id, string $type, float $value): bool {
+    if (!in_array($type, ['none', 'percent', 'fixed'])) return false;
+
+    if ($type === 'percent') {
+        $stmt = $this->pdo->prepare("UPDATE products SET discount_type = ?, discount_percent = ?, discount_amount = 0 WHERE id = ?");
+        return $stmt->execute([$type, $value, $product_id]);
+    }
+    if ($type === 'fixed') {
+        $stmt = $this->pdo->prepare("UPDATE products SET discount_type = ?, discount_amount = ?, discount_percent = 0 WHERE id = ?");
+        return $stmt->execute([$type, $value, $product_id]);
+    }
+
+    $stmt = $this->pdo->prepare("UPDATE products SET discount_type = 'none', discount_percent = 0, discount_amount = 0 WHERE id = ?");
+    return $stmt->execute([$product_id]);
+}
+
+public function removeDiscount(int $product_id): bool {
+    return $this->setDiscount($product_id, 'none', 0);
+}
+
+VendorController.php
+php// 1. INSIDE Vendor() switch — add this new case
+case 'discount':
+    $this->handleDiscount($parts);
+    break;
+
+// ─────────────────────────────────────────────────────────────
+// 2. ADD this new method alongside your other methods
+
+public function handleDiscount($parts) {
+    $action    = $parts[2] ?? '';
+    $productId = (int)($parts[3] ?? 0);
+
+    if ($action === 'set' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $type  = $_POST['discount_type']  ?? 'none';
+        $value = (float)($_POST['discount_value'] ?? 0);
+        $this->product->setDiscount($productId, $type, $value);
+        header("Location: index.php?controller=vendor&action=dashboard/item/view/$productId");
+        exit;
+    }
+
+    if ($action === 'remove') {
+        $this->product->removeDiscount($productId);
+        header("Location: index.php?controller=vendor&action=dashboard/item/view/$productId");
+        exit;
+    }
+
+    if ($action === 'view') {
+        $productDetails = $this->product->fetchProduct($productId);
+        $discount       = $this->product->calculateDiscount($productDetails);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/Discount.php';
+    }
+}
+
+// ─────────────────────────────────────────────────────────────
+// 3. INSIDE showInventory() — add the foreach loop AFTER $allProducts is fetched
+
+foreach ($allProducts as &$row) {
+    $row['discount'] = $this->product->calculateDiscount($row);
+}
+unset($row);
+
+Inventory.php
+php// REPLACE this block:
+//   <div class="detail-item">
+//       <span class="detail-label">Price</span>
+//       <span class="detail-value">Rs.<?= htmlspecialchars($row['price']) ?></span>
+//   </div>
+// WITH:
+
+<div class="detail-item">
+    <span class="detail-label">Price</span>
+    <span class="detail-value">
+        <?php $d = $row['discount']; ?>
+        <?php if ($d['has_discount']): ?>
+            <span style="text-decoration:line-through; color:#999; font-size:12px;">
+                Rs.<?= number_format($d['original_price'], 2) ?>
+            </span>
+            <span style="color:#e53935; font-weight:bold;">
+                Rs.<?= number_format($d['final_price'], 2) ?>
+            </span>
+            <span style="background:#e53935; color:#fff; font-size:10px;
+                         padding:1px 6px; border-radius:10px; margin-left:4px;">
+                <?= $d['discount_percent'] ?>% OFF
+            </span>
+        <?php else: ?>
+            Rs.<?= number_format($d['original_price'], 2) ?>
+        <?php endif; ?>
+    </span>
+</div>
