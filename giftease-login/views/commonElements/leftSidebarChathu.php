@@ -2,23 +2,37 @@
   <div class="left_sidebar">
     <!-- Logo -->
     <div class="logo">
-      <img src="resources/ge5.png" class="logo_img">
+      <img src="resources/iconL.png" class="logo_img">
       <div class="gift">
         gift<span class="Ease">Ease
         </span>
       </div>
     </div>
     <?php
-    function isActive($pageName, $activePage)
-    {
+    function isActive($pageName, $activePage) {
       return $pageName === $activePage ? 'active' : '';
     }
     ?>
-    <a href="?controller=admin&action=dashboard/front" class="nav-item <?= isActive('front', $activePage) ?>">
-      Front
+    <a href="?controller=admin&action=dashboard/orders" class="nav-item <?= isActive('orders', $activePage) ?>">
+      Orders
+    </a>
+    <a href="?controller=admin&action=dashboard/reports" class="nav-item <?= isActive('reports', $activePage) ?>">
+      Reports
+    </a>
+    <a href="?controller=admin&action=dashboard/avenue" class="nav-item <?= isActive('avenue', $activePage) ?>">
+      Avenue
+    </a>
+    <a href="?controller=admin&action=dashboard/salary" class="nav-item <?= isActive('salary', $activePage) ?>">
+      Salary
+    </a>
+    <a href="?controller=admin&action=dashboard/admins" class="nav-item <?= isActive('admin', $activePage) ?>">
+      Admins
     </a>
     <a href="?controller=admin&action=dashboard/customer" class="nav-item <?= isActive('customer', $activePage) ?>">
       Customer
+    </a>
+    <a href="?controller=admin&action=dashboard/deliveryman" class="nav-item <?= isActive('deliveryman', $activePage) ?>">
+      Deliveryman
     </a>
     <a href="?controller=admin&action=dashboard/delivery" class="nav-item <?= isActive('delivery', $activePage) ?>">
       Delivery
@@ -26,25 +40,34 @@
     <a href="?controller=admin&action=dashboard/vendor" class="nav-item <?= isActive('vendor', $activePage) ?>">
       Vendor
     </a>
+    <a href="?controller=admin&action=dashboard/giftWrappers"
+      class="nav-item <?= isActive('giftWrappers', $activePage) ?>">
+      Gift Wrappers
+    </a>
     <a href="?controller=admin&action=dashboard/items" class="nav-item <?= isActive('items', $activePage) ?>">
       Items
     </a>
-    <a href="?controller=admin&action=dashboard/reports" class="nav-item <?= isActive('reports', $activePage) ?>">
-      Reports
+    <a href="?controller=admin&action=dashboard/giftWrapping"
+      class="nav-item <?= isActive('giftWrapping', $activePage) ?>">
+      Gift Wrapping
     </a>
+    <a href="?controller=admin&action=dashboard/category" class="nav-item <?= isActive('category', $activePage) ?>">
+      Category
+    </a>
+
     </nav>
     <div class="button-section">
-      <a href="#logout" class="btn1">
+      <a href="?controller=admin&action=handleLogout" class="btn1">
         <i class="fas fa-sign-out-alt"></i>
         Log Out
       </a>
     </div>
   </div>
   <div class="topbar-container">
-    <!-- Search Bar -->
-    <div class="search-bar">
-      <input type="text" class="search-input" placeholder="Search..." />
+    <div class="falling-gifts">
     </div>
+    
+    
 
     <div class="gift">
       gift<span class="Ease">Ease
@@ -53,13 +76,15 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?controller=admin&action=dashboard/settings"
+      <a href="?controller=admin&action=dashboard/withdraw"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
-        <i class="fas fa-cog"></i>
+        <i class="fa fa-credit-card" aria-hidden="true"></i>
       </a>
       <a href="?controller=admin&action=dashboard/profile" class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>
   </div>
+</div>
+<script src="public/main.js"></script>
 </div>

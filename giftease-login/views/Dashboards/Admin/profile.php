@@ -3,135 +3,125 @@
 
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="resources/1.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Delivery Partner Dashboard - GiftEase</title>
-  <link rel="stylesheet" href="public/style.css" />
+  <link rel="stylesheet" href="public/backup/style.css">
+  <link rel="stylesheet" href="public/sideTopBar.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
 
-  <div class="container">
-    <?php
-    $activePage = 'profile';
-    include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebarChathu.php';
-    ?>
-    <div class="main-content">
-      <div class="cardColour">
 
-        <div class="profile-section">
-          <i class="profile-picture"></i>
-          <div class="">
-            <h4>Chathu Ruwanthika</h4>
-            <p>Vendor • Member since Jan 2025</p>
-            <p><i class="fas fa-star"></i> 4.9 Rating • 
+  <?php
+  $activePage = 'profile';
+  include 'views/commonElements/leftSidebarChathu.php';
 
-          </div>
-        </div>
+  $adminProfile = $adminProfile ?? [];
+  $profileStats = $profileStats ?? [];
+  $fullName = trim((string)(($adminProfile['first_name'] ?? '') . ' ' . ($adminProfile['last_name'] ?? '')));
+  $displayName = $fullName !== '' ? $fullName : 'Admin';
+  $profileImage = trim((string)($adminProfile['image_loc'] ?? ''));
+  $createdAt = !empty($adminProfile['created_at']) ? date('M Y', strtotime((string)$adminProfile['created_at'])) : 'N/A';
+  ?>
+  <div class="main-content">
+    <div class="page-header">
+      <h1 class="title">Admin Profile</h1>
+      <p class="subtitle">Manage your personal account information</p>
+    </div>
 
-        <div class="summary-grid">
-          <div class="card">
-            <div class="title">1,247</div>
-            <div class="subtitle">Total Items Sold</div>
-          </div>
-          <div class="card">
-            <div class="title">$18,650</div>
-            <div class="subtitle">Total Earnings</div>
-          </div>
-          <div class="card">
-            <div class="title">98.5%</div>
-            <div class="subtitle">Success Rate</div>
-          </div>
-          <div class="card">
-            <div class="title">4.9</div>
-            <div class="subtitle">Avg Rating</div>
-          </div>
-        </div>
-      </div>
+    <div class="cardColour">
 
-      <div class="card">
-        <h4>Personal Information</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <div class="form-group">
-            <label class="subtitle">Full Name</label>
-            <input type="text" class="form-input" value="Saneth" readonly />
-          </div>
-          <div class="form-group">
-            <label class="subtitle">Email</label>
-            <input type="email" class="form-input" value="sanethsiriwardhana@gmail.com" readonly />
-          </div>
-          <div class="form-group">
-            <label class="subtitle">Phone</label>
-            <input type="tel" class="form-input" value="+94 761694206" />
-          </div>
-          <div class="form-group">
-            <label class="subtitle">Emergency Contact</label>
-            <input type="tel" class="form-input" value="+94 761694206" />
-          </div>
+      <div class="profile-section">
+        <a href="?controller=admin&action=dashboard/updateProfilePicture">
+          <?php if ($profileImage !== ''): ?>
+            <img src="<?php echo htmlspecialchars($profileImage); ?>" class="profile-picture" alt="Admin profile picture" style="object-fit: cover;">
+          <?php else: ?>
+            <div class="profile-picture" style="display:flex;align-items:center;justify-content:center;font-weight:700;">
+              <?php echo htmlspecialchars(strtoupper(substr($displayName, 0, 2))); ?>
+            </div>
+          <?php endif; ?>
+        </a>
+        <div class="">
+          <h4><?php echo htmlspecialchars($displayName); ?></h4>
+          <p><?php echo htmlspecialchars($adminProfile['designation'] ?? 'Administrator'); ?> • Member since <?php echo htmlspecialchars($createdAt); ?></p>
+
         </div>
       </div>
 
-      <div class="card">
-        <h4>Vehicle Information</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <div class="form-group">
-            <label class="subtitle">Vehicle Type</label>
-            <select class="">
-              <option selected>Motorcycle</option>
-              <option>Car</option>
-              <option>Van</option>
-              <option>Bicycle</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="subtitle">License Plate</label>
-            <input type="text" class="form-input" value="MM-7270" />
-          </div>
-          <div class="form-group">
-            <label class="subtitle">Insurance Number</label>
-            <input type="text" class="form-input" value="INS-789456" />
-          </div>
-          <div class="form-group">
-            <label class="subtitle">License Expiry</label>
-            <input type="date" class="form-input" value="2025-12-31" />
-          </div>
+      <div class="summary-grid">
+        <div class="card">
+          <div class="title"><?php echo htmlspecialchars((string)($profileStats['total_admins'] ?? 0)); ?></div>
+          <div class="subtitle">Admins</div>
         </div>
-      </div>
-
-      <div class="card">
-        <h4>Performance Metrics</h4>
-        <div class="summary-grid">
-          <div class="cardColour">
-            <div class="title">28</div>
-            <div class="subtitle">This Month</div>
-            <div>+15% vs last month</div>
-          </div>
-          <div class="cardColour">
-            <div class="title">$420</div>
-            <div class="subtitle">Monthly Earnings</div>
-            <div>+8% vs last month</div>
-          </div>
-          <div class="cardColour">
-            <div class="title">22min</div>
-            <div class="subtitle">Avg Delivery Time</div>
-            <div>-3min vs last month</div>
-          </div>
-          <div class="cardColour">
-            <div class="title">156</div>
-            <div class="subtitle">Customer Reviews</div>
-            <div>+12 this month</div>
-          </div>
+        <div class="card">
+          <div class="title"><?php echo htmlspecialchars((string)($profileStats['total_vendors'] ?? 0)); ?></div>
+          <div class="subtitle">Vendors</div>
         </div>
-      </div>
-
-      <div style="display: flex; gap: 15px;">
-        <button class="btn1" onclick="updateProfile()">Update Profile</button>
-        <button class="btn1" onclick="changePassword()">Change Password</button>
+        <div class="card">
+          <div class="title"><?php echo htmlspecialchars((string)($profileStats['total_delivery'] ?? 0)); ?></div>
+          <div class="subtitle">Delivery Partners</div>
+        </div>
+        <div class="card">
+          <div class="title"><?php echo htmlspecialchars((string)($profileStats['total_deliveryman'] ?? 0)); ?></div>
+          <div class="subtitle">Deliverymen</div>
+        </div>
       </div>
     </div>
+
+    <div class="card">
+      <h4>Personal Information</h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="form-group">
+          <label class="subtitle">Full Name</label>
+          <input type="text" class="form-input" value="<?php echo htmlspecialchars($displayName); ?>" readonly />
+        </div>
+        <div class="form-group">
+          <label class="subtitle">Email</label>
+          <input type="email" class="form-input" value="<?php echo htmlspecialchars($adminProfile['email'] ?? ''); ?>" readonly />
+        </div>
+        <div class="form-group">
+          <label class="subtitle">Phone</label>
+          <input type="tel" class="form-input" value="<?php echo htmlspecialchars($adminProfile['phone'] ?? ''); ?>" readonly />
+        </div>
+        <div class="form-group">
+          <label class="subtitle">Designation</label>
+          <input type="text" class="form-input" value="<?php echo htmlspecialchars($adminProfile['designation'] ?? ''); ?>" readonly />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>Work Information</h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="form-group">
+          <label class="subtitle">Address</label>
+          <input type="text" class="form-input" value="<?php echo htmlspecialchars($adminProfile['address'] ?? ''); ?>" readonly />
+        </div>
+        <div class="form-group">
+          <label class="subtitle">Status</label>
+          <input type="text" class="form-input" value="<?php echo htmlspecialchars($adminProfile['status'] ?? 'active'); ?>" readonly />
+        </div>
+        <div class="form-group">
+          <label class="subtitle">Gift Wrappers</label>
+          <input type="text" class="form-input" value="<?php echo htmlspecialchars((string)($profileStats['total_gift_wrappers'] ?? 0)); ?>" readonly />
+        </div>
+        <div class="form-group">
+          <label class="subtitle">Clients</label>
+          <input type="text" class="form-input" value="<?php echo htmlspecialchars((string)($profileStats['total_clients'] ?? 0)); ?>" readonly />
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 15px;">
+      <a href="?controller=admin&action=dashboard/editProfile" class="btn1">Update Profile</a>
+      
+    </div>
   </div>
-  <script src="main.js"></script>
+
+  <script src="public/main.js"></script>
 </body>
 
 </html>

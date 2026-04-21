@@ -1,22 +1,33 @@
 <?php
 
-require_once __DIR__ . '/../models/UserModel.php';
+class AuthController {
+    private $giftWrapper;
+    private $deliveryman;
+    private $delivery;
+    private $admin;
+    private $client;
+    private $vendor;
 
-class AuthController
-{
-    private $model;
-
-    public function __construct()
-    {
-        $this->model = new UserModel();
+    public function __construct($pdo) {
+        require_once __DIR__ . '/../models/CategoryModel.php';
+        require_once __DIR__ . '/../models/GiftWrapperModel.php';
+        require_once __DIR__ . '/../models/DeliveryModel.php';
+        require_once __DIR__ . '/../models/DeliverymanModel.php';
+        require_once __DIR__ . '/../models/AdminModel.php';
+        require_once __DIR__ . '/../models/ClientModel.php';
+        require_once __DIR__ . '/../models/VendorModel.php';
+        $this->giftWrapper = new GiftWrapperModel($pdo);
+        $this->deliveryman = new DeliverymanModel($pdo);
+        $this->delivery = new DeliveryModel($pdo);
+        $this->admin = new AdminModel($pdo);
+        $this->client = new ClientModel($pdo);
+        $this->vendor = new VendorModel($pdo);
     }
-    public function landing()
-    {
+    public function landing() {
         require_once __DIR__ . '/../views/LandingPage/landingPage.php';
     }
 
-    public function handleLogin()
-    {
+    public function handleLogin() {
         $error = '';
         $user = null;
 
@@ -27,18 +38,39 @@ class AuthController
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             $type = $_GET['type'] ?? 'client';
-            $role= $_POST['role'] ?? '';
-            $user = $this->model->authenticate($email, $password, $role);
+            $role = $_POST['role'] ?? '';
+            $error;
+
+            switch ($role) {
+                case 'client':
+                    $user = $this->client->authenticate($email, $password, $role, $error);
+                    break;
+                case 'vendor':
+                    $user = $this->vendor->authenticate($email, $password, $role, $error);
+                    break;
+                case 'admin':
+                    $user = $this->admin->authenticate($email, $password, $role, $error);
+                    break;
+                case 'delivery':
+                    $user = $this->delivery->authenticate($email, $password, $role, $error);
+                    break;
+                case 'deliveryman':
+                    $user = $this->deliveryman->authenticate($email, $password, $role, $error);
+                    break;
+                case 'giftWrapper':
+                    $user = $this->giftWrapper->authenticate($email, $password, $role, $error);
+                    break;
+            }
             if ($user) {
                 $_SESSION['user'] = $user;
 
                 // 🔑 Navigation happens here
-                switch ($user['type']) {
+                switch ($role) {
                     case 'client':
                         header("Location: index.php?controller=client&action=dashboard/primary");
                         exit;
                     case 'vendor':
-                        header("Location: index.php?controller=vendor&action=checkID/primary");
+                        header("Location: index.php?controller=vendor&action=dashboard/primary");
                         exit;
                     case 'admin':
                         header("Location: index.php?controller=admin&action=dashboard/primary");
@@ -53,258 +85,243 @@ class AuthController
                         header("Location: index.php?controller=giftWrapper&action=dashboard/primary");
                         exit;
                 }
-
-            } else {
-                $error = '❌ Invalid email or password.';
             }
         }
 
         // Load different views based on user type
-
         require_once __DIR__ . '/../views/Login/login.php';
-
-
     }
 
-    public function handleSignup()
-    {
+    public function logout() {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
+        exit;
+    }
+
+
+    public function handleSignup() {
         $error = '';
         $success = '';
 
         $type = $_GET['type'] ?? 'client';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'] ?? '';
+            $firstname = $_POST['f_name'] ?? '';
+            $lastname = $_POST['l_name'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $role = $_POST['role'] ?? '';
+            $address = $_POST['address'] ?? '';
+            $phone = $_POST['phone'] ?? '';
+            switch ($role) {
+                case 'client':
+                    if ($this->client->getUserByEmail($email)) {
+                        $error = 'User already exists.';
+                    } else {
+                        $this->client->addUser([
+                            'first_name' => $firstname,
+                            'last_name' => $lastname,
+                            'email' => $email,
+                            'password' => $hashedPassword,
+                            'imageloc' => NULL,
+                            'address' => $address,
+                            'phone' => $phone
+                        ]);
+                    }
+                    break;
+                case 'vendor':
+                    $shopName = $_POST['shopName'] ?? '';
+                    if ($this->vendor->getUserByEmail($email)) {
+                        $error = 'User already exists.';
+                    } else {
+                        // Handle file uploads for vendor documents
+                        $uploadDir = __DIR__ . '/../resources/uploads/vendor/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
 
+                        $docs = [];
+                        $docFields = ['identity_doc', 'business_cert', 'tin_doc', 'address_proof', 'bank_details'];
 
-            if ($this->model->getUserByEmail($email)) {
-                $error = 'User already exists.';
-            } else {
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $this->model->addUser([
-                    'name' => $name,
-                    'email' => $email,
-                    'password' => $hashedPassword,
-                    'type' => $role
-                ]);
-                $success = '✅ Account created. Please log in.';
-                header("Location: index.php?action=handleLogin&type=$type");
-                exit;
+                        foreach ($docFields as $field) {
+                            if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+                                $file = $_FILES[$field];
+                                $filename = uniqid() . '_' . basename($file['name']);
+                                $uploadPath = $uploadDir . $filename;
+                                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                                    $docs[$field] = 'resources/uploads/vendor/' . $filename;
+                                }
+                            }
+                        }
+
+                        $this->vendor->addUser([
+                            'first_name' => $firstname,
+                            'last_name' => $lastname,
+                            'email' => $email,
+                            'password' => $hashedPassword,
+                            'imageloc' => NULL,
+                            'address' => $address,
+                            'phone' => $phone,
+                            'shopName' => $shopName,
+                            'identity_doc' => $docs['identity_doc'] ?? null,
+                            'business_cert' => $docs['business_cert'] ?? null,
+                            'tin_doc' => $docs['tin_doc'] ?? null,
+                            'address_proof' => $docs['address_proof'] ?? null,
+                            'bank_details' => $docs['bank_details'] ?? null
+                        ]);
+                    }
+                    break;
+
+                case 'giftWrapper':
+                    $years = $_POST['years'] ?? '';
+                    if ($this->giftWrapper->getUserByEmail($email)) {
+                        $error = 'User already exists.';
+                    } else {
+                        // Handle file uploads for gift wrapper documents
+                        $uploadDir = __DIR__ . '/../resources/uploads/giftWrapper/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+
+                        $docs = [];
+                        $docFields = ['wrapper_identity', 'wrapper_address', 'portfolio'];
+
+                        foreach ($docFields as $field) {
+                            if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+                                $file = $_FILES[$field];
+                                $filename = uniqid() . '_' . basename($file['name']);
+                                $uploadPath = $uploadDir . $filename;
+                                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                                    $docs[$field] = 'resources/uploads/giftWrapper/' . $filename;
+                                }
+                            }
+                        }
+
+                        $this->giftWrapper->addUser([
+                            'first_name' => $firstname,
+                            'last_name' => $lastname,
+                            'email' => $email,
+                            'password' => $hashedPassword,
+                            'imageloc' => NULL,
+                            'address' => $address,
+                            'phone' => $phone,
+                            'years_of_experience' => $years,
+                            'identity_doc' => $docs['wrapper_identity'] ?? null,
+                            'address_proof' => $docs['wrapper_address'] ?? null,
+                            'portfolio' => $docs['portfolio'] ?? null
+                        ]);
+                    }
+                    break;
+
+                case 'delivery':
+                    $vehiclePlate = $_POST['vehiclePlate'] ?? '';
+                    if ($this->delivery->getUserByEmail($email)) {
+                        $error = 'User already exists.';
+                    } else {
+                        // Handle file uploads for delivery documents
+                        $uploadDir = __DIR__ . '/../resources/uploads/delivery/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+
+                        $docs = [];
+                        $docFields = ['delivery_identity', 'driving_license', 'vehicle_registration', 'vehicle_insurance'];
+
+                        foreach ($docFields as $field) {
+                            if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+                                $file = $_FILES[$field];
+                                $filename = uniqid() . '_' . basename($file['name']);
+                                $uploadPath = $uploadDir . $filename;
+                                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                                    $docs[$field] = 'resources/uploads/delivery/' . $filename;
+                                }
+                            }
+                        }
+
+                        $this->delivery->addUser([
+                            'first_name' => $firstname,
+                            'last_name' => $lastname,
+                            'email' => $email,
+                            'password' => $hashedPassword,
+                            'imageloc' => NULL,
+                            'address' => $address,
+                            'phone' => $phone,
+                            'vehiclePlate' => $vehiclePlate,
+                            'vehicleType' => $_POST['vehicleType'] ?? '',
+                            'identity_doc' => $docs['delivery_identity'] ?? null,
+                            'driving_license' => $docs['driving_license'] ?? null,
+                            'vehicle_registration' => $docs['vehicle_registration'] ?? null,
+                            'vehicle_insurance' => $docs['vehicle_insurance'] ?? null
+                        ]);
+                    }
+                    break;
+                case 'deliveryman':
+                    $vehiclePlate = $_POST['vehiclePlate'] ?? '';
+                    if ($this->deliveryman->getUserByEmail($email)) {
+                        $error = 'User already exists.';
+                    } else {
+                        // Handle file uploads for deliveryman documents
+                        $uploadDir = __DIR__ . '/../resources/uploads/delivery/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+
+                        $docs = [];
+                        $docFields = ['delivery_identity', 'driving_license', 'vehicle_registration', 'vehicle_insurance'];
+
+                        foreach ($docFields as $field) {
+                            if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
+                                $file = $_FILES[$field];
+                                $filename = uniqid() . '_' . basename($file['name']);
+                                $uploadPath = $uploadDir . $filename;
+                                if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                                    $docs[$field] = 'resources/uploads/delivery/' . $filename;
+                                }
+                            }
+                        }
+
+                        $this->deliveryman->addUser([
+                            'first_name' => $firstname,
+                            'last_name' => $lastname,
+                            'email' => $email,
+                            'password' => $hashedPassword,
+                            'imageloc' => NULL,
+                            'address' => $address,
+                            'phone' => $phone,
+                            'vehiclePlate' => $vehiclePlate,
+                            'vehicleType' => $_POST['vehicleType'] ?? '',
+                            'identity_doc' => $docs['delivery_identity'] ?? null,
+                            'driving_license' => $docs['driving_license'] ?? null,
+                            'vehicle_registration' => $docs['vehicle_registration'] ?? null,
+                            'vehicle_insurance' => $docs['vehicle_insurance'] ?? null
+                        ]);
+                    }
+                    break;
+
+                case 'admin':
+                    $designation = $_POST['designation'] ?? '';
+                    if ($this->admin->getUserByEmail($email)) {
+                        $error = 'User already exists.';
+                    } else {
+                        $this->admin->addUser([
+                            'first_name' => $firstname,
+                            'last_name' => $lastname,
+                            'email' => $email,
+                            'password' => $hashedPassword,
+                            'imageloc' => NULL,
+                            'address' => $address,
+                            'phone' => $phone,
+                            'designation' => $designation
+                        ]);
+                    }
+                    break;
             }
+            $success = '✅ Account created. Please log in.';
+            header("Location: index.php?action=handleLogin&type=$type");
+            exit;
         }
-
         require_once __DIR__ . '/../views/Signup/signup.php';
-
     }
-
-    public function monitorDashboards()
-    {
-        $type = $_GET['type'] ?? 'client';
-        $level1 = $_GET['level'] ?? 'primary';
-        switch ($type) {
-            case 'vendor':
-                $this->Vendor($level1);
-                break;
-            case 'delivery':
-                $this->Delivery($level1);
-                break;
-            case 'deliveryman':
-                $this->Deliveryman($level1);
-                break;
-            case 'giftWrapper':
-                $this->GiftWrapper($level1);
-                break;
-            case 'admin':
-                $this->Admin($level1);
-                break;
-            case 'client':
-                $this->Client($level1);
-                break;
-        }
-    }
-
-    public function Vendor($level1)
-    {
-        switch ($level1) {
-            case 'inventory':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardInventory.php';
-                break;
-            case 'messages':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardMesseges.php';
-                break;
-            case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardAnalysis.php';
-                break;
-            case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardProfile.php';
-                break;
-            case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardHistory.php';
-                break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardSettings.php';
-                break;
-            case 'viewitem':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewItem.php';
-                break;
-            case 'vieworder':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewOrder.php';
-                break;
-            case 'edititem':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
-                break;
-        }
-    }
-    public function Delivery($level1)
-    {
-        switch ($level1) {
-            case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/profile.php';
-                break;
-            case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/history.php';
-                break;
-            case 'map':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/map.php';
-                break;
-            case 'notification':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/notification.php';
-                break;
-            case 'order':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/order.php';
-                break;
-            case 'proof':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';
-                break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Delivery/Settings.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Dashboards/Delivery/home.php';
-                break;
-        }
-    }
-
-    public function Deliveryman($level1)
-    {
-        switch ($level1) {
-            case 'primary':
-                require_once __DIR__ . '/../views/Dashboards/Deliveryman/deliverymanDashboard.php';
-                break;
-            case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/Deliveryman/deliverymanDashboard.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Dashboards/Deliveryman/deliverymanDashboard.php';
-                break;
-        }
-    }
-
-    public function GiftWrapper($level1)
-    {
-        switch ($level1) {
-            case 'analytics':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/analitic.php';
-                break;
-            case 'earnings':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/earning.php';
-                break;
-            case 'order':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/order.php';
-                break;
-            case 'portfolio':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/portfolio.php';
-                break;
-            case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/profile.php';
-                break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/setting.php';
-                break;
-            case 'service':
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/service.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Dashboards/GiftWrapper/overview.php';
-                break;
-        }
-    }
-
-    public function Admin($level1)
-    {
-        switch ($level1) {
-            case 'customer':
-                require_once __DIR__ . '/../views/Dashboards/Admin/customer.php';
-                break;
-            case 'delivery':
-                require_once __DIR__ . '/../views/Dashboards/Admin/deliver.php';
-                break;
-            case 'items':
-                require_once __DIR__ . '/../views/Dashboards/Admin/items new.php';
-                break;
-            case 'reports':
-                require_once __DIR__ . '/../views/Dashboards/Admin/reports nesw.php';
-                break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Admin/settings new.php';
-                break;
-            case 'vendor':
-                require_once __DIR__ . '/../views/Dashboards/Admin/vendors.php';
-                break;
-            case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/Admin/profile.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Dashboards/Admin/front.php';
-                break;
-        }
-    }
-
-    public function Client($level1)
-    {
-        switch ($level1) {
-            case 'cart':
-                require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
-                break;
-            case 'wishlist':
-                require_once __DIR__ . '/../views/Dashboards/Client/wishlist.php';
-                break;
-            case 'tracking':
-                require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
-                break;
-            case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Client/history.php';
-                break;
-            case 'customize':
-                require_once __DIR__ . '/../views/Dashboards/Client/customize.php';
-                break;
-            case 'payment':
-                require_once __DIR__ . '/../views/Dashboards/Client/payment.php';
-                break;
-            case 'account':
-                require_once __DIR__ . '/../views/Dashboards/Client/account.php';
-                break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Client/settings.php';
-                break;
-            case 'viewitem':
-                require_once __DIR__ . '/../views/Dashboards/Client/ViewItem.php';
-                break;
-            default:
-                require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
-                break;
-        }
-    }
-
 }
-
-
-
-
-

@@ -1,0 +1,27 @@
+container
+main-content
+page-header
+title
+subtitle
+cardColour
+profile-section
+card
+form-group
+subtitle
+form-input
+form-input
+filter tabs
+btn1
+btn2
+inventory-grid
+inventory-item
+item-image
+item-content
+item header
+item-name
+item detail
+detail-label
+detail-value
+item-actions
+btn-outline
+btn-small
