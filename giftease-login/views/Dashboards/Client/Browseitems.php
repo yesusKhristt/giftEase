@@ -27,8 +27,8 @@
             </div>
 
 
-            <h4 class="subtitle" style="padding: 10px">Filter by:</h4>
-            <div class="filter-tabs">
+            <!-- <h4 class="subtitle" style="padding: 10px">Filter by:</h4> -->
+            <!-- <div class="filter-tabs">
 
                 <select class="btn1" onchange="filterProducts('category', this.value)">
                     <option value="">Categories</option>
@@ -55,7 +55,7 @@
                     <option value="rating">Rating</option>
                     <option value="name">Name</option>
                 </select>
-            </div>
+            </div> -->
 
 
             <div class="inventory-grid">
