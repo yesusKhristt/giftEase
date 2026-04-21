@@ -33,9 +33,9 @@
         Messages
       </a>
 
-      <a href="?controller=delivery&action=dashboard/proof" class="nav-item <?= isActive('proof', $activePage) ?>">
+      <!-- <a href="?controller=delivery&action=dashboard/proof" class="nav-item <?= isActive('proof', $activePage) ?>">
         Upload Proof
-      </a>
+      </a> -->
 
     </nav>
     <div class="button-section">

@@ -63,7 +63,7 @@ $role = $_POST['role'] ?? ($type === 'client' ? 'client' : '');
       <input type="text" name="f_name" placeholder="First Name" required>
       <input type="text" name="l_name" placeholder="Last Name" required>
       <input type="email" name="email" placeholder="Email" required>
-      <input type="text" name="phone" placeholder="Phone Number" required>
+      <input type="text" name="phone" placeholder="7XXXXXXXX" required pattern="7[0-9]{8}" maxlength="9">
       <input type="text" name="address" placeholder="Address" required>
 
       <!-- Role-specific fields -->
@@ -95,8 +95,8 @@ $role = $_POST['role'] ?? ($type === 'client' ? 'client' : '');
     <!-- STEP 2 -->
     <div class="step" id="step2">
 
-      <input type="password" id="password" name="password" placeholder="Password" required>
-      <input type="password" id="confirmPassword" name="passwordC" placeholder="Confirm Password" required>
+      <input type="password" id="password" name="password" placeholder="Password" required minlength="8">
+      <input type="password" id="confirmPassword" name="passwordC" placeholder="Confirm Password" required minlength="8">
 
       <label>
         <input type="checkbox" required> I agree to the Terms & Conditions

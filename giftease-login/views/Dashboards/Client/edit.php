@@ -49,8 +49,16 @@
                         <tr>
                             <td class="subtitle">Mobile Phone number</td>
                             <td colspan="2">
-                                <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number"
-                                    value="<?php echo htmlspecialchars($_SESSION['user']['phone']); ?>">
+                                <!-- <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number"
+                                    value="<?php echo htmlspecialchars($_SESSION['user']['phone']); ?>"> -->
+
+                                <input type="tel" id="phone" class="form-input" name="phone"
+                                    placeholder="7X XXX XXXX"
+                                    value="<?php echo htmlspecialchars($_SESSION['user']['phone']); ?>"
+                                    pattern="7[0-9]{8}"
+                                    maxlength="9"
+                                    title="Phone number must start with 7 and be exactly 9 digits"
+                                    >
                             </td>
                         </tr>
 
