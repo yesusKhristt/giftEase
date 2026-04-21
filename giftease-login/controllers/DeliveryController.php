@@ -317,21 +317,18 @@ class DeliveryController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $orderId = (int)($_POST['order_id'] ?? 0);
             $clientName = trim((string)($_POST['client_name'] ?? ''));
-            $clientPhone = trim((string)($_POST['client_phone'] ?? ''));
-            $clientGender = trim((string)($_POST['gender'] ?? ''));
+            $clientNIC = trim((string)($_POST['client_nic'] ?? ''));
             $proofDetails = trim((string)($_POST['proof_details'] ?? ''));
             $note = trim((string)($_POST['note'] ?? ''));
 
             $validationErrors = $this->delivery->validation([
-                'client_phone' => $clientPhone,
-                'proof_details' => $proofDetails
+                'proof_details' => $proofDetails,
+                'client_nic' => $clientNIC,
             ]);
             if (!empty($validationErrors)) {
                 $uploadError = implode(', ', $validationErrors);
             } elseif ($orderId <= 0) {
                 $uploadError = 'Please enter a valid order ID.';
-            } elseif ($clientName === '' || $clientPhone === '' || $proofDetails === '') {
-                $uploadError = 'Client name, phone, and proof details are required.';
             } elseif (!$this->delivery->canUploadProofForOrder($deliveryId, $orderId)) {
                 $uploadError = 'Order is not a completed order assigned to you.';
             } else {
@@ -339,8 +336,7 @@ class DeliveryController
                     $deliveryId,
                     $orderId,
                     $clientName,
-                    $clientPhone,
-                    $clientGender,
+                    $clientNIC,
                     $proofDetails,
                     $note !== '' ? $note : null
                 );
@@ -355,7 +351,37 @@ class DeliveryController
         }
 
         $myProofs = $this->delivery->getDeliveryProofsByDelivery($deliveryId);
+        $proofSummary = $this->countNicGenderSummary($myProofs);
         require_once __DIR__ . '/../views/Dashboards/Delivery/proof.php';
+    }
+
+    private function countNicGenderSummary(array $proofs)
+    {
+        $summary = ['male' => 0, 'female' => 0];
+
+        foreach ($proofs as $proof) {
+            $gender = $this->inferGenderFromNic((string)($proof['client_nic'] ?? ''));
+            if ($gender === 'female') {
+                $summary['female']++;
+            } elseif ($gender === 'male') {
+                $summary['male']++;
+            }
+        }
+
+        return $summary;
+    }
+
+    private function inferGenderFromNic($nic)
+    {
+        $digitsOnly = preg_replace('/\D+/', '', (string)$nic);
+
+        if (strlen($digitsOnly) < 7) {
+            return null;
+        }
+
+        
+        $segment = (int)substr($digitsOnly, 4, 3);
+        return $segment >= 500 ? 'female' : 'male';
     }
 
 

@@ -559,13 +559,13 @@ class DeliveryModel
         return ((int)$stmt->fetchColumn()) > 0;
     }
 
-    public function saveDeliveryProof($deliveryId, $orderId, $clientName, $clientPhone, $clientGender, $proofDetails, $note = null)
+    public function saveDeliveryProof($deliveryId, $orderId, $clientName, $clientNIC, $proofDetails, $note = null)
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO delivery_proofs (order_id, delivery_id, client_name, client_phone, gender, proof_details, note)
-             VALUES (?, ?, ?, ?, ?, ?, ?)"
+            "INSERT INTO delivery_proofs (order_id, delivery_id, client_name, client_nic, proof_details, note)
+             VALUES (?, ?, ?, ?, ?, ?)"
         );
-        return $stmt->execute([$orderId, $deliveryId, $clientName, $clientPhone, $clientGender, $proofDetails, $note]);
+        return $stmt->execute([$orderId, $deliveryId, $clientName, $clientNIC, $proofDetails, $note]);
     }
 
     public function getDeliveryProofsByDelivery($deliveryId)
@@ -574,8 +574,7 @@ class DeliveryModel
             "SELECT dp.id,
                     dp.order_id,
                     dp.client_name,
-                    dp.client_phone,
-                    dp.gender,
+                    dp.client_nic,
                     dp.proof_details,
                     dp.note,
                     dp.uploaded_at,
@@ -597,8 +596,9 @@ class DeliveryModel
     {
         $errors = [];
 
-        if (empty($data['client_phone']) || !preg_match('/^0[0-9]{9}$/', $data['client_phone'])) {
-            $errors[] = "Please enter a valid client phone number.";
+       
+        if (empty($data['client_nic']) || !preg_match('/^[0-9]{9}[v]$|^[0-9]{12}$/', $data['client_nic'])) {
+            $errors[] = "Please enter a valid client nic number.";
         }
 
         if (empty($data['proof_details']) || strlen($data['proof_details']) < 2 || strlen($data['proof_details']) > 1000) {
@@ -635,4 +635,7 @@ class DeliveryModel
             // Ignore backfill errors
         }
     }
+   
+
+
 }

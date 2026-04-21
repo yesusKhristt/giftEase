@@ -62,10 +62,7 @@
                         <label>Customer Name</label>
                         <input type="text" name="customer" placeholder="Search customer..." value="<?= htmlspecialchars($customer) ?>">
                     </div>
-                    <div class="filter-group">
-                        <label>Product Name</label>
-                        <input type="text" name="product" placeholder="Search product..." value="<?= htmlspecialchars($product) ?>">
-                    </div>
+                    
 
                     <div class="filter-actions history-filter-actions">
                         <button type="submit" class="btn1"><i class="fas fa-search"></i> Filter</button>
@@ -85,7 +82,6 @@
                     <tr>
                         <th>Order ID</th>
                         <th>Customer</th>
-                        <th>Product</th>
                         <th>Delivery Date</th>
                         <th>Status</th>
                         <th>Earnings</th>

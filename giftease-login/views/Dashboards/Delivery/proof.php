@@ -16,6 +16,8 @@
     <?php
     $activePage = 'proof';
     include 'views/commonElements/leftSidebarSaneth.php';
+    $maleCount = (int)($proofSummary['male'] ?? 0);
+    $femaleCount = (int)($proofSummary['female'] ?? 0);
     ?>
     <div class="main-content">
       <div class="page-header">
@@ -46,16 +48,9 @@
               <input type="text" id="client_name" name="client_name" maxlength="150" placeholder="Enter client full name" required>
             </div>
 
-            <div class="proof-field">
-              <label for="client_phone">Client Phone</label>
-              <input type="text" id="client_phone" name="client_phone" maxlength="30" placeholder="Enter client phone number" required>
-            </div>
-
              <div class="proof-field">
-              <select name="gender" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                </select>
+              <label for="client_name">Client NIC</label>
+              <input type="text" id="client_nic" name="client_nic" maxlength="12" placeholder="Enter client nic number" required>
             </div>
 
             <div class="proof-field proof-field-full">
@@ -78,14 +73,16 @@
       <div class="card">
         <h3 style="margin-top: 0;">My Uploaded Proofs</h3>
         <p class="subtitle">These records are visible to admin with order and client details.</p>
-
+        <div class="card">
+          <span>Male clients: <?= (int)$maleCount ?></span>
+        <span>Female clients: <?= (int)$femaleCount ?></span>
+        </div>
         <table class="table proof-table">
           <thead>
             <tr>
               <th>Order ID</th>
               <th>Client</th>
-              <th>Client Phone</th>
-              <th>Gender</th>
+              <th>Client NIC</th>
               <th>Delivery Date</th>
               <th>Proof Details</th>
               <th>Note</th>
@@ -104,14 +101,14 @@
                 if ($clientName === '') {
                   $clientName = trim(($proof['first_name'] ?? '') . ' ' . ($proof['last_name'] ?? ''));
                 }
+                $clientNIC = trim((string)($proof['client_nic'] ?? ''));
                 $uploadedLabel = !empty($proof['uploaded_at']) ? date('M d, Y h:i A', strtotime($proof['uploaded_at'])) : 'N/A';
                 $deliveryDateLabel = !empty($proof['deliveryDate']) ? date('M d, Y', strtotime($proof['deliveryDate'])) : 'N/A';
                 ?>
                 <tr>
                   <td>#<?= htmlspecialchars($proof['order_id']) ?></td>
                   <td><?= htmlspecialchars($clientName !== '' ? $clientName : 'N/A') ?></td>
-                  <td><?= htmlspecialchars($proof['client_phone'] ?? ($proof['phone'] ?? 'N/A')) ?></td>
-                  <td><?= htmlspecialchars($proof['gender'] ?? ($proof['gender'] ?? 'N/A')) ?></td>
+                  <td><?= htmlspecialchars($clientNIC !== '' ? $clientNIC : 'N/A') ?></td>
                   <td><?= htmlspecialchars($deliveryDateLabel) ?></td>
                   <td><?= htmlspecialchars($proof['proof_details'] ?? '-') ?></td>
                   <td><?= htmlspecialchars($proof['note'] ?? '-') ?></td>
@@ -122,6 +119,7 @@
           </tbody>
         </table>
       </div>
+      <!-- <div class="card"></div> -->
 
     </div>
   </div>
