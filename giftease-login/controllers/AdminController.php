@@ -775,10 +775,19 @@ class AdminController {
             case 'reports':
                 $this->reports($parts);
                 break;
+            case 'codecheck':
+                $this->codecheck($parts);
+                break;
             default:
                 $this->reports($parts);
                 break;
         }
+    }
+
+    public function codecheck($parts){
+        $all = $this->withdraw->getAllWithdraws();
+        $users = $this->withdraw->countVendorWithdraws();
+        require_once __DIR__ . '/../views/Dashboards/Admin/codecheck.php';
     }
 
     public function profile($parts) {
@@ -887,7 +896,7 @@ class AdminController {
                 }
 
                 foreach ($totals as $vendorId => $total) {
-                    $this->vendor->addToBalance($vendorId, ($total *(100 - $percentage)/100));
+                    $this->vendor->addToBalance($vendorId, ($total * (100 - $percentage) / 100));
                 }
                 $delivery_id = $_POST['delivery_id'];
                 $giftWrapper_id = $_POST['giftWrapper_id'];
@@ -895,8 +904,8 @@ class AdminController {
                 $deliveryPrice = $_POST['deliveryPrice'];
 
                 $this->orders->approveOrder($order_id);
-                $this->giftWrapper->addToBalance($giftWrapper_id, ($wrappingPrice * $percentage/ 100));
-                $this->delivery->addToBalance($delivery_id, ($deliveryPrice * (100 - $percentage)/100));
+                $this->giftWrapper->addToBalance($giftWrapper_id, ($wrappingPrice * $percentage / 100));
+                $this->delivery->addToBalance($delivery_id, ($deliveryPrice * (100 - $percentage) / 100));
             }
         }
         $pendingOrders = $this->orders->getPendingOrders();
