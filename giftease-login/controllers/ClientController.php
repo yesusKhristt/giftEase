@@ -1,51 +1,786 @@
 <?php
-class ClientController
-{
-    public function dashboard()
-    {
-        if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'client') {
+class ClientController {
+    private $client;
+    private $products;
+    private $cart;
+    private $giftWrapper;
+    private $messeges;
+    private $orders;
+    private $notification;
+    private $ratings;
+    private $wishlist;
+
+    public function __construct($pdo) {
+        require_once __DIR__ . '/../models/ClientModel.php';
+        require_once __DIR__ . '/../models/ProductsModel.php';
+        require_once __DIR__ . '/../models/CartModel.php';
+        require_once __DIR__ . '/../models/GiftWrappingModel.php';
+        require_once __DIR__ . '/../models/OrderModel.php';
+        require_once __DIR__ . '/../models/MessegesModel.php';
+        require_once __DIR__ . '/../models/NotificationModel.php';
+        require_once __DIR__ . '/../models/RatingModel.php';
+        require_once __DIR__ . '/../models/WishlistModel.php';
+        $this->client       = new ClientModel($pdo);
+        $this->products     = new ProductsModel($pdo);
+        $this->cart         = new CartModel($pdo);
+        $this->giftWrapper  = new GiftWrappingModel($pdo);
+        $this->orders       = new OrderModel($pdo);
+        $this->messeges     = new MessegesModel($pdo);
+        $this->notification = new NotificationModel($pdo);
+        $this->ratings = new RatingModel($pdo);
+        $this->wishlist = new WishlistModel($pdo);
+    }
+
+    public function dashboard() {
+        if (! $this->client->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=client");
             exit;
         }
         global $pdo;
-        $path = $_GET['action'];
+        $path  = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
-        $this->Client($parts[1]);
+        $this->Client($parts);
     }
-    public function Client($parts)
-    {
-        switch ($parts) {
+
+    public function items($parts) {
+        /* ================= PAGINATION LOGIC ================= */
+
+        $itemsPerPage = 12;
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $itemsPerPage;
+
+        // Fetch paginated products
+        $allProducts = $this->products->fetchPaginated($itemsPerPage, $offset);
+
+        // Count total products
+        $totalItems = $this->products->countAllProducts();
+        $totalPages = ceil($totalItems / $itemsPerPage);
+
+        /* ================= CART AJAX LOGIC ================= */
+
+        $state = $_GET['state'] ?? NULL;
+
+        if ($state === 'cart') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->cart->isInCart($client_id, $product_id)) {
+                $this->cart->removeFromCart($product_id, $client_id);
+                echo json_encode(['inCart' => false]);
+            } else {
+                $this->cart->addToCart($client_id, $product_id);
+                echo json_encode(['inCart' => true]);
+            }
+            exit;
+        } else if ($state === 'cartCheck') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->cart->isInCart($client_id, $product_id)) {
+                echo json_encode(['inCart' => true]);
+            } else {
+                echo json_encode(['inCart' => false]);
+            }
+            exit;
+        }
+        if ($state === 'wishlist') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->wishlist->isInWishlist($client_id, $product_id)) {
+                $this->wishlist->removeFromWishlist($product_id, $client_id);
+                echo json_encode(['inWishlist' => false]);
+            } else {
+                $this->wishlist->addToWishlist($client_id, $product_id);
+                echo json_encode(['inWishlist' => true]);
+                exit;
+            }
+            exit;
+        } else if ($state === 'wishlistCheck') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->wishlist->isInWishlist($client_id, $product_id)) {
+                echo json_encode(['inWishlist' => true]);
+            } else {
+                echo json_encode(['inWishlist' => false]);
+            }
+            exit;
+        }
+
+        /* ================= LOAD VIEW ================= */
+
+        require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
+    }
+
+
+    public function displayProduct($parts) {
+        $productId      = $parts[2];
+        $productDetails = $this->products->fetchProduct($productId);
+        $ratings = $this->products->fetchRating($productId);
+
+        require_once __DIR__ . '/../views/Dashboards/Client/Viewitem.php';
+    }
+
+    // public function cart($parts)
+    // {
+    //     $state = $parts[3] ?? '';
+
+    //     if ($state === 'remove') {
+    //         $product_id = (int)$parts[2];
+    //         $client_id = $_SESSION['client']['id'];
+
+    //         $this->cart->removeFromCart($product_id, $client_id);
+
+    //         header("Location: index.php?controller=client&action=dashboard/cart");
+    //         exit;
+    //     }
+    //     $cartItems = $this->cart->getCartForClient($_SESSION['client']['id']);
+    //     // var_dump($cartItems);
+    //     require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
+    // }
+
+    public function wrapping() {
+        require_once __DIR__ . '/../views/Dashboards/Client/wrap.php';
+    }
+
+    public function messeges($parts) {
+        $staff_id = $parts[4] ?? '';
+
+        if ($parts[3] === 'send') {
+            if ($parts[2] === 'vendor') {
+                $message = trim($_POST['message'] ?? '');
+
+                if ($message === '' && empty($_FILES['attachments']['name'][0])) {
+                    echo json_encode(['success' => false, 'error' => 'Empty message']);
+                    exit;
+                }
+
+                $attatchmentPath = [];
+
+                if (! empty($_FILES['attachments']['tmp_name'])) {
+
+                    $uploadDir = "resources/uploads/vendor/attatchments/";
+                    if (! is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    foreach ($_FILES['attachments']['tmp_name'] as $key => $tmpName) {
+
+                        $fileName   = time() . "_" . basename($_FILES['attachments']['name'][$key]);
+                        $targetFile = $uploadDir . $fileName;
+
+                        if (move_uploaded_file($tmpName, $targetFile)) {
+                            $attatchmentPath[] = $fileName;
+                        }
+                    }
+                }
+
+                $this->messeges->sendVendorMessege(
+                    $staff_id,
+                    $_SESSION['user']['id'],
+                    [
+                        'message'      => $message,
+                        'attatchments' => $attatchmentPath,
+                    ],
+                    1
+                );
+
+                echo json_encode(['success' => true]);
+                exit;
+            } else if ($parts[2] == 'giftwrapper') {
+                $message = trim($_POST['message'] ?? '');
+
+                if ($message === '' && empty($_FILES['attachments']['name'][0])) {
+                    echo json_encode(['success' => false, 'error' => 'Empty message']);
+                    exit;
+                }
+
+                $attatchmentPath = [];
+
+                if (! empty($_FILES['attachments']['tmp_name'])) {
+
+                    $uploadDir = "resources/uploads/giftWrapper/attatchments/";
+                    if (! is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    foreach ($_FILES['attachments']['tmp_name'] as $key => $tmpName) {
+
+                        $fileName   = time() . "_" . basename($_FILES['attachments']['name'][$key]);
+                        $targetFile = $uploadDir . $fileName;
+
+                        if (move_uploaded_file($tmpName, $targetFile)) {
+                            $attatchmentPath[] = $fileName;
+                        }
+                    }
+                }
+
+                $this->messeges->sendGiftWrapperMessege(
+                    $staff_id,
+                    $_SESSION['user']['id'],
+                    [
+                        'message'      => $message,
+                        'attatchments' => $attatchmentPath,
+                    ],
+                    1
+                );
+
+                echo json_encode(['success' => true]);
+                exit;
+            } else if ($parts[2] == 'delivery') {
+                $message = trim($_POST['message'] ?? '');
+
+                if ($message === '' && empty($_FILES['attachments']['name'][0])) {
+                    echo json_encode(['success' => false, 'error' => 'Empty message']);
+                    exit;
+                }
+
+                $attatchmentPath = [];
+
+                if (! empty($_FILES['attachments']['tmp_name'])) {
+
+                    $uploadDir = "resources/uploads/delivery/attatchments/";
+                    if (! is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    foreach ($_FILES['attachments']['tmp_name'] as $key => $tmpName) {
+
+                        $fileName   = time() . "_" . basename($_FILES['attachments']['name'][$key]);
+                        $targetFile = $uploadDir . $fileName;
+
+                        if (move_uploaded_file($tmpName, $targetFile)) {
+                            $attatchmentPath[] = $fileName;
+                        }
+                    }
+                }
+
+                $this->messeges->sendDeliveryMessege(
+                    $staff_id,
+                    $_SESSION['user']['id'],
+                    [
+                        'message'      => $message,
+                        'attatchments' => $attatchmentPath,
+                    ],
+                    1
+                );
+
+                echo json_encode(['success' => true]);
+                exit;
+            }
+        }
+        if ($parts[3] == "markRead") {
+            $type = $parts[2];
+            $staff_id = $parts[4];
+            $allowedTypes = ['vendor', 'giftwrapper', 'delivery'];
+            if (!in_array($type, $allowedTypes)) {
+                echo json_encode(['success' => false, 'error' => 'Invalid type']);
+                return;
+            }
+
+            $staff_id = (int) $staff_id;
+            if ($staff_id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+                return;
+            }
+
+            $result = $this->messeges->markMessagesAsReadClient($type, $staff_id, $_SESSION['user']['id']);
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => $result]);
+        }
+        if ($parts[3] === 'view') {
+            $direct = 0;
+            $dirAccess = $parts[5] ?? '';
+            if ($dirAccess === "direct") {
+                $direct = 1;
+                if ($parts[2] == 'delivery') {
+                    $directType = 'delivery';
+                    $directID = $parts[4];
+                    $staffData = $this->messeges->getDelivery($directID);
+                } else if ($parts[2] == 'giftWrapper') {
+                    $directType = 'giftwrapper';
+                    $directID = $parts[4];
+                    $staffData = $this->messeges->getGiftWrapper($directID);
+                } else if ($parts[2] == 'vendor') {
+                    $directType = 'vendor';
+                    $directID = $parts[4];
+                    $staffData = $this->messeges->getVendor($directID);
+                }
+            }
+            $myMessages = $this->messeges->getMessage($_SESSION['user']['id']);
+            require_once __DIR__ . '/../views/Dashboards/Client/messeges.php';
+        }
+    }
+
+    public function notifications() {
+        $notifications = $this->notification->getClientNotifications($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/notification.php';
+    }
+
+    public function notificationViewed($parts) {
+        $id = (int)$parts[2];
+        $this->notification->viewNotificationClient($id);
+        exit();
+    }
+
+    public function wrappingPackages($parts) {
+        $packages = $this->giftWrapper->getGiftWrappingPackages();
+
+        // Handle package selection
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['package_id'])) {
+            $packageId = (int)$_POST['package_id'];
+            $package = $this->giftWrapper->getGiftWrappingPackageById($packageId);
+
+            if ($package) {
+                $_SESSION['checkout']['wrap'] = [
+                    'mode' => 'package',
+                    'packageId' => $package['id'],
+                    'totalPrice' => $package['price']
+                ];
+
+                header("Location: index.php?controller=client&action=dashboard/checkout/package");
+                exit;
+            }
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/wrappingPackages.php';
+    }
+
+    public function history() {
+        $clientId = $_SESSION['user']['id'];
+        $orders = $this->orders->getOrdersByClient($clientId);
+
+        // Check which orders have been rated
+        foreach ($orders as &$order) {
+            // Prefer resolved delivery status (from orderStatus) when available
+            if (isset($order['resolved_is_delivered'])) {
+                $order['is_delivered'] = (bool) $order['resolved_is_delivered'];
+            }
+            $order['has_rated'] = false;
+            if ($order['vendor_id']) {
+                $order['has_rated'] = $this->ratings->hasRated($order['vendor_id'], $clientId, $order['id']);
+            }
+        }
+
+        include __DIR__ . '/../views/Dashboards/Client/history.php';
+    }
+
+    public function rate() {
+        $clientId = $_SESSION['user']['id'];
+        $orders = $this->orders->getOrdersByClient($clientId);
+
+        foreach ($orders as &$order) {
+            if (isset($order['resolved_is_delivered'])) {
+                $order['is_delivered'] = (bool) $order['resolved_is_delivered'];
+            }
+            $order['has_rated'] = false;
+            if ($order['vendor_id']) {
+                $order['has_rated'] = $this->ratings->hasRated($order['vendor_id'], $clientId, $order['id']);
+            }
+        }
+
+        // Reuse history view but highlight Rate tab
+        $activePage = 'rate';
+        include __DIR__ . '/views/Dashboards/Client/history.php';
+    }
+
+    public function cart($parts) {
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $state      = $parts[3] ?? '';
+            $product_id = $parts[2] ?? '';
+            $client_id  = $_SESSION['user']['id'];
+
+            if ($state == 'remove') {
+                $this->cart->removeFromCart($product_id, $client_id);
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
+
+            if ($state == 'inc') {
+                $this->cart->increaseCartQuantity($client_id, $product_id);
+
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
+            if ($state == 'dec') {
+                $this->cart->decreaseCartQuantity($client_id, $product_id);
+
+                header("Location: index.php?controller=client&action=dashboard/cart");
+                exit;
+            }
+            if ($state == 'submit') {
+
+                $errors = [];
+
+                foreach ($cartItems as $row) {
+                    $available = $row['totalStock'] - $row['reservedStock'];
+
+                    if ($row['quantity'] > $available) {
+                        $errors[] = $row['name'] . " is out of stock (only $available left)";
+                    }
+                }
+
+                // If there are errors
+                if (!empty($errors)) {
+                    $_SESSION['stock_errors'] = $errors;
+
+                    header("Location: index.php?controller=client&action=dashboard/cart");
+                    exit;
+                }
+
+                // Continue if everything is valid
+                $_SESSION['checkout'] = [
+                    'wrap' => [],
+                    'delivery' => [],
+                    'payment' => [],
+                    'cart' => []
+                ];
+
+                $_SESSION['checkout']['cart']['productPrice'] = $_POST['subtotal'] ?? null;
+
+                header("Location: index.php?controller=client&action=dashboard/wrap");
+                exit;
+            }
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
+    }
+
+    public function custom($parts) {
+        $boxWrap        = $this->giftWrapper->getBoxWrap();
+        $boxRibbon      = $this->giftWrapper->getBoxRibbon();
+        $paperBag       = $this->giftWrapper->getPaperBag();
+        $paperBagRibbon = $this->giftWrapper->getPaperBagRibbon();
+        $chocolates     = $this->giftWrapper->getChocolates();
+        $softToys       = $this->giftWrapper->getSoftToys();
+        $cards          = $this->giftWrapper->getCards();
+
+
+        if (isset($_POST['array'])) {
+            // Decode the JSON string into an associative array
+            $data = json_decode($_POST['array'], true);
+
+            $_SESSION['checkout']['wrap'] = $data;
+
+            header("Location: index.php?controller=client&action=dashboard/checkout/custom");
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/custom.php';
+    }
+
+    public function checkout($parts) {
+        $mode    = $parts[2];
+        // var_dump($_SESSION['checkout']['wrap']);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $_SESSION['checkout']['wrap']['mode'] = $mode;
+            $data['orderType'] = $_POST['orderType'] ?? null;
+            $data['recipientName'] = $_POST['recipientName'] ?? null;
+            $data['recipientPhone'] = $_POST['recipientPhone'] ?? null;
+            $data['deliveryAddress'] = $_POST['deliveryAddress'] ?? null;
+            $data['locationType'] = $_POST['locationType'] ?? null;
+            $data['deliveryDate'] = $_POST['deliveryDate'] ?? null;
+            $data['deliveryPrice'] = $_POST['deliveryPrice'] ?? null;
+
+            $_SESSION['checkout']['delivery'] = $data;
+
+            header("Location: index.php?controller=client&action=dashboard/payhere");
+            exit;
+        }
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/checkout.php';
+    }
+
+    public function payhereNotify($parts) {
+        if ($_SESSION['checkout']['method'])
+            $this->completeOrder($parts);
+    }
+
+    public function payhere($parts) {
+        $cartItems = $this->cart->getCartForClient($_SESSION['user']['id']);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $_SESSION['checkout']['cart'] = $cartItems;
+            if ($_SESSION['checkout']['wrap']['mode'] === 'custom') {
+                $wrap_id = $this->giftWrapper->addCustomWrap($_SESSION['checkout']['wrap']);
+            } else if ($_SESSION['checkout']['wrap']['mode'] === 'package') {
+                $wrap_id = $_SESSION['checkout']['wrap']['packageId'];
+            }
+
+
+            $method = $_POST['method'];
+
+            $_SESSION['checkout']['wrap']['id'] = $wrap_id;
+
+
+            $order_id = $this->orders->confirmOrder($_SESSION['checkout'], $_SESSION['user']['id'], $method);
+            $this->products->reduceVendorStock($cartItems);
+
+
+            $notificationTitle = "Order Placed!";
+            $notificationMessege = "Your Order has been successfully Placed consisting of ";
+            $href = "?controller=client&action=dashboard/tracking/" . $order_id;
+            foreach ($_SESSION['checkout']['cart'] as $row) {
+                $product_id = $row['product_id'];
+                $vendor_id = $row['vendor_id'];
+                $name = $row['name'];
+                $notificationMessege = $notificationMessege . $name . ' ';
+
+                $notificationTitleVendor = "You have a new Order!";
+                $notificationMessegeVendor = "You have a new order, order" . $order_id . " for the item ID" . $product_id . " named " . "'" . $name . "'";
+                $hrefVendor = "?controller=vendor&action=dashboard/item/view/" . $product_id;
+                $this->notification->notifyVendor($vendor_id, $notificationTitleVendor, $notificationMessegeVendor, $hrefVendor);
+            }
+            $this->notification->notifyClient($_SESSION['user']['id'], $notificationTitle, $notificationMessege, $href);
+            $this->cart->emptyCart($_SESSION['user']['id']);
+            unset($_SESSION['checkout']);
+
+            if ($method === 'card') {
+                echo json_encode(['order_id' => $order_id]);
+                exit;
+            }
+
+            header("Location: index.php?controller=client&action=dashboard/tracking/$order_id");
+            exit;
+            $this->completeOrder($parts);
+        }
+        require_once __DIR__ . '/../views/Dashboards/Client/payhere/payhere.php';
+    }
+
+    private function completeOrder($parts) {
+    }
+
+    public function account($parts) {
+        $user2 = $_SESSION['user'];
+        require_once __DIR__ . '/../views/Dashboards/Client/account.php';
+    }
+
+    public function wishlist($parts) {
+        $itemsPerPage = 4;
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $itemsPerPage;
+
+        // Fetch paginated products
+        $allProducts = $this->products->fetchPaginated($itemsPerPage, $offset);
+
+        // Count total products
+        $totalItems = $this->products->countAllProducts();
+        $totalPages = ceil($totalItems / $itemsPerPage);
+
+        $state = $_GET['state'] ?? NULL;
+
+        if ($state === 'wishlist') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->wishlist->isInWishlist($client_id, $product_id)) {
+                $this->wishlist->removeFromWishlist($product_id, $client_id);
+                echo json_encode(['inWishlist' => false]);
+            } else {
+                $this->wishlist->addToWishlist($client_id, $product_id);
+                echo json_encode(['inWishlist' => true]);
+                exit;
+            }
+            exit;
+        } else if ($state === 'wishlistCheck') {
+            $product_id = $parts[2];
+            $client_id = $_SESSION['user']['id'];
+
+            if ($this->wishlist->isInWishlist($client_id, $product_id)) {
+                echo json_encode(['inWishlist' => true]);
+            } else {
+                echo json_encode(['inWishlist' => false]);
+            }
+            exit;
+        }
+
+        $allProducts = $this->wishlist->getWishlistForClient($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/wishlist.php';
+    }
+
+    public function Client($parts) {
+        switch ($parts[1]) {
             case 'cart':
-                require_once __DIR__ . '/../views/Dashboards/Client/cart.php';
+                $this->cart($parts);
                 break;
             case 'wishlist':
-                require_once __DIR__ . '/../views/Dashboards/Client/wishlist.php';
-                break;
-            case 'tracking':
-                require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
+                $this->wishlist($parts);
                 break;
             case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Client/history.php';
+                $this->history();
                 break;
-            case 'customize':
-                require_once __DIR__ . '/../views/Dashboards/Client/customize.php';
+            case 'messeges':
+                $this->messeges($parts);
+                break;
+            case 'wrap':
+                $this->wrapping();
                 break;
             case 'payment':
                 require_once __DIR__ . '/../views/Dashboards/Client/payment.php';
                 break;
-            case 'account':
-                require_once __DIR__ . '/../views/Dashboards/Client/account.php';
+            case 'payhere':
+                $this->payhere($parts);
                 break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Client/settings.php';
+            case 'payhereNotify':
+                $this->payhereNotify($parts);
+                break;
+            case 'account':
+                $this->account($parts);
+                break;
+            case 'notifications':
+                $this->notifications();
+                break;
+            case 'notificationViewed':
+                $this->notificationViewed($parts);
                 break;
             case 'viewitem':
-                require_once __DIR__ . '/../views/Dashboards/Client/ViewItem.php';
+                $this->displayproduct($parts);
+                break;
+            case 'checkout':
+                $this->checkout($parts);
+                break;
+            case 'custom':
+                $this->custom($parts);
+                break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
+                break;
+            case 'editProfile':
+                $this->editProfile($parts);
+                break;
+            case 'wrappingPackages':
+                $this->wrappingPackages($parts);
+                break;
+            case 'orders':
+                $this->orders($parts);
+                break;
+            case 'tracking':
+                $this->trackOrder($parts);
+                break;
+            case 'orderItems':
+                $this->viewItems($parts);
+                break;
+            case 'rate':
+                $this->rateItems($parts);
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Client/Browseitems.php';
+                $this->items($parts);
                 break;
         }
+    }
+
+    public function rateItems($parts) {
+        $order_id = $parts[2];
+        $order = $this->orders->getOrderByID2($order_id);
+        $orderItems = $this->orders->getItemsInOrder3($order_id, $_SESSION['user']['id']);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // $product_id = $parts[3];
+            $rating = $_POST['rating'];
+            $review = $_POST['review'];
+            $productId = $_POST['product_id'];
+
+            $this->orders->rateProduct($_SESSION['user']['id'], $productId, $order_id, $rating, $review);
+
+            header("Location: index.php?controller=client&action=dashboard/rate/$order_id");
+            exit;
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/rateItems.php';
+    }
+
+
+    public function orders($parts) {
+        $myOrders = $this->orders->getAllClientOrders($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Client/orders.php';
+    }
+
+    public function trackOrder($parts) {
+        $order_id = $parts[2];
+        $order = $this->orders->getOrderByID($order_id);
+        require_once __DIR__ . '/../views/Dashboards/Client/trackorder.php';
+    }
+
+    public function viewItems($parts) {
+        $order_id = $parts[2];
+        $order = $this->orders->getOrderByID($order_id);
+        $orderItems = $this->orders->getItemsInOrder($order_id);
+        require_once __DIR__ . '/../views/Dashboards/Client/viewOrder.php';
+    }
+
+    public function editProfile($parts) {
+        $USER_ID = $_SESSION['user']['id'];
+        $stmt = $this->client->getpdo()->prepare("SELECT * FROM clients WHERE id = ?");
+        $stmt->execute([$USER_ID]);
+        $clientUser = $stmt->fetch();
+        $user1 = $clientUser;
+        $user2 = $clientUser;
+
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name'  => $_POST['last_name'] ?? '',
+                'phone'      => $_POST['phone'] ?? '',
+                'id' => $_SESSION['user']['id']
+            ];
+
+            $this->client->updateUser($data);
+            $_SESSION['user'] = $this->client->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=client&action=dashboard/account");
+            exit;
+
+            // Redirect or show a success message
+        }
+        require_once __DIR__ . '/../views/Dashboards/Client/edit.php';
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle file upload if user selected a new image
+            $uploadDir = "resources/uploads/client/profilePictures/";
+            if (! is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Get file info
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            // Move file to upload folder
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                // store the uploaded file path
+                $profilePicPath = $targetFile;
+                echo "File uploaded successfully: $profilePicPath";
+            } else {
+                echo "File upload failed.";
+            }
+            $this->client->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+            $_SESSION['user'] = $this->client->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=client&action=dashboard/account");
+            exit;
+
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Client/addImage.php';
+    }
+
+    public function handleLogout() {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
+        exit;
     }
 }

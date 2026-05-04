@@ -1,0 +1,20 @@
+ORDER_1776514634681 SUCCESS
+ORDER_1776532522447 SUCCESS
+ORDER_1776532687616 SUCCESS
+ORDER_1776532762603 SUCCESSVAG
+ORDER_1776533077673 SUCCESSVAG
+ORDER_1776534379794 SUCCESSVAGBUTT
+ORDER_1776534750290 FAILED (2)
+ORDER_1776534889557 SUCCESSGAY
+ORDER_1776534978729 SUCCESSLES
+Controller response: <br />
+<b>Warning</b>:  Undefined array key "user" in <b>C:\laragon\www\giftEase\giftease-login\controllers\ClientController.php</b> on line <b>35</b><br />
+<br />
+<b>Warning</b>:  Trying to access array offset on null in <b>C:\laragon\www\giftEase\giftease-login\controllers\ClientController.php</b> on line <b>35</b><br />
+
+13 SUCCESS
+14 | PayHere ID: 320032594050 SUCCESS
+2 | PayHere ID: 320032594054 SUCCESS
+3 | PayHere ID: 320032594056 SUCCESS
+4 | PayHere ID: 320032594057 SUCCESS
+10 | PayHere ID: 320032594216 SUCCESS

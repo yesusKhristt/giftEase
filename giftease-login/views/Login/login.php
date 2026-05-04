@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>GiftEase Login</title>
-  <link rel="stylesheet" href="public/style.css">
+  <link rel="stylesheet" href="public/signupstyle.css">
   <link rel="icon" href="resources/icon.png">
 </head>
 
@@ -12,18 +12,17 @@
   style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f6f6f6;">
   <div class="authContainer">
     <div class="logo">
-      <img src="resources/ge5.png" class="logo_img">
+      <img src="resources/iconL.png" class="logo_img">
       <div class="gift">
-        gift<span class="Ease">Ease</span>
-        <p>
-          <?php
-          $type = $_GET['type'] ?? 'client';
+      gift<span class="Ease">Ease</span>
+        <h6>
+          <?php $type = $_GET['type'] ?? 'client';
           if ($type != 'client') {
             echo 'Staff ';
           }
           ?>Login
-        </p>
-      </div>
+        </h6>
+    </div>
     </div>
 
     <div>
@@ -46,8 +45,8 @@
         <input type="password" name="password" placeholder="Password"
           class="textbox <?= !empty($error) ? 'shake error' : '' ?>" id="passwordInput" required>
 
-        <button type="submit" class="btn2">Login</button>
-        <a href="?action=handleSignup&type=<?= htmlspecialchars($type) ?>" id="signupLink" class="btn1">No account? Sign
+        <button type="submit" class="btn-primary">Login</button>
+        <a href="?action=handleSignup&type=<?= htmlspecialchars($type) ?>" id="signupLink" class="login-link">No account? Sign
           Up</a>
       </form>
     </div>

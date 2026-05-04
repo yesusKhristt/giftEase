@@ -1,60 +1,43 @@
 <?php
-class VendorController
-{
+class VendorController {
     private $vendor;
     private $product;
+    private $category;
+    private $messeges;
+    private $order;
+    private $withdraw;
+    private $notification;
 
-    public function __construct($pdo)
-    {
+    public function __construct($pdo) {
         require_once __DIR__ . '/../models/VendorModel.php';
         require_once __DIR__ . '/../models/ProductsModel.php';
-        $this->vendor = new VendorModel($pdo);
-        $this->product = new ProductsModel($pdo);
+        require_once __DIR__ . '/../models/CategoryModel.php';
+        require_once __DIR__ . '/../models/MessegesModel.php';
+        require_once __DIR__ . '/../models/OrderModel.php';
+        require_once __DIR__ . '/../models/WithdrawModel.php';
+        require_once __DIR__ . '/../models/NotificationModel.php';
+        $this->vendor   = new VendorModel($pdo);
+        $this->product  = new ProductsModel($pdo);
+        $this->category = new CategoryModel($pdo);
+        $this->messeges = new MessegesModel($pdo);
+        $this->order    = new OrderModel($pdo);
+        $this->withdraw    = new WithdrawModel($pdo);
+        $this->notification = new NotificationModel($pdo);
     }
 
-    public function checkID()
-    {
-
-        $exists = $this->vendor->getVendorID($_SESSION['user']['id']);
-        var_dump($exists);
-
-        if (!$exists) {
-            $this->employeeForm($_SESSION['user']['id']);
-        } else {
-            header("Location: index.php?controller=vendor&action=dashboard/primary");
-            exit;
-        }
-
-    }
-
-    public function employeeForm($user_id)
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $phone = $_POST['phone'] ?? '';
-            $shopname = $_POST['shopName'] ?? '';
-            $address = $_POST['address'] ?? '';
-
-            $this->vendor->addVendor($user_id, $shopname, $phone, $address);
-            header("Location: index.php?controller=vendor&action=dashboard/primary");
-            exit;
-        }
-        require_once __DIR__ . '/../views/commonElements/extendedFrom.php';
-    }
-    public function dashboard()
-    {
-        if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'vendor') {
+    public function dashboard() {
+        if (! $this->vendor->getUserByEmail($_SESSION['user']['email'])) {
             header("Location: index.php?controller=auth&action=handleLogin&type=staff");
             exit;
         }
         global $pdo;
-        $path = $_GET['action'];
+        $path  = $_GET['action'];
         $parts = explode('/', trim($path, '/'));
 
         $this->Vendor($parts);
     }
 
-    public function handleitems($parts)
-    {
+    public function handleitems($parts) {
         switch ($parts[2]) {
             case 'view':
                 $this->viewItem($parts);
@@ -68,33 +51,93 @@ class VendorController
             case 'delete':
                 $this->deleteItem($parts);
                 break;
-
         }
     }
 
-    public function viewItem($parts)
-    {
-        $productId = $parts[3];
+    public function viewItem($parts) {
+        $productId      = $parts[3];
+        $ratings = $this->product->fetchRating($productId);
         $productDetails = $this->product->fetchProduct($productId);
-        require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewItem.php';
+        require_once __DIR__ . '/../views/Dashboards/Vendor/ViewItem.php';
     }
 
-    public function deleteItem($parts)
-    {
+    public function deleteItem($parts) {
         $productId = $parts[3];
         $this->product->deleteProduct($productId);
         header("Location: index.php?controller=vendor&action=dashboard/inventory");
         exit;
     }
 
+    public function messeges($parts) {
+        $client_id = $parts[3] ?? '';
 
-    public function handleItem($parts)
-    {
+        if ($parts[2] === 'send') {
+            $message = trim($_POST['message'] ?? '');
+
+            if ($message === '' && empty($_FILES['attachments']['name'][0])) {
+                echo json_encode(['success' => false, 'error' => 'Empty message']);
+                exit;
+            }
+
+            $attatchmentPath = [];
+
+            if (! empty($_FILES['attachments']['tmp_name'])) {
+
+                $uploadDir = "resources/uploads/vendor/attatchments/";
+                if (! is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                foreach ($_FILES['attachments']['tmp_name'] as $key => $tmpName) {
+
+                    $fileName   = time() . "_" . basename($_FILES['attachments']['name'][$key]);
+                    $targetFile = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($tmpName, $targetFile)) {
+                        $attatchmentPath[] = $fileName;
+                    }
+                }
+            }
+
+            $this->messeges->sendVendorMessege(
+                $client_id,
+                $_SESSION['user']['id'],
+                [
+                    'message'      => $message,
+                    'attatchments' => $attatchmentPath,
+                ],
+                0
+            );
+
+            echo json_encode(['success' => true]);
+            exit;
+        }
+        if ($parts[2] == "markRead") {
+            $id = $parts[3];
+
+            $id = (int) $id;
+            if ($id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Invalid ID']);
+                return;
+            }
+
+            $result = $this->messeges->markMessagesAsReadStaff('vendor', $_SESSION['user']['id'], $id);
+
+            header('Content-Type: application/json');
+            echo json_encode(['success' => $result]);
+        }
+        if ($parts[2] === 'view') {
+            $myMessages = $this->messeges->getMessageVendor($_SESSION['user']['id']);
+            require_once __DIR__ . '/../views/Dashboards/Vendor/Messeges.php';
+        }
+    }
+
+    public function handleItem($parts) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $title = $_POST['title'];
-            $category = $_POST['category'];
+            $title       = $_POST['title'];
+            $category    = $_POST['category'];
             $subcategory = $_POST['subcategory'];
-            $price = $_POST['price'];
+            $price       = $_POST['price'];
             $description = $_POST['description'];
 
             // Handle file upload if user selected a new image
@@ -102,7 +145,11 @@ class VendorController
 
             foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
                 $uploadDir = "resources/uploads/vendor/products/";
-                $fileName = time() . "_" . basename($_FILES['images']['name'][$key]);
+                if (! is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                $fileName   = time() . "_" . basename($_FILES['images']['name'][$key]);
                 $targetFile = $uploadDir . $fileName;
 
                 if (move_uploaded_file($tmpName, $targetFile)) {
@@ -114,12 +161,12 @@ class VendorController
 
             switch ($parts[2]) {
                 case 'add':
-                    $productID = $this->product->addProduct($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+                    $productID = $this->product->addProduct($_SESSION['user']['id'], $title, $price, $description, $category, $subcategory, $profilePicPath);
                     header("Location: index.php?controller=vendor&action=dashboard/item/view/$productID");
                     exit;
                 case 'edit':
                     $this->product->editProduct(
-                        $parts[3],       // product ID
+                        $parts[3], // product ID
                         $title,
                         $price,
                         $description,
@@ -137,57 +184,315 @@ class VendorController
             }
         }
         if ($parts[2] == 'edit') {
-            $productId = $parts[3];
+            $productId      = $parts[3];
             $productDetails = $this->product->fetchProduct($productId);
         }
-        require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
+        $categories    = $this->category->getCategory();
+        $subcategories = $this->category->getAllSubcategory();
+        require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
     }
 
-    public function test($profilePicPath)
-    {
+    public function ajaxCategory() {
+        $categoryId = intval($_POST['category_id'] ?? 0);
+
+        $subcategories = $this->category->getSubcategory($categoryId);
+
+        header('Content-Type: application/json');
+        echo json_encode($subcategories);
+    }
+
+    public function test($profilePicPath) {
         require_once __DIR__ . '/../views/Dashboards/Vendor/test.php';
     }
 
-    public function showInventory($parts)
-    {
-        $allProducts = $this->product->fetchAll($this->vendor->getVendorID($_SESSION['user']['id']));
-        require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardInventory.php';
+    public function showInventory($parts) {
+        /* ================= PAGINATION LOGIC ================= */
+
+        $itemsPerPage = 9;
+
+        $statusFilter = $_GET['status'] ?? 'all';
+        $categoryFilter = isset($_GET['category']) ? (int) $_GET['category'] : 0;
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $itemsPerPage;
+
+        $allProducts = $this->product->fetchPaginatedFromVendorFiltered(
+            $_SESSION['user']['id'],
+            $itemsPerPage,
+            $offset,
+            $statusFilter,
+            $categoryFilter
+        );
+
+        $totalItems = $this->product->countFromVendorFiltered(
+            $_SESSION['user']['id'],
+            $statusFilter,
+            $categoryFilter
+        );
+        $totalPages = ceil($totalItems / $itemsPerPage);
+
+        $categories = $this->category->getCategory();
+
+        //$allProducts = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/Inventory.php';
     }
 
+    public function manageInventory($parts) {
+        $products = $this->product->fetchAllfromVendor($_SESSION['user']['id']);
+        $stock    = $parts[2] ?? 'NULL';
+        if ($stock === 'Total') {
 
-    public function Vendor($parts)
-    {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $product_id = $_POST['productId'];
+                $quantity   = $_POST['quantity'];
+                $state      = $_GET['state'];
+                if ($state === 'add') {
+                    $this->product->addStock($product_id, $quantity);
+                } else if ($state === 'sub') {
+                    $this->product->substractStock($product_id, $quantity);
+                }
+                header("Location: index.php?controller=vendor&action=dashboard/manageInventory");
+                exit;
+            }
+        } else if ($stock === 'Reserved') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $product_id = $_POST['productId'];
+                $quantity   = $_POST['quantity'];
+                $state      = $_GET['state'];
+                if ($state === 'add') {
+                    $this->product->addReserved($product_id, $quantity);
+                } else if ($state === 'sub') {
+                    $this->product->substractReserved($product_id, $quantity);
+                }
+                header("Location: index.php?controller=vendor&action=dashboard/manageInventory");
+                exit;
+            }
+        }
+        require_once __DIR__ . '/../views/Dashboards/Vendor/manageInventory.php';
+    }
+
+    public function handleLogout() {
+        session_unset();
+        session_destroy();
+        header("Location: index.php?controller=auth&action=landing");
+        exit;
+    }
+
+    public function showOrders() {
+        $vendorId   = $_SESSION['user']['id'];
+        $orders     = $this->order->getOrdersForVendor($vendorId);
+        $orderStats = $this->order->getVendorOrderStats($vendorId);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/Orders.php';
+    }
+
+    public function viewOrder($parts) {
+        $orderId    = $parts[2] ?? null;
+        $vendorId   = $_SESSION['user']['id'];
+        $orderDetail = $this->order->getOrderDetailForVendor($orderId, $vendorId);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/ViewOrder.php';
+    }
+
+    public function Finance($parts) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($parts[2] == 'withdraw') {
+                $amount = $_POST['amount'];
+                $this->vendor->withdrawMoney($_SESSION['user']['id'], $amount);
+                $this->withdraw->requestWithdrawVendor($_SESSION['user']['id'], $amount);
+            }
+            if ($parts[2] == 'updateBank') {
+                $bank_details = [
+                    "bank_name" => $_POST['bank_name'],
+                    "account_holder" => $_POST['account_number'],
+                    "account_name" => $_POST['account_holder'],
+                    "branch" => $_POST['branch']
+                ];
+                $this->vendor->saveBank($_SESSION['user']['id'], $bank_details);
+            }
+        }
+        $money = $this->vendor->getAccountBalance($_SESSION['user']['id']);
+        $pendingMoney = $this->vendor->getPendingBalance($_SESSION['user']['id']);
+        $bank = $this->vendor->getBank($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/Wallet.php';
+    }
+
+    public function Vendor($parts) {
         switch ($parts[1]) {
             case 'inventory':
                 $this->showInventory($parts);
                 break;
-            case 'messages':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardMesseges.php';
+            case 'manageInventory':
+                $this->manageInventory($parts);
+                break;
+            case 'getCategory':
+                $this->ajaxCategory();
+                break;
+            case 'messeges':
+                $this->messeges($parts);
+                break;
+            case 'orders':
+                $this->showOrders();
                 break;
             case 'analysis':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardAnalysis.php';
-                break;
-            case 'profile':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardProfile.php';
+                $selectedRange = $_GET['range'] ?? 'month';
+                if (!in_array($selectedRange, ['week', 'month', 'year'], true)) {
+                    $selectedRange = 'month';
+                }
+
+                $analysisStats = $this->vendor->getAnalysisStats((int) $_SESSION['user']['id'], $selectedRange);
+                $salesTrend = $this->vendor->getSalesTrend((int) $_SESSION['user']['id'], $selectedRange);
+                require_once __DIR__ . '/../views/Dashboards/Vendor/Analysis.php';
                 break;
             case 'history':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardHistory.php';
+                $this->History($parts);
                 break;
-            case 'settings':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardSettings.php';
+            case 'wallet':
+                $this->Finance($parts);
+                break;
+            case 'notifications':
+                $this->notifications();
+                break;
+            case 'notificationViewed':
+                $this->notificationViewed($parts);
                 break;
             case 'item':
                 $this->handleitems($parts);
                 break;
             case 'vieworder':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardViewOrder.php';
+                $this->viewOrder($parts);
                 break;
             case 'edititem':
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardEditItem.php';
+                require_once __DIR__ . '/../views/Dashboards/Vendor/EditItem.php';
+                break;
+            case 'account':
+                $this->account($parts);
+                break;
+            case 'editProfile':
+                $this->editProfile($parts);
+                break;
+            case 'updateProfilePicture':
+                $this->updateProfilePicture();
                 break;
             default:
-                require_once __DIR__ . '/../views/Dashboards/Vendor/vendorDashboardOrders.php';
+                $this->showOrders();
                 break;
         }
+    }
+    public function History($parts){
+        $paginatedOrders = $this->vendor->getAllOrderByVendor($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
+    }
+
+    public function notifications() {
+        $notifications = $this->notification->getVendorNotifications($_SESSION['user']['id']);
+        require_once __DIR__ . '/../views/Dashboards/Vendor/notification.php';
+    }
+
+    public function notificationViewed($parts) {
+        $id = (int)$parts[2];
+        $this->notification->viewNotificationVendor($id);
+        exit();
+    }
+
+    public function account($parts) {
+        $user2 = $_SESSION['user'];
+        require_once __DIR__ . '/../views/Dashboards/Vendor/account.php';
+    }
+
+    public function editProfile($parts) {
+
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'first_name' => $_POST['first_name'] ?? '',
+                'last_name'  => $_POST['last_name'] ?? '',
+                'phone'      => $_POST['phone'] ?? '',
+                'shopName'   => $_POST['shopName'] ?? '',
+                'address'   => $_POST['address'] ?? '',
+
+                'id' => $_SESSION['user']['id']
+            ];
+
+            $this->vendor->updateUser($data);
+            $_SESSION['user'] = $this->vendor->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=vendor&action=dashboard/account");
+            exit;
+
+            // Redirect or show a success message
+        }
+        require_once __DIR__ . '/../views/Dashboards/Vendor/edit.php';
+    }
+
+    public function updateProfilePicture() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle file upload if user selected a new image
+            $uploadDir = "resources/uploads/vendor/profilePictures/";
+            if (! is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Get file info
+            $tmpName    = $_FILES['profilePic']['tmp_name'];
+            $fileName   = time() . "_" . basename($_FILES['profilePic']['name']);
+            $targetFile = $uploadDir . $fileName;
+
+            // Move file to upload folder
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                // store the uploaded file path
+                $profilePicPath = $targetFile;
+                echo "File uploaded successfully: $profilePicPath";
+            } else {
+                echo "File upload failed.";
+            }
+            $this->vendor->updateProfilePicture($_SESSION['user']['id'], $profilePicPath);
+            $_SESSION['user'] = $this->vendor->getUserByID($_SESSION['user']['id']);
+            header("Location: index.php?controller=vendor&action=dashboard/account");
+            exit;
+
+            //$this->test($this->vendor->getVendorID($_SESSION['user']['id']), $title, $price, $description, $category, $subcategory, $profilePicPath);
+        }
+
+        require_once __DIR__ . '/../views/Dashboards/Vendor/addImage.php';
+    }
+
+    public function showHistory($parts) {
+        $vendorId = $_SESSION['user']['id'];
+        $statusFilter = $_GET['status'] ?? 'all';
+
+        // Fetch all orders for vendor
+        $allOrders = $this->order->getOrdersForVendor($vendorId);
+
+        // Filter by status if needed
+        $filteredOrders = $allOrders;
+        if ($statusFilter !== 'all') {
+            $filteredOrders = array_filter($allOrders, function ($order) use ($statusFilter) {
+                if ($statusFilter === 'delivered') {
+                    return $order['is_delivered'] == 1;
+                } elseif ($statusFilter === 'pending') {
+                    return $order['is_delivered'] == 0;
+                }
+                return true;
+            });
+        }
+
+        // Pagination
+        $itemsPerPage = 10;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($page < 1) $page = 1;
+
+        $totalItems = count($filteredOrders);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $offset = ($page - 1) * $itemsPerPage;
+
+        $paginatedOrders = array_slice($filteredOrders, $offset, $itemsPerPage);
+
+        require_once __DIR__ . '/../views/Dashboards/Vendor/History.php';
+    }
+    public function deactivateUser() {
+        $USER_ID = $_SESSION['user']['id'];
+        $this->user->deactivateUser($USER_ID);
+        header("Location: index.php");
+        exit;
     }
 }

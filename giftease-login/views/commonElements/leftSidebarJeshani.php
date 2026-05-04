@@ -1,51 +1,4 @@
 <div class="permbar">
-  <div class="left_sidebar">
-    <!-- Logo -->
-    <div class="logo">
-      <img src="resources/ge5.png" class="logo_img">
-      <div class="gift">
-        gift<span class="Ease">Ease
-        </span>
-      </div>
-    </div>
-    <?php
-    function isActive($pageName, $activePage)
-    {
-      return $pageName === $activePage ? 'active' : '';
-    }
-    ?>
-    <nav class="nav-section">
-      <a href="?controller=giftWrapper&action=dashboard/analytics"
-        class="nav-item <?= isActive('analytics', $activePage) ?>">
-        Analytics
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/earnings"
-        class="nav-item <?= isActive('earnings', $activePage) ?>">
-        Earning
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/order" class="nav-item <?= isActive('order', $activePage) ?>">
-        Order
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/overview"
-        class="nav-item <?= isActive('overview', $activePage) ?>">
-        Overview
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/portfolio"
-        class="nav-item <?= isActive('portfolio', $activePage) ?>">
-        Portfolio
-      </a>
-      <a href="?controller=giftWrapper&action=dashboard/service"
-        class="nav-item <?= isActive('service', $activePage) ?>">
-        Service
-      </a>
-    </nav>
-    <div class="button-section">
-      <a href="#logout" class="btn1">
-        <i class="fas fa-sign-out-alt"></i>
-        Log Out
-      </a>
-    </div>
-  </div>
   <div class="topbar-container">
     <!-- Search Bar -->
     <div class="search-bar">
@@ -59,14 +12,65 @@
 
     <!-- Right Side Links/Buttons -->
     <nav class="topbar-actions">
-      <a href="?controller=giftWrapper&action=dashboard/settings"
+      <a href="?controller=giftWrapper&action=dashboard/wallet"
         class="settings-btn <?= isActive('settings', $activePage) ?>">
-        <i class="fas fa-cog"></i>
+        <i class="fa fa-credit-card"></i>
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/notifications"
+        class="settings-btn <?= isActive('settings', $activePage) ?>">
+        <i class="fas fa-bell"></i>
       </a>
       <a href="?controller=giftWrapper&action=dashboard/profile"
         class="settings-btn <?= isActive('profile', $activePage) ?>">
         <i class="fas fa-user"></i>
       </a>
     </nav>
+  </div>
+  <div class="left_sidebar">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="resources/iconL.png" class="logo_img">
+      <div class="gift">
+        gift<span class="Ease">Ease
+        </span>
+      </div>
+    </div>
+    <?php
+    function isActive($pageName, $activePage) {
+      return $pageName === $activePage ? 'active' : '';
+    }
+    ?>
+    <nav class="nav-section">
+      <a href="?controller=giftWrapper&action=dashboard/overview"
+        class="nav-item <?= isActive('overview', $activePage) ?>">
+        Overview
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/allOrder"
+        class="nav-item <?= isActive('allOrder', $activePage) ?>">
+        All Orders
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/assignedOrder"
+        class="nav-item <?= isActive('assignedOrder', $activePage) ?>">
+        Assigned Order
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/messeges/view" class="nav-item <?= isActive('messages', $activePage) ?>">
+        Messeges
+      </a>
+      <a href="?controller=giftWrapper&action=dashboard/service"
+        class="nav-item <?= isActive('service', $activePage) ?>">
+        Service
+      </a>
+
+      <a href="?controller=giftWrapper&action=dashboard/history"
+        class="nav-item <?= isActive('history', $activePage) ?>">
+        History
+      </a>
+    </nav>
+    <div class="button-section">
+      <a href="?controller=giftWrapper&action=handleLogout" class="btn1">
+        <i class="fas fa-sign-out-alt"></i>
+        Log Out
+      </a>
+    </div>
   </div>
 </div>

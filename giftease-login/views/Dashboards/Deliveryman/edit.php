@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delivery Partner Dashboard - GiftEase</title>
+    <link rel="stylesheet" href="public/delivery.css" />
+    <link rel="stylesheet" href="public/sideTopBar.css" />
+    <link rel="icon" type="image/png" href="resources/1.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <?php
+        $activePage = 'account';
+        include 'views/commonElements/leftSidebarDeliveryman.php';
+        ?>
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="title">Edit Profile</h1>
+                <p class="subtitle">Manage your personal information</p>
+            </div>
+            <div class="card">
+                <form method="post">
+                    <table class="table">
+                        
+                        <tr>
+                            <td style="width:15%" class="subtitle">
+                                First Name
+                            </td>
+                            <td colspan="2">
+                                <input type="text" id="first_name" name="first_name" placeholder="First Name" value="<?php echo htmlspecialchars($deliverymanProfile['first_name'] ?? ''); ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subtitle">
+                                Last Name
+                            </td>
+                            <td colspan="2">
+                                <input type="text" id="last_name" name="last_name" placeholder="Last Name" value="<?php echo htmlspecialchars($deliverymanProfile['last_name'] ?? ''); ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subtitle">Email</td>
+                            <td colspan="2">
+                                <input type="email" id="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($deliverymanProfile['email'] ?? ''); ?>" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subtitle">Mobile Phone number</td>
+                            <td colspan="2">
+                                <input type="tel" id="phone" name="phone" placeholder="Mobile Phone number" value="<?php echo htmlspecialchars($deliverymanProfile['phone'] ?? ''); ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subtitle">Address</td>
+                            <td colspan="2">
+                                <input type="text" id="address" name="address" placeholder="Address" value="<?php echo htmlspecialchars($deliverymanProfile['address'] ?? ''); ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subtitle">Vehicle Type</td>
+                            <td colspan="2">
+                                <input type="text" id="vehicleType" name="vehicleType" placeholder="Vehicle Type" value="<?php echo htmlspecialchars($deliverymanProfile['vehicleType'] ?? ''); ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="subtitle">License Plate</td>
+                            <td colspan="2">
+                                <input type="text" id="vehiclePlate" name="vehiclePlate" placeholder="Vehicle Plate" value="<?php echo htmlspecialchars($deliverymanProfile['vehiclePlate'] ?? ''); ?>">
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div style="margin-top: 20px;">
+                        <table>
+                            <tr>
+                                <td>
+                                    <button class="btn1" type="submit" name="save">Save Changes</button>
+                                </td>
+                                <td>
+                                    <button class="btn1" type="reset">Reset</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

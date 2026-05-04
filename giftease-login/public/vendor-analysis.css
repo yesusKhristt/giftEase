@@ -1,0 +1,163 @@
+.analysis-page {
+    background:
+        radial-gradient(circle at 12% 10%, rgba(208, 60, 46, 0.12) 0, rgba(208, 60, 46, 0) 44%),
+        radial-gradient(circle at 88% 0%, rgba(3, 46, 63, 0.12) 0, rgba(3, 46, 63, 0) 42%),
+        #f6f6f6;
+}
+
+.analysis-shell {
+    padding: 28px;
+}
+
+.analysis-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.analysis-header .title {
+    margin-bottom: 6px;
+}
+
+.badge-live {
+    padding: 8px 12px;
+    border: 1px solid rgba(3, 46, 63, 0.2);
+    border-radius: 999px;
+    background: #ffffff;
+    color: #032e3f;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.analysis-filters {
+    margin: 0 0 18px 0;
+    border: 0;
+    background: linear-gradient(125deg, #ffffff 0%, #fde6e2 100%);
+    box-shadow: 0 16px 32px rgba(40, 62, 71, 0.08);
+}
+
+.analysis-filters .btn1 {
+    text-decoration: none;
+    color: #032e3f;
+    border: 1px solid rgba(3, 46, 63, 0.25);
+    border-radius: 14px;
+    font-weight: 700;
+}
+
+.analysis-filters .btn1:hover {
+    color: #032e3f;
+    background: #fff4f2;
+}
+
+.analysis-filters .btn1.is-active {
+    color: #ffffff;
+    background: linear-gradient(140deg, #d03c2e 0%, #ee715f 100%);
+    border-color: #d03c2e;
+    box-shadow: 0 10px 20px rgba(208, 60, 46, 0.22);
+}
+
+.chart-card {
+    margin: 0 0 18px 0;
+    border: 1px solid rgba(3, 46, 63, 0.14);
+    box-shadow: 0 20px 40px rgba(3, 46, 63, 0.08);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.card-title {
+    font-size: 26px;
+    color: #032e3f;
+    font-weight: 700;
+}
+
+.chart-caption {
+    color: #58707a;
+    font-size: 14px;
+    margin: 0;
+}
+
+.chart-container {
+    min-height: 300px;
+}
+
+.analysis-grid {
+    padding: 0;
+    gap: 14px;
+    border-bottom: 0;
+}
+
+.metric-card {
+    margin: 0;
+    border: 1px solid rgba(3, 46, 63, 0.14);
+    box-shadow: 0 12px 24px rgba(3, 46, 63, 0.05);
+}
+
+.metric-primary {
+    background: linear-gradient(145deg, #ffffff 0%, #fff2ef 100%);
+}
+
+.metric-alert {
+    background: linear-gradient(145deg, #ffffff 0%, #fff7e9 100%);
+}
+
+.metric-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.metric-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(3, 46, 63, 0.08);
+    color: #032e3f;
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+}
+
+.metric-card .title {
+    font-size: 40px;
+    letter-spacing: -0.03em;
+}
+
+.metric-card .subtitle {
+    font-size: 15px;
+}
+
+@media (max-width: 900px) {
+    .analysis-shell {
+        padding: 16px;
+    }
+
+    .analysis-header {
+        flex-direction: column;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .chart-container {
+        min-height: 240px;
+    }
+
+    .metric-card .title {
+        font-size: 34px;
+    }
+}

@@ -1,24 +1,14 @@
 <?php
-class ProductsModel
-{
+class ProductsModel {
     private $pdo;
     private $user;
 
-    public function __construct(PDO $pdo)
-    {
+    public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
         $this->createTableIfNotExists(); // Create the table if not there
     }
 
-    public function createTableIfNotExists()
-    {
-        $sql1 = "
-        CREATE TABLE IF NOT EXISTS categories (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(20) NOT NULL
-        );
-         ";
-
+    public function createTableIfNotExists() {
         //INSERT INTO products (vendor_id, name, price, description,mainCategory, subCategory, created_at) VALUES (9, 'Apex Slaughterspine', 35, 'COOLEST FICTIONAL DINASAUR EVER', 1,13, CURRENT_TIMESTAMP);
         $sql2 = "
         CREATE TABLE IF NOT EXISTS products (
@@ -30,11 +20,18 @@ class ProductsModel
             status VARCHAR(20) NOT NULL,
             mainCategory INT NOT NULL,
             subCategory INT NOT NULL,
+            totalStock INT NOT NULL,
+            reservedStock INT NOT NULL,
+            sold INT NOT NULL,
+            impressions INT NOT NULL,
+            clicks INT NOT NULL,
+            raiting INT NOT NULL,
             displayImage VARCHAR(500) NOT NULL,
+            deliverable BOOL NOT NULL DEFAULT 1,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE,
             FOREIGN KEY (mainCategory) REFERENCES categories(id) ON DELETE CASCADE,
-            FOREIGN KEY (subCategory) REFERENCES categories(id) ON DELETE CASCADE
+            FOREIGN KEY (subCategory) REFERENCES subcategories(id) ON DELETE CASCADE
         );
          ";
 
@@ -49,7 +46,6 @@ class ProductsModel
         ";
 
         try {
-            $this->pdo->exec($sql1);
             $this->pdo->exec($sql2);
             $this->pdo->exec($sql3);
         } catch (PDOException $e) {
@@ -57,17 +53,23 @@ class ProductsModel
         }
     }
 
-    public function fetchAll($id)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE vendor_id = $id");
+    public function fetchAll() {
+        $stmt = $this->pdo->prepare("SELECT * FROM products");
         $stmt->execute();
 
         // Fetch all rows as an array of associative arrays
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function fetchProduct($productId)
-    {
+    public function fetchAllfromVendor($Vendor_id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM products WHERE vendor_id = $Vendor_id");
+        $stmt->execute();
+
+        // Fetch all rows as an array of associative arrays
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchProduct($productId) {
         $stmt1 = $this->pdo->prepare("SELECT * FROM products WHERE id = $productId");
         $stmt1->execute();
         $product1 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
@@ -76,42 +78,57 @@ class ProductsModel
         $stmt2->execute();
         $product2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
+        $stmt3 = $this->pdo->prepare("SELECT shopName, phone, Rating FROM vendors WHERE id = ?");
+        $stmt3->execute([$product1[0]['vendor_id']]);
+        $product3 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+
         return [
             'id' => $product1[0]['id'],
+            'vendor_id' => $product1[0]['vendor_id'],
             'name' => $product1[0]['name'],
             'price' => $product1[0]['price'],
             'description' => $product1[0]['description'],
-            'images' => $product2
+            'totalStock' => $product1[0]['totalStock'],
+            'reservedStock' => $product1[0]['reservedStock'],
+            'impressions' => $product1[0]['impressions'],
+            'subcategory' => $product1[0]['subCategory'],
+            'category' => $product1[0]['mainCategory'],
+            'sold' => $product1[0]['sold'],
+            'clicks' => $product1[0]['clicks'],
+            'rating' => $product1[0]['raiting'],
+            'images' => $product2,
+            'shop' => $product3[0]['shopName'],
+            'phone' => $product3[0]['phone'],
+            'vendorRating' => (int)$product3[0]['Rating']
         ];
-
     }
 
-    public function fetchProductPic($productId)
-    {
+    public function reduceVendorStock($cartItems) {
+        foreach ($cartItems as $row):
+            $this->addReserved($row['id'], $row['quantity']);
+        endforeach;
+    }
+
+    public function fetchProductPic($productId) {
         $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
         $stmt2->execute();
         return $stmt2->fetchAll(PDO::FETCH_ASSOC);
-
     }
 
-    public function fetchProductPicCol($productId)
-    {
+    public function fetchProductPicCol($productId) {
         $stmt2 = $this->pdo->prepare("SELECT image_loc FROM productimages WHERE product_id = $productId ORDER BY sortOrder ASC");
         $stmt2->execute();
         return $stmt2->fetch(PDO::FETCH_ASSOC);
-
     }
 
 
-    public function deleteProduct($productId)
-    {
+    public function deleteProduct($productId) {
         $stmt1 = $this->pdo->prepare("DELETE FROM products WHERE id = $productId");
         $stmt1->execute();
     }
 
-    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath)
-    {
-        $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, status, mainCategory, subCategory, displayImage, created_at) VALUES (?, ?, ?, ?, 'active',? ,  ? , ? ,CURRENT_TIMESTAMP)");
+    public function addProduct($vendor_id, $name, $price, $description, $mainC, $subC, $profilePath) {
+        $stmt1 = $this->pdo->prepare("INSERT INTO products (vendor_id, name, price, description, status, mainCategory, subCategory, totalStock, reservedStock, sold, impressions, clicks, raiting, displayImage, created_at) VALUES (?, ?, ?, ?, 'active',? ,  ? , 0 ,0, 0, 0, 0, 0, ?, CURRENT_TIMESTAMP)");
         $stmt1->execute([
             $vendor_id,
             $name,
@@ -121,8 +138,7 @@ class ProductsModel
             $subC,
             $profilePath[0]
         ]);
-        $productID = $this->pdo->lastInsertId();
-        ;
+        $productID = $this->pdo->lastInsertId();;
         $sort = 1;
         foreach ($profilePath as $image) {
             $stmt2 = $this->pdo->prepare("INSERT INTO productImages (product_id, sortOrder, image_loc) VALUES (?, ? ,?)");
@@ -136,8 +152,90 @@ class ProductsModel
         return $productID;
     }
 
-    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath)
-    {
+    public function addStock($product_id, $stockQuantity) {
+        $stmt1 = $this->pdo->prepare("SELECT totalStock from products WHERE id = ?");
+        $stmt1->execute([
+            $product_id
+        ]);
+        $currStock = $stmt1->fetch();
+        $newstock = $currStock[0] + $stockQuantity;
+        $stmt2 = $this->pdo->prepare("UPDATE products SET totalStock = ? WHERE id = ?");
+        $stmt2->execute([
+            $newstock,
+            $product_id
+        ]);
+    }
+
+    public function substractStock($product_id, $stockQuantity) {
+        $stmt1 = $this->pdo->prepare("SELECT totalStock from products WHERE id = ?");
+        $stmt1->execute([
+            $product_id
+        ]);
+        $currStock = $stmt1->fetch();
+        if ($currStock[0] - $stockQuantity >= 0) {
+            $stmt2 = $this->pdo->prepare("UPDATE products SET totalStock = ? WHERE id = ?");
+            $stmt2->execute([
+                $currStock[0] - $stockQuantity,
+                $product_id
+            ]);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function fetchRating($productId) {
+        $stmt = $this->pdo->prepare("
+        SELECT  
+            r.rating,
+            r.review,
+            r.created_at,
+            c.first_name,
+            c.last_name
+        FROM ratings r 
+        JOIN clients c ON r.client_id = c.id
+        WHERE r.product_id = ?
+        ORDER BY r.created_at DESC
+        LIMIT 20
+    ");
+        $stmt->execute([$productId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function addReserved($product_id, $stockQuantity) {
+        $stmt1 = $this->pdo->prepare("SELECT reservedStock from products WHERE id = ?");
+        $stmt1->execute([
+            $product_id
+        ]);
+        $currStock = $stmt1->fetch();
+        $newstock = $currStock[0] + $stockQuantity;
+        $stmt2 = $this->pdo->prepare("UPDATE products SET reservedStock = ? WHERE id = ?");
+        $stmt2->execute([
+            $newstock,
+            $product_id
+        ]);
+    }
+
+    public function substractReserved($product_id, $stockQuantity) {
+        $stmt1 = $this->pdo->prepare("SELECT reservedStock from products WHERE id = ?");
+        $stmt1->execute([
+            $product_id
+        ]);
+        $currStock = $stmt1->fetch();
+        if ($currStock[0] - $stockQuantity >= 0) {
+            $stmt2 = $this->pdo->prepare("UPDATE products SET reservedStock = ? WHERE id = ?");
+            $stmt2->execute([
+                $currStock[0] - $stockQuantity,
+                $product_id
+            ]);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function editProduct($product_id, $name, $price, $description, $mainC, $subC, $profilePath) {
         // fallback to DB images if $profilePath is empty
         if (empty($profilePath)) {
             $profilePath = $this->fetchProductPic($product_id);
@@ -157,7 +255,7 @@ class ProductsModel
         // update products table
         $stmt1 = $this->pdo->prepare('
         UPDATE products 
-        SET name = ?, price = ?, description = ?, mainCategory = ?, subCategory = ?, displayImage = ?  
+        SET name = ?, price = ?, description = ?, mainCategory = ?, subCategory = ?, displayImage = ? 
         WHERE id = ?
     ');
         $stmt1->execute([
@@ -191,4 +289,117 @@ class ProductsModel
         }
     }
 
+    // 🔹 Get products with pagination
+    public function fetchPaginated($limit, $offset) {
+        $stmt = $this->pdo->prepare("
+        SELECT * FROM products
+        WHERE status = 'active'
+        ORDER BY created_at DESC
+        LIMIT :limit OFFSET :offset
+    ");
+
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function fetchPaginatedFromVendor($limit, $offset, $vendor_id) {
+        $stmt = $this->pdo->prepare("
+    SELECT *
+    FROM products
+    WHERE status = 'active'
+      AND vendor_id = :vendor_id
+    ORDER BY created_at DESC
+    LIMIT :limit OFFSET :offset
+");
+
+
+        $stmt->bindValue(':vendor_id', (int)$vendor_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function fetchPaginatedFromVendorFiltered($vendor_id, $limit, $offset, $status = 'all', $categoryId = 0) {
+        $sql = "SELECT * FROM products WHERE vendor_id = :vendor_id";
+        if ($status !== 'all') {
+            $sql .= " AND status = :status";
+        }
+        if ((int) $categoryId > 0) {
+            $sql .= " AND mainCategory = :category_id";
+        }
+        $sql .= " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':vendor_id', (int) $vendor_id, PDO::PARAM_INT);
+        if ($status !== 'all') {
+            $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+        }
+        if ((int) $categoryId > 0) {
+            $stmt->bindValue(':category_id', (int) $categoryId, PDO::PARAM_INT);
+        }
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countFromVendorFiltered($vendor_id, $status = 'all', $categoryId = 0) {
+        $sql = "SELECT COUNT(*) FROM products WHERE vendor_id = :vendor_id";
+        if ($status !== 'all') {
+            $sql .= " AND status = :status";
+        }
+        if ((int) $categoryId > 0) {
+            $sql .= " AND mainCategory = :category_id";
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':vendor_id', (int) $vendor_id, PDO::PARAM_INT);
+        if ($status !== 'all') {
+            $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+        }
+        if ((int) $categoryId > 0) {
+            $stmt->bindValue(':category_id', (int) $categoryId, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+    // 🔹 Count total active products
+    public function countAllProducts() {
+        $stmt = $this->pdo->prepare("
+        SELECT COUNT(*) FROM products WHERE status = 'active'
+    ");
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
+
+    public function fetchAllWithVendor() {
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                p.id,
+                p.vendor_id,
+                p.name,
+                p.price,
+                p.description,
+                p.status,
+                p.mainCategory,
+                p.subCategory,
+                p.totalStock,
+                p.displayImage,
+                v.shopName
+            FROM products p
+            LEFT JOIN vendors v ON p.vendor_id = v.id
+            ORDER BY p.id DESC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

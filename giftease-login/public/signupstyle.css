@@ -1,0 +1,179 @@
+   @font-face {
+    font-family: 'Century Gothic';
+    src: url('fonts/centurygothic.ttf') format('truetype');
+}
+
+
+* {
+    font-family: 'Century Gothic';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #e91e63;
+}
+
+body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #ffffffff, #ffffffff);
+      margin: 0;
+    }
+
+    .authContainer {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+    outline: 1px solid #e91e63;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+   .logo {
+    background: #ffff;
+    color: #2C2C2C;
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(164, 44, 44, 0.1);
+    position: relative;
+}
+
+    .logo img {
+      width: 50px;
+    }
+
+  .gift {
+    font-size: 40px;
+    color: #e91e63;
+    text-align: center;
+}
+
+.Ease {
+    font-size: 40px;
+    font-weight: bold;
+    color: #2C2C2C;
+}
+
+    .gift p {
+      font-size: 13px;
+      font-weight: normal;
+      color: #555;
+      margin: 0;
+    }
+
+    /* Step Indicator */
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .step-indicator span {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #ffffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .step-indicator span.active {
+      background: #e91e63;
+      color: white;
+    }
+
+    .step {
+      display: none;
+      animation: fade 0.4s ease;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #e91e63;
+    }
+
+    label {
+      font-size: 13px;
+      color: #555;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .step-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: #e91e63;
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: #e91e63;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #d1d5db;
+    }
+
+    .login-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #e91e63;
+      text-decoration: none;
+    }
+
+    .login-link:hover {
+      text-decoration: underline;
+    }

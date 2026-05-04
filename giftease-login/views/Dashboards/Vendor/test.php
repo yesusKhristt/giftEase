@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Vendor Orders</title>
     <link rel="stylesheet" href="public/style.css">
+    <link rel="stylesheet" href="public/sideTopBar.css" />
     <link rel="icon" href="resources/icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -14,7 +15,7 @@
     <div class="container">
         <?php
         $activePage = 'orders';
-        include 'C:\xampp\htdocs\giftEase\giftease-login\views\commonElements/leftSidebar.php';
+        include 'views\commonElements/leftSidebar.php';
         ?>
         <div class="main-content">
 

@@ -1,89 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Delivery Man</title>
-  <link rel="stylesheet" href="public/style.css">
-  <link rel="icon" href="resources/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Man Dashboard - GiftEase</title>
+  <link rel="stylesheet" href="public/deliverystyle.css">
+  <link rel="stylesheet" href="public/sideTopBar.css" />
+  <link rel="icon" type="image/png" href="resources/1.png">
 </head>
+
 <body>
-  <div class="sidebar">
-    <h2>Wrapping Outlet Dashboard</h2>
-    <ul>
-      <li>Dashboard</li>
-      <li>Received Orders</li>
-      <li>Assigned Orders</li>
-      <li>Wrapping History</li>
-    </ul>
-  </div>
-  <div class="main">
-    <div class="top-summary">
-      <div class="summary-card blue">5 Orders Received</div>
-      <div class="summary-card">2 Orders Wrapped</div>
-      <div class="summary-card">3 Orders Pending Pickup</div>
-      <div class="summary-card">1 Urgent Order</div>
-    </div>
+  <div class="container">
+    <?php
+    $activePage = 'home';
+    include 'views/commonElements/leftSidebarDeliveryman.php';
+    ?>
 
-    <div class="orders">
-      <h3>Assigned Orders</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Product</th>
-            <th>Wrapper</th>
-            <th>Due Time</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>#1008 <br/> Amina Silva</td>
-            <td>Teddy Bear<br/>\"Amina payal Happy Birthday!\"</td>
-            <td><img src=\"https://via.placeholder.com/40\" alt=\"Wrapper\" /><br/>Floral Pattern</td>
-            <td>Today<br/>2:00 PM</td>
-            <td class="actions">
-              <button class="mark">Mark as Wrapped</button>
-              <button class="proof">Upload Wrapping Proof</button>
-            </td>
-          </tr>
-          <tr>
-            <td>#1006 <br/> John Lee</td>
-            <td>Wristwatch<br/>Cong/Glula...</td>
-            <td>Blue paper<br/>Red</td>
-            <td>Tomorrow<br/>10:00 AM</td>
-            <td class="actions">
-              <button class="mark">Mark as Wrapped</button>
-              <button class="proof">Upload Wrapping Proof</button>
-            </td>
-          </tr>
-          <tr>
-            <td>#1004 <br/> David Perera</td>
-            <td>Gift Basket<br/>Do sapadge</td>
-            <td>Krap riobon<br/>Suipe</td>
-            <td>Tomorrow<br/>10:00 AM</td>
-            <td class="actions">
-              <button class="repack">Request Repackaging</button>
-            </td>
-          </tr>
-          <tr>
-            <td>#1003 <br/> Mia Chen</td>
-            <td>Photo Album<br/>Wrap carefully, item delicate</td>
-            <td>Striped paper<br/>stripped</td>
-            <td>Tomorrow<br/>10:00 AM</td>
-            <td class="actions">
-              <button class="mark">Mark as Wrapped</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="main-content">
+      <div class="page-header">
+        <h1 class="title">Delivery Man Home</h1>
+        <p class="subtitle">Pickup operations from shops to outlet</p>
+      </div>
 
-    <div class="footer-buttons">
-      <button>🖨️ Print Instructions</button>
-      <button>🖨️ Print Label</button>
+      <div class="summary-grid" style="margin-bottom: 16px;">
+        <div class="card">
+          <div class="subtitle">Available Tasks</div>
+          <div class="title"><?= (int)($dashboardStats['available_total'] ?? 0) ?></div>
+        </div>
+        <div class="card">
+          <div class="subtitle">My Active Tasks</div>
+          <div class="title"><?= (int)($dashboardStats['my_active_total'] ?? 0) ?></div>
+        </div>
+        <div class="card">
+          <div class="subtitle">Picked Up</div>
+          <div class="title"><?= (int)($dashboardStats['picked_up_total'] ?? 0) ?></div>
+        </div>
+        <div class="card">
+          <div class="subtitle">Completed</div>
+          <div class="title"><?= (int)($dashboardStats['my_completed_total'] ?? 0) ?></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="margin-bottom: 10px;">Quick Navigation</h4>
+        <div class="summary-grid">
+          <a class="btn1" href="?controller=deliveryman&action=dashboard/available">Go To Available Tasks</a>
+          <a class="btn1" href="?controller=deliveryman&action=dashboard/myTasks">Go To My Tasks</a>
+          <a class="btn1" href="?controller=deliveryman&action=dashboard/history">Go To History</a>
+        </div>
+      </div>
     </div>
   </div>
 </body>
-</html>
 
+</html>
